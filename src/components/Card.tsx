@@ -1,6 +1,6 @@
 import styles from "../styles/Card.module.scss"
 
-export default function Card({ title, children }) {
+export default function Card({ title, children }: { title: string, children: any}) {
     return (
         <div className="card mat-elevation-z4">
             <h5 className={styles.cardTitle}>{title}</h5>

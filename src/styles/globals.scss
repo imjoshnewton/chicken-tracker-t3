@@ -1,0 +1,409 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        color-scheme: dark;
+    }
+
+    body {
+        color: white;
+        background: black;
+    }
+}
+
+.loader {
+    border: 10px solid var(--color-bg);
+    border-top: 10px solid var(--color-tirtiary);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+    --color-bg: #eef0f1;
+    --color-text: #08090a;
+    --color-dard-text: #08090a;
+    --color-light-text: #fefefe;
+    --color-primary: #264653;
+    --color-secondary: #2a9d8f;
+    --color-tirtiary: #f4a261;
+    --color-accent1: #e76f51;
+    --color-accent2: #e9c46a;
+}
+
+html,
+body {
+    padding: 0;
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    margin-top: 50px;
+}
+
+
+
+main {
+    padding: 1rem 10vw;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+}
+
+input {
+    display: inline-block;
+    outline: none;
+    border: none;
+    font-size: 1.5rem;
+    width: 100%;
+    padding: 5px 10px;
+}
+
+fieldset {
+    border: none;
+    padding: 1rem 0;
+    font-size: 1.25rem;
+}
+
+code {
+    overflow-x: scroll;
+}
+
+/* Navbar */
+
+.navbar {
+    height: 65px;
+    width: 100%;
+    background: #264653;
+    color: var(--color-light-text);
+    position: fixed;
+    top: 0;
+    padding: 0 10vw;
+    font-weight: bold;
+    border-bottom: 1px solid var(--color-gray);
+    z-index: 99;
+
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+
+        li {
+            border-radius: 50%;
+        }
+    }
+
+    img {
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        border: 2px solid #dedede;
+        cursor: pointer;
+    }
+
+    // .user-name {
+    //     margin-top: -8px;
+    // }
+}
+
+/* Buttons */
+
+.btn,
+button {
+    background-color: var(--color-gray);
+    border: none;
+    color: var(--color-text);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    text-decoration: none;
+    font-family: 'Noto Sans', sans-serif;
+    font-weight: bold;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    margin: 0.5rem 1rem 0.5rem 0;
+}
+
+@media only screen and (max-width: 768px) {
+    button {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+
+button:hover {
+    filter: brightness(90%);
+}
+
+button:disabled,
+button[disabled] {
+    filter: brightness(80%);
+    cursor: not-allowed;
+}
+
+button.btn-blue {
+    background-color: var(--color-blue);
+    color: white;
+}
+
+button.btn-red {
+    background-color: var(--color-red);
+    color: white;
+}
+
+button.btn-green {
+    background-color: var(--color-green);
+    color: white;
+}
+
+button.btn-google {
+    background-color: white;
+    color: var(--color-text);
+}
+
+.btn-google img {
+    width: 30px;
+    margin-right: 10px;
+}
+
+button.btn-logo {
+    background-color: var(--color-text);
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Cards */
+
+.card {
+    padding: 2rem;
+    margin: 1rem 0;
+    background-color: white;
+    border: 1px solid var(--color-gray);
+    border-radius: 8px;
+
+    .description {
+        margin-top: 0;
+    }
+}
+
+.card footer {
+    display: flex;
+}
+
+.card-img-center {
+    width: 20%;
+    display: block;
+    margin: auto;
+    border-radius: 50%;
+    max-width: 150px;
+}
+
+.card-info {
+    color: white;
+    background: var(--color-blue);
+}
+
+/* File uploads */
+
+input[type="file"] {
+    display: none;
+}
+
+.upload-snippet {
+    width: 75%;
+    margin-left: auto;
+    background: white;
+    padding: 5px;
+    margin: 5px 0;
+}
+
+.breed {
+    flex-basis: 50%;
+}
+
+.divider {
+    display: block;
+    margin: 0;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: rgba(0, 0, 0, 0.12);
+}
+
+/* Utilities */
+
+.push-left {
+    margin-left: auto;
+}
+
+.text-sm {
+    font-size: 0.85rem;
+}
+
+.text-danger {
+    font-weight: bold;
+    color: var(--color-red);
+}
+
+.text-success {
+    font-weight: bold;
+    color: var(--color-green);
+}
+
+.text-info {
+    font-weight: bold;
+    color: var(--color-blue);
+}
+
+.box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.box-center {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.mat-elevation-z4 {
+    box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.d-flex {
+    display: flex !important;
+}
+
+.flex-wrap {
+    flex-wrap: wrap !important;
+}
+
+.flex-50 {
+    flex-basis: 50%;
+}
+
+.justify-content-center {
+    justify-content: center !important;
+}
+
+.justify-content-evently {
+    justify-content: space-evenly !important;
+}
+
+.align-items-center {
+    align-items: center !important;
+}
+
+.flock-image {
+    border-radius: 50%;
+}
+
+.ms-3 {
+    margin-left: 1rem !important;
+}
+
+.ms-4 {
+    margin-left: 1.5rem !important;
+}
+
+.me-3 {
+    margin-right: 1rem !important;
+}
+
+.my-4 {
+    margin-top: 1.5rem !important;
+    margin-bottom: 1.5rem !important;
+}
+
+@media screen and (max-width:1150px) {
+    .flex-50 {
+        flex-basis: 100%;
+    }
+}
+
+@media screen and (max-width:850px) {
+    main {
+        padding: 1rem 5vw;
+    }
+
+    .navbar {
+        padding: 0 2vw;
+    }
+
+    .breed {
+        flex-basis: 100%;
+    }
+
+    body {
+        margin-top: 0.75rem;
+    }
+
+}

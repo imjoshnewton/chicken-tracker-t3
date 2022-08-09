@@ -1,0 +1,15 @@
+.title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.content {
+    display: none;
+    flex-wrap: wrap;
+}
+
+.active {
+    display: flex;
+    flex-wrap: wrap;
+}

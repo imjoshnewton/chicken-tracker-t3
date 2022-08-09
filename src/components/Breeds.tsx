@@ -1,9 +1,10 @@
+import { Breed } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
 import styles from "../styles/Breeds.module.scss";
 
-export default function Breeds({ breeds, className }) {
-    const [isActive, setIsActive] = useState(false);
+export default function Breeds({ breeds, className }: { breeds: Breed[], className: string}) {
+    const [isActive, setIsActive] = useState(true);
 
     if (!breeds) {
         return null;
@@ -11,17 +12,17 @@ export default function Breeds({ breeds, className }) {
 
     return (
         <div className={className}>
-            <h3 className={styles.title} onClick={() => setIsActive(!isActive)}>Breeds<span>{isActive ? '-' : '+'}</span></h3>
+            <h3 className={styles.title} onClick={() => setIsActive(!isActive)}>Breeds</h3>
             {/* {isActive && ( */}
                 <div className={isActive ? styles.active : styles.content}>
                     {
-                        breeds?.map((breed, index) => {
+                        breeds?.map((breed: Breed, index: number) => {
                             return (
-                                <div className="d-flex align-items-center breed" key={index}>
-                                    <Image src={breed.imageUrl} width="50" height="50" className="flock-image" alt="" />
+                                <div className="flex items-center breed mb-4" key={index}>
+                                    <Image src={breed.imageUrl!} width="50" height="50" className="flock-image" alt="" />
                                     <div className="ms-3">
                                         <p>
-                                            <strong>{breed.breed}</strong>
+                                            <strong>{breed.name}</strong>
                                             <br />
                                             <strong>Count: </strong>{breed.count}
                                         </p>

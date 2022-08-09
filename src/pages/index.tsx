@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import { trpc } from "../utils/trpc";
 
@@ -10,6 +11,10 @@ type TechnologyCardProps = {
 
 const Home: NextPage = () => {
   const hello = trpc.useQuery(["example.hello", { text: "from tRPC" }]);
+
+  const { data, status } = useSession();
+
+  console.log("Data.user: ", data?.user);
 
   return (
     <>

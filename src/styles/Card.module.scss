@@ -1,0 +1,16 @@
+.card {
+    padding: 1.5rem;
+    min-height: 500px;
+    min-width: 750px;
+
+    .content {
+        display: flex;
+
+    }
+}
+
+.cardTitle {
+    margin-top: 0;
+    transform: translateY(-10px);
+    color: #757575;
+}

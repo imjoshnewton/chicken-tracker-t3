@@ -15,4 +15,8 @@ function defineNextConfig(config) {
 export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
+  images: {
+    domains: ['firebasestorage.googleapis.com', 'lh3.googleusercontent.com'],
+    formats: ['image/avif', 'image/webp'],
+  },
 });

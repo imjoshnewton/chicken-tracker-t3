@@ -4,7 +4,8 @@ import type { AppRouter } from "../server/router";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
-import "../styles/globals.css";
+import "../styles/globals.scss";
+import Navbar from "../components/Navbar";
 
 const MyApp: AppType = ({
   Component,
@@ -12,7 +13,10 @@ const MyApp: AppType = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      {/* <UserContext.Provider value={userData}> */}
+        <Navbar />
+        <Component {...pageProps} />
+      {/* </UserContext.Provider> */}
     </SessionProvider>
   );
 };

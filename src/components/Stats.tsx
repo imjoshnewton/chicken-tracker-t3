@@ -1,14 +1,14 @@
-import { DocumentData, Timestamp } from "firebase/firestore";
+import { Breed, Flock, Log } from '@prisma/client';
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-export default function Stats({ logs, flock, className }) {
-    function chartData(logs: DocumentData[], flock?: any) {
+export default function Stats({ logs, flock, className }: { logs: Log[], flock: Flock & { breeds: Breed[], logs: Log[] }, className: string }) {
+    function chartData(logs: Log[], flock: Flock & { breeds: Breed[], logs: Log[] }) {
         const flockDailyAverage = calcDailyAverage(flock);
         const sorted = logs.sort((a, b) => {
-            return (a['date'] as Timestamp).toMillis() > (b['date'] as Timestamp).toMillis() ? 1 : -1
+            return a.date > b.date ? 1 : -1
         })
         return {
             datasets: [
@@ -35,12 +35,12 @@ export default function Stats({ logs, flock, className }) {
                     fill: 'origin',
                 }
             ],
-            labels: sorted.map((i: any) => (i.date as Timestamp).toDate().toLocaleString('us-EN', { year: 'numeric', month: 'numeric', day: 'numeric' }))
+            labels: sorted.map((i: any) => i.date.toLocaleString('us-EN', { year: 'numeric', month: 'numeric', day: 'numeric' }))
         }
     }
 
-    function calcDailyAverage(flock: any) {
-        const breedAverages = flock?.chickens.map(breed => (breed.averageProduction * breed.count) / 7);
+    function calcDailyAverage(flock: Flock & { breeds: Breed[], logs: Log[]}) {
+        const breedAverages = flock.breeds.map(breed => (breed.averageProduction * breed.count) / 7);
         const dailyAverage = breedAverages.reduce((a, b) => a + b);
 
         return dailyAverage;
