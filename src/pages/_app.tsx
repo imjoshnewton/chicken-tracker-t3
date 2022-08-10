@@ -13,10 +13,8 @@ const MyApp: AppType = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      {/* <UserContext.Provider value={userData}> */}
         <Navbar />
         <Component {...pageProps} />
-      {/* </UserContext.Provider> */}
     </SessionProvider>
   );
 };

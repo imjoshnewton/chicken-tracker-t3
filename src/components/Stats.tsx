@@ -1,6 +1,7 @@
 import { Breed, Flock, Log } from '@prisma/client';
 import { Line } from "react-chartjs-2";
 import { Chart, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import Link from 'next/link';
 
 Chart.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -39,7 +40,7 @@ export default function Stats({ logs, flock, className }: { logs: Log[], flock: 
         }
     }
 
-    function calcDailyAverage(flock: Flock & { breeds: Breed[], logs: Log[]}) {
+    function calcDailyAverage(flock: Flock & { breeds: Breed[], logs: Log[]}): number {
         const breedAverages = flock.breeds.map(breed => (breed.averageProduction * breed.count) / 7);
         const dailyAverage = breedAverages.reduce((a, b) => a + b);
 
@@ -65,19 +66,11 @@ export default function Stats({ logs, flock, className }: { logs: Log[], flock: 
 
     return (
         <div className={className}>
-            <h3>Stats</h3>
-            <div className="d-flex flex-wrap">
+            <h2>Stats</h2>
+            <div className="flex flex-col">
                 <Line data={chartData(logs, flock)} options={options} id="flockchart"></Line>
-                {/* {
-                    logs.map((log, index) => {
-                        return (
-                            <>
-                                <pre>{log.count}</pre>
-                                <pre>{log.notes}</pre>
-                            </>
-                        )
-                    })
-                } */}
+                <div className='p-2'></div>
+                <Link href="/logs" className=''>See all logs &gt;</Link>
             </div>
         </div>
     );

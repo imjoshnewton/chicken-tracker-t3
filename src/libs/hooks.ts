@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { trpc } from '../utils/trpc';
-import { Breed, Flock, Log } from '@prisma/client';
 import { useRouter } from 'next/router';
 
 export interface BaseUser {
@@ -16,39 +14,17 @@ export function useUserData() {
     const { data, status } = useSession({
         required: true
     });
-    const [ defaultFlock, setDefaultFlock ] = useState<string | null>(null);
-    const userResp = trpc.useQuery(["user.getUser", { userId: data?.user?.id }]);
 
-    console.log("Data: ", data);
-    
-    useEffect(() => {
-        if (data?.user) {
-            setDefaultFlock(userResp.data ? userResp.data.defaultFlock : null);
-            
-        } else {
-            setDefaultFlock(null);
-        }
-    }, [data?.user]);
-
-    return { user: data?.user, defaultFlock: data?.defaultFlock };
+    return { user: data?.user, defaultFlock: data?.defaultFlock, status };
 }
 
 // Custom hook to read  auth record and user profile doc
 export function useFlockData() {
     const router = useRouter();
     const { flockId } = router.query;
-    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }]);
-
-    console.log("FLock Data: ", flockData.data);
-
-    // useEffect(() => {
-    //     if (data?.user && flockId) {
-    //         setFlock(flockData.data ? flockData.data : null);
-
-    //     } else {
-    //         setFlock(null);
-    //     }
-    // }, [flockId]);
+    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }], {
+        enabled: !!flockId
+    });
 
     return { flockId, flock: flockData.data, loading: !flockData.data };
 }
