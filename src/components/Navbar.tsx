@@ -11,7 +11,7 @@ export default function Navbar() {
             <ul>
                 <li>
                     <Link href="/">
-                        <span className='flex items-center'><Image src="/chicken.svg" width='50' height='50' alt="Chicken tracker logo" />Chicken Tracker</span>
+                        <span className='flex items-center'>Chicken&nbsp;<Image src="/chicken.svg" width='42' height='42' alt="Chicken tracker logo" />&nbsp;Tracker</span>
                     </Link>
                 </li>
 
@@ -24,7 +24,7 @@ export default function Navbar() {
                             </Link>
                         </li>
                         <li className='ml-4'>
-                            <div className='h-10 w-px bg-white'></div>
+                            <div className='h-10 w-[1.5px] bg-white'></div>
                         </li>
                         <li className='ml-4 flex items-center multilink'>
                             <div className='mr-3 user-name'>{user.name}</div>
