@@ -9,7 +9,7 @@ export default function Navbar() {
     return (
         <nav className="navbar">
             <ul>
-                <li>
+                <li className='cursor-pointer'>
                     <Link href="/">
                         <span className='flex items-center'>Chicken&nbsp;<Image src="/chicken.svg" width='42' height='42' alt="Chicken tracker logo" />&nbsp;Tracker</span>
                     </Link>
@@ -26,11 +26,11 @@ export default function Navbar() {
                         <li className='ml-4'>
                             <div className='h-10 w-[1.5px] bg-white'></div>
                         </li>
-                        <li className='ml-4 flex items-center multilink'>
+                        <li className='ml-4 flex items-center multilink cursor-pointer'>
                             <div className='mr-3 user-name'>{user.name}</div>
-                            <Link href={`/flocks/${defaultFlock}`}>
+                            {/* <Link href={`/flocks/${defaultFlock}`}> */}
                                 <img src={user.image as string} width="50" height="50" alt="" className='profile-image' />
-                            </Link>
+                            {/* </Link> */}
                             <div className="multilink-content fadeIn">
                                 <Link href="/api/auth/signout">Logout</Link>
                             </div>
