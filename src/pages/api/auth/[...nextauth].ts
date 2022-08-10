@@ -7,7 +7,6 @@ import FacebookProvider from "next-auth/providers/facebook";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";
-import Credentials from "next-auth/providers/credentials";
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
