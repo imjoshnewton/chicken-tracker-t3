@@ -6,16 +6,22 @@ import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
 import "../styles/globals.scss";
 import Navbar from "../components/Navbar";
+import Head from "next/head";
 
 const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-        <Navbar />
-        <Component {...pageProps} />
-    </SessionProvider>
+    <>
+      <Head>
+        <link rel="shortcut icon" href="/favicon.png" />
+      </Head>
+      <SessionProvider session={session}>
+          <Navbar />
+          <Component {...pageProps} />
+      </SessionProvider>
+    </>
   );
 };
 
