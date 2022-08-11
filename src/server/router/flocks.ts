@@ -6,7 +6,6 @@ export const flocksRouter = createProtectedRouter()
         input: z
             .object({
                 flockId: z.string().nullish(),
-                limit: z.number().nullish(),
             }),
         async resolve({ input, ctx }) {
             if (input?.flockId && ctx.session?.user?.id) {
@@ -17,12 +16,13 @@ export const flocksRouter = createProtectedRouter()
                     },
                     include: {
                         breeds: true,
-                        logs: {
-                            orderBy: {
-                                date: 'desc'
-                            },
-                            take: input.limit || 7
-                        },
+                        // logs: {
+                            
+                        //     orderBy: {
+                        //         date: 'desc'
+                        //     },
+                        //     take: input.limit || 7
+                        // },
                     }
                 });
             }
@@ -59,6 +59,33 @@ export const flocksRouter = createProtectedRouter()
                     }
                 }
             });
+        }
+    })
+    .query("getStatLogs", {
+        input: z
+            .object({
+                flockId: z.string().nullish(),
+                limit: z.number().nullish(),
+            }),
+        async resolve({ input, ctx }) {
+            if(input.flockId) {
+                return await ctx.prisma.log.groupBy({
+                    where: {
+                        flockId: input.flockId
+                    },
+                    by: ['date'],
+                    orderBy: {
+                        date: 'desc'
+                    },
+                    take: input.limit || 7,
+                    _sum: {
+                        count: true
+                    }
+                });
+            }
+            else {
+                return null;
+            }
         }
     })
     .mutation('createLog', {

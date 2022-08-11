@@ -26,17 +26,16 @@ export default function Stats({
   logs,
   flock,
   className,
+  limit,
   onRangeChange,
 }: {
-  logs: Log[];
-  flock: Flock & { breeds: Breed[]; logs: Log[] };
+  logs: any[] | null | undefined;
+  flock: Flock & { breeds: Breed[] };
   className: string;
+  limit: string;
   onRangeChange: any;
 }) {
-  function chartData(
-    logs: Log[],
-    flock: Flock & { breeds: Breed[]; logs: Log[] }
-  ) {
+  function chartData(logs: any[], flock: Flock & { breeds: Breed[] }) {
     const flockDailyAverage = calcDailyAverage(flock);
     const sorted = logs.sort((a, b) => {
       return a.date > b.date ? 1 : -1;
@@ -44,7 +43,7 @@ export default function Stats({
     return {
       datasets: [
         {
-          data: sorted.map((i: any) => i.count),
+          data: sorted.map((i: any) => i._sum.count),
           label: "Egg Production",
           backgroundColor: "rgba(39,166,154,0.2)",
           borderColor: "rgba(39,166,154,1)",
@@ -77,9 +76,7 @@ export default function Stats({
     };
   }
 
-  function calcDailyAverage(
-    flock: Flock & { breeds: Breed[]; logs: Log[] }
-  ): number {
+  function calcDailyAverage(flock: Flock & { breeds: Breed[] }): number {
     const breedAverages = flock.breeds.map(
       (breed) => (breed.averageProduction * breed.count) / 7
     );
@@ -109,7 +106,7 @@ export default function Stats({
     <div className={className}>
       <div className='flex justify-between'>
         <h2 className='mb-4'>Stats</h2>
-        <select defaultValue={7} onChange={onRangeChange}>
+        <select defaultValue={limit} onChange={onRangeChange}>
           <option value='7'>Last 7 Days</option>
           <option value='15'>Last 15 Days</option>
           <option value='30'>Last 30 Days</option>

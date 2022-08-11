@@ -22,11 +22,14 @@ export function useUserData() {
 export function useFlockData({ limit }: {limit: string}) {
     const router = useRouter();
     const { flockId } = router.query;
-    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString(), limit: Number(limit) }], {
+    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }], {
+        enabled: !!flockId
+    });
+    const logsData = trpc.useQuery(["flocks.getStatLogs", { flockId: flockId?.toString(), limit: Number(limit) }], {
         enabled: !!flockId
     });
 
-    return { flockId, flock: flockData.data, loading: !flockData.data };
+    return { flockId, flock: flockData.data, logs: logsData.data, loading: !flockData.data };
 }
 
 // export function useFlockData() {

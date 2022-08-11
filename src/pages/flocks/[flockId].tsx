@@ -9,12 +9,14 @@ import { useState } from "react";
 
 export default function Flocks() {
   const [limit, setLimit] = useState("7");
-  const { flockId, flock, loading } = useFlockData({ limit: limit });
+  const { flockId, flock, logs, loading } = useFlockData({ limit: limit });
 
   const onRangeChange = (event: any) => {
     setLimit(event.target.value);
     console.log("Limit: ", limit);
   };
+
+  console.log("Logs: ", logs);
 
   return (
     <main>
@@ -42,9 +44,10 @@ export default function Flocks() {
           <div className='flex flex-wrap justify-evently'>
             <Breeds breeds={flock?.breeds} className='flex-50'></Breeds>
             <Stats
-              logs={flock.logs}
+              logs={logs}
               flock={flock}
               className='flex-50'
+              limit={limit}
               onRangeChange={onRangeChange}></Stats>
           </div>
         </Card>
