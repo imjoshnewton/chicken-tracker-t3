@@ -43,7 +43,7 @@ export default function Navbar() {
                 {!user && (
                     <li>
                         <Link href="/api/auth/signin">
-                            <button className="btn">Log in</button>
+                            <button className="btn p-4">Log in</button>
                         </Link>
                     </li>
                 )}
