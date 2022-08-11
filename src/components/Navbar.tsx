@@ -19,11 +19,6 @@ export default function Navbar() {
                 {user && (
                     <>
                         <li className='ml-auto text-white hover:text-slate-200'>
-                            <Link href={`/flocks/${defaultFlock}`}>
-                                My Flock
-                            </Link>
-                        </li>
-                        <li className='ml-4'>
                             <div className='h-10 w-[1.5px] bg-white'></div>
                         </li>
                         <li className='ml-4 flex items-center multilink cursor-pointer'>
@@ -32,6 +27,12 @@ export default function Navbar() {
                                 <img src={user.image as string} width="50" height="50" alt="" className='profile-image' />
                             {/* </Link> */}
                             <div className="multilink-content fadeIn">
+                                <Link href={`/flocks/${defaultFlock}`}>
+                                    My Flock
+                                </Link>
+                                <Link href={`/logs`}>
+                                    All Logs
+                                </Link>
                                 <Link href="/api/auth/signout">Logout</Link>
                             </div>
                         </li>
