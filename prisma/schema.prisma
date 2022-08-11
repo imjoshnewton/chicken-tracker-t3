@@ -2,20 +2,14 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-    provider = "sqlite"
-    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.text annotations in model Account below
-    // Further reading: 
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
-    url      = env("DATABASE_URL")
-}
-
-model Example {
-    id String @id @default(cuid())
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    referentialIntegrity = "prisma"
 }
 
 // Necessary for Next auth
@@ -25,12 +19,12 @@ model Account {
     type              String
     provider          String
     providerAccountId String
-    refresh_token     String? //@db.Text
-    access_token      String? //@db.Text
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
     expires_at        Int?
     token_type        String?
     scope             String?
-    id_token          String? //@db.Text
+    id_token          String? @db.Text
     session_state     String?
     user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -54,7 +48,7 @@ model User {
     defaultFlock  String    @default("")
     accounts      Account[]
     sessions      Session[]
-    flocks        Flock[] 
+    flocks        Flock[]
 }
 
 model VerificationToken {
@@ -67,9 +61,9 @@ model VerificationToken {
 
 model Flock {
     id          String  @id @default(cuid())
-    name        String
-    description String?
-    imageUrl    String
+    name        String  @db.Text
+    description String? @db.Text
+    imageUrl    String  @db.Text
     type        String
     userId      String
     owner       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -78,21 +72,21 @@ model Flock {
 }
 
 model Breed {
-    id                  String  @id @default(cuid())
-    name                String
-    description         String?
-    count               Int @default(1)
-    imageUrl            String?
-    averageProduction   Float @default(4.5)
-    flockId             String
-    flock               Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    name              String  @db.Text
+    description       String? @db.Text
+    count             Int
+    imageUrl          String? @db.Text
+    averageProduction Float
+    flockId           String
+    flock             Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
 
 model Log {
-    id          String  @id @default(cuid())
-    count       Int
-    notes       String?
-    date        DateTime
-    flockId     String
-    flock       Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id      String   @id @default(cuid())
+    count   Int
+    notes   String?  @db.Text
+    date    DateTime
+    flockId String
+    flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
