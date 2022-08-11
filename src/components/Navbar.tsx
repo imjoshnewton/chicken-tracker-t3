@@ -18,9 +18,9 @@ export default function Navbar() {
                 {/* user is signed-in */}
                 {user && (
                     <>
-                        <li className='ml-auto text-white hover:text-slate-200'>
+                        {/* <li className='ml-auto text-white hover:text-slate-200'>
                             <div className='h-10 w-[1.5px] bg-white'></div>
-                        </li>
+                        </li> */}
                         <li className='ml-4 flex items-center multilink cursor-pointer'>
                             <div className='mr-3 user-name'>{user.name}</div>
                             {/* <Link href={`/flocks/${defaultFlock}`}> */}
