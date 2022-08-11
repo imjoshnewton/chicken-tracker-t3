@@ -14,7 +14,7 @@ export default function Flocks() {
             {
                 flock ? (
                     <Card title="Flock Details" key={flockId?.toString()}>
-                        <div className="flex items-center">
+                        <div className="flex items-center flex-wrap">
                             <Image src={flock?.imageUrl} width="150" height="150" className="flock-image" alt="" />
                             <div className="ml-6">
                                 <h1>{flock?.name}</h1>
