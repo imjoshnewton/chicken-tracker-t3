@@ -24,7 +24,7 @@ export default function Logs() {
           {logs?.map((log) => {
             return (
               <li
-                className='mb-3 shadow min-h-[50px] flex items-center pr-2 pl-6 py-2 border-solid border rounded'
+                className='mb-3 shadow min-h-[50px] flex items-center px-3 py-2 border-solid border rounded'
                 key={log.id}>
                 <div className='basis-1/3 md:basis-1/4'>
                   {log.date.toDateString()}
