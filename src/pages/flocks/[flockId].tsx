@@ -31,12 +31,12 @@ export default function Flocks() {
               alt=''
             />
             {/* <pre>{limit}</pre> */}
-            <div className='ml-6'>
+            <div className='ml-0 md:ml-6'>
               <h1>{flock?.name}</h1>
               <p className='description'>{flock?.description}</p>
               <p className='text-gray-400 mt-2'>{flock?.type}</p>
             </div>
-            <div className='ml-auto flex self-start'>
+            <div className='w-full ml-0 mt-4 md:ml-auto md:mt-0 md:w-auto flex self-start'>
               <Modal flockId={flockId?.toString()} />
             </div>
           </div>
