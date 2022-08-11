@@ -11,7 +11,7 @@ export default function Navbar() {
             <ul>
                 <li className='cursor-pointer'>
                     <Link href="/">
-                        <span className='flex items-center'>Chicken&nbsp;<Image src="/chicken.svg" width='42' height='42' alt="Chicken tracker logo" />&nbsp;Tracker</span>
+                        <span className='flex items-center'>Chicken&nbsp;<Image src="/chicken.svg" width='40' height='40' alt="Chicken tracker logo" />&nbsp;Tracker</span>
                     </Link>
                 </li>
 
@@ -24,7 +24,7 @@ export default function Navbar() {
                         <li className='ml-4 flex items-center multilink cursor-pointer'>
                             <div className='mr-3 user-name'>{user.name}</div>
                             {/* <Link href={`/flocks/${defaultFlock}`}> */}
-                                <img src={user.image as string} width="50" height="50" alt="" className='profile-image' />
+                                <img src={user.image as string} width="40" height="40" alt="" className='profile-image' />
                             {/* </Link> */}
                             <div className="multilink-content fadeIn">
                                 <Link href={`/flocks/${defaultFlock}`}>

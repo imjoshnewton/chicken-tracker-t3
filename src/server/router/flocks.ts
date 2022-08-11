@@ -6,6 +6,7 @@ export const flocksRouter = createProtectedRouter()
         input: z
             .object({
                 flockId: z.string().nullish(),
+                limit: z.number().nullish(),
             }),
         async resolve({ input, ctx }) {
             if (input?.flockId && ctx.session?.user?.id) {
@@ -20,7 +21,7 @@ export const flocksRouter = createProtectedRouter()
                             orderBy: {
                                 date: 'desc'
                             },
-                            take: 7
+                            take: input.limit || 7
                         },
                     }
                 });

@@ -19,10 +19,10 @@ export function useUserData() {
 }
 
 // Custom hook to read  auth record and user profile doc
-export function useFlockData() {
+export function useFlockData({ limit }: {limit: string}) {
     const router = useRouter();
     const { flockId } = router.query;
-    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }], {
+    const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString(), limit: Number(limit) }], {
         enabled: !!flockId
     });
 
