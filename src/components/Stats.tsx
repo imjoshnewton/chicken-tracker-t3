@@ -11,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import Link from "next/link";
+import Loader from "./Loader";
 
 Chart.register(
   CategoryScale,
@@ -47,11 +48,11 @@ export default function Stats({
           label: "Egg Production",
           backgroundColor: "rgba(39,166,154,0.2)",
           borderColor: "rgba(39,166,154,1)",
-          pointBackgroundColor: "rgba(148,159,177,1)",
-          pointBorderColor: "rgba(148,159,177,1)",
+          pointBackgroundColor: "rgba(39,166,154,0.8)",
+          pointBorderColor: "rgba(39,166,154,0.8)",
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(148,159,177,0.8)",
-          fill: true,
+          fill: "origin",
         },
         {
           data: sorted.map((i: any) => flockDailyAverage),
@@ -106,7 +107,11 @@ export default function Stats({
   };
 
   if (!flock || !logs) {
-    return null;
+    return (
+      <div className='flex justify-center items-center basis-[48%]'>
+        <Loader show={true}></Loader>
+      </div>
+    );
   }
 
   return (

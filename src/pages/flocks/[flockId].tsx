@@ -45,11 +45,12 @@ export default function Flocks() {
           </div>
           <div className='divider my-6'></div>
           <div className='flex flex-wrap justify-evently'>
-            <Breeds breeds={flock?.breeds} className='flex-50'></Breeds>
+            <Breeds breeds={flock?.breeds} className='flex-48'></Breeds>
+            <div className='p-2'></div>
             <Stats
               logs={logs}
               flock={flock}
-              className='flex-50'
+              className='flex-48'
               limit={limit}
               onRangeChange={onRangeChange}></Stats>
           </div>
