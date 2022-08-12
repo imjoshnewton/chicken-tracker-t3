@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useUserData } from "../libs/hooks";
 
+import { MdOutlineEditNote, MdLogout, MdHomeFilled } from "react-icons/md";
+import { AiOutlineDollar } from "react-icons/ai";
+
 // Top navbar
 export default function Navbar() {
   const { user, defaultFlock } = useUserData();
@@ -42,10 +45,29 @@ export default function Navbar() {
               />
               {/* </Link> */}
               <div className='multilink-content fadeIn'>
-                <Link href={`/flocks/${defaultFlock}`}>My Flock</Link>
-                <Link href={`/logs`}>Logs</Link>
-                <Link href={`/expenses`}>Expenses</Link>
-                <Link href='/api/auth/signout'>Logout</Link>
+                <Link href={`/flocks/${defaultFlock}`}>
+                  <a className='flex items-center'>
+                    <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
+                    My Flock
+                  </a>
+                </Link>
+                <Link href={`/logs`}>
+                  <a className='flex items-center'>
+                    <MdOutlineEditNote className='mr-1 inline text-2xl' /> Logs
+                  </a>
+                </Link>
+                <Link href={`/expenses`}>
+                  <a className='flex items-center'>
+                    <AiOutlineDollar className='mr-3 inline text-xl mt-[-3px]' />
+                    Expenses
+                  </a>
+                </Link>
+                <Link href='/api/auth/signout'>
+                  <a className='flex items-center'>
+                    <MdLogout className='mr-3 inline text-xl' />
+                    Logout
+                  </a>
+                </Link>
               </div>
             </li>
           </>
