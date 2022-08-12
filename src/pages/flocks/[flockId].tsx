@@ -1,11 +1,13 @@
 import Image from "next/image";
+
+import { useState } from "react";
+import { useFlockData } from "../../libs/hooks";
+
 import Card from "../../components/Card";
 import Loader from "../../components/Loader";
 import Breeds from "../../components/Breeds";
 import Stats from "../../components/Stats";
-import { useFlockData } from "../../libs/hooks";
 import LogModal from "../../components/LogModal";
-import { useState } from "react";
 import ExpenseModal from "../../components/ExpenseModal";
 
 export default function Flocks() {
@@ -14,10 +16,7 @@ export default function Flocks() {
 
   const onRangeChange = (event: any) => {
     setLimit(event.target.value);
-    console.log("Limit: ", limit);
   };
-
-  console.log("Logs: ", logs);
 
   return (
     <main>
