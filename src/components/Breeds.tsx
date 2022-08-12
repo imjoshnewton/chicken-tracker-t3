@@ -1,8 +1,8 @@
 import { Breed } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
-import styles from "../styles/Breeds.module.scss";
 import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
+import Loader from "./Loader";
 
 export default function Breeds({
   breeds,
@@ -14,12 +14,18 @@ export default function Breeds({
   const [isActive, setIsActive] = useState(false);
 
   if (!breeds) {
-    return null;
+    return (
+      <div className='flex justify-center items-center basis-[48%]'>
+        <Loader show={true}></Loader>
+      </div>
+    );
   }
 
   return (
     <div className={className}>
-      <h2 className={styles.title} onClick={() => setIsActive(!isActive)}>
+      <h2
+        className='flex justify-between items-center mb-6'
+        onClick={() => setIsActive(!isActive)}>
         Breeds
         {isActive ? (
           <MdOutlineExpandLess className='inline md:hidden' />
