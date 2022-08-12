@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { trpc } from "../utils/trpc";
+import { MdOutlineEditNote } from "react-icons/md";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -46,7 +47,8 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
         className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto'
         type='button'
         onClick={() => setShowModal(true)}>
-        + Add Log Entry
+        <MdOutlineEditNote className='text-2xl' />
+        &nbsp;Add Log Entry
       </button>
       {showModal ? (
         <>

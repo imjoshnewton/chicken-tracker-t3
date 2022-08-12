@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { trpc } from "../utils/trpc";
+import { AiOutlineDollar } from "react-icons/ai";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -47,7 +48,8 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
         className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto'
         type='button'
         onClick={() => setShowModal(true)}>
-        + Add New Expense
+        <AiOutlineDollar className='text-xl' />
+        &nbsp;Add New Expense
       </button>
       {showModal ? (
         <>
@@ -86,8 +88,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       name='amount-input'
                       prefix='$'
                       placeholder='0.00'
-                      defaultValue={1000}
+                      defaultValue={100.0}
                       decimalsLimit={2}
+                      decimalScale={2}
                       onValueChange={(value, name) => setAmount(Number(value))}
                     />
 
