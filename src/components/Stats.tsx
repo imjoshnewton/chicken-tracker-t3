@@ -1,5 +1,8 @@
-import { Breed, Flock, Log } from "@prisma/client";
+import { Breed, Flock } from "@prisma/client";
 import { Line } from "react-chartjs-2";
+import Link from "next/link";
+import Loader from "./Loader";
+import { MdOutlineTrendingDown, MdOutlineTrendingUp } from "react-icons/md";
 import {
   Chart,
   CategoryScale,
@@ -10,9 +13,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import Link from "next/link";
-import Loader from "./Loader";
-import { date } from "zod";
 
 Chart.register(
   CategoryScale,
@@ -158,6 +158,9 @@ export default function Stats({
     );
   }
 
+  const targetDailyAvg = calcDailyAverage(flock);
+  const actualDailyAvg = calcActualDailyAverage(logs);
+
   return (
     <div className={className}>
       <div className='flex justify-between'>
@@ -175,8 +178,18 @@ export default function Stats({
           id='flockchart'></Line>
         <div className='p-2'></div>
         <div className='flex justify-between'>
-          <div>Target Daily Avg: {calcDailyAverage(flock).toFixed(2)}</div>
-          <div>Actual Daily Avg: {calcActualDailyAverage(logs).toFixed(2)}</div>
+          <div>Target Daily Avg: {targetDailyAvg.toFixed(2)}</div>
+          <div className='flex items-center'>
+            Actual Daily Avg:
+            <span className='ml-1'>{actualDailyAvg.toFixed(2)}</span>
+            <span className='ml-1'>
+              {actualDailyAvg < targetDailyAvg ? (
+                <MdOutlineTrendingDown className='text-red-600' />
+              ) : (
+                <MdOutlineTrendingUp className=' text-green-600' />
+              )}
+            </span>
+          </div>
         </div>
         <div className='p-2'></div>
         <Link href='/logs' className=''>
