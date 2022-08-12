@@ -22,6 +22,7 @@ export function useUserData() {
 export function useFlockData({ limit }: {limit: string}) {
     const router = useRouter();
     const { flockId } = router.query;
+    
     const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }], {
         enabled: !!flockId
     });

@@ -12,6 +12,7 @@ import {
 } from "chart.js";
 import Link from "next/link";
 import Loader from "./Loader";
+import { date } from "zod";
 
 Chart.register(
   CategoryScale,
@@ -38,13 +39,12 @@ export default function Stats({
 }) {
   function chartData(logs: any[], flock: Flock & { breeds: Breed[] }) {
     const flockDailyAverage = calcDailyAverage(flock);
-    const sorted = logs.sort((a, b) => {
-      return a.date > b.date ? 1 : -1;
-    });
+    const chartArray = createChartArray(logs, Number(limit));
+
     return {
       datasets: [
         {
-          data: sorted.map((i: any) => i._sum.count),
+          data: chartArray.map((i: any) => i._sum.count),
           label: "Egg Production",
           backgroundColor: "rgba(39,166,154,0.2)",
           borderColor: "rgba(39,166,154,1)",
@@ -55,7 +55,7 @@ export default function Stats({
           fill: "origin",
         },
         {
-          data: sorted.map((i: any) => flockDailyAverage),
+          data: chartArray.map(() => flockDailyAverage),
           label: "Flock Average",
           backgroundColor: "rgba(149,159,177,0.2)",
           borderColor: "rgba(149,159,177,1)",
@@ -67,13 +67,7 @@ export default function Stats({
           pointRadius: 0,
         },
       ],
-      labels: sorted.map((i: any) =>
-        i.date.toLocaleString("us-EN", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-        })
-      ),
+      labels: chartArray.map((d) => d.date),
     };
   }
 
@@ -91,6 +85,56 @@ export default function Stats({
       logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length;
 
     return average;
+  }
+
+  function getDatesInRange(limit: number) {
+    const retArray: Date[] = [];
+
+    for (let i: number = limit - 1; i >= 0; i--) {
+      const today = new Date(Date.now());
+      retArray.push(new Date(today.setDate(today.getDate() - i)));
+    }
+
+    return retArray;
+  }
+
+  function createChartArray(logs: any[], limit: number) {
+    const dates = getDatesInRange(Number(limit));
+    const logsArray = logs.map((log) => {
+      return {
+        ...log,
+        date: log.date.toLocaleString("us-EN", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }),
+      };
+    });
+
+    const retArray = dates.map((date) => {
+      const stringValue = date.toLocaleString("us-EN", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+
+      const index = logsArray.map((l) => l.date).indexOf(stringValue);
+
+      if (index >= 0) {
+        return {
+          ...logsArray[index],
+        };
+      } else {
+        return {
+          date: stringValue,
+          _sum: {
+            count: 0,
+          },
+        };
+      }
+    });
+
+    return retArray;
   }
 
   const options = {

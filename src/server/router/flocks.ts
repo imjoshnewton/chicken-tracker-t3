@@ -16,13 +16,6 @@ export const flocksRouter = createProtectedRouter()
                     },
                     include: {
                         breeds: true,
-                        // logs: {
-                            
-                        //     orderBy: {
-                        //         date: 'desc'
-                        //     },
-                        //     take: input.limit || 7
-                        // },
                     }
                 });
             }
@@ -82,12 +75,24 @@ export const flocksRouter = createProtectedRouter()
             .object({
                 flockId: z.string().nullish(),
                 limit: z.number().nullish(),
+                today: z.date().nullish(),
             }),
         async resolve({ input, ctx }) {
-            if(input.flockId) {
+            if(input.flockId && input.limit) {
+                var today = new Date(Date.now())
+                var pastDate = new Date(today);
+                pastDate.setDate(pastDate.getDate() - input.limit);
+
+                console.log("Today: ", today);
+                console.log("Past Date: ", pastDate);
+
                 return await ctx.prisma.log.groupBy({
                     where: {
-                        flockId: input.flockId
+                        flockId: input.flockId,
+                        date: {
+                            lte: today,
+                            gte: pastDate
+                        }
                     },
                     by: ['date'],
                     orderBy: {
