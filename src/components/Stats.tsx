@@ -56,7 +56,7 @@ export default function Stats({
         },
         {
           data: chartArray.map(() => flockDailyAverage),
-          label: "Flock Average",
+          label: "Target Average",
           backgroundColor: "rgba(149,159,177,0.2)",
           borderColor: "rgba(149,159,177,1)",
           pointBackgroundColor: "rgba(148,159,177,1)",
