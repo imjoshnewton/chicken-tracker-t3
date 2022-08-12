@@ -1,15 +1,16 @@
 import { useState } from "react";
+import CurrencyInput from "react-currency-input-field";
 import { trpc } from "../utils/trpc";
 
-const Modal = ({ flockId }: { flockId: string | undefined }) => {
+const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState<Date>();
-  const [count, setCount] = useState(0);
-  const [notes, setNotes] = useState<string>();
+  const [amount, setAmount] = useState(0);
+  const [memo, setMemo] = useState<string>();
 
   const utils = trpc.useContext();
 
-  const createLogMutation = trpc.useMutation(["flocks.createLog"], {
+  const createExpenseMutation = trpc.useMutation(["flocks.createExpense"], {
     onSuccess: () => {
       utils.invalidateQueries();
     },
@@ -21,17 +22,17 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
 
   function resetFormValues(): void {
     setDate(undefined);
-    setNotes(undefined);
-    setCount(0);
+    setMemo(undefined);
+    setAmount(0);
   }
 
   async function createNewLog(
     flockId: string,
     date: Date,
-    count: number,
-    notes?: string
+    amount: number,
+    memo?: string
   ): Promise<void> {
-    await createLogMutation.mutateAsync({ flockId, date, count, notes });
+    await createExpenseMutation.mutateAsync({ flockId, date, amount, memo });
     closeModal();
     resetFormValues();
   }
@@ -46,7 +47,7 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
         className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto'
         type='button'
         onClick={() => setShowModal(true)}>
-        + Add Log Entry
+        + Add New Expense
       </button>
       {showModal ? (
         <>
@@ -54,7 +55,7 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
             <div className='relative w-auto my-6 mx-auto max-w-3xl min-w-[350px]'>
               <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                 <div className='flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
-                  <h3 className='text-xl font=semibold'>New Log Entry</h3>
+                  <h3 className='text-xl font=semibold'>New Expense</h3>
                 </div>
                 <div className='relative flex-auto'>
                   <form className='px-8 pt-6 pb-8 w-full'>
@@ -78,24 +79,37 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
                       type='date'
                     />
                     <label className='block text-black text-sm font-bold mb-1 mt-2'>
-                      Count
+                      Amount
                     </label>
-                    <input
+                    <CurrencyInput
+                      id='amount-input'
+                      name='amount-input'
+                      prefix='$'
+                      placeholder='0.00'
+                      defaultValue={1000}
+                      decimalsLimit={2}
+                      onValueChange={(value, name) => setAmount(Number(value))}
+                    />
+
+                    {/* <input
                       className='appearance-none border rounded w-full py-2 px-1 text-black'
                       required
-                      value={count}
-                      onChange={(e) => setCount(Number(e.target.value))}
-                      placeholder='0'
-                      type='number'
-                    />
+                      type='text'
+                      pattern='^\$\d{1,3}(,\d{3})*(\.\d+)?$'
+                      value={amount}
+                      onChange={(e) => setAmount(Number(e.target.value))}
+                      onKeyUp={(e) => formatCurrency(e.target)}
+                      onBlur={(e) => formatCurrency(e.target, "blur")}
+                      data-type='currency'
+                      placeholder='$0.00'></input> */}
                     <label className='block text-black text-sm font-bold mb-1'>
-                      Notes
+                      Memo
                     </label>
                     <textarea
                       className='appearance-none border rounded w-full py-2 px-1 text-black'
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                      placeholder='Notes...'
+                      value={memo}
+                      onChange={(e) => setMemo(e.target.value)}
+                      placeholder='Memo...'
                     />
                   </form>
                 </div>
@@ -111,8 +125,8 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
                     type='button'
                     onClick={async () => {
                       // await createNewLog(flockId, date, count, notes);
-                      if (date && count) {
-                        await createNewLog(flockId, date, count, notes);
+                      if (date && amount) {
+                        await createNewLog(flockId, date, amount, memo);
                       }
                     }}>
                     Submit
@@ -127,4 +141,4 @@ const Modal = ({ flockId }: { flockId: string | undefined }) => {
   );
 };
 
-export default Modal;
+export default ExpenseModal;

@@ -61,6 +61,22 @@ export const flocksRouter = createProtectedRouter()
             });
         }
     })
+    .query("getExpenses", {
+        async resolve({ input, ctx }) {
+            return await ctx.prisma.flock.findMany({
+                where: {
+                    userId: ctx.session.user.id
+                },
+                include: {
+                    expenses: {
+                        orderBy: {
+                            date: 'desc'
+                        }
+                    }
+                }
+            });
+        }
+    })
     .query("getStatLogs", {
         input: z
             .object({
@@ -102,6 +118,20 @@ export const flocksRouter = createProtectedRouter()
             })
         }
     })
+    .mutation('createExpense', {
+        input: z
+            .object({
+                flockId: z.string(),
+                date: z.date(),
+                amount: z.number(),
+                memo: z.string().optional(),
+            }),
+        async resolve({ input, ctx }) {
+            return await ctx.prisma.expense.create({
+                data: input,
+            })
+        }
+    })
     .mutation('deleteLog', {
         input: z
             .object({
@@ -109,6 +139,19 @@ export const flocksRouter = createProtectedRouter()
             }),
         async resolve({ input, ctx }) {
             return await ctx.prisma.log.delete({
+                where: {
+                    id: input.id
+                }
+            })
+        }
+    })
+    .mutation('deleteExpense', {
+        input: z
+            .object({
+                id: z.string(),
+            }),
+        async resolve({ input, ctx }) {
+            return await ctx.prisma.expense.delete({
                 where: {
                     id: input.id
                 }

@@ -85,6 +85,13 @@ export default function Stats({
     return dailyAverage;
   }
 
+  function calcActualDailyAverage(logs: any[]) {
+    const average =
+      logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length;
+
+    return average;
+  }
+
   const options = {
     responsive: true,
     plugins: {
@@ -117,6 +124,11 @@ export default function Stats({
           data={chartData(logs, flock)}
           options={options}
           id='flockchart'></Line>
+        <div className='p-2'></div>
+        <div className='flex justify-between'>
+          <div>Target Daily Avg: {calcDailyAverage(flock).toFixed(2)}</div>
+          <div>Actual Daily Avg: {calcActualDailyAverage(logs).toFixed(2)}</div>
+        </div>
         <div className='p-2'></div>
         <Link href='/logs' className=''>
           See all logs &gt;

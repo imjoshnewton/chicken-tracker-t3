@@ -60,15 +60,17 @@ model VerificationToken {
 }
 
 model Flock {
-    id          String  @id @default(cuid())
-    name        String  @db.Text
-    description String? @db.Text
-    imageUrl    String  @db.Text
+    id          String    @id @default(cuid())
+    name        String    @db.Text
+    description String?   @db.Text
+    imageUrl    String    @db.Text
     type        String
+    zip         String?   @default("")
     userId      String
-    owner       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     breeds      Breed[]
     logs        Log[]
+    expenses    Expense[]
 }
 
 model Breed {
@@ -87,6 +89,15 @@ model Log {
     count   Int
     notes   String?  @db.Text
     date    DateTime
+    flockId String
+    flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+}
+
+model Expense {
+    id      String   @id @default(cuid())
+    amount  Float
+    date    DateTime
+    memo    String?  @db.Text
     flockId String
     flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
