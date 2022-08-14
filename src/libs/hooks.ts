@@ -19,18 +19,19 @@ export function useUserData() {
 }
 
 // Custom hook to read  auth record and user profile doc
-export function useFlockData({ limit }: {limit: string}) {
+export function useFlockData() {
     const router = useRouter();
-    const { flockId } = router.query;
-    
+    const { flockId, statsRange } = router.query;
+    const range = statsRange ? Number(statsRange) : 7;
+
     const flockData = trpc.useQuery(["flocks.getFlock", { flockId: flockId?.toString() }], {
         enabled: !!flockId
     });
-    const logsData = trpc.useQuery(["flocks.getStatLogs", { flockId: flockId?.toString(), limit: Number(limit) }], {
+    const logsData = trpc.useQuery(["flocks.getStatLogs", { flockId: flockId?.toString(), limit: range }], {
         enabled: !!flockId
     });
 
-    return { flockId, flock: flockData.data, logs: logsData.data, loading: !flockData.data };
+    return { flockId, flock: flockData.data, logs: logsData.data, range, loading: !flockData.data };
 }
 
 // export function useFlockData() {
