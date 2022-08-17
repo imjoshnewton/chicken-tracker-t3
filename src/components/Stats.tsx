@@ -204,7 +204,7 @@ export default function Stats({
               {stats.thisWeekAvg._avg.count?.toFixed(2)}
             </span>
             <span className='ml-1'>
-              {stats.thisWeeksAverage < stats.lastWeeksAverage ? (
+              {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
                 <MdOutlineTrendingDown className='text-red-600' />
               ) : (
                 <MdOutlineTrendingUp className=' text-green-600' />
