@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useFlockData } from "../../libs/hooks";
 
 import Card from "../../components/Card";
@@ -13,7 +13,9 @@ import { useRouter } from "next/router";
 
 export default function Flocks() {
   const router = useRouter();
-  const { flockId, flock, logs, range } = useFlockData();
+  const { flockId, flock, stats, range } = useFlockData();
+
+  console.log("Logs: ", stats.logs);
 
   const onRangeChange = (event: any) => {
     const newRange = event.target.value;
@@ -52,7 +54,7 @@ export default function Flocks() {
             <Breeds breeds={flock?.breeds} className='flex-48'></Breeds>
             <div className='p-2'></div>
             <Stats
-              logs={logs}
+              stats={stats}
               flock={flock}
               className='flex-48'
               limit={range.toString()}
