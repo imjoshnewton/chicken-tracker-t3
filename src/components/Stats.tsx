@@ -2,7 +2,12 @@ import { Breed, Flock } from "@prisma/client";
 import { Line } from "react-chartjs-2";
 import Link from "next/link";
 import Loader from "./Loader";
-import { MdOutlineTrendingDown, MdOutlineTrendingUp } from "react-icons/md";
+import {
+  MdOutlineTrendingDown,
+  MdOutlineTrendingUp,
+  MdArrowDownward,
+  MdArrowUpward,
+} from "react-icons/md";
 import {
   Chart,
   CategoryScale,
@@ -25,13 +30,13 @@ Chart.register(
 );
 
 export default function Stats({
-  logs,
+  stats,
   flock,
   className,
   limit,
   onRangeChange,
 }: {
-  logs: any[] | null | undefined;
+  stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
   limit: string;
@@ -150,7 +155,7 @@ export default function Stats({
     },
   };
 
-  if (!flock || !logs) {
+  if (!flock || !stats.logs) {
     return (
       <div className='flex justify-center items-center basis-[48%]'>
         <Loader show={true}></Loader>
@@ -159,7 +164,7 @@ export default function Stats({
   }
 
   const targetDailyAvg = calcDailyAverage(flock);
-  const actualDailyAvg = calcActualDailyAverage(logs);
+  const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
   return (
     <div className={className}>
@@ -173,7 +178,7 @@ export default function Stats({
       </div>
       <div className='flex flex-col'>
         <Line
-          data={chartData(logs, flock)}
+          data={chartData(stats.logs, flock)}
           options={options}
           id='flockchart'></Line>
         <div className='p-2'></div>
@@ -184,6 +189,22 @@ export default function Stats({
             <span className='ml-1'>{actualDailyAvg.toFixed(2)}</span>
             <span className='ml-1'>
               {actualDailyAvg < targetDailyAvg ? (
+                <MdArrowDownward className='text-red-600' />
+              ) : (
+                <MdArrowUpward className=' text-green-600' />
+              )}
+            </span>
+          </div>
+        </div>
+        <div className='flex justify-between'>
+          <div>Last Weeks Avg: {stats.lastWeekAvg._avg.count?.toFixed(2)}</div>
+          <div className='flex items-center'>
+            This Weeks Avg:
+            <span className='ml-1'>
+              {stats.thisWeekAvg._avg.count?.toFixed(2)}
+            </span>
+            <span className='ml-1'>
+              {stats.thisWeeksAverage < stats.lastWeeksAverage ? (
                 <MdOutlineTrendingDown className='text-red-600' />
               ) : (
                 <MdOutlineTrendingUp className=' text-green-600' />
