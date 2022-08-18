@@ -5,6 +5,8 @@ import { useUserData } from "../libs/hooks";
 import { MdOutlineEditNote, MdLogout, MdHomeFilled } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
 
+import logo from "../../public/chicken.svg";
+
 // Top navbar
 export default function Navbar() {
   const { user, defaultFlock } = useUserData();
@@ -17,7 +19,7 @@ export default function Navbar() {
             <span className='flex items-center'>
               Chicken&nbsp;
               <Image
-                src='/chicken.svg'
+                src={logo}
                 width='40'
                 height='40'
                 alt='Chicken tracker logo'
@@ -30,36 +32,32 @@ export default function Navbar() {
         {/* user is signed-in */}
         {user && (
           <>
-            {/* <li className='ml-auto text-white hover:text-slate-200'>
-                            <div className='h-10 w-[1.5px] bg-white'></div>
-                        </li> */}
             <li className='ml-4 flex items-center multilink cursor-pointer'>
               <div className='mr-3 user-name'>{user.name}</div>
-              {/* <Link href={`/flocks/${defaultFlock}`}> */}
               <img
                 src={user.image as string}
                 width='40'
                 height='40'
-                alt=''
-                className='profile-image'
+                alt='Current user profile image'
               />
               {/* </Link> */}
               <div className='multilink-content fadeIn'>
                 <Link href={`/flocks/${defaultFlock}`}>
                   <a className='flex items-center'>
                     <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
-                    My Flock
+                    My Flocks
                   </a>
                 </Link>
                 <Link href={`/logs`}>
                   <a className='flex items-center'>
-                    <MdOutlineEditNote className='mr-1 inline text-2xl' /> Logs
+                    <MdOutlineEditNote className='mr-1 inline text-2xl' /> All
+                    Logs
                   </a>
                 </Link>
                 <Link href={`/expenses`}>
                   <a className='flex items-center'>
                     <AiOutlineDollar className='mr-3 inline text-xl mt-[-3px]' />
-                    Expenses
+                    All Expenses
                   </a>
                 </Link>
                 <Link href='/api/auth/signout'>
