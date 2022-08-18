@@ -176,7 +176,7 @@ export default function Stats({
           <option value='30'>Last 30 Days</option>
         </select>
       </div>
-      <div className='flex flex-col'>
+      <div className='flex flex-col overflow-hidden'>
         <Line
           data={chartData(stats.logs, flock)}
           options={options}
