@@ -15,11 +15,11 @@ const MyApp: AppType = ({
   return (
     <>
       <Head>
-        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel='shortcut icon' href='/favicon.png' />
       </Head>
       <SessionProvider session={session}>
-          <Navbar />
-          <Component {...pageProps} />
+        <Navbar />
+        <Component {...pageProps} />
       </SessionProvider>
     </>
   );
@@ -54,5 +54,5 @@ export default withTRPC<AppRouter>({
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: false,
+  ssr: true,
 })(MyApp);
