@@ -44,7 +44,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   return (
     <>
       <button
-        className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto'
+        className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto h-10'
         type='button'
         onClick={() => setShowModal(true)}>
         <MdOutlineEditNote className='text-2xl' />

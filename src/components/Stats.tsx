@@ -176,11 +176,13 @@ export default function Stats({
           <option value='30'>Last 30 Days</option>
         </select>
       </div>
-      <div className='flex flex-col'>
-        <Line
-          data={chartData(stats.logs, flock)}
-          options={options}
-          id='flockchart'></Line>
+      <div className="flex flex-col">
+        <div className="w-[99%]">
+          <Line
+            data={chartData(stats.logs, flock)}
+            options={options}
+            id='flockchart'></Line>
+        </div>
         <div className='p-2'></div>
         <div className='flex justify-between'>
           <div>Target Daily Avg: {targetDailyAvg.toFixed(2)}</div>
