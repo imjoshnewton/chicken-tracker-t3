@@ -324,7 +324,7 @@ input[type="file"] {
     transition-delay: 0.15s;
     box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 
-    div {
+    a {
         opacity: 0;
         transform: translateY(-10px);
         transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
@@ -350,7 +350,7 @@ input[type="file"] {
     transition-delay: 0s;
 }
 
-.multilink:hover .multilink-content>div {
+.multilink:hover .multilink-content>a {
     opacity: 1;
     transform: translateY(0px);
     transition-delay: 0.15s;
