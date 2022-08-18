@@ -24,7 +24,7 @@ export default function Breeds({
   return (
     <div className={className}>
       <h2
-        className='flex justify-between items-center mb-6'
+        className='flex justify-between items-center mb-6 dark:text-gray-300'
         onClick={() => setIsActive(!isActive)}>
         Breeds
         {isActive ? (
@@ -34,7 +34,12 @@ export default function Breeds({
         )}
       </h2>
       {/* {isActive && ( */}
-      <div className={isActive ? "flex flex-wrap" : "hidden md:flex flex-wrap"}>
+      <div
+        className={
+          isActive
+            ? "flex flex-wrap dark:text-gray-300"
+            : "hidden md:flex flex-wrap dark:text-gray-300"
+        }>
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <div className='flex items-center breed mb-4' key={index}>
@@ -45,7 +50,7 @@ export default function Breeds({
                 className='flock-image'
                 alt=''
               />
-              <div className='ml-3'>
+              <div className='ml-3 dark:text-gray-300'>
                 <p>
                   <strong>{breed.name}</strong>
                   <br />

@@ -144,6 +144,7 @@ export default function Stats({
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
@@ -169,15 +170,15 @@ export default function Stats({
   return (
     <div className={className}>
       <div className='flex justify-between'>
-        <h2 className='mb-4'>Stats</h2>
-        <select defaultValue={limit} onChange={onRangeChange}>
+        <h2 className='mb-4 dark:text-gray-300'>Stats</h2>
+        <select defaultValue={limit} onChange={onRangeChange} className='mb-4'>
           <option value='7'>Last 7 Days</option>
           <option value='15'>Last 15 Days</option>
           <option value='30'>Last 30 Days</option>
         </select>
       </div>
-      <div className="flex flex-col">
-        <div className="w-[99%]">
+      <div className='flex flex-col'>
+        <div className='w-[99%] min-h-[300px] md:min-h-[275px]'>
           <Line
             data={chartData(stats.logs, flock)}
             options={options}
@@ -185,8 +186,10 @@ export default function Stats({
         </div>
         <div className='p-2'></div>
         <div className='flex justify-between'>
-          <div>Target Daily Avg: {targetDailyAvg.toFixed(2)}</div>
-          <div className='flex items-center'>
+          <div className='dark:text-gray-300'>
+            Target Daily Avg: {targetDailyAvg.toFixed(2)}
+          </div>
+          <div className='flex items-center dark:text-gray-300'>
             Actual Daily Avg:
             <span className='ml-1'>{actualDailyAvg.toFixed(2)}</span>
             <span className='ml-1'>
@@ -198,9 +201,9 @@ export default function Stats({
             </span>
           </div>
         </div>
-        <div className='flex justify-between'>
+        <div className='flex justify-between dark:text-gray-300'>
           <div>Last Weeks Avg: {stats.lastWeekAvg._avg.count?.toFixed(2)}</div>
-          <div className='flex items-center'>
+          <div className='flex items-center dark:text-gray-300'>
             This Weeks Avg:
             <span className='ml-1'>
               {stats.thisWeekAvg._avg.count?.toFixed(2)}
@@ -215,8 +218,10 @@ export default function Stats({
           </div>
         </div>
         <div className='p-2'></div>
-        <Link href='/logs' className=''>
-          See all logs &gt;
+        <Link href='/logs'>
+          <a className='text-white hover:text-gray-300 dark:text-gray-400 dark:hover:text-gray-200'>
+            See all logs &gt;
+          </a>
         </Link>
       </div>
     </div>

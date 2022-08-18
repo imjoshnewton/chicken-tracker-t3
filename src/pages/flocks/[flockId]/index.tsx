@@ -1,13 +1,13 @@
 import Image from "next/image";
 
-import { useFlockData } from "../../libs/hooks";
+import { useFlockData } from "../../../libs/hooks";
 
-import Card from "../../components/Card";
-import Loader from "../../components/Loader";
-import Breeds from "../../components/Breeds";
-import Stats from "../../components/Stats";
-import LogModal from "../../components/LogModal";
-import ExpenseModal from "../../components/ExpenseModal";
+import Card from "../../../components/Card";
+import Loader from "../../../components/Loader";
+import Breeds from "../../../components/Breeds";
+import Stats from "../../../components/Stats";
+import LogModal from "../../../components/LogModal";
+import ExpenseModal from "../../../components/ExpenseModal";
 import { useRouter } from "next/router";
 
 export default function Flocks() {
@@ -28,6 +28,12 @@ export default function Flocks() {
     <main>
       {flock ? (
         <Card title='Flock Details' key={flockId?.toString()}>
+          <Link href={`/flocks/${flockId}/edit`}>
+            <a className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 m-3 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'>
+              Edit&nbsp;&nbsp;
+              <MdOutlineEdit />
+            </a>
+          </Link>
           <div className='flex items-center flex-wrap'>
             <Image
               src={flock?.imageUrl}
@@ -38,17 +44,23 @@ export default function Flocks() {
             />
             {/* <pre>{limit}</pre> */}
             <div className='ml-0 md:ml-6'>
-              <h1>{flock?.name}</h1>
-              <p className='description'>{flock?.description}</p>
-              <p className='text-gray-400 mt-2'>{flock?.type}</p>
+              <div className='flex items-center'>
+                <h1 className='mr-3 dark:text-gray-300'>{flock?.name}</h1>
+              </div>
+              <p className='description dark:text-gray-300'>
+                {flock?.description}
+              </p>
+              <p className='text-gray-400 mt-2 dark:text-gray-400'>
+                {flock?.type}
+              </p>
             </div>
-            <div className='w-full ml-0 mt-4 md:ml-auto md:mt-0 md:w-auto flex self-start flex-wrap'>
+            <div className='w-full ml-0 mt-4 lg:ml-auto md:mt-0 sm:w-auto flex self-start flex-wrap'>
               <LogModal flockId={flockId?.toString()} />
               <div className='p-1'></div>
               <ExpenseModal flockId={flockId?.toString()} />
             </div>
           </div>
-          <div className='divider my-6'></div>
+          <div className='divider my-6 dark:border-t-gray-500'></div>
           <div className='flex flex-wrap justify-evently'>
             <Breeds breeds={flock?.breeds} className='flex-48'></Breeds>
             <div className='p-2'></div>
@@ -69,24 +81,30 @@ export default function Flocks() {
   );
 }
 
-import { authOptions } from '../api/auth/[...nextauth]'
-import { unstable_getServerSession } from "next-auth/next"
+import { authOptions } from "../../api/auth/[...nextauth]";
+import { unstable_getServerSession } from "next-auth/next";
+import Link from "next/link";
+import { MdOutlineEdit } from "react-icons/md";
 
 export async function getServerSideProps(context: any) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions)
+  const session = await unstable_getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   if (!session) {
     return {
       redirect: {
-        destination: '/api/auth/signin',
+        destination: "/api/auth/signin",
         permanent: false,
       },
-    }
+    };
   }
 
   return {
     props: {
       session,
     },
-  }
+  };
 }
