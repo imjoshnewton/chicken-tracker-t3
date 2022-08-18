@@ -178,6 +178,7 @@ export default function Stats({
       </div>
       <div className='flex flex-col overflow-hidden'>
         <Line
+        className="overflow-hidden"
           data={chartData(stats.logs, flock)}
           options={options}
           id='flockchart'></Line>
