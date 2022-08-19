@@ -62,7 +62,10 @@ export default function Flocks() {
           </div>
           <div className='divider my-6 dark:border-t-gray-500'></div>
           <div className='flex flex-wrap justify-evently'>
-            <Breeds breeds={flock?.breeds} className='flex-48'></Breeds>
+            <Breeds
+              flockId={flockId?.toString()}
+              breeds={flock?.breeds}
+              className='flex-48'></Breeds>
             <div className='p-2'></div>
             <Stats
               stats={stats}

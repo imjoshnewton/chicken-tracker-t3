@@ -1,17 +1,26 @@
 import { Breed } from "@prisma/client";
 import Image from "next/image";
 import { useState } from "react";
-import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
+import {
+  MdAdd,
+  MdOutlineExpandLess,
+  MdOutlineExpandMore,
+} from "react-icons/md";
+import BreedModal from "./BreedModal";
 import Loader from "./Loader";
 
 export default function Breeds({
+  flockId,
   breeds,
   className,
 }: {
+  flockId: string | undefined;
   breeds: Breed[];
   className: string;
 }) {
   const [isActive, setIsActive] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBreed, setSellectedBreed] = useState<Breed | null>(null);
 
   if (!breeds) {
     return (
@@ -33,8 +42,7 @@ export default function Breeds({
           <MdOutlineExpandMore className='inline md:hidden' />
         )}
       </h2>
-      {/* {isActive && ( */}
-      <div
+      <ul
         className={
           isActive
             ? "flex flex-wrap dark:text-gray-300"
@@ -42,7 +50,13 @@ export default function Breeds({
         }>
         {breeds?.map((breed: Breed, index: number) => {
           return (
-            <div className='flex items-center breed mb-4' key={index}>
+            <li
+              className='flex items-center breed mb-4'
+              key={index}
+              onClick={() => {
+                setSellectedBreed(breed);
+                setShowModal(true);
+              }}>
               <Image
                 src={breed.imageUrl!}
                 width='50'
@@ -58,11 +72,33 @@ export default function Breeds({
                   {breed.count}
                 </p>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
-      {/* )} */}
+      </ul>
+      <button
+        className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto h-10 bg-white'
+        type='button'
+        onClick={() => {
+          setShowModal(true);
+          setSellectedBreed(null);
+        }}>
+        <MdAdd className='text-2xl' />
+        &nbsp;Add New Breed
+      </button>
+      {showModal ? (
+        <BreedModal
+          flockId={flockId}
+          breed={selectedBreed}
+          show={true}
+          closeModal={() => {
+            setShowModal(false);
+            setSellectedBreed(null);
+          }}
+        />
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

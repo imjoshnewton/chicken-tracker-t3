@@ -11,7 +11,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const utils = trpc.useContext();
 
-  const createExpenseMutation = trpc.useMutation(["flocks.createExpense"], {
+  const createExpenseMutation = trpc.useMutation(["expenses.createExpense"], {
     onSuccess: () => {
       utils.invalidateQueries();
     },

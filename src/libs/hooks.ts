@@ -23,6 +23,7 @@ export function useFlockData() {
   const router = useRouter();
   const { flockId, statsRange } = router.query;
   const range = statsRange ? Number(statsRange) : 7;
+
   const now = new Date(Date.now());
   now.setHours(0, 0, 0, 0);
   const today = now;
@@ -35,7 +36,7 @@ export function useFlockData() {
   );
   const logsData = trpc.useQuery(
     [
-      "flocks.getStats",
+      "stats.getStats",
       {
         flockId: flockId?.toString(),
         limit: range,
@@ -44,7 +45,6 @@ export function useFlockData() {
     ],
     {
       enabled: !!flockId,
-      //   refetchInterval: 30000,
     }
   );
 

@@ -2,12 +2,12 @@ import Card from "../../components/Card";
 import { trpc } from "../../utils/trpc";
 
 export default function Logs() {
-  const flocks = trpc.useQuery(["flocks.getExpenses"]);
+  const flocks = trpc.useQuery(["expenses.getExpenses"]);
   const expenses = flocks.data?.flatMap((f) => f.expenses);
 
   const utils = trpc.useContext();
 
-  const mutation = trpc.useMutation("flocks.deleteLog", {
+  const mutation = trpc.useMutation("expenses.deleteExpense", {
     onSuccess: () => {
       utils.invalidateQueries();
     },

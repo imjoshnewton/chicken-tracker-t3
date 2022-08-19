@@ -10,9 +10,9 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const utils = trpc.useContext();
 
-  const createLogMutation = trpc.useMutation(["flocks.createLog"], {
+  const createLogMutation = trpc.useMutation(["logs.createLog"], {
     onSuccess: () => {
-      utils.invalidateQueries("flocks.getStats");
+      utils.invalidateQueries("stats.getStats");
     },
   });
 
