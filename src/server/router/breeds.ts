@@ -29,7 +29,33 @@ export const breedssRouter = createProtectedRouter()
       });
     },
   })
-  .mutation("deleteExpense", {
+  .mutation("updateBreed", {
+    input: z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      count: z.number(),
+      averageProduction: z.number(),
+      imageUrl: z.string(),
+      flockId: z.string(),
+    }),
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.breed.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          count: input.count,
+          imageUrl: input.imageUrl ? input.imageUrl : "",
+          averageProduction: input.averageProduction,
+          flockId: input.flockId,
+        },
+      });
+    },
+  })
+  .mutation("deleteBreed", {
     input: z.object({
       id: z.string(),
     }),

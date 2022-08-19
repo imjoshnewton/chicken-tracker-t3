@@ -7,6 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import "../styles/globals.scss";
 import Navbar from "../components/Navbar";
 import Head from "next/head";
+import { Toaster } from "react-hot-toast";
 
 const MyApp: AppType = ({
   Component,
@@ -20,6 +21,7 @@ const MyApp: AppType = ({
       <SessionProvider session={session}>
         <Navbar />
         <Component {...pageProps} />
+        <Toaster position='top-right' />
       </SessionProvider>
     </>
   );

@@ -136,8 +136,13 @@ function FlockForm({
           </label>
           {uploading ? (
             <Loader show={true} />
-          ) : !uploading && downloadURL ? (
-            <img src={downloadURL} width='100' height='100' />
+          ) : (!uploading && downloadURL) || flock?.imageUrl ? (
+            <img
+              src={downloadURL ? downloadURL : flock!.imageUrl!}
+              width='100'
+              height='100'
+              className='flock-image'
+            />
           ) : (
             <></>
           )}
