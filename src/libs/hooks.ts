@@ -20,6 +20,9 @@ export function useUserData() {
 
 // Custom hook to read  auth record and user profile doc
 export function useFlockData() {
+  const { data, status } = useSession({
+    required: true,
+  });
   const router = useRouter();
   const { flockId, statsRange } = router.query;
   const range = statsRange ? Number(statsRange) : 7;
@@ -31,7 +34,7 @@ export function useFlockData() {
   const flockData = trpc.useQuery(
     ["flocks.getFlock", { flockId: flockId?.toString() }],
     {
-      enabled: !!flockId,
+      enabled: !!flockId && !!data?.user,
     }
   );
   const logsData = trpc.useQuery(
@@ -44,9 +47,11 @@ export function useFlockData() {
       },
     ],
     {
-      enabled: !!flockId,
+      enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
+
+  console.log("Needed: ", flockId, range, today);
 
   console.log("LogsData: ", logsData);
 
