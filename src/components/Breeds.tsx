@@ -76,7 +76,7 @@ export default function Breeds({
           );
         })}
         <button
-          className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto h-10 bg-white basis-1/2'
+          className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 btn w-full md:w-auto h-10 bg-white basis-full md:basis-1/2 mt-4 mb-1'
           type='button'
           onClick={() => {
             setShowModal(true);
