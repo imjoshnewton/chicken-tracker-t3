@@ -9,7 +9,7 @@ export default function Logs() {
 
   const mutation = trpc.useMutation("flocks.deleteLog", {
     onSuccess: () => {
-      utils.invalidateQueries();
+      utils.invalidateQueries("flocks.getStats");
     },
   });
 

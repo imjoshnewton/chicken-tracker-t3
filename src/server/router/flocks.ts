@@ -193,6 +193,28 @@ export const flocksRouter = createProtectedRouter()
         },
       });
     },
+  })
+  .mutation("updateFlock", {
+    input: z.object({
+      id: z.string(),
+      name: z.string(),
+      description: z.string(),
+      type: z.string(),
+      imageUrl: z.string().nullable(),
+    }),
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.flock.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          name: input.name,
+          description: input.description,
+          type: input.type,
+          imageUrl: input.imageUrl ? input.imageUrl : "",
+        },
+      });
+    },
   });
 
 function getThisWeek(today: Date): [beginningofWeek: Date, endofWeek: Date] {

@@ -60,7 +60,15 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                   <h3 className='text-xl font=semibold'>New Expense</h3>
                 </div>
                 <div className='relative flex-auto'>
-                  <form className='px-8 pt-6 pb-8 w-full'>
+                  <form
+                    className='px-8 pt-6 pb-8 w-full'
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      // await createNewLog(flockId, date, count, notes);
+                      if (date && amount) {
+                        await createNewLog(flockId, date, amount, memo);
+                      }
+                    }}>
                     <label className='block text-black text-sm font-bold mb-1'>
                       Date
                     </label>
