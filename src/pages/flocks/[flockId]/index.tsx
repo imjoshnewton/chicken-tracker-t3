@@ -68,7 +68,7 @@ export default function Flocks() {
               flockId={flockId?.toString()}
               breeds={flock?.breeds}
               className='flex-48'></Breeds>
-            <div className='p-2'></div>
+            <div className='p-3'></div>
             <Stats
               stats={stats}
               flock={flock}

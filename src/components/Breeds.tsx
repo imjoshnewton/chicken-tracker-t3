@@ -45,26 +45,30 @@ export default function Breeds({
       <ul
         className={
           isActive
-            ? "flex flex-wrap dark:text-gray-300"
-            : "hidden md:flex flex-wrap dark:text-gray-300"
+            ? "flex flex-wrap justify-between dark:text-gray-300"
+            : "hidden md:flex justify-between flex-wrap dark:text-gray-300"
         }>
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li
-              className='flex items-center breed mb-4'
+              className='flex items-center mb-4 rounded-lg shadow basis-[100%] xl:basis-[49%] hover:cursor-pointer hover:shadow-lg border'
               key={index}
               onClick={() => {
                 setSellectedBreed(breed);
                 setShowModal(true);
               }}>
-              <Image
-                src={breed.imageUrl!}
-                width='50'
-                height='50'
-                className='flock-image'
-                alt=''
-              />
-              <div className='ml-3 dark:text-gray-300'>
+              <div className='h-full basis-1/5 relative'>
+                <Image
+                  src={breed.imageUrl!}
+                  // width='60'
+                  // height='60'
+                  layout='fill'
+                  objectFit='cover'
+                  className='rounded-l-lg'
+                  alt=''
+                />
+              </div>
+              <div className='p-3 dark:text-gray-300'>
                 <p>
                   <strong>{breed.name}</strong>
                   <br />
@@ -76,7 +80,7 @@ export default function Breeds({
           );
         })}
         <button
-          className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 btn w-full md:w-auto h-10 bg-white basis-full md:basis-1/2 mt-4 mb-1'
+          className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 btn w-full xl:w-auto h-10 bg-white basis-full xl:basis-3/5 mt-4 mb-1'
           type='button'
           onClick={() => {
             setShowModal(true);
