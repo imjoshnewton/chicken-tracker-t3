@@ -2,14 +2,9 @@ import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 
-export interface BaseUser {
-  id: string;
-  name?: string | null | undefined;
-  email?: string | null | undefined;
-  image?: string | null | undefined;
-}
-
-// Custom hook to read  auth record and user profile doc
+//
+// Custom hook to get user's session data
+//
 export function useUserData() {
   const { data, status } = useSession({
     required: true,
@@ -18,9 +13,11 @@ export function useUserData() {
   return { user: data?.user, defaultFlock: data?.defaultFlock, status };
 }
 
-// Custom hook to read  auth record and user profile doc
+//
+// Custom hook to get the data for the flock page: flockId, flock data (including breeds), logs and stats
+//
 export function useFlockData() {
-  const { data, status } = useSession({
+  const { data } = useSession({
     required: true,
   });
   const router = useRouter();
@@ -51,10 +48,6 @@ export function useFlockData() {
     }
   );
 
-  console.log("Needed: ", flockId, range, today);
-
-  console.log("LogsData: ", logsData);
-
   return {
     flockId,
     flock: flockData.data,
@@ -64,6 +57,10 @@ export function useFlockData() {
       thisWeekAvg: logsData.data?.thisWeeksAvg,
     },
     range,
-    loading: !flockData.data,
+    loading: flockData.isLoading && logsData.isLoading,
+    error: {
+      flock: flockData.error,
+      stats: logsData.error,
+    },
   };
 }
