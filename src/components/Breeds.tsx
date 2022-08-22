@@ -51,7 +51,7 @@ export default function Breeds({
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li
-              className='flex items-center mb-4 rounded-lg shadow basis-[100%] xl:basis-[49%] hover:cursor-pointer hover:shadow-lg border'
+              className='flex items-center mb-4 rounded-lg shadow basis-[100%] xl:basis-[49%] hover:cursor-pointer hover:shadow-lg border transition-shadow'
               key={index}
               onClick={() => {
                 setSellectedBreed(breed);
@@ -80,7 +80,7 @@ export default function Breeds({
           );
         })}
         <button
-          className='px-4 py-2 rounded hover:shadow-lg outline-none focus:outline-none mr-1 btn w-full xl:w-auto h-10 bg-white basis-full xl:basis-3/5 mt-4 mb-1'
+          className='px-4 py-2 rounded hover:shadow-lg bg-white outline-none focus:outline-none mr-1 w-full xl:w-auto h-10 basis-full mt-4 mb-1 transition-all'
           type='button'
           onClick={() => {
             setShowModal(true);

@@ -219,7 +219,7 @@ export default function Stats({
         </div>
         <div className='p-2'></div>
         <Link href='/logs'>
-          <a className='text-stone-400 hover:text-stone-700'>
+          <a className='text-stone-400 hover:text-stone-700 transition-colors'>
             See all logs &gt;
           </a>
         </Link>

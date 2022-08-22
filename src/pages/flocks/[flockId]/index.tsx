@@ -31,7 +31,7 @@ export default function Flocks() {
       {flock ? (
         <Card title='Flock Details' key={flockId?.toString()}>
           <Link href={`/flocks/${flockId}/edit`}>
-            <a className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 mt-3 mr-5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200'>
+            <a className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 mt-3 mr-5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors'>
               Edit&nbsp;&nbsp;
               <MdOutlineEdit />
             </a>

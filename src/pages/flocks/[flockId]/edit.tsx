@@ -189,8 +189,14 @@ function FlockForm({
 
         <div className='flex items-center mt-4'>
           <button
+            type='button'
+            onClick={() => router.push(`/flocks/${flock.id}`)}
+            className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 w-full md:w-auto h-10 mr-3 transition-all'>
+            Cancel
+          </button>
+          <button
             type='submit'
-            className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 btn w-full md:w-auto h-10 mr-3'
+            className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 btn w-full md:w-auto h-10 mr-3 transition-all'
             disabled={!isDirty || !isValid}>
             Save Changes
           </button>
