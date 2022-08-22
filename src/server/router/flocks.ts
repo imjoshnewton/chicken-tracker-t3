@@ -35,6 +35,26 @@ export const flocksRouter = createProtectedRouter()
       }
     },
   })
+  .mutation("createFlock", {
+    input: z.object({
+      owner: z.string(),
+      name: z.string(),
+      description: z.string(),
+      type: z.string(),
+      imageUrl: z.string().nullable(),
+    }),
+    async resolve({ input, ctx }) {
+      return await ctx.prisma.flock.create({
+        data: {
+          userId: input.owner,
+          name: input.name,
+          description: input.description,
+          type: input.type,
+          imageUrl: input.imageUrl ? input.imageUrl : "",
+        },
+      });
+    },
+  })
   .mutation("updateFlock", {
     input: z.object({
       id: z.string(),
