@@ -30,9 +30,16 @@ export default function FlockForm({
 
   const utils = trpc.useContext();
 
-  const mutation = trpc.useMutation(["flocks.updateFlock"], {
-    onSuccess: () => {
+  const updateFlock = trpc.useMutation(["flocks.updateFlock"], {
+    onSuccess: (data) => {
       utils.invalidateQueries("flocks.getFlock");
+      router.push(`/flocks/${data.id}`);
+    },
+  });
+  const createFlock = trpc.useMutation(["flocks.createFlock"], {
+    onSuccess: (data) => {
+      utils.invalidateQueries("flocks.getFlock");
+      router.push(`/flocks/${data.id}`);
     },
   });
 
@@ -84,7 +91,7 @@ export default function FlockForm({
       });
   };
 
-  const updateFlock = (flockData: Flock & { breeds: Breed[] }) => {
+  const createOrUpdateFlock = (flockData: Flock & { breeds: Breed[] }) => {
     console.log(
       "Data: ",
       flockData.name,
@@ -94,19 +101,26 @@ export default function FlockForm({
       downloadURL
     );
 
-    mutation.mutate({
-      id: flockData.id,
-      name: flockData.name,
-      description: flockData.description ? flockData.description : "",
-      type: flockData.type,
-      imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-    });
-
-    router.push(`/flocks/${flockData.id}`);
+    if (flockData.id) {
+      updateFlock.mutate({
+        id: flockData.id,
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+      });
+    } else {
+      createFlock.mutate({
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+      });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(updateFlock)}>
+    <form onSubmit={handleSubmit(createOrUpdateFlock)}>
       <div>
         {/* <ImageUploader /> */}
 

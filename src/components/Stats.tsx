@@ -77,17 +77,18 @@ export default function Stats({
   }
 
   function calcDailyAverage(flock: Flock & { breeds: Breed[] }): number {
-    const breedAverages = flock.breeds.map(
-      (breed) => (breed.averageProduction * breed.count) / 7
-    );
+    const breedAverages = flock.breeds.length
+      ? flock.breeds.map((breed) => (breed.averageProduction * breed.count) / 7)
+      : [0];
     const dailyAverage = breedAverages.reduce((a, b) => a + b);
 
     return dailyAverage;
   }
 
   function calcActualDailyAverage(logs: any[]) {
-    const average =
-      logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length;
+    const average = logs.length
+      ? logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length
+      : 0;
 
     return average;
   }

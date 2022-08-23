@@ -42,7 +42,7 @@ export default function Navbar() {
               />
               {/* </Link> */}
               <div className='multilink-content fadeIn'>
-                <Link href={`/flocks/${defaultFlock}`}>
+                <Link href={`/flocks/`}>
                   <a className='flex items-center'>
                     <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
                     My Flocks

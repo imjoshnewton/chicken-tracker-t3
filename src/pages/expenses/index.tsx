@@ -37,7 +37,7 @@ export default function Logs() {
                 </span>
                 <div className='ml-auto'>
                   <button
-                    className='bg-red-500 hover:shadow-lg hover:cursor-pointer rounded py-1 px-2'
+                    className='bg-red-500 text-white hover:shadow-lg hover:cursor-pointer rounded py-1 px-2'
                     onClick={async () => {
                       await deleteLog(expense.id);
                     }}>

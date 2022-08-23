@@ -37,7 +37,6 @@ export const flocksRouter = createProtectedRouter()
   })
   .mutation("createFlock", {
     input: z.object({
-      owner: z.string(),
       name: z.string(),
       description: z.string(),
       type: z.string(),
@@ -46,7 +45,7 @@ export const flocksRouter = createProtectedRouter()
     async resolve({ input, ctx }) {
       return await ctx.prisma.flock.create({
         data: {
-          userId: input.owner,
+          userId: ctx.session.user.id,
           name: input.name,
           description: input.description,
           type: input.type,
