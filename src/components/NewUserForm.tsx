@@ -1,24 +1,25 @@
-import { useState, useEffect } from "react";
-import { storage } from "../libs/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Breed, Flock } from "@prisma/client";
+import { storage } from "../libs/firebase";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
 
-export default function FlockForm({
-  flock,
-  userId,
+export default function NewUserForm({
+  user,
 }: {
-  flock: Flock & {
-    breeds: Breed[];
+  user: {
+    id: string;
+  } & {
+    name?: string | null | undefined;
+    email?: string | null | undefined;
+    image?: string | null | undefined;
   };
-  userId: string;
 }) {
   const router = useRouter();
   const { register, handleSubmit, formState, reset, watch } = useForm({
-    defaultValues: { ...flock, image: null as any },
+    defaultValues: { name: "", image: "", imageFile: null as any },
     mode: "onChange",
   });
 
@@ -30,26 +31,19 @@ export default function FlockForm({
 
   const utils = trpc.useContext();
 
-  const updateFlock = trpc.useMutation(["flocks.updateFlock"], {
+  const updateUser = trpc.useMutation(["user.updateUser"], {
     onSuccess: (data) => {
-      utils.invalidateQueries("flocks.getFlock");
-      router.push(`/flocks/${data.id}`);
+      //   router.push("/auth/new-user?userUpdated=true");
+      router.reload();
     },
   });
-  const createFlock = trpc.useMutation(["flocks.createFlock"], {
-    onSuccess: (data) => {
-      utils.invalidateQueries("flocks.getFlock");
-      router.push(`/flocks/${data.id}`);
-    },
-  });
-  const setDefaultFlock = trpc.useMutation(["user.setDefaultFlock"]);
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       console.log("Watch: ", value, name, type);
 
-      if (name == "image" && type == "change") {
-        uploadFile(value.image);
+      if (name == "imageFile" && type == "change") {
+        uploadFile(value.imageFile);
       }
     });
     return () => subscription.unsubscribe();
@@ -64,7 +58,7 @@ export default function FlockForm({
     // Makes reference to the storage bucket location
     const uploadRef = ref(
       storage,
-      `uploads/${userId}/${flock.id}.${extension}`
+      `uploads/${user.id}/${user.id}.${extension}`
     );
     setUploading(true);
 
@@ -92,36 +86,30 @@ export default function FlockForm({
       });
   };
 
-  const createOrUpdateFlock = (flockData: Flock & { breeds: Breed[] }) => {
-    console.log(
-      "Data: ",
-      flockData.name,
-      flockData.description,
-      flockData.type,
-      flockData.imageUrl,
-      downloadURL
-    );
+  const updateUserInformation = (data: {
+    name: string;
+    image: string;
+    imageFile: any;
+  }) => {
+    console.log("Data: ", data, downloadURL);
 
-    if (flockData.id) {
-      updateFlock.mutate({
-        id: flockData.id,
-        name: flockData.name,
-        description: flockData.description ? flockData.description : "",
-        type: flockData.type,
-        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-      });
-    } else {
-      createFlock.mutate({
-        name: flockData.name,
-        description: flockData.description ? flockData.description : "",
-        type: flockData.type,
-        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-      });
-    }
+    updateUser.mutate({
+      name: data.name,
+      image: downloadURL ? downloadURL : "",
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(createOrUpdateFlock)}>
+    <form onSubmit={handleSubmit(updateUserInformation)}>
+      <section>
+        <h2 className='mb-3'>Welcome!</h2>
+        <p className='mb-3'>
+          Let's get to know you a little better...
+          <br />
+          Complete your profile by uploading a profile picture and letting us
+          know your name.
+        </p>
+      </section>
       <div>
         {/* <ImageUploader /> */}
 
@@ -129,19 +117,19 @@ export default function FlockForm({
           <label
             className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
             htmlFor='file_input'>
-            Flock image
+            Profile image
           </label>
           {uploading ? (
             <>
               <Loader show={true} />
               <h3>{progress}%</h3>
             </>
-          ) : (!uploading && downloadURL) || flock?.imageUrl ? (
+          ) : (!uploading && downloadURL) || user.image ? (
             <img
-              src={downloadURL ? downloadURL : flock!.imageUrl!}
+              src={downloadURL ? downloadURL : user.image ? user.image : ""}
               width='100'
               height='100'
-              className='flock-image'
+              className='rounded-full'
             />
           ) : (
             <></>
@@ -152,7 +140,7 @@ export default function FlockForm({
             id='image'
             type='file'
             accept='image/x-png,image/gif,image/jpeg'
-            {...register("image")}
+            {...register("imageFile")}
           />
           <p
             className='mt-1 text-sm text-gray-500 dark:text-gray-300'
@@ -170,39 +158,13 @@ export default function FlockForm({
             {...register("name")}
           />
         </fieldset>
-        <fieldset className='mb-3'>
-          <label>Description</label>
-          <input
-            className='appearance-none border rounded w-full py-2 px-1 text-black'
-            // name='description'
-            type='text'
-            {...register("description")}
-          />
-        </fieldset>
-        <fieldset className='mb-6'>
-          <label>Type:&nbsp;</label>
-          <select {...register("type")}>
-            <option value='egg-layers'>Egg Layers</option>
-            <option value='meat-birds'>Meat Birds</option>
-          </select>
-        </fieldset>
 
         <div className='flex items-center mt-4'>
-          {flock.id ? (
-            <button
-              type='button'
-              onClick={() => router.push(`/flocks/${flock.id}`)}
-              className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 w-full md:w-auto h-10 mr-3 transition-all'>
-              Cancel
-            </button>
-          ) : (
-            <></>
-          )}
           <button
             type='submit'
             className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 btn w-full md:w-auto h-10 mr-3 transition-all'
             disabled={!isDirty || !isValid}>
-            {flock.id ? "Save Changes" : "Create Flock"}
+            Update Profile
           </button>
         </div>
       </div>

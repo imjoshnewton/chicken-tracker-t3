@@ -20,18 +20,40 @@ export const userRouter = createProtectedRouter()
       }
     },
   })
+  .mutation("updateUser", {
+    input: z
+      .object({
+        name: z.string(),
+        image: z.string(),
+      })
+      .nullish(),
+    async resolve({ input, ctx }) {
+      if (input) {
+        return await ctx.prisma.user.update({
+          where: {
+            id: ctx.session.user.id,
+          },
+          data: {
+            name: input.name,
+            image: input.image,
+          },
+        });
+      } else {
+        return null;
+      }
+    },
+  })
   .mutation("setDefaultFlock", {
     input: z
       .object({
-        userId: z.string(),
         flockId: z.string(),
       })
       .nullish(),
     async resolve({ input, ctx }) {
-      if ((input?.userId, input?.flockId)) {
+      if (input?.flockId) {
         return await ctx.prisma.user.update({
           where: {
-            id: input?.userId,
+            id: ctx.session.user.id,
           },
           data: {
             defaultFlock: input.flockId,

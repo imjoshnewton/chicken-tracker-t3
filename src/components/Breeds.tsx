@@ -48,6 +48,16 @@ export default function Breeds({
             ? "flex flex-wrap justify-between dark:text-gray-300"
             : "hidden md:flex justify-between flex-wrap dark:text-gray-300"
         }>
+        {breeds.length < 1 && (
+          <div className='text-center basis-full'>
+            <p className='mb-3'>
+              A flock isn't much of a flock without any chickens...
+            </p>
+            <p className='mb-4'>
+              Click the button below to add your first breed. 👇
+            </p>
+          </div>
+        )}
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li

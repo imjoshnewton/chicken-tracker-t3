@@ -11,33 +11,40 @@ import { env } from "../../../env/server.mjs";
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    async session({ session, user }): Promise<Session & {defaultFlock?: string}> {
+    async session({
+      session,
+      user,
+    }): Promise<Session & { defaultFlock?: string }> {
       let retSession;
 
       if (session.user) {
         session.user.id = user.id;
 
-        const defaultFlock = (await prisma.user.findUnique({
-          where: {
-            id: user.id
-          }
-        }))?.defaultFlock;
+        const defaultFlock = (
+          await prisma.user.findUnique({
+            where: {
+              id: user.id,
+            },
+          })
+        )?.defaultFlock;
 
-        retSession = {...session, defaultFlock: defaultFlock};
-        
+        retSession = { ...session, defaultFlock: defaultFlock };
+
         return retSession;
-      }
-      else {
+      } else {
         return session;
       }
     },
+  },
+  pages: {
+    newUser: "/auth/new-user",
   },
   // Configure one or more authentication providers
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({
       server: process.env.EMAIL_SERVER,
-      from: process.env.EMAIL_FROM
+      from: process.env.EMAIL_FROM,
     }),
     GoogleProvider({
       clientId: env.GOOGLE_ID,
@@ -46,17 +53,16 @@ export const authOptions: NextAuthOptions = {
         params: {
           prompt: "consent",
           access_type: "offline",
-          response_type: "code"
-        }
-      }
+          response_type: "code",
+        },
+      },
     }),
     FacebookProvider({
       clientId: env.FACEBOOK_CLIENT_ID,
-      clientSecret: env.FACEBOOK_CLIENT_SECRET
-    })
+      clientSecret: env.FACEBOOK_CLIENT_SECRET,
+    }),
     // ...add more providers here
   ],
 };
 
 export default NextAuth(authOptions);
-

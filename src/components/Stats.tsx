@@ -203,7 +203,12 @@ export default function Stats({
           </div>
         </div>
         <div className='flex justify-between dark:text-gray-300'>
-          <div>Last Weeks Avg: {stats.lastWeekAvg._avg.count?.toFixed(2)}</div>
+          <div>
+            Last Weeks Avg:{" "}
+            {stats.lastWeekAvg._avg.count
+              ? stats.lastWeekAvg._avg.count.toFixed(2)
+              : "n/a"}
+          </div>
           <div className='flex items-center dark:text-gray-300'>
             This Weeks Avg:
             <span className='ml-1'>

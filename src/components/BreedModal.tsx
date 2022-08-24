@@ -145,7 +145,9 @@ const BreedModal = ({
             <div className='relative w-auto my-6 mx-auto max-w-3xl min-w-[350px]'>
               <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                 <div className='flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
-                  <h3 className='text-xl font=semibold'>New Log Entry</h3>
+                  <h3 className='text-xl font=semibold'>
+                    {breed?.id ? "Update Breed" : "Create New Breed"}
+                  </h3>
                 </div>
                 <div className='relative flex-auto'>
                   <form

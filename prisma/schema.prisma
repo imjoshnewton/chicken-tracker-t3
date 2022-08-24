@@ -44,7 +44,7 @@ model User {
     name          String?
     email         String?   @unique
     emailVerified DateTime?
-    image         String?
+    image         String?   @db.Text
     defaultFlock  String    @default("")
     accounts      Account[]
     sessions      Session[]

@@ -10,6 +10,7 @@ export default function Logs() {
   const mutation = trpc.useMutation("logs.deleteLog", {
     onSuccess: () => {
       utils.invalidateQueries("stats.getStats");
+      utils.invalidateQueries("logs.getLogs");
     },
   });
 
