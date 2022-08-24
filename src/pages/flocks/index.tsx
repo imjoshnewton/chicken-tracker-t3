@@ -3,12 +3,15 @@ import Image from "next/image";
 import { useAllFlocks } from "../../libs/hooks";
 import Link from "next/link";
 import FlockForm from "../../components/FlockEditForm";
+import { useState } from "react";
+import { MdAdd } from "react-icons/md";
 
 // TO-DO: Add list of all flocks
 export default function Flocks() {
   const { flocks, userId, loading } = useAllFlocks();
+  const [addFlock, setAddFlock] = useState(false);
 
-  if (!flocks?.length && userId && !loading) {
+  if ((!flocks?.length && userId && !loading) || (userId && addFlock)) {
     return (
       <main>
         <Card title='New FLock'>
@@ -32,7 +35,17 @@ export default function Flocks() {
 
   return (
     <main>
-      <ul className='flex items-center justify-between'>
+      <div className='flex items-center justify-end'>
+        <button
+          className='px-4 py-2 btn rounded hover:shadow-lg bg-white outline-none focus:outline-none mr-1 w-full xl:w-auto h-10 basis-full md:basis-1/3 lg:basis-1/5 mt-4 mb-1 transition-all'
+          type='button'
+          onClick={() => {
+            setAddFlock(true);
+          }}>
+          <MdAdd className='text-2xl' /> &nbsp;Add New Flock
+        </button>
+      </div>
+      <ul className='flex items-center justify-between flex-wrap'>
         {flocks?.map((flock) => {
           return (
             <li className='basis-full sm:basis-1/2 lg:basis-1/3' key={flock.id}>
@@ -70,6 +83,7 @@ export default function Flocks() {
             </li>
           );
         })}
+        <li className='basis-3/4'></li>
       </ul>
     </main>
   );
