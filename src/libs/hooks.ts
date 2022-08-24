@@ -69,5 +69,9 @@ export function useAllFlocks() {
   const { data } = useSession({ required: true });
   const flocks = trpc.useQuery(["flocks.getFlocks"], { enabled: !!data?.user });
 
-  return { flocks: flocks.data, userId: data?.user?.id };
+  return {
+    flocks: flocks.data,
+    userId: data?.user?.id,
+    loading: flocks.isLoading,
+  };
 }

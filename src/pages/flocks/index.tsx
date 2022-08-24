@@ -6,12 +6,9 @@ import FlockForm from "../../components/FlockEditForm";
 
 // TO-DO: Add list of all flocks
 export default function Flocks() {
-  const { flocks, userId } = useAllFlocks();
+  const { flocks, userId, loading } = useAllFlocks();
 
-  console.log("Flocks: ", flocks);
-  console.log("UserId: ", userId);
-
-  if (!flocks?.length && userId) {
+  if (!flocks?.length && userId && !loading) {
     return (
       <main>
         <Card title='New FLock'>
@@ -38,12 +35,12 @@ export default function Flocks() {
       <ul className='flex items-center justify-between'>
         {flocks?.map((flock) => {
           return (
-            <li className='basis-1/3' key={flock.id}>
+            <li className='basis-full sm:basis-1/2 lg:basis-1/3' key={flock.id}>
               <Link href={`/flocks/${flock.id}`}>
                 <a>
                   <div className='shadow hover:shadow-2xl'>
                     <Card title={"Flock"}>
-                      <div className='flex items-center'>
+                      <div className='flex items-center flex-wrap sm:flex-nowrap'>
                         <Image
                           src={flock?.imageUrl}
                           width='150'
