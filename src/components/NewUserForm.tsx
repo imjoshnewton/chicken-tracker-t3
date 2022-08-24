@@ -104,7 +104,7 @@ export default function NewUserForm({
       <section>
         <h2 className='mb-3'>Welcome!</h2>
         <p className='mb-3'>
-          Let's get to know you a little better...
+          Let&apos;s get to know you a little better...
           <br />
           Complete your profile by uploading a profile picture and letting us
           know your name.

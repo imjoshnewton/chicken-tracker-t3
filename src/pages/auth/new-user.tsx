@@ -35,7 +35,7 @@ export default function NewUser() {
           <section>
             <h2 className='mb-3'>Welcome!</h2>
             <p className='mb-3'>
-              Let's make a new flock.
+              Let&apos;s make a new flock.
               <br />
               Give your flock a name, description (optional), and select whether
               they are egg layers or meat birds.
