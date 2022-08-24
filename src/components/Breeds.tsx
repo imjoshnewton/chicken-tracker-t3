@@ -51,7 +51,7 @@ export default function Breeds({
         {breeds.length < 1 && (
           <div className='text-center basis-full'>
             <p className='mb-3'>
-              A flock isn't much of a flock without any chickens...
+              A flock isn&apos;t much of a flock without any chickens...
             </p>
             <p className='mb-4'>
               Click the button below to add your first breed. 👇
