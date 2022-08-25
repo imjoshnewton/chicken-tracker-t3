@@ -1,5 +1,6 @@
 import { env } from "./src/env/server.mjs";
 import withPWA from "next-pwa";
+import runtimeCaching from "next-pwa/cache.js";
 
 /**
  * Don't be scared of the generics here.
@@ -25,6 +26,8 @@ export default withPWA(
       dest: "public",
       register: true,
       skipWaiting: true,
+      runtimeCaching,
+      buildExcludes: [/middleware-manifest.json$/],
     },
   })
 );
