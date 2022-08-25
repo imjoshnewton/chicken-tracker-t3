@@ -94,10 +94,11 @@ model Log {
 }
 
 model Expense {
-    id      String   @id @default(cuid())
-    amount  Float
-    date    DateTime
-    memo    String?  @db.Text
-    flockId String
-    flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id       String   @id @default(cuid())
+    amount   Float
+    date     DateTime
+    memo     String?  @db.Text
+    flockId  String
+    category String   @default("other")
+    flock    Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }

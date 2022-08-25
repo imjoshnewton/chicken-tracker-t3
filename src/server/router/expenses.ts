@@ -24,6 +24,7 @@ export const expensesRouter = createProtectedRouter()
       date: z.date(),
       amount: z.number(),
       memo: z.string().optional(),
+      category: z.string(),
     }),
     async resolve({ input, ctx }) {
       return await ctx.prisma.expense.create({

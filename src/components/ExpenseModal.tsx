@@ -8,6 +8,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [date, setDate] = useState<Date>();
   const [amount, setAmount] = useState(0);
   const [memo, setMemo] = useState<string>();
+  const [category, setCategory] = useState<string>("other");
 
   const utils = trpc.useContext();
 
@@ -31,9 +32,16 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     flockId: string,
     date: Date,
     amount: number,
+    category: string,
     memo?: string
   ): Promise<void> {
-    await createExpenseMutation.mutateAsync({ flockId, date, amount, memo });
+    await createExpenseMutation.mutateAsync({
+      flockId,
+      date,
+      amount,
+      category,
+      memo,
+    });
     closeModal();
     resetFormValues();
   }
@@ -66,7 +74,13 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       e.preventDefault();
                       // await createNewLog(flockId, date, count, notes);
                       if (date && amount) {
-                        await createNewLog(flockId, date, amount, memo);
+                        await createNewLog(
+                          flockId,
+                          date,
+                          amount,
+                          category,
+                          memo
+                        );
                       }
                     }}>
                     <label className='block text-black text-sm font-bold mb-1'>
@@ -100,19 +114,23 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       decimalsLimit={2}
                       decimalScale={2}
                       onValueChange={(value, name) => setAmount(Number(value))}
-                    />
-
-                    {/* <input
                       className='appearance-none border rounded w-full py-2 px-1 text-black'
-                      required
-                      type='text'
-                      pattern='^\$\d{1,3}(,\d{3})*(\.\d+)?$'
-                      value={amount}
-                      onChange={(e) => setAmount(Number(e.target.value))}
-                      onKeyUp={(e) => formatCurrency(e.target)}
-                      onBlur={(e) => formatCurrency(e.target, "blur")}
-                      data-type='currency'
-                      placeholder='$0.00'></input> */}
+                    />
+                    <fieldset className='my-3'>
+                      <label className='block text-black text-sm font-bold mb-1 mt-2'>
+                        Category:&nbsp;&nbsp;
+                      </label>
+                      <select
+                        onChange={(e) => setCategory(e.target.value)}
+                        value={category}
+                        className='border rounded w-full py-2 px-1 text-black'>
+                        <option value='feed'>Feed</option>
+                        <option value='suplements'>Suplements</option>
+                        <option value='medication'>Medication</option>
+                        <option value='other'>Other</option>
+                      </select>
+                    </fieldset>
+
                     <label className='block text-black text-sm font-bold mb-1'>
                       Memo
                     </label>
@@ -137,7 +155,13 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                     onClick={async () => {
                       // await createNewLog(flockId, date, count, notes);
                       if (date && amount) {
-                        await createNewLog(flockId, date, amount, memo);
+                        await createNewLog(
+                          flockId,
+                          date,
+                          amount,
+                          category,
+                          memo
+                        );
                       }
                     }}>
                     Submit
