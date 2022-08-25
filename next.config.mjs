@@ -1,4 +1,5 @@
 import { env } from "./src/env/server.mjs";
+import withPWA from "next-pwa";
 
 /**
  * Don't be scared of the generics here.
@@ -12,11 +13,18 @@ function defineNextConfig(config) {
   return config;
 }
 
-export default defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ['firebasestorage.googleapis.com', 'lh3.googleusercontent.com'],
-    formats: ['image/avif', 'image/webp'],
-  },
-});
+export default withPWA(
+  defineNextConfig({
+    reactStrictMode: true,
+    swcMinify: true,
+    images: {
+      domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
+      formats: ["image/avif", "image/webp"],
+    },
+    pwa: {
+      dest: "public",
+      register: true,
+      skipWaiting: true,
+    },
+  })
+);

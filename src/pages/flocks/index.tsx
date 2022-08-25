@@ -14,21 +14,23 @@ export default function Flocks() {
   if ((!flocks?.length && userId && !loading) || (userId && addFlock)) {
     return (
       <main>
-        <Card title='New FLock'>
-          <FlockForm
-            flock={{
-              id: "",
-              name: "",
-              description: "",
-              imageUrl: "",
-              type: "",
-              zip: "",
-              userId: "",
-              breeds: [],
-            }}
-            userId={userId}
-          />
-        </Card>
+        <div className='shadow'>
+          <Card title='New FLock'>
+            <FlockForm
+              flock={{
+                id: "",
+                name: "",
+                description: "",
+                imageUrl: "",
+                type: "",
+                zip: "",
+                userId: "",
+                breeds: [],
+              }}
+              userId={userId}
+            />
+          </Card>
+        </div>
       </main>
     );
   }
