@@ -20,7 +20,7 @@
     "firebase": "^9.9.2",
     "next": "12.2.3",
     "next-auth": "^4.10.3",
-    "next-pwa": "^5.5.5",
+    "next-pwa": "^5.5.4",
     "nodemailer": "^6.7.8",
     "react": "18.2.0",
     "react-chartjs-2": "^4.3.1",

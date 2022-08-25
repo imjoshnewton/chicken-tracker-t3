@@ -14,19 +14,20 @@ function defineNextConfig(config) {
   return config;
 }
 
-export default withPWA({
-  // defineNextConfig({
-  reactStrictMode: true,
-  swcMinify: true,
-  images: {
-    domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
-    formats: ["image/avif", "image/webp"],
-  },
-  pwa: {
-    dest: "public",
-    register: true,
-    skipWaiting: true,
-    runtimeCaching,
-  },
-  // })
-});
+export default //{
+defineNextConfig(
+  withPWA({
+    reactStrictMode: true,
+    swcMinify: true,
+    images: {
+      domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
+      formats: ["image/avif", "image/webp"],
+    },
+    pwa: {
+      dest: "./public",
+      register: true,
+      skipWaiting: true,
+      runtimeCaching,
+    },
+  })
+);
