@@ -47,11 +47,20 @@ export function useFlockData() {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
+  const expenseData = trpc.useQuery(
+    ["stats.getExpenseStats", { today: today }],
+    {
+      enabled: !!flockId && !!range && !!today && !!data?.user,
+    }
+  );
+
+  console.log("Expense Data: ", expenseData);
 
   return {
     flockId,
     flock: flockData.data,
     stats: {
+      expenses: expenseData.data,
       logs: logsData.data?.getLogs,
       lastWeekAvg: logsData.data?.lastWeeksAvg,
       thisWeekAvg: logsData.data?.thisWeeksAvg,

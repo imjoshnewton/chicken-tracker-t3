@@ -26,7 +26,7 @@ export const logsRouter = createProtectedRouter()
       notes: z.string().optional(),
     }),
     async resolve({ input, ctx }) {
-      return await ctx.prisma.log.create({
+      return await ctx.prisma.eggLog.create({
         data: input,
       });
     },
@@ -36,7 +36,7 @@ export const logsRouter = createProtectedRouter()
       id: z.string(),
     }),
     async resolve({ input, ctx }) {
-      return await ctx.prisma.log.delete({
+      return await ctx.prisma.eggLog.delete({
         where: {
           id: input.id,
         },

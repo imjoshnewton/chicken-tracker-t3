@@ -1,83 +1,135 @@
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
 
-export const statsRouter = createProtectedRouter().query("getStats", {
-  input: z.object({
-    flockId: z.string().nullish(),
-    limit: z.number().nullish(),
-    today: z.date().nullish(),
-  }),
-  async resolve({ input, ctx }) {
-    if (input.flockId && input.limit && input.today) {
-      var today = input.today;
-      today.setHours(23, 59, 59, 999);
+export const statsRouter = createProtectedRouter()
+  .query("getStats", {
+    input: z.object({
+      flockId: z.string().nullish(),
+      limit: z.number().nullish(),
+      today: z.date().nullish(),
+    }),
+    async resolve({ input, ctx }) {
+      if (input.flockId && input.limit && input.today) {
+        var today = input.today;
+        today.setHours(23, 59, 59, 999);
 
-      var pastDate = new Date(today);
-      pastDate.setDate(pastDate.getDate() - input.limit);
-      pastDate.setHours(0, 0, 0, 0);
+        var pastDate = new Date(today);
+        pastDate.setDate(pastDate.getDate() - input.limit);
+        pastDate.setHours(0, 0, 0, 0);
 
-      const getLogs = await ctx.prisma.log.groupBy({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: today,
-            gte: pastDate,
+        const getLogs = await ctx.prisma.eggLog.groupBy({
+          where: {
+            flockId: input.flockId,
+            date: {
+              lte: today,
+              gte: pastDate,
+            },
           },
-        },
-        by: ["date"],
-        orderBy: {
-          date: "desc",
-        },
-        take: input.limit || 7,
-        _sum: {
-          count: true,
-        },
-      });
-
-      const [beginThisWeek, endThisWeek] = getThisWeek(today);
-
-      console.log("This week: ", [beginThisWeek, endThisWeek]);
-
-      const thisWeeksAvg = await ctx.prisma.log.aggregate({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: endThisWeek,
-            gte: beginThisWeek,
+          by: ["date"],
+          orderBy: {
+            date: "desc",
           },
-        },
-        _avg: {
-          count: true,
-        },
-      });
-
-      const [beginLastWeek, endLastWeek] = getLastWeek(today);
-
-      console.log("Last week: ", [beginLastWeek, endLastWeek]);
-
-      const lastWeeksAvg = await ctx.prisma.log.aggregate({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: endLastWeek,
-            gte: beginLastWeek,
+          take: input.limit || 7,
+          _sum: {
+            count: true,
           },
-        },
-        _avg: {
-          count: true,
-        },
-      });
+        });
+
+        const [beginThisWeek, endThisWeek] = getThisWeek(today);
+
+        console.log("This week: ", [beginThisWeek, endThisWeek]);
+
+        const thisWeeksAvg = await ctx.prisma.eggLog.aggregate({
+          where: {
+            flockId: input.flockId,
+            date: {
+              lte: endThisWeek,
+              gte: beginThisWeek,
+            },
+          },
+          _avg: {
+            count: true,
+          },
+        });
+
+        const [beginLastWeek, endLastWeek] = getLastWeek(today);
+
+        console.log("Last week: ", [beginLastWeek, endLastWeek]);
+
+        const lastWeeksAvg = await ctx.prisma.eggLog.aggregate({
+          where: {
+            flockId: input.flockId,
+            date: {
+              lte: endLastWeek,
+              gte: beginLastWeek,
+            },
+          },
+          _avg: {
+            count: true,
+          },
+        });
+
+        return {
+          getLogs,
+          thisWeeksAvg,
+          lastWeeksAvg,
+        };
+      } else {
+        return null;
+      }
+    },
+  })
+  .query("getExpenseStats", {
+    input: z.object({
+      today: z.date(),
+    }),
+    async resolve({ input, ctx }) {
+      const today = input.today;
+      console.log("Before calcs: ", today.getMonth());
+
+      const oneMonthAgo = new Date(today);
+      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+      const twoMonthsAgo = new Date(oneMonthAgo);
+      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 1);
+
+      const months = [
+        today.getMonth(),
+        oneMonthAgo.getMonth(),
+        twoMonthsAgo.getMonth(),
+      ];
+      const years: number[] = [
+        today.getFullYear(),
+        oneMonthAgo.getFullYear(),
+        twoMonthsAgo.getFullYear(),
+      ];
+
+      console.log("Months: ", months);
+      console.log("Years: ", years);
+
+      const getExpenses = await ctx.prisma
+        .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, SUM(expen.amount) AS Tot
+                    FROM Expense AS expen
+                    WHERE YEAR(expen.date) IN (${today.getFullYear()}, ${oneMonthAgo.getFullYear()}, ${twoMonthsAgo.getFullYear()}) AND MONTH(expen.date) IN (${
+        today.getMonth() + 1
+      }, ${oneMonthAgo.getMonth() + 1}, ${twoMonthsAgo.getMonth() + 1})
+                    GROUP BY MonthYear, Cat
+                    ORDER BY MonthYear ASC`;
+
+      const getProduction = await ctx.prisma
+        .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, SUM(logs.count) AS Tot
+                    FROM EggLog AS logs
+                    WHERE YEAR(logs.date) IN (${today.getFullYear()}, ${oneMonthAgo.getFullYear()}, ${twoMonthsAgo.getFullYear()}) AND MONTH(logs.date) IN (${
+        today.getMonth() + 1
+      }, ${oneMonthAgo.getMonth() + 1}, ${twoMonthsAgo.getMonth() + 1})
+                    GROUP BY MonthYear
+                    ORDER BY MonthYear ASC`;
 
       return {
-        getLogs,
-        thisWeeksAvg,
-        lastWeeksAvg,
+        expenses: getExpenses,
+        production: getProduction,
       };
-    } else {
-      return null;
-    }
-  },
-});
+    },
+  });
 
 function getThisWeek(today: Date): [beginningofWeek: Date, endofWeek: Date] {
   //   const today = admin.firestore.Timestamp.now().toDate();
