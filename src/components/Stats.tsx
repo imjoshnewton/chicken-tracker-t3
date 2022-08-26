@@ -10,6 +10,7 @@ import {
 } from "react-icons/md";
 import {
   Chart as ChartJS,
+  BarController,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -21,6 +22,7 @@ import {
 } from "chart.js";
 
 ChartJS.register(
+  BarController,
   CategoryScale,
   LinearScale,
   PointElement,
