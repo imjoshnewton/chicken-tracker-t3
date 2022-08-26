@@ -12,19 +12,19 @@ export default function Navbar() {
   const { user, defaultFlock } = useUserData();
 
   return (
-    <nav className='navbar'>
+    <nav className='navbar h-[60px] md:h-[65px]'>
       <ul>
         <li className='cursor-pointer'>
           <Link href='/'>
             <span className='flex items-center'>
-              Chicken&nbsp;
+              <span className='hidden sm:inline'>Chicken&nbsp;</span>
               <Image
                 src={logo}
                 width='40'
                 height='40'
                 alt='Chicken tracker logo'
               />
-              &nbsp;Tracker
+              <span className='hidden sm:inline'>&nbsp;Tracker</span>
             </span>
           </Link>
         </li>
@@ -33,17 +33,18 @@ export default function Navbar() {
         {user && (
           <>
             <li className='ml-4 flex items-center multilink cursor-pointer'>
-              <div className='mr-3 user-name'>{user.name}</div>
+              <div className='mr-3 user-name hidden md:block'>{user.name}</div>
               {user.image && (
                 <img
                   src={user.image as string}
-                  width='40'
-                  height='40'
+                  width='35'
+                  height='35'
+                  className='h-9 md:h-11 w-9 md:w-11'
                   alt='Current user profile image'
                 />
               )}
               {/* </Link> */}
-              <div className='multilink-content fadeIn'>
+              <div className='multilink-content fadeIn top-16 right-2 md:right-auto'>
                 <Link href={`/flocks/`}>
                   <a className='flex items-center'>
                     <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />

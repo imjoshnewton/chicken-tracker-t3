@@ -139,7 +139,7 @@ code {
 /* Navbar */
 
 .navbar {
-    height: 65px;
+    // height: 65px;
     width: 100%;
     background: #264653;
     color: var(--color-light-text);
@@ -170,8 +170,8 @@ code {
 
     img {
         border-radius: 50%;
-        width: 45px;
-        height: 45px;
+        // width: 45px;
+        // height: 45px;
         border: 2px solid #dedede;
         cursor: pointer;
     }
@@ -280,7 +280,6 @@ button.btn-logo {
 
 .multilink-content {
     position: absolute;
-    top: 60px;
     background-color: #eef0f1;
     min-width: 160px;
     padding: 8px;
