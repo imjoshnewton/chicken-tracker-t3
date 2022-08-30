@@ -1,100 +1,101 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["referentialIntegrity"]
+    provider        = "prisma-client-js"
+    previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider             = "mysql"
-  url                  = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+    provider             = "mysql"
+    url                  = env("DATABASE_URL")
+    shadowDatabaseUrl    = env("SHADOW_DATABASE_URL")
+    referentialIntegrity = "prisma"
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.Text
+    access_token      String? @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([provider, providerAccountId])
+    @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?   @db.Text
-  defaultFlock  String    @default("")
-  accounts      Account[]
-  sessions      Session[]
-  flocks        Flock[]
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?   @db.Text
+    defaultFlock  String    @default("")
+    accounts      Account[]
+    sessions      Session[]
+    flocks        Flock[]
 }
 
 model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
+    identifier String
+    token      String   @unique
+    expires    DateTime
 
-  @@unique([identifier, token])
+    @@unique([identifier, token])
 }
 
 model Flock {
-  id          String    @id @default(cuid())
-  name        String    @db.Text
-  description String?   @db.Text
-  imageUrl    String    @db.Text
-  type        String
-  zip         String?   @default("")
-  userId      String
-  owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  breeds      Breed[]
-  logs        EggLog[]
-  expenses    Expense[]
+    id          String    @id @default(cuid())
+    name        String    @db.Text
+    description String?   @db.Text
+    imageUrl    String    @db.Text
+    type        String
+    zip         String?   @default("")
+    userId      String
+    owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    breeds      Breed[]
+    logs        EggLog[]
+    expenses    Expense[]
 }
 
 model Breed {
-  id                String  @id @default(cuid())
-  name              String  @db.Text
-  description       String? @db.Text
-  count             Int
-  imageUrl          String? @db.Text
-  averageProduction Float
-  flockId           String
-  flock             Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id                String  @id @default(cuid())
+    name              String  @db.Text
+    description       String? @db.Text
+    count             Int
+    imageUrl          String? @db.Text
+    averageProduction Float
+    flockId           String
+    flock             Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
 
 model EggLog {
-  id      String   @id @default(cuid())
-  count   Int
-  notes   String?  @db.Text
-  date    DateTime
-  flockId String
-  flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id      String   @id @default(cuid())
+    count   Int
+    notes   String?  @db.Text
+    date    DateTime
+    flockId String
+    flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
 
 model Expense {
-  id       String   @id @default(cuid())
-  amount   Float
-  date     DateTime
-  memo     String?  @db.Text
-  flockId  String
-  category String   @default("other")
-  flock    Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+    id       String   @id @default(cuid())
+    amount   Float
+    date     DateTime
+    memo     String?  @db.Text
+    flockId  String
+    category String   @default("other")
+    flock    Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 }
