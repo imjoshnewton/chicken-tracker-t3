@@ -111,7 +111,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 </div>
                 <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b'>
                   <button
-                    className='text-black background-transparent uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1'
+                    className='text-black background-transparent uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 hover:bg-slate-50 rounded'
                     type='button'
                     onClick={closeModal}>
                     Close

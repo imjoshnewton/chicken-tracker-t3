@@ -7,7 +7,7 @@ import Loader from "./Loader";
 import { useUserData } from "../libs/hooks";
 import { storage } from "../libs/firebase";
 import { toast } from "react-hot-toast";
-import { MdOutlineDelete } from "react-icons/md";
+import { MdImage, MdOutlineDelete } from "react-icons/md";
 
 const BreedModal = ({
   flockId,
@@ -78,7 +78,9 @@ const BreedModal = ({
     // Makes reference to the storage bucket location
     const uploadRef = ref(
       storage,
-      `uploads/${user?.id}/${breed ? breed.id : file.name}.${extension}`
+      `uploads/${user?.id}/${
+        breed ? breed.id : file.name.split(".")[0]
+      }.${extension}`
     );
     setUploading(true);
 
@@ -147,8 +149,10 @@ const BreedModal = ({
   }
 
   async function deleteBreedClick(id: string) {
-    deleteBreed.mutate({ id });
-    closeModal();
+    if (confirm(`Are you sure you want to delete this breed?`)) {
+      deleteBreed.mutate({ id });
+      closeModal();
+    }
   }
 
   return (
@@ -175,11 +179,6 @@ const BreedModal = ({
                     className='px-8 pt-6 pb-8 w-full'
                     onSubmit={handleSubmit(createOrUpdateBreed)}>
                     <fieldset className='mb-3'>
-                      <label
-                        className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-                        htmlFor='file_input'>
-                        Flock image
-                      </label>
                       {uploading ? (
                         <Loader show={true} />
                       ) : (!uploading && downloadURL) || breed?.imageUrl ? (
@@ -192,14 +191,20 @@ const BreedModal = ({
                       ) : (
                         <></>
                       )}
-                      <input
-                        className='block w-full py-1 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file-input'
-                        aria-describedby='file_input_help'
-                        id='image'
-                        type='file'
-                        accept='image/x-png,image/gif,image/jpeg'
-                        {...register("image")}
-                      />
+                      <label
+                        className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
+                        htmlFor='image'>
+                        <MdImage />
+                        &nbsp;Upload image
+                        <input
+                          className='hidden'
+                          aria-describedby='file_input_help'
+                          id='image'
+                          type='file'
+                          accept='image/x-png,image/gif,image/jpeg'
+                          {...register("image")}
+                        />
+                      </label>
                       <p
                         className='mt-1 text-sm text-gray-500 dark:text-gray-300'
                         id='file_input_help'>
