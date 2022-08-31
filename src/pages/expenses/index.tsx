@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import Card from "../../components/Card";
 import { trpc } from "../../utils/trpc";
 
@@ -9,7 +10,9 @@ export default function Logs() {
 
   const mutation = trpc.useMutation("expenses.deleteExpense", {
     onSuccess: () => {
-      utils.invalidateQueries();
+      utils.invalidateQueries("stats.getExpenseStats");
+      utils.invalidateQueries("expenses.getExpenses");
+      toast.success("Expense deleted!");
     },
   });
 

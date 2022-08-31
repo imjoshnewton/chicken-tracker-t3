@@ -2,6 +2,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { storage } from "../libs/firebase";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
@@ -35,6 +36,7 @@ export default function NewUserForm({
     onSuccess: (data) => {
       //   router.push("/auth/new-user?userUpdated=true");
       router.reload();
+      toast.success("User info updated!");
     },
   });
 

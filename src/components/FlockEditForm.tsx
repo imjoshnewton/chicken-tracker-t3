@@ -7,6 +7,7 @@ import { Breed, Flock } from "@prisma/client";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
 import { MdImage } from "react-icons/md";
+import toast from "react-hot-toast";
 
 export default function FlockForm({
   flock,
@@ -35,12 +36,14 @@ export default function FlockForm({
     onSuccess: (data) => {
       utils.invalidateQueries("flocks.getFlock");
       router.push(`/flocks/${data.id}`);
+      toast.success("Flock updated!");
     },
   });
   const createFlock = trpc.useMutation(["flocks.createFlock"], {
     onSuccess: (data) => {
       utils.invalidateQueries("flocks.getFlock");
       router.push(`/flocks/${data.id}`);
+      toast.success("Flock created!");
     },
   });
   const setDefaultFlock = trpc.useMutation(["user.setDefaultFlock"]);

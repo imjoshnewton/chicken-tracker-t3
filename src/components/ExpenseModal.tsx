@@ -2,6 +2,7 @@ import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
 import { trpc } from "../utils/trpc";
 import { AiOutlineDollar } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -14,7 +15,8 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const createExpenseMutation = trpc.useMutation(["expenses.createExpense"], {
     onSuccess: () => {
-      utils.invalidateQueries();
+      utils.invalidateQueries("stats.getExpenseStats");
+      toast.success("Expense added!");
     },
   });
 

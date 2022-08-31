@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import Card from "../../components/Card";
 import { trpc } from "../../utils/trpc";
 
@@ -11,6 +12,7 @@ export default function Logs() {
     onSuccess: () => {
       utils.invalidateQueries("stats.getStats");
       utils.invalidateQueries("logs.getLogs");
+      toast.success("Log deleted!");
     },
   });
 

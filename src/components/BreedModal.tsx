@@ -29,18 +29,21 @@ const BreedModal = ({
 
   const createNewBreed = trpc.useMutation(["breeds.createBreed"], {
     onSuccess: () => {
+      toast.success("New breed created!");
       invalidateAllFlockPageQueries();
     },
   });
 
   const updateBreed = trpc.useMutation(["breeds.updateBreed"], {
     onSuccess: () => {
+      toast.success("Breed updated!");
       invalidateAllFlockPageQueries();
     },
   });
 
   const deleteBreed = trpc.useMutation(["breeds.deleteBreed"], {
     onSuccess: () => {
+      toast.success("Breed deleted!");
       invalidateAllFlockPageQueries();
     },
   });

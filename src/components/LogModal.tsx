@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "../utils/trpc";
 import { MdOutlineEditNote } from "react-icons/md";
+import toast from "react-hot-toast";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -13,6 +14,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const createLogMutation = trpc.useMutation(["logs.createLog"], {
     onSuccess: () => {
       utils.invalidateQueries("stats.getStats");
+      toast.success("New log created!");
     },
   });
 
