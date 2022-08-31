@@ -296,6 +296,8 @@ function ExpenseChart({
           // pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
           type: "bar" as const,
+          yAxisID: "y",
+          order: 2,
         },
         {
           data: chartArray
@@ -310,6 +312,8 @@ function ExpenseChart({
           // pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
           type: "bar" as const,
+          yAxisID: "y",
+          order: 2,
         },
         {
           data: chartArray
@@ -324,6 +328,8 @@ function ExpenseChart({
           // pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
           type: "bar" as const,
+          yAxisID: "y",
+          order: 2,
         },
         {
           data: chartArray.filter((i) => i.Cat == "other").map((i) => i.Tot),
@@ -336,6 +342,8 @@ function ExpenseChart({
           // pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
           type: "bar" as const,
+          yAxisID: "y",
+          order: 2,
         },
         {
           data: prodArray.map((i) => i.Tot),
@@ -348,6 +356,8 @@ function ExpenseChart({
           pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
           type: "line" as const,
+          yAxisID: "y1",
+          order: 1,
         },
       ],
       labels: Array.from(new Set(chartArray.map((i: any) => i.MonthYear))),
@@ -475,6 +485,22 @@ function ExpenseChart({
       y: {
         startAtZero: true,
         stacked: true,
+        ticks: {
+          // Include a dollar sign in the ticks
+          callback: function (value: any) {
+            return "$" + value;
+          },
+        },
+      },
+      y1: {
+        // type: "linear" as const,
+        display: true,
+        position: "right" as const,
+        // stacked: false,
+
+        grid: {
+          drawOnChartArea: false, // only want the grid lines for one axis to show up
+        },
       },
     },
   };

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { Breed, Flock } from "@prisma/client";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
+import { MdImage } from "react-icons/md";
 
 export default function FlockForm({
   flock,
@@ -126,6 +127,43 @@ export default function FlockForm({
         {/* <ImageUploader /> */}
 
         <fieldset className='mb-3'>
+          {uploading ? (
+            <>
+              <Loader show={true} />
+              <h3>{progress}%</h3>
+            </>
+          ) : (!uploading && downloadURL) || flock?.imageUrl ? (
+            <img
+              src={downloadURL ? downloadURL : flock!.imageUrl!}
+              width='100'
+              height='100'
+              className='flock-image'
+            />
+          ) : (
+            <></>
+          )}
+          <label
+            className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
+            htmlFor='image'>
+            <MdImage />
+            &nbsp;Upload image
+            <input
+              className='hidden'
+              aria-describedby='file_input_help'
+              id='image'
+              type='file'
+              accept='image/x-png,image/gif,image/jpeg'
+              {...register("image")}
+            />
+          </label>
+          <p
+            className='mt-1 text-sm text-gray-500 dark:text-gray-300'
+            id='file_input_help'>
+            SVG, PNG, JPG or GIF (MAX. 850kb).
+          </p>
+        </fieldset>
+
+        {/* <fieldset className='mb-3'>
           <label
             className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
             htmlFor='file_input'>
@@ -159,7 +197,7 @@ export default function FlockForm({
             id='file_input_help'>
             SVG, PNG, JPG or GIF (MAX. 200x200px).
           </p>
-        </fieldset>
+        </fieldset> */}
 
         <fieldset className='mb-3'>
           <label>Name</label>
