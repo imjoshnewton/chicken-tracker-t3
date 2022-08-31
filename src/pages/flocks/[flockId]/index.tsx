@@ -43,7 +43,7 @@ export default function Flocks() {
                 width='150'
                 height='150'
                 className='flock-image'
-                alt=''
+                alt='A user uploaded image that represents this flock'
               />
               {/* <pre>{limit}</pre> */}
               <div className='ml-0 md:ml-6'>

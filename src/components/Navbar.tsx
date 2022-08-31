@@ -22,7 +22,7 @@ export default function Navbar() {
                 src={logo}
                 width='40'
                 height='40'
-                alt='Chicken tracker logo'
+                alt='Chicken tracker logo the white outline of a chicken'
               />
               <span className='hidden sm:inline'>&nbsp;Tracker</span>
             </span>
