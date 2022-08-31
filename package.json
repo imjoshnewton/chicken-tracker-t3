@@ -17,6 +17,7 @@
     "@trpc/react": "^9.26.2",
     "@trpc/server": "^9.26.2",
     "chart.js": "^3.9.1",
+    "date-fns": "^2.29.2",
     "firebase": "^9.9.2",
     "next": "12.2.3",
     "next-auth": "^4.10.3",

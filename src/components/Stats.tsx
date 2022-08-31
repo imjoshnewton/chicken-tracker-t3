@@ -2,6 +2,7 @@ import { Breed, Flock } from "@prisma/client";
 import { Line, Chart } from "react-chartjs-2";
 import Link from "next/link";
 import Loader from "./Loader";
+import { subMonths } from "date-fns";
 import {
   MdOutlineTrendingDown,
   MdOutlineTrendingUp,
@@ -449,7 +450,7 @@ function ExpenseChart({
 
     for (let i: number = limit - 1; i >= 0; i--) {
       const today = new Date(Date.now());
-      retArray.push(new Date(today.setMonth(today.getMonth() - i)));
+      retArray.push(subMonths(today, i));
     }
 
     return retArray;

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
+import { subMonths } from "date-fns";
 
 export const statsRouter = createProtectedRouter()
   .query("getStats", {
@@ -84,43 +85,33 @@ export const statsRouter = createProtectedRouter()
       today: z.date(),
     }),
     async resolve({ input, ctx }) {
-      const today = input.today;
-      console.log("Before calcs: ", today.getMonth());
+      const dates = [input.today];
 
-      const oneMonthAgo = new Date(today);
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-      const twoMonthsAgo = new Date(oneMonthAgo);
-      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 1);
-
-      const months = [
-        today.getMonth(),
-        oneMonthAgo.getMonth(),
-        twoMonthsAgo.getMonth(),
-      ];
-      const years: number[] = [
-        today.getFullYear(),
-        oneMonthAgo.getFullYear(),
-        twoMonthsAgo.getFullYear(),
-      ];
-
-      console.log("Months: ", months);
-      console.log("Years: ", years);
+      for (let i = 1; i < 6; i++) {
+        dates.push(subMonths(dates[i - 1]!, 1));
+      }
 
       const getExpenses = await ctx.prisma
         .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, SUM(expen.amount) AS Tot
                     FROM Expense AS expen
-                    WHERE YEAR(expen.date) IN (${today.getFullYear()}, ${oneMonthAgo.getFullYear()}, ${twoMonthsAgo.getFullYear()}) AND MONTH(expen.date) IN (${
-        today.getMonth() + 1
-      }, ${oneMonthAgo.getMonth() + 1}, ${twoMonthsAgo.getMonth() + 1})
+                    WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
+                    AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
+        dates[1]?.getMonth()! + 1
+      }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
+        dates[4]?.getMonth()! + 1
+      }, ${dates[5]?.getMonth()! + 1})
                     GROUP BY MonthYear, Cat
                     ORDER BY MonthYear ASC`;
 
       const getProduction = await ctx.prisma
         .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, SUM(logs.count) AS Tot
                     FROM EggLog AS logs
-                    WHERE YEAR(logs.date) IN (${today.getFullYear()}, ${oneMonthAgo.getFullYear()}, ${twoMonthsAgo.getFullYear()}) AND MONTH(logs.date) IN (${
-        today.getMonth() + 1
-      }, ${oneMonthAgo.getMonth() + 1}, ${twoMonthsAgo.getMonth() + 1})
+                    WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
+                    AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
+        dates[1]?.getMonth()! + 1
+      }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
+        dates[4]?.getMonth()! + 1
+      }, ${dates[5]?.getMonth()! + 1})
                     GROUP BY MonthYear
                     ORDER BY MonthYear ASC`;
 
