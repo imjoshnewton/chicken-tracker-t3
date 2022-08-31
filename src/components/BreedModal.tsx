@@ -7,6 +7,7 @@ import Loader from "./Loader";
 import { useUserData } from "../libs/hooks";
 import { storage } from "../libs/firebase";
 import { toast } from "react-hot-toast";
+import { MdOutlineDelete } from "react-icons/md";
 
 const BreedModal = ({
   flockId,
@@ -28,19 +29,27 @@ const BreedModal = ({
 
   const createNewBreed = trpc.useMutation(["breeds.createBreed"], {
     onSuccess: () => {
-      utils.invalidateQueries(["flocks.getFlock"]);
-      utils.invalidateQueries(["stats.getStats"]);
-      utils.invalidateQueries(["logs.getLogs"]);
+      invalidateAllFlockPageQueries();
     },
   });
 
   const updateBreed = trpc.useMutation(["breeds.updateBreed"], {
     onSuccess: () => {
-      utils.invalidateQueries(["flocks.getFlock"]);
-      utils.invalidateQueries(["stats.getStats"]);
-      utils.invalidateQueries(["logs.getLogs"]);
+      invalidateAllFlockPageQueries();
     },
   });
+
+  const deleteBreed = trpc.useMutation(["breeds.deleteBreed"], {
+    onSuccess: () => {
+      invalidateAllFlockPageQueries();
+    },
+  });
+
+  function invalidateAllFlockPageQueries() {
+    utils.invalidateQueries(["flocks.getFlock"]);
+    utils.invalidateQueries(["stats.getStats"]);
+    utils.invalidateQueries(["logs.getLogs"]);
+  }
 
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
@@ -137,6 +146,11 @@ const BreedModal = ({
     }
   }
 
+  async function deleteBreedClick(id: string) {
+    deleteBreed.mutate({ id });
+    closeModal();
+  }
+
   return (
     <>
       {show ? (
@@ -144,10 +158,17 @@ const BreedModal = ({
           <div className='flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none modal-overlay'>
             <div className='relative w-auto my-6 mx-auto max-w-3xl min-w-[350px]'>
               <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-                <div className='flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
+                <div className='flex items-center justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
                   <h3 className='text-xl font=semibold'>
-                    {breed?.id ? "Update Breed" : "Create New Breed"}
+                    {breed?.id ? "Edit Breed" : "Create New Breed"}
                   </h3>
+                  {breed?.id ? (
+                    <button
+                      onClick={() => deleteBreedClick(breed?.id)}
+                      className=' text-xl text-red-600 hover:bg-slate-50 p-3 hover:shadow rounded'>
+                      <MdOutlineDelete />
+                    </button>
+                  ) : null}
                 </div>
                 <div className='relative flex-auto'>
                   <form
@@ -224,7 +245,7 @@ const BreedModal = ({
                 </div>
                 <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b'>
                   <button
-                    className='text-black background-transparent uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1'
+                    className='text-black background-transparent uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 hover:bg-slate-50 rounded'
                     type='button'
                     onClick={closeModal}>
                     Close
