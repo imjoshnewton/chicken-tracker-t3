@@ -19,8 +19,9 @@ const MyApp: AppType = ({
         <link rel='shortcut icon' href='/favicon.png' />
       </Head>
       <SessionProvider session={session}>
-        <Navbar />
-        <Component {...pageProps} />
+        <Navbar>
+          <Component {...pageProps} />
+        </Navbar>
         <Toaster position='top-right' />
       </SessionProvider>
     </>

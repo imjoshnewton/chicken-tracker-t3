@@ -75,7 +75,7 @@ a {
 }
 
 main {
-    padding: 1rem 10vw;
+    padding: 1rem 7vw;
 }
 
 h1 {
@@ -145,7 +145,7 @@ code {
     color: var(--color-light-text);
     position: fixed;
     top: 0;
-    padding: 0 10vw;
+    // padding: 0 ;
     font-weight: bold;
     border-bottom: 1px solid var(--color-gray);
     z-index: 99;
@@ -278,6 +278,19 @@ button.btn-logo {
     background-color: rgba(0, 0, 0, 0.33);
 }
 
+.side-nav a {
+    float: none !important;
+    color: var(--color-dard-text);
+    padding: 8px 10px;
+    text-decoration: none;
+    display: block;
+    text-align: left !important;
+
+    &:hover {
+        color: var(--color-secondary);
+    }
+}
+
 .multilink-content {
     position: absolute;
     background-color: #eef0f1;
@@ -372,9 +385,9 @@ button.btn-logo {
         padding: 1rem 5vw;
     }
 
-    .navbar {
-        padding: 0 5vw;
-    }
+    // .navbar {
+    //     padding: 0 5vw;
+    // }
 
     .breed {
         flex-basis: 100%;
