@@ -117,7 +117,11 @@ export default function Navbar({ children }: { children: any }) {
         <ul className='p-4 pt-7 side-nav'>
           <li className='mb-0'>
             <Link href={`/flocks/`}>
-              <a className='flex items-center'>
+              <a
+                className='flex items-center'
+                onClick={() => {
+                  setSideBarOpen(false);
+                }}>
                 <MdHomeFilled className='mr-5 inline text-2xl mt-[-3px]' />
                 My Flocks
               </a>
@@ -125,7 +129,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li className='mb-0'>
             <Link href={`/logs`}>
-              <a className='flex items-center'>
+              <a
+                className='flex items-center'
+                onClick={() => {
+                  setSideBarOpen(false);
+                }}>
                 <MdOutlineEditNote className='mr-[10px] inline text-3xl' /> All
                 Logs
               </a>
@@ -133,7 +141,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li className='mb-0'>
             <Link href={`/expenses`}>
-              <a className='flex items-center'>
+              <a
+                className='flex items-center'
+                onClick={() => {
+                  setSideBarOpen(false);
+                }}>
                 <AiOutlineDollar className='mr-5 inline text-2xl mt-[-3px]' />
                 All Expenses
               </a>
@@ -141,7 +153,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li className='mb-0'>
             <Link href='/api/auth/signout'>
-              <a className='flex items-center'>
+              <a
+                className='flex items-center'
+                onClick={() => {
+                  setSideBarOpen(false);
+                }}>
                 <MdLogout className='mr-5 inline text-2xl' />
                 Logout
               </a>
