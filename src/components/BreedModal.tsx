@@ -167,7 +167,7 @@ const BreedModal = ({
               <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
                 <div className='flex items-center justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
                   <h3 className='text-xl font=semibold'>
-                    {breed?.id ? "Edit Breed" : "Create New Breed"}
+                    {breed?.id ? "Edit Breed" : "Add Chickens"}
                   </h3>
                   {breed?.id ? (
                     <button

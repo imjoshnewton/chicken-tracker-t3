@@ -35,7 +35,7 @@ export default function Breeds({
       <h2
         className='flex justify-between items-center mb-6 dark:text-gray-300'
         onClick={() => setIsActive(!isActive)}>
-        Breeds
+        Chickens
         {isActive ? (
           <MdOutlineExpandLess className='inline md:hidden' />
         ) : (
@@ -97,7 +97,7 @@ export default function Breeds({
             setSellectedBreed(null);
           }}>
           <MdAdd className='text-2xl' />
-          &nbsp;Add New Breed
+          &nbsp;Add Chickens
         </button>
       </ul>
       {showModal ? (
