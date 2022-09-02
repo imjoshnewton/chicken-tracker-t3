@@ -259,7 +259,7 @@ const BreedModal = ({
                     Close
                   </button>
                   <button
-                    className='text-white bg-yellow-500 active:bg-yellow-700 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1'
+                    className='text-white bg-secondary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1'
                     type='submit'
                     onClick={handleSubmit(createOrUpdateBreed)}>
                     Submit

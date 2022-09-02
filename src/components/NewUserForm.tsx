@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { MdImage } from "react-icons/md";
 import { storage } from "../libs/firebase";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
@@ -116,11 +117,6 @@ export default function NewUserForm({
         {/* <ImageUploader /> */}
 
         <fieldset className='mb-3'>
-          <label
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-            htmlFor='file_input'>
-            Profile image
-          </label>
           {uploading ? (
             <>
               <Loader show={true} />
@@ -128,26 +124,32 @@ export default function NewUserForm({
             </>
           ) : (!uploading && downloadURL) || user.image ? (
             <img
-              src={downloadURL ? downloadURL : user.image ? user.image : ""}
+              src={downloadURL ? downloadURL : user.image!}
               width='100'
               height='100'
-              className='rounded-full'
+              className='flock-image'
             />
           ) : (
             <></>
           )}
-          <input
-            className='block w-full py-1 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file-input'
-            aria-describedby='file_input_help'
-            id='image'
-            type='file'
-            accept='image/x-png,image/gif,image/jpeg'
-            {...register("imageFile")}
-          />
+          <label
+            className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
+            htmlFor='image'>
+            <MdImage />
+            &nbsp;Upload image
+            <input
+              className='hidden'
+              aria-describedby='file_input_help'
+              id='image'
+              type='file'
+              accept='image/x-png,image/gif,image/jpeg'
+              {...register("imageFile")}
+            />
+          </label>
           <p
             className='mt-1 text-sm text-gray-500 dark:text-gray-300'
             id='file_input_help'>
-            SVG, PNG, JPG or GIF (MAX. 200x200px).
+            SVG, PNG, JPG or GIF (MAX. 850kb).
           </p>
         </fieldset>
 
