@@ -75,7 +75,7 @@ a {
 }
 
 main {
-    padding: 1rem 7vw;
+    padding: 1rem 3.5vw;
 }
 
 h1 {
@@ -278,18 +278,18 @@ button.btn-logo {
     background-color: rgba(0, 0, 0, 0.33);
 }
 
-.side-nav a {
-    float: none !important;
-    color: var(--color-dard-text);
-    padding: 8px 10px;
-    text-decoration: none;
-    display: block;
-    text-align: left !important;
+// .side-nav a {
+//     float: none !important;
+//     color: var(--color-dard-text);
+//     padding: 8px 10px;
+//     text-decoration: none;
+//     display: block;
+//     text-align: left !important;
 
-    &:hover {
-        color: var(--color-secondary);
-    }
-}
+//     &:hover {
+//         color: var(--color-secondary);
+//     }
+// }
 
 .multilink-content {
     position: absolute;

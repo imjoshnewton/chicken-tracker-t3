@@ -7,15 +7,18 @@ import {
   MdLogout,
   MdHomeFilled,
   MdMenu,
+  MdSettings,
 } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
 
 import logo from "../../public/chicken.svg";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 // Top navbar
 export default function Navbar({ children }: { children: any }) {
   const { user, defaultFlock } = useUserData();
+  const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   return (
@@ -63,7 +66,7 @@ export default function Navbar({ children }: { children: any }) {
                 )}
                 {/* </Link> */}
                 <div className='multilink-content fadeIn top-16 right-2 md:right-auto'>
-                  <Link href={`/flocks/`}>
+                  {/* <Link href={`/flocks/`}>
                     <a className='flex items-center'>
                       <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
                       My Flocks
@@ -80,7 +83,7 @@ export default function Navbar({ children }: { children: any }) {
                       <AiOutlineDollar className='mr-3 inline text-xl mt-[-3px]' />
                       All Expenses
                     </a>
-                  </Link>
+                  </Link> */}
                   <Link href='/api/auth/signout'>
                     <a className='flex items-center'>
                       <MdLogout className='mr-3 inline text-xl' />
@@ -111,14 +114,20 @@ export default function Navbar({ children }: { children: any }) {
       <aside
         className={
           sideBarOpen
-            ? "h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-300 transition-transform shadow-xl"
-            : "-translate-x-52 md:translate-x-0 h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-300 transition-transform shadow-lg"
+            ? "h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-2xl"
+            : "-translate-x-52 md:translate-x-0 h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-lg"
         }>
-        <ul className='p-4 pt-7 side-nav'>
-          <li className='mb-0'>
+        {/* {router.pathname} */}
+        <ul className='pt-7 side-nav'>
+          <li
+            className={`mb-0 px-2 ${
+              router.pathname.startsWith("/flocks")
+                ? "bg-gray-400 text-white"
+                : ""
+            } hover:bg-gray-300`}>
             <Link href={`/flocks/`}>
               <a
-                className='flex items-center'
+                className='flex items-center px-2 py-3'
                 onClick={() => {
                   setSideBarOpen(false);
                 }}>
@@ -127,22 +136,28 @@ export default function Navbar({ children }: { children: any }) {
               </a>
             </Link>
           </li>
-          <li className='mb-0'>
+          <li
+            className={`mb-0 px-2 ${
+              router.pathname == "/logs" ? "bg-gray-400 text-white" : ""
+            } hover:bg-gray-300`}>
             <Link href={`/logs`}>
               <a
-                className='flex items-center'
+                className='flex items-center px-2 py-3'
                 onClick={() => {
                   setSideBarOpen(false);
                 }}>
-                <MdOutlineEditNote className='mr-[10px] inline text-3xl' /> All
+                <MdOutlineEditNote className='mr-[14px] inline text-3xl' /> All
                 Logs
               </a>
             </Link>
           </li>
-          <li className='mb-0'>
+          <li
+            className={`mb-0 px-2 ${
+              router.pathname == "/expenses" ? "bg-gray-400 text-white" : ""
+            } hover:bg-gray-300`}>
             <Link href={`/expenses`}>
               <a
-                className='flex items-center'
+                className='flex items-center px-2 py-3'
                 onClick={() => {
                   setSideBarOpen(false);
                 }}>
@@ -151,14 +166,35 @@ export default function Navbar({ children }: { children: any }) {
               </a>
             </Link>
           </li>
-          <li className='mb-0'>
-            <Link href='/api/auth/signout'>
+          <li className='mt-auto px-3'>
+            <div className='divider my-3 dark:border-t-gray-500'></div>
+          </li>
+          <li
+            className={`mb-0 px-2 ${
+              router.pathname == "/settings" ? "bg-gray-400 text-white" : ""
+            } hover:bg-gray-300`}>
+            <Link href='/'>
               <a
-                className='flex items-center'
+                className='flex items-center px-2 py-3'
                 onClick={() => {
                   setSideBarOpen(false);
                 }}>
-                <MdLogout className='mr-5 inline text-2xl' />
+                <MdSettings className='mr-5 inline text-2xl' />
+                Settings
+              </a>
+            </Link>
+          </li>
+          <li
+            className={`mb-0 px-2 ${
+              router.pathname == "/logout" ? "bg-gray-400 text-white" : ""
+            } hover:bg-gray-300`}>
+            <Link href='/api/auth/signout'>
+              <a
+                className='flex items-center px-2 py-3'
+                onClick={() => {
+                  setSideBarOpen(false);
+                }}>
+                <MdLogout className='ml-[2px] mr-[18.5px] inline text-2xl' />
                 Logout
               </a>
             </Link>
