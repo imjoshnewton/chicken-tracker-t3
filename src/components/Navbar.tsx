@@ -24,7 +24,7 @@ export default function Navbar({ children }: { children: any }) {
 
   return (
     <>
-      <nav className='navbar h-[60px] md:h-[65px] pr-5 pl-1 md:px-6'>
+      <nav className='navbar h-[60px] md:h-[65px] pr-5 pl-2 md:px-6'>
         <ul>
           <li className='inline md:hidden'>
             <button
@@ -54,7 +54,7 @@ export default function Navbar({ children }: { children: any }) {
               />
             </button>
           </li>
-          <li className='cursor-pointer'>
+          <li className='cursor-pointer translate-x-2 sm:translate-x-0'>
             <Link href='/'>
               <span className='flex items-center'>
                 <span className='hidden sm:inline'>Chicken&nbsp;</span>
