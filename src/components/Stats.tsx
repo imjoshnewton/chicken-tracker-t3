@@ -60,14 +60,17 @@ export default function Stats({
       <div className='flex justify-between'>
         <h2 className='mb-4 dark:text-gray-300'>Stats</h2>
       </div>
-      <ProductionChart
-        stats={stats}
-        flock={flock}
-        className={className}
-        limit={limit}
-        onRangeChange={onRangeChange}
-      />
-      <ExpenseChart stats={stats} className={className} />
+      <div className='flex flex-wrap'>
+        <ProductionChart
+          stats={stats}
+          flock={flock}
+          className={"flex-48"}
+          limit={limit}
+          onRangeChange={onRangeChange}
+        />
+        <div className='p-2'></div>
+        <ExpenseChart stats={stats} className={"flex-48"} />
+      </div>
     </div>
   );
 }
@@ -517,7 +520,7 @@ function ExpenseChart({
   return (
     <div className={className}>
       <div className='flex justify-between'>
-        <h3 className='my-4 dark:text-gray-300'>Expenses</h3>
+        <h3 className='mb-4 dark:text-gray-300'>Expenses</h3>
         {/* <select defaultValue={limit} onChange={onRangeChange} className='mb-4'>
           <option value='7'>Last 7 Days</option>
           <option value='15'>Last 15 Days</option>
