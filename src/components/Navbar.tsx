@@ -20,6 +20,7 @@ export default function Navbar({ children }: { children: any }) {
   const { user, defaultFlock } = useUserData();
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
 
   return (
     <>
@@ -27,10 +28,30 @@ export default function Navbar({ children }: { children: any }) {
         <ul>
           <li className='inline md:hidden'>
             <button
+              className='flex flex-col h-12 w-12 rounded justify-center items-center group'
               onClick={() => {
                 setSideBarOpen(!sideBarOpen);
               }}>
-              <MdMenu className=' text-2xl' />
+              {/* <MdMenu className=' text-2xl' /> */}
+              <div
+                className={`${genericHamburgerLine} ${
+                  sideBarOpen
+                    ? "rotate-45 translate-y-[7px] group-hover:opacity-100"
+                    : "group-hover:opacity-100"
+                }`}
+              />
+              <div
+                className={`${genericHamburgerLine} ${
+                  sideBarOpen ? "opacity-0" : "group-hover:opacity-100"
+                }`}
+              />
+              <div
+                className={`${genericHamburgerLine} ${
+                  sideBarOpen
+                    ? "-rotate-45 -translate-y-[7px] group-hover:opacity-100"
+                    : "group-hover:opacity-100"
+                }`}
+              />
             </button>
           </li>
           <li className='cursor-pointer'>
