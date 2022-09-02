@@ -221,41 +221,50 @@ function ProductionChart({
             id='productionChart'></Line>
         </div>
         <div className='p-2'></div>
-        <div className='flex justify-between'>
-          <div className='dark:text-gray-300'>
-            Target Daily Avg: {targetDailyAvg.toFixed(2)}
+        <div className='flex justify-around'>
+          <div className='flex flex-col justify-center items-center text-center dark:text-gray-300'>
+            Target Daily Avg
+            <br />
+            {targetDailyAvg.toFixed(2)}
           </div>
-          <div className='flex items-center dark:text-gray-300'>
-            Actual Daily Avg:
-            <span className='ml-1'>{actualDailyAvg.toFixed(2)}</span>
-            <span className='ml-1'>
-              {actualDailyAvg < targetDailyAvg ? (
-                <MdArrowDownward className='text-red-600' />
-              ) : (
-                <MdArrowUpward className=' text-green-600' />
-              )}
-            </span>
+          <div className='flex flex-col items-center dark:text-gray-300'>
+            Actual Daily Avg
+            <br />
+            <div className='flex items-center'>
+              <span>{actualDailyAvg.toFixed(2)}</span>
+              <span className='ml-1'>
+                {actualDailyAvg < targetDailyAvg ? (
+                  <MdArrowDownward className='text-red-600' />
+                ) : (
+                  <MdArrowUpward className=' text-green-600' />
+                )}
+              </span>
+            </div>
           </div>
         </div>
-        <div className='flex justify-between dark:text-gray-300'>
-          <div>
-            Last Weeks Avg:{" "}
+        <div className='flex justify-around dark:text-gray-300 mt-2'>
+          <div className='flex flex-col justify-center items-center text-center'>
+            Last Weeks Avg
+            <br />
             {stats.lastWeekAvg._avg.count
               ? stats.lastWeekAvg._avg.count.toFixed(2)
               : "n/a"}
           </div>
-          <div className='flex items-center dark:text-gray-300'>
-            This Weeks Avg:
-            <span className='ml-1'>
-              {stats.thisWeekAvg._avg.count?.toFixed(2)}
-            </span>
-            <span className='ml-1'>
-              {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
-                <MdOutlineTrendingDown className='text-red-600' />
-              ) : (
-                <MdOutlineTrendingUp className=' text-green-600' />
-              )}
-            </span>
+          <div className='flex flex-col items-center dark:text-gray-300'>
+            This Weeks Avg
+            <br />
+            <div className='flex items-center'>
+              <span className='ml-1'>
+                {stats.thisWeekAvg._avg.count?.toFixed(2)}
+              </span>
+              <span className='ml-1'>
+                {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
+                  <MdOutlineTrendingDown className='text-red-600' />
+                ) : (
+                  <MdOutlineTrendingUp className=' text-green-600' />
+                )}
+              </span>
+            </div>
           </div>
         </div>
         <div className='p-2'></div>
