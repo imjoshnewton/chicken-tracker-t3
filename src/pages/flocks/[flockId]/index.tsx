@@ -68,12 +68,12 @@ export default function Flocks() {
               <Breeds
                 flockId={flockId?.toString()}
                 breeds={flock?.breeds}
-                className='basis-full'></Breeds>
-              <div className='p-3'></div>
+                className='basis-full xl:basis-[23%]'></Breeds>
+              <div className='p-3 basis-[2%]'></div>
               <Stats
                 stats={stats}
                 flock={flock}
-                className='basis-full'
+                className='basis-full xl:basis-[75%]'
                 limit={range.toString()}
                 onRangeChange={onRangeChange}></Stats>
             </div>

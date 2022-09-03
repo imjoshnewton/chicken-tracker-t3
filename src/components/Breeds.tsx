@@ -61,7 +61,7 @@ export default function Breeds({
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li
-              className='flex items-center mb-4 rounded-lg shadow basis-[100%] xl:basis-[49%] hover:cursor-pointer hover:shadow-lg border transition-shadow'
+              className='flex items-center mb-4 rounded-lg shadow basis-[100%] hover:cursor-pointer hover:shadow-lg border transition-shadow'
               key={index}
               onClick={() => {
                 setSellectedBreed(breed);
