@@ -6,7 +6,6 @@ import {
   MdOutlineEditNote,
   MdLogout,
   MdHomeFilled,
-  MdMenu,
   MdSettings,
 } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
