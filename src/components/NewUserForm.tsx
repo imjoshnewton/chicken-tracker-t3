@@ -31,8 +31,6 @@ export default function NewUserForm({
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
-  const utils = trpc.useContext();
-
   const updateUser = trpc.useMutation(["user.updateUser"], {
     onSuccess: (data) => {
       //   router.push("/auth/new-user?userUpdated=true");
