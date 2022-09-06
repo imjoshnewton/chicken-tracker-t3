@@ -24,6 +24,15 @@ export default function NewUser() {
         <div className='shadow-xl'>
           <Card title='New user info'>
             <div className='flex'>
+              <section>
+                <h2 className='mb-3'>Welcome!</h2>
+                <p className='mb-3'>
+                  Let&apos;s get to know you a little better...
+                  <br />
+                  Complete your profile by uploading a profile picture and
+                  letting us know your name.
+                </p>
+              </section>
               <NewUserForm user={data.user} />
             </div>
           </Card>

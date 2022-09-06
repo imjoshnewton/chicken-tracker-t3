@@ -37,16 +37,16 @@ export default function Breeds({
         onClick={() => setIsActive(!isActive)}>
         Chickens
         {isActive ? (
-          <MdOutlineExpandLess className='inline md:hidden' />
+          <MdOutlineExpandLess className='inline lg:hidden' />
         ) : (
-          <MdOutlineExpandMore className='inline md:hidden' />
+          <MdOutlineExpandMore className='inline lg:hidden' />
         )}
       </h2>
       <ul
         className={
           isActive
             ? "flex flex-wrap justify-between dark:text-gray-300"
-            : "hidden md:flex justify-between flex-wrap dark:text-gray-300"
+            : "hidden lg:flex justify-between flex-wrap dark:text-gray-300"
         }>
         {breeds.length < 1 && (
           <div className='text-center basis-full'>
@@ -80,7 +80,9 @@ export default function Breeds({
               </div>
               <div className='p-3 dark:text-gray-300'>
                 <p>
-                  <strong>{breed.name}</strong>
+                  <strong>{`${breed.name ? breed.name : ""}${
+                    breed.name ? " - " : ""
+                  }${breed.breed}`}</strong>
                   <br />
                   <strong>Count: </strong>
                   {breed.count}

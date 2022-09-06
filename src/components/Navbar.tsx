@@ -24,9 +24,9 @@ export default function Navbar({ children }: { children: any }) {
 
   return (
     <>
-      <nav className='navbar h-[60px] md:h-[65px] pr-5 pl-2 md:px-6'>
+      <nav className='navbar h-[60px] lg:h-[65px] pr-5 pl-2 lg:px-6'>
         <ul>
-          <li className='inline md:hidden'>
+          <li className='inline lg:hidden'>
             <button
               className='flex flex-col h-12 w-12 rounded justify-center items-center group'
               onClick={() => {
@@ -73,7 +73,7 @@ export default function Navbar({ children }: { children: any }) {
           {user && (
             <>
               <li className='ml-4 flex items-center multilink cursor-pointer'>
-                <div className='mr-3 user-name hidden md:block'>
+                <div className='mr-3 user-name hidden lg:block'>
                   {user.name}
                 </div>
                 {user.image && (
@@ -81,12 +81,12 @@ export default function Navbar({ children }: { children: any }) {
                     src={user.image as string}
                     width='35'
                     height='35'
-                    className='h-9 md:h-11 w-9 md:w-11'
+                    className='h-9 lg:h-11 w-9 lg:w-11'
                     alt='Current user profile image'
                   />
                 )}
                 {/* </Link> */}
-                <div className='multilink-content fadeIn top-16 right-2 md:right-auto'>
+                <div className='multilink-content fadeIn top-16 right-2 lg:right-auto'>
                   {/* <Link href={`/flocks/`}>
                     <a className='flex items-center'>
                       <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
@@ -128,15 +128,15 @@ export default function Navbar({ children }: { children: any }) {
       </nav>
       <section
         className={
-          sideBarOpen ? "md:ml-52 transition-all" : "md:ml-52 transition-all"
+          sideBarOpen ? "lg:ml-52 transition-all" : "lg:ml-52 transition-all"
         }>
         {children}
       </section>
       <aside
         className={
           sideBarOpen
-            ? "h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-2xl"
-            : "-translate-x-52 md:translate-x-0 h-[calc(100vh_-_60px)] md:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-lg"
+            ? "h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-2xl"
+            : "-translate-x-52 lg:translate-x-0 h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-lg"
         }>
         {/* {router.pathname} */}
         <ul className='pt-7 side-nav'>
@@ -194,7 +194,7 @@ export default function Navbar({ children }: { children: any }) {
             className={`mb-0 px-2 ${
               router.pathname == "/settings" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
-            <Link href='/'>
+            <Link href='/settings'>
               <a
                 className='flex items-center px-2 py-3'
                 onClick={() => {

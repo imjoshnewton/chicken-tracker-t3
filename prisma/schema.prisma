@@ -72,7 +72,8 @@ model Flock {
 
 model Breed {
     id                String  @id @default(cuid())
-    name              String  @db.Text
+    name              String? @db.Text
+    breed             String  @default("") @db.Text
     description       String? @db.Text
     count             Int
     imageUrl          String? @db.Text

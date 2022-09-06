@@ -21,7 +21,7 @@ export default function NewUserForm({
 }) {
   const router = useRouter();
   const { register, handleSubmit, formState, reset, watch } = useForm({
-    defaultValues: { name: "", image: "", imageFile: null as any },
+    defaultValues: { name: user.name || "", image: "", imageFile: null as any },
     mode: "onChange",
   });
 
@@ -104,15 +104,6 @@ export default function NewUserForm({
 
   return (
     <form onSubmit={handleSubmit(updateUserInformation)}>
-      <section>
-        <h2 className='mb-3'>Welcome!</h2>
-        <p className='mb-3'>
-          Let&apos;s get to know you a little better...
-          <br />
-          Complete your profile by uploading a profile picture and letting us
-          know your name.
-        </p>
-      </section>
       <div>
         {/* <ImageUploader /> */}
 

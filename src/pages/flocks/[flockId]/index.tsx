@@ -57,7 +57,7 @@ export default function Flocks() {
                   {flock?.type}
                 </p>
               </div>
-              <div className='w-full ml-0 mt-4 lg:ml-auto md:mt-0 sm:w-auto flex self-start flex-wrap'>
+              <div className='w-full ml-0 mt-4 lg:ml-auto lg:mt-0 lg:w-auto flex self-start flex-wrap'>
                 <LogModal flockId={flockId?.toString()} />
                 <div className='p-1'></div>
                 <ExpenseModal flockId={flockId?.toString()} />
