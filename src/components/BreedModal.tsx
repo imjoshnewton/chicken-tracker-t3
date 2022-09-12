@@ -118,6 +118,7 @@ const BreedModal = ({
       createNewBreed.mutate({
         flockId: breedData.flockId,
         name: breedData.name!,
+        breed: breedData.breed!,
         description: breedData.description ? breedData.description : "",
         imageUrl: downloadURL
           ? downloadURL
@@ -133,6 +134,7 @@ const BreedModal = ({
         id: breedData.id,
         flockId: breedData.flockId,
         name: breedData.name!,
+        breed: breedData.breed!,
         description: breedData.description ? breedData.description : "",
         imageUrl: downloadURL
           ? downloadURL
@@ -221,6 +223,16 @@ const BreedModal = ({
                       className='appearance-none border rounded w-full py-2 px-1 text-black'
                       required
                       {...register("name")}
+                      type='text'
+                    />
+
+                    <label className='block text-black text-sm font-bold mb-1'>
+                      Breed
+                    </label>
+                    <input
+                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      required
+                      {...register("breed")}
                       type='text'
                     />
                     <label className='block text-black text-sm font-bold mb-1'>

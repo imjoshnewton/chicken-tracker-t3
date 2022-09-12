@@ -17,6 +17,7 @@ export const breedssRouter = createProtectedRouter()
   .mutation("createBreed", {
     input: z.object({
       name: z.string(),
+      breed: z.string(),
       description: z.string().optional(),
       count: z.number(),
       averageProduction: z.number(),
@@ -32,7 +33,8 @@ export const breedssRouter = createProtectedRouter()
   .mutation("updateBreed", {
     input: z.object({
       id: z.string(),
-      name: z.string(),
+      name: z.string().nullish(),
+      breed: z.string(),
       description: z.string(),
       count: z.number(),
       averageProduction: z.number(),
@@ -45,8 +47,9 @@ export const breedssRouter = createProtectedRouter()
           id: input.id,
         },
         data: {
-          name: input.name,
-          description: input.description,
+          name: input.name ? input.name : "",
+          breed: input.breed,
+          description: input.description ? input.description : "",
           count: input.count,
           imageUrl: input.imageUrl ? input.imageUrl : "",
           averageProduction: input.averageProduction,
