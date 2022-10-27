@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createProtectedRouter } from "./protected-router";
+import { JWT } from "google-auth-library";
 
 export const flocksRouter = createProtectedRouter()
   .query("getFlock", {
@@ -83,9 +84,83 @@ export const flocksRouter = createProtectedRouter()
           ownerId: flockRes.userId,
         };
 
-        console.log("Test MSG Data: ", msgData);
+        const client = new JWT({
+          email: process.env.GCP_CLIENT_EMAIL,
+          key: process.env.GCP_PRIVATE_KEY,
+          scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+        });
+
+        const dataBuffer = Buffer.from(JSON.stringify(msgData)).toString(
+          "base64"
+        );
+
+        const url =
+          "https://pubsub.googleapis.com/v1/projects/chicken-tracker-83ef8/topics/defaultFlock:publish";
+
+        // const options = {
+        //   url: url,
+        //   method: "POST",
+        //   data: {
+        //     messages: [
+        //       {
+        //         data: dataBuffer,
+        //       },
+        //     ],
+        //   },
+        // };
+
+        const response = await client.request({
+          url: url,
+          method: "POST",
+          data: {
+            messages: [
+              {
+                data: dataBuffer,
+              },
+            ],
+          },
+        });
+        console.log(response);
+
+        // const response = await fetch(url, {
+        //   method: "POST",
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   body: JSON.stringify({
+        //     messages: [
+        //       {
+        //         data: Buffer.from(JSON.stringify(msgData)).toString("base64"),
+        //       },
+        //     ],
+        //   }),
+        // });
+
+        // console.log("Test MSG Data: ", response);
       }
 
       return flockRes;
     },
   });
+
+// const topicName = "test-topic";
+
+// module.exports.publisher = async (event) => {
+//   console.log(event.body);
+//   const dataBuffer = Buffer.from(event.body).toString("base64");
+//   const url = `https://pubsub.googleapis.com/v1/${topicName}:publish`;
+//   const options = {
+//     url: url,
+//     method: "POST",
+//     data: {
+//       messages: [
+//         {
+//           data: dataBuffer,
+//         },
+//       ],
+//     },
+//   };
+//   const res = await client.request(options);
+//   console.log(res.data);
+//   return res.data;
+// };

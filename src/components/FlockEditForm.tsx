@@ -20,7 +20,7 @@ export default function FlockForm({
 }) {
   const router = useRouter();
   const { register, handleSubmit, formState, reset, watch } = useForm({
-    defaultValues: { ...flock, image: null as any },
+    defaultValues: { ...flock, image: null as any, default: false },
     mode: "onChange",
   });
 
@@ -96,7 +96,9 @@ export default function FlockForm({
       });
   };
 
-  const createOrUpdateFlock = (flockData: Flock & { breeds: Breed[] }) => {
+  const createOrUpdateFlock = (
+    flockData: Flock & { breeds: Breed[] } & { default: boolean }
+  ) => {
     console.log(
       "Data: ",
       flockData.name,
@@ -113,6 +115,7 @@ export default function FlockForm({
         description: flockData.description ? flockData.description : "",
         type: flockData.type,
         imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+        default: flockData.default,
       });
     } else {
       createFlock.mutate({
@@ -166,42 +169,6 @@ export default function FlockForm({
           </p>
         </fieldset>
 
-        {/* <fieldset className='mb-3'>
-          <label
-            className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-            htmlFor='file_input'>
-            Flock image
-          </label>
-          {uploading ? (
-            <>
-              <Loader show={true} />
-              <h3>{progress}%</h3>
-            </>
-          ) : (!uploading && downloadURL) || flock?.imageUrl ? (
-            <img
-              src={downloadURL ? downloadURL : flock!.imageUrl!}
-              width='100'
-              height='100'
-              className='flock-image'
-            />
-          ) : (
-            <></>
-          )}
-          <input
-            className='block w-full py-1 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 file-input'
-            aria-describedby='file_input_help'
-            id='image'
-            type='file'
-            accept='image/x-png,image/gif,image/jpeg'
-            {...register("image")}
-          />
-          <p
-            className='mt-1 text-sm text-gray-500 dark:text-gray-300'
-            id='file_input_help'>
-            SVG, PNG, JPG or GIF (MAX. 200x200px).
-          </p>
-        </fieldset> */}
-
         <fieldset className='mb-3'>
           <label>Name</label>
           <input
@@ -219,6 +186,10 @@ export default function FlockForm({
             type='text'
             {...register("description")}
           />
+        </fieldset>
+        <fieldset className='mb-6'>
+          <label>Make default:&nbsp;</label>
+          <input type='checkbox' {...register("default")}></input>
         </fieldset>
         <fieldset className='mb-6'>
           <label>Type:&nbsp;</label>
