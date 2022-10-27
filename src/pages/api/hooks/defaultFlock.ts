@@ -6,7 +6,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log(req.body);
 
   const message = req.body.message;
-  const data = Buffer.from(req.body.message.data, "base64").toJSON();
+  const data = JSON.parse(
+    Buffer.from(req.body.message.data, "base64").toString()
+  );
 
   console.log("Data: ", data);
 
