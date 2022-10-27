@@ -61,9 +61,10 @@ export const flocksRouter = createProtectedRouter()
       description: z.string(),
       type: z.string(),
       imageUrl: z.string().nullable(),
+      default: z.boolean().optional(),
     }),
     async resolve({ input, ctx }) {
-      return await ctx.prisma.flock.update({
+      const flockRes = await ctx.prisma.flock.update({
         where: {
           id: input.id,
         },
@@ -74,5 +75,17 @@ export const flocksRouter = createProtectedRouter()
           imageUrl: input.imageUrl ? input.imageUrl : "",
         },
       });
+
+      if (input.default) {
+        // Send a message to cloud pubsub
+        const msgData = {
+          flockId: flockRes.id,
+          ownerId: flockRes.userId,
+        };
+
+        console.log("Test MSG Data: ", msgData);
+      }
+
+      return flockRes;
     },
   });
