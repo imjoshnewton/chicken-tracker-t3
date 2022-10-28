@@ -112,18 +112,19 @@ export const flocksRouter = createProtectedRouter()
         //   },
         // };
 
-        // const response = await client.request({
-        //   url: url,
-        //   method: "POST",
-        //   data: {
-        //     messages: [
-        //       {
-        //         data: dataBuffer,
-        //       },
-        //     ],
-        //   },
-        // });
-        // console.log(response);
+        const response = await client.request({
+          url: url,
+          method: "POST",
+          data: {
+            messages: [
+              {
+                data: dataBuffer,
+              },
+            ],
+          },
+        });
+
+        console.log(response);
 
         // const response = await fetch(url, {
         //   method: "POST",
