@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState<Date>();
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState<number>();
   const [notes, setNotes] = useState<string>();
 
   const utils = trpc.useContext();
@@ -97,7 +97,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       required
                       value={count}
                       onChange={(e) => setCount(Number(e.target.value))}
-                      placeholder='0'
+                      placeholder=''
                       type='number'
                     />
                     <label className='block text-black text-sm font-bold mb-1'>
