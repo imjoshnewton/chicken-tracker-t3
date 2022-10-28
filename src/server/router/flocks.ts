@@ -84,6 +84,8 @@ export const flocksRouter = createProtectedRouter()
           ownerId: flockRes.userId,
         };
 
+        console.log("Private Key: ", process.env.GCP_PRIVATE_KEY);
+
         const client = new JWT({
           email: process.env.GCP_CLIENT_EMAIL,
           key: process.env.GCP_PRIVATE_KEY,
