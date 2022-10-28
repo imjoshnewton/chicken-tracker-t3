@@ -97,7 +97,7 @@ export const flocksRouter = createProtectedRouter()
         const url =
           "https://pubsub.googleapis.com/v1/projects/chicken-tracker-83ef8/topics/defaultFlock:publish";
 
-        console.log("Client: ", client);
+        // console.log("Client: ", client);
         console.log("Data: ", dataBuffer);
 
         // const options = {
