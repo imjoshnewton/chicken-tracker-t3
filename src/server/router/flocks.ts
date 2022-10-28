@@ -84,14 +84,11 @@ export const flocksRouter = createProtectedRouter()
           ownerId: flockRes.userId,
         };
 
-        console.log(
-          "Private Key: ",
-          process.env.GCP_PRIVATE_KEY?.replace(/\\n/gm, "\n")
-        );
+        console.log("Private Key: ", JSON.parse(process.env.GCP_PRIVATE_KEY!));
 
         const client = new JWT({
           email: process.env.GCP_CLIENT_EMAIL,
-          key: process.env.GCP_PRIVATE_KEY?.replace(/\\n/gm, "\n"), //process.env.GCP_PRIVATE_KEY,
+          key: JSON.parse(process.env.GCP_PRIVATE_KEY!),
           scopes: ["https://www.googleapis.com/auth/cloud-platform"],
         });
 
