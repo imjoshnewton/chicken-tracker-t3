@@ -77,67 +77,67 @@ export const flocksRouter = createProtectedRouter()
         },
       });
 
-      if (input.default) {
-        // Send a message to cloud pubsub
-        const msgData = {
-          flockId: flockRes.id,
-          ownerId: flockRes.userId,
-        };
+      // if (input.default) {
+      //   // Send a message to cloud pubsub
+      //   const msgData = {
+      //     flockId: flockRes.id,
+      //     ownerId: flockRes.userId,
+      //   };
 
-        const client = new JWT({
-          email: process.env.GCP_CLIENT_EMAIL,
-          key: process.env.GCP_PRIVATE_KEY,
-          scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-        });
+      //   const client = new JWT({
+      //     email: process.env.GCP_CLIENT_EMAIL,
+      //     key: process.env.GCP_PRIVATE_KEY,
+      //     scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+      //   });
 
-        const dataBuffer = Buffer.from(JSON.stringify(msgData)).toString(
-          "base64"
-        );
+      //   const dataBuffer = Buffer.from(JSON.stringify(msgData)).toString(
+      //     "base64"
+      //   );
 
-        const url =
-          "https://pubsub.googleapis.com/v1/projects/chicken-tracker-83ef8/topics/defaultFlock:publish";
+      //   const url =
+      //     "https://pubsub.googleapis.com/v1/projects/chicken-tracker-83ef8/topics/defaultFlock:publish";
 
-        // const options = {
-        //   url: url,
-        //   method: "POST",
-        //   data: {
-        //     messages: [
-        //       {
-        //         data: dataBuffer,
-        //       },
-        //     ],
-        //   },
-        // };
+      // const options = {
+      //   url: url,
+      //   method: "POST",
+      //   data: {
+      //     messages: [
+      //       {
+      //         data: dataBuffer,
+      //       },
+      //     ],
+      //   },
+      // };
 
-        const response = await client.request({
-          url: url,
-          method: "POST",
-          data: {
-            messages: [
-              {
-                data: dataBuffer,
-              },
-            ],
-          },
-        });
-        console.log(response);
+      // const response = await client.request({
+      //   url: url,
+      //   method: "POST",
+      //   data: {
+      //     messages: [
+      //       {
+      //         data: dataBuffer,
+      //       },
+      //     ],
+      //   },
+      // });
+      // console.log(response);
 
-        // const response = await fetch(url, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     messages: [
-        //       {
-        //         data: Buffer.from(JSON.stringify(msgData)).toString("base64"),
-        //       },
-        //     ],
-        //   }),
-        // });
+      // const response = await fetch(url, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({
+      //     messages: [
+      //       {
+      //         data: Buffer.from(JSON.stringify(msgData)).toString("base64"),
+      //       },
+      //     ],
+      //   }),
+      // });
 
-        // console.log("Test MSG Data: ", response);
-      }
+      // console.log("Test MSG Data: ", response);
+      // }
 
       return flockRes;
     },
