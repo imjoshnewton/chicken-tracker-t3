@@ -1,5 +1,8 @@
+import { useSession } from "next-auth/react";
 import Card from "../../components/Card";
 import FlockForm from "../../components/FlockEditForm";
+import Loader from "../../components/Loader";
+import NewUserForm from "../../components/NewUserForm";
 
 export default function NewUser() {
   const { data } = useSession();
@@ -74,33 +77,4 @@ export default function NewUser() {
       </div>
     </main>
   );
-}
-
-import { authOptions } from "../api/auth/[...nextauth]";
-import { unstable_getServerSession } from "next-auth/next";
-import { useSession } from "next-auth/react";
-import Loader from "../../components/Loader";
-import NewUserForm from "../../components/NewUserForm";
-
-export async function getServerSideProps(context: any) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/api/auth/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session,
-    },
-  };
 }

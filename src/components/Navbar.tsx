@@ -19,7 +19,7 @@ import { signOut } from "next-auth/react";
 
 // Top navbar
 export default function Navbar({ children }: { children: any }) {
-  const { user, defaultFlock } = useUserData();
+  const { user } = useUserData();
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;

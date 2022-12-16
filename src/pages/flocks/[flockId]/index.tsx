@@ -87,29 +87,3 @@ export default function Flocks() {
     </main>
   );
 }
-
-import { authOptions } from "../../api/auth/[...nextauth]";
-import { unstable_getServerSession } from "next-auth/next";
-
-export async function getServerSideProps(context: any) {
-  const session = await unstable_getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/api/auth/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      session,
-    },
-  };
-}

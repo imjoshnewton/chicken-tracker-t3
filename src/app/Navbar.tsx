@@ -19,7 +19,7 @@ import { usePathname } from "next/navigation";
 
 // Top navbar
 export default function Navbar({ children }: { children: any }) {
-  const { user, defaultFlock } = useUserData();
+  const { user } = useUserData();
   // const router = useRouter();
   const pathname = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);

@@ -2,7 +2,7 @@ import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
 
-//
+//s
 // Custom hook to get user's session data
 //
 export function useUserData() {
@@ -10,7 +10,11 @@ export function useUserData() {
     required: true,
   });
 
-  return { user: data?.user, defaultFlock: data?.defaultFlock, status };
+  return {
+    user: data?.user,
+    defaultFlock: (data as any)?.defaultFlock,
+    status,
+  };
 }
 
 //
