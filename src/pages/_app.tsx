@@ -7,10 +7,11 @@ import { SessionProvider } from "next-auth/react";
 import Navbar from "../components/Navbar";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
+import { type Session } from "next-auth";
 
 import "../styles/globals.scss";
 
-const MyApp: AppType = ({
+const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
