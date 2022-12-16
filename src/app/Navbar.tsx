@@ -14,15 +14,18 @@ import { AiOutlineDollar } from "react-icons/ai";
 
 import logo from "../../public/chicken.svg";
 import { useState } from "react";
-import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 
 // Top navbar
 export default function Navbar({ children }: { children: any }) {
   const { user, defaultFlock } = useUserData();
-  const router = useRouter();
+  // const router = useRouter();
+  const pathname = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
+
+  // console.log("Router: ", router);
 
   return (
     <>
@@ -138,13 +141,11 @@ export default function Navbar({ children }: { children: any }) {
             ? "h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-2xl"
             : "-translate-x-52 lg:translate-x-0 h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-lg"
         }>
-        {/* {router.pathname} */}
+        {/* {pathname} */}
         <ul className='pt-7 side-nav'>
           <li
             className={`mb-0 px-2 ${
-              router.pathname.startsWith("/flocks")
-                ? "bg-gray-400 text-white"
-                : ""
+              pathname?.startsWith("/flocks") ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
             <Link
               href={`/flocks/`}
@@ -158,7 +159,7 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/logs" ? "bg-gray-400 text-white" : ""
+              pathname == "/logs" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
             <Link
               href={`/logs`}
@@ -172,7 +173,7 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/expenses" ? "bg-gray-400 text-white" : ""
+              pathname == "/expenses" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
             <Link
               href={`/expenses`}
@@ -189,7 +190,7 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/settings" ? "bg-gray-400 text-white" : ""
+              pathname == "/settings" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
             <Link
               href='/settings'
@@ -203,7 +204,7 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/logout" ? "bg-gray-400 text-white" : ""
+              pathname == "/logout" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}>
             <button
               className='flex items-center px-2 py-3'

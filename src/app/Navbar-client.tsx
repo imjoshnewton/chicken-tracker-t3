@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useUserData } from "../libs/hooks";
 
 import {
   MdOutlineEditNote,
@@ -18,8 +17,21 @@ import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 
 // Top navbar
-export default function Navbar({ children }: { children: any }) {
-  const { user, defaultFlock } = useUserData();
+export default function NavbarClient({
+  user,
+  children,
+}: {
+  user:
+    | ({
+        id: string;
+      } & {
+        name?: string | null | undefined;
+        email?: string | null | undefined;
+        image?: string | null | undefined;
+      })
+    | undefined;
+  children: any;
+}) {
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
@@ -89,24 +101,6 @@ export default function Navbar({ children }: { children: any }) {
                 )}
                 {/* </Link> */}
                 <div className='multilink-content fadeIn top-16 right-2 lg:right-auto'>
-                  {/* <Link href={`/flocks/`}>
-                    <a className='flex items-center'>
-                      <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
-                      My Flocks
-                    </a>
-                  </Link>
-                  <Link href={`/logs`}>
-                    <a className='flex items-center'>
-                      <MdOutlineEditNote className='mr-1 inline text-2xl' /> All
-                      Logs
-                    </a>
-                  </Link>
-                  <Link href={`/expenses`}>
-                    <a className='flex items-center'>
-                      <AiOutlineDollar className='mr-3 inline text-xl mt-[-3px]' />
-                      All Expenses
-                    </a>
-                  </Link> */}
                   <Link href='/api/auth/signout' className='flex items-center'>
                     <MdLogout className='mr-3 inline text-xl' />
                     Logout

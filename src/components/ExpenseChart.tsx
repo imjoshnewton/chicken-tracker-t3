@@ -319,10 +319,10 @@ export default function ExpenseChart({
           </div>
         </div> */}
         <div className='p-2'></div>
-        <Link href='/expenses'>
-          <a className='text-stone-400 hover:text-stone-700 transition-colors'>
-            See all expenses &gt;
-          </a>
+        <Link
+          href='/expenses'
+          className='text-stone-400 hover:text-stone-700 transition-colors'>
+          See all expenses &gt;
         </Link>
       </div>
     </div>

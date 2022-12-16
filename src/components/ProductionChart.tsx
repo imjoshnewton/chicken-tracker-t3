@@ -179,10 +179,10 @@ export default function ProductionChart({
             id='productionChart'></Line>
         </div>
         <div className='p-2'></div>
-        <Link href='/logs'>
-          <a className='text-stone-400 hover:text-stone-700 transition-colors'>
-            See all logs &gt;
-          </a>
+        <Link
+          href='/logs'
+          className='text-stone-400 hover:text-stone-700 transition-colors'>
+          See all logs &gt;
         </Link>
         <div className='p-2'></div>
         <div className='flex justify-around'>

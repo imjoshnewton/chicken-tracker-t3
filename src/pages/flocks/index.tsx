@@ -52,35 +52,33 @@ export default function Flocks() {
           return (
             <li className='basis-full sm:basis-1/2 lg:basis-1/3' key={flock.id}>
               <Link href={`/flocks/${flock.id}`}>
-                <a>
-                  <div className='shadow hover:shadow-2xl'>
-                    <Card title={"Flock"}>
-                      <div className='flex items-center flex-wrap sm:flex-nowrap'>
-                        <Image
-                          src={flock?.imageUrl}
-                          width='150'
-                          height='150'
-                          className='flock-image'
-                          alt=''
-                        />
-                        {/* <pre>{limit}</pre> */}
-                        <div className='ml-0 md:ml-6'>
-                          <div className='flex items-center'>
-                            <h1 className='mr-3 dark:text-gray-300'>
-                              {flock?.name}
-                            </h1>
-                          </div>
-                          <p className='description dark:text-gray-300'>
-                            {flock?.description}
-                          </p>
-                          <p className='text-gray-400 mt-2 dark:text-gray-400'>
-                            {flock?.type}
-                          </p>
+                <div className='shadow hover:shadow-2xl'>
+                  <Card title={"Flock"}>
+                    <div className='flex items-center flex-wrap sm:flex-nowrap'>
+                      <Image
+                        src={flock?.imageUrl}
+                        width='150'
+                        height='150'
+                        className='flock-image'
+                        alt=''
+                      />
+                      {/* <pre>{limit}</pre> */}
+                      <div className='ml-0 md:ml-6'>
+                        <div className='flex items-center'>
+                          <h1 className='mr-3 dark:text-gray-300'>
+                            {flock?.name}
+                          </h1>
                         </div>
+                        <p className='description dark:text-gray-300'>
+                          {flock?.description}
+                        </p>
+                        <p className='text-gray-400 mt-2 dark:text-gray-400'>
+                          {flock?.type}
+                        </p>
                       </div>
-                    </Card>
-                  </div>
-                </a>
+                    </div>
+                  </Card>
+                </div>
               </Link>
             </li>
           );

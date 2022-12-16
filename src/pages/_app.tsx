@@ -4,10 +4,11 @@ import type { AppRouter } from "../server/router";
 import type { AppType } from "next/dist/shared/lib/utils";
 import superjson from "superjson";
 import { SessionProvider } from "next-auth/react";
-import "../styles/globals.scss";
 import Navbar from "../components/Navbar";
 import Head from "next/head";
 import { Toaster } from "react-hot-toast";
+
+import "../styles/globals.scss";
 
 const MyApp: AppType = ({
   Component,
@@ -57,5 +58,5 @@ export default withTRPC<AppRouter>({
   /**
    * @link https://trpc.io/docs/ssr
    */
-  ssr: true,
+  ssr: false,
 })(MyApp);

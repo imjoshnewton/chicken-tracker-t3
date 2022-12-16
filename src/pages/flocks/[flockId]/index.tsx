@@ -31,11 +31,11 @@ export default function Flocks() {
       {flock ? (
         <div className='shadow-xl'>
           <Card title='Flock Details' key={flockId?.toString()}>
-            <Link href={`/flocks/${flockId}/edit`}>
-              <a className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 mt-3 mr-5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors'>
-                Edit&nbsp;&nbsp;
-                <MdOutlineEdit />
-              </a>
+            <Link
+              href={`/flocks/${flockId}/edit`}
+              className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 mt-3 mr-5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors'>
+              Edit&nbsp;&nbsp;
+              <MdOutlineEdit />
             </Link>
             <div className='flex items-center flex-wrap'>
               <Image
