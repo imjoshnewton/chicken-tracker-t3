@@ -22,6 +22,10 @@ export default function Breeds({
   const [showModal, setShowModal] = useState(false);
   const [selectedBreed, setSellectedBreed] = useState<Breed | null>(null);
 
+  const totalBirds = breeds
+    .map((b) => b.count)
+    .reduce((acc, current) => acc + current);
+
   if (!breeds) {
     return (
       <div className="flex basis-[48%] items-center justify-center">
@@ -37,6 +41,9 @@ export default function Breeds({
         onClick={() => setIsActive(!isActive)}
       >
         Birds
+        <span className="hidden sm:hidden md:hidden lg:block">
+          {totalBirds}
+        </span>
         {isActive ? (
           <MdOutlineExpandLess className="inline lg:hidden" />
         ) : (
@@ -73,12 +80,10 @@ export default function Breeds({
               <div className="relative h-full basis-1/5">
                 <Image
                   src={breed.imageUrl!}
-                  // width='60'
-                  // height='60'
                   layout="fill"
                   objectFit="cover"
                   className="rounded-l-lg"
-                  alt=""
+                  alt={breed.name ?? ""}
                 />
               </div>
               <div className="p-3 dark:text-gray-300">
