@@ -60,14 +60,14 @@ export default function Navbar({ children }: { children: any }) {
           <li className="translate-x-2 cursor-pointer sm:translate-x-0">
             <Link href="/">
               <span className="flex items-center">
-                <span className="hidden sm:inline">Chicken&nbsp;</span>
+                <span className="hidden sm:inline">Flock&nbsp;</span>
                 <Image
                   src={logo}
                   width="40"
                   height="40"
-                  alt="Chicken tracker logo the white outline of a chicken"
+                  alt="Flock Nerd logo the white outline of a chicken"
                 />
-                <span className="hidden sm:inline">&nbsp;Tracker</span>
+                <span className="hidden sm:inline">&nbsp;Nerd</span>
               </span>
             </Link>
           </li>

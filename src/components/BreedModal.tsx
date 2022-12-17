@@ -169,7 +169,7 @@ const BreedModal = ({
               <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
                 <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
                   <h3 className="font=semibold text-xl">
-                    {breed?.id ? "Edit Breed" : "Add Chickens"}
+                    {breed?.id ? "Edit Breed" : "Add Birds"}
                   </h3>
                   {breed?.id ? (
                     <button
@@ -276,7 +276,7 @@ const BreedModal = ({
                     Close
                   </button>
                   <button
-                    className="bg-secondary mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                    className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                     type="submit"
                     onClick={handleSubmit(createOrUpdateBreed)}
                   >

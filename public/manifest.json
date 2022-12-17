@@ -4,9 +4,9 @@
   "display": "standalone",
   "scope": "/",
   "start_url": "/",
-  "name": "Chicken Tracker: Know what's up with your flock",
-  "short_name": "Chicken Tracker",
-  "description": "Track egg production, get stats, track expenses",
+  "name": "Flock Nerd: Flock stats for nerds",
+  "short_name": "Flock Nerd",
+  "description": "Track egg production and expenses, get stats",
   "icons": [
     {
       "src": "/manifest-icon-192.maskable.png",

@@ -24,7 +24,7 @@ export default function Breeds({
 
   if (!breeds) {
     return (
-      <div className='flex justify-center items-center basis-[48%]'>
+      <div className="flex basis-[48%] items-center justify-center">
         <Loader show={true}></Loader>
       </div>
     );
@@ -33,27 +33,29 @@ export default function Breeds({
   return (
     <div className={className}>
       <h2
-        className='flex justify-between items-center mb-6 dark:text-gray-300'
-        onClick={() => setIsActive(!isActive)}>
-        Chickens
+        className="mb-6 flex items-center justify-between dark:text-gray-300"
+        onClick={() => setIsActive(!isActive)}
+      >
+        Birds
         {isActive ? (
-          <MdOutlineExpandLess className='inline lg:hidden' />
+          <MdOutlineExpandLess className="inline lg:hidden" />
         ) : (
-          <MdOutlineExpandMore className='inline lg:hidden' />
+          <MdOutlineExpandMore className="inline lg:hidden" />
         )}
       </h2>
       <ul
         className={
           isActive
             ? "flex flex-wrap justify-between dark:text-gray-300"
-            : "hidden lg:flex justify-between flex-wrap dark:text-gray-300"
-        }>
+            : "hidden flex-wrap justify-between dark:text-gray-300 lg:flex"
+        }
+      >
         {breeds.length < 1 && (
-          <div className='text-center basis-full'>
-            <p className='mb-3'>
+          <div className="basis-full text-center">
+            <p className="mb-3">
               A flock isn&apos;t much of a flock without any chickens...
             </p>
-            <p className='mb-4'>
+            <p className="mb-4">
               Click the button below to add your first breed. 👇
             </p>
           </div>
@@ -61,24 +63,25 @@ export default function Breeds({
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li
-              className='flex items-center mb-4 rounded-lg shadow basis-[100%] hover:cursor-pointer hover:shadow-lg border transition-shadow'
+              className="mb-4 flex basis-[100%] items-center rounded-lg border shadow transition-shadow hover:cursor-pointer hover:shadow-lg"
               key={index}
               onClick={() => {
                 setSellectedBreed(breed);
                 setShowModal(true);
-              }}>
-              <div className='h-full basis-1/5 relative'>
+              }}
+            >
+              <div className="relative h-full basis-1/5">
                 <Image
                   src={breed.imageUrl!}
                   // width='60'
                   // height='60'
-                  layout='fill'
-                  objectFit='cover'
-                  className='rounded-l-lg'
-                  alt=''
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-l-lg"
+                  alt=""
                 />
               </div>
-              <div className='p-3 dark:text-gray-300'>
+              <div className="p-3 dark:text-gray-300">
                 <p>
                   <strong>{`${breed.name ? breed.name : ""}${
                     breed.name ? " - " : ""
@@ -92,14 +95,15 @@ export default function Breeds({
           );
         })}
         <button
-          className='px-4 py-2 rounded hover:shadow-lg bg-white outline-none focus:outline-none mr-1 w-full xl:w-auto h-10 basis-full mt-4 mb-1 transition-all'
-          type='button'
+          className="mr-1 mt-4 mb-1 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none xl:w-auto"
+          type="button"
           onClick={() => {
             setShowModal(true);
             setSellectedBreed(null);
-          }}>
-          <MdAdd className='text-2xl' />
-          &nbsp;Add Chickens
+          }}
+        >
+          <MdAdd className="text-2xl" />
+          &nbsp;Add Birds
         </button>
       </ul>
       {showModal ? (
