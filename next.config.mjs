@@ -1,37 +1,42 @@
-import { env } from "./src/env/server.mjs";
 import withPWA from "next-pwa";
 import runtimeCaching from "next-pwa/cache.js";
 
+const pwa = withPWA({
+  dest: "./public",
+  register: true,
+  skipWaiting: true,
+  runtimeCaching,
+  disable: process.env.NODE_ENV === "development",
+});
+// @ts-check
 /**
- * Don't be scared of the generics here.
- * All they do is to give us autocompletion when using this.
- *
- * @template {import('next').NextConfig} T
- * @param {T} config - A generic parameter that flows through to the return type
- * @constraint {{import('next').NextConfig}}
+ * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
+ * This is especially useful for Docker builds.
  */
-function defineNextConfig(config) {
-  return config;
-}
+!process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
-export default //{
-defineNextConfig(
-  withPWA({
-    reactStrictMode: true,
-    swcMinify: true,
-    experimental: {
-      appDir: true,
-    },
-    images: {
-      domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
-      formats: ["image/avif", "image/webp"],
-    },
-    pwa: {
-      dest: "./public",
-      register: true,
-      skipWaiting: true,
-      runtimeCaching,
-      disable: process.env.NODE_ENV === "development",
-    },
-  })
-);
+/** @type {import("next").NextConfig} */
+const config = {
+  reactStrictMode: true,
+  swcMinify: true,
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en",
+  },
+  images: {
+    domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
+    formats: ["image/avif", "image/webp"],
+  },
+};
+// export default config;
+export default pwa(config);
+// export default withPWA({
+// pwa: {
+//   dest: "./public",
+//   register: true,
+//   skipWaiting: true,
+//   runtimeCaching,
+//   disable: process.env.NODE_ENV === "development",
+// },
+// ...config,
+// });

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { MdImage } from "react-icons/md";
-import { storage } from "../libs/firebase";
+import { storage } from "../lib/firebase";
 import { trpc } from "../utils/trpc";
 import Loader from "./Loader";
 
@@ -31,7 +31,7 @@ export default function NewUserForm({
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
-  const updateUser = trpc.useMutation(["user.updateUser"], {
+  const updateUser = trpc.auth.updateUser.useMutation({
     onSuccess: (data) => {
       //   router.push("/auth/new-user?userUpdated=true");
       router.reload();
@@ -105,7 +105,7 @@ export default function NewUserForm({
       <div>
         {/* <ImageUploader /> */}
 
-        <fieldset className='mb-3'>
+        <fieldset className="mb-3">
           {uploading ? (
             <>
               <Loader show={true} />
@@ -114,49 +114,52 @@ export default function NewUserForm({
           ) : (!uploading && downloadURL) || user.image ? (
             <img
               src={downloadURL ? downloadURL : user.image!}
-              width='100'
-              height='100'
-              className='flock-image'
+              width="100"
+              height="100"
+              className="flock-image"
             />
           ) : (
             <></>
           )}
           <label
-            className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
-            htmlFor='image'>
+            className="mt-3 inline-flex items-center rounded bg-gray-400 px-3 py-2 text-white hover:cursor-pointer hover:bg-gray-500"
+            htmlFor="image"
+          >
             <MdImage />
             &nbsp;Upload image
             <input
-              className='hidden'
-              aria-describedby='file_input_help'
-              id='image'
-              type='file'
-              accept='image/x-png,image/gif,image/jpeg'
+              className="hidden"
+              aria-describedby="file_input_help"
+              id="image"
+              type="file"
+              accept="image/x-png,image/gif,image/jpeg"
               {...register("imageFile")}
             />
           </label>
           <p
-            className='mt-1 text-sm text-gray-500 dark:text-gray-300'
-            id='file_input_help'>
+            className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+            id="file_input_help"
+          >
             SVG, PNG, JPG or GIF (MAX. 850kb).
           </p>
         </fieldset>
 
-        <fieldset className='mb-3'>
+        <fieldset className="mb-3">
           <label>Name</label>
           <input
-            className='appearance-none border rounded w-full py-2 px-1 text-black'
+            className="w-full appearance-none rounded border py-2 px-1 text-black"
             // name='name'
-            type='text'
+            type="text"
             {...register("name")}
           />
         </fieldset>
 
-        <div className='flex items-center mt-4'>
+        <div className="mt-4 flex items-center">
           <button
-            type='submit'
-            className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 btn w-full md:w-auto h-10 mr-3 transition-all'
-            disabled={!isDirty || !isValid}>
+            type="submit"
+            className="btn mb-1 mr-3 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+            disabled={!isDirty || !isValid}
+          >
             Update Profile
           </button>
         </div>

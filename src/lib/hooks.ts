@@ -32,27 +32,24 @@ export function useFlockData() {
   now.setHours(0, 0, 0, 0);
   const today = now;
 
-  const flockData = trpc.useQuery(
-    ["flocks.getFlock", { flockId: flockId?.toString() }],
+  const flockData = trpc.flocks.getFlock.useQuery(
+    { flockId: flockId as string },
     {
       enabled: !!flockId && !!data?.user,
     }
   );
-  const logsData = trpc.useQuery(
-    [
-      "stats.getStats",
-      {
-        flockId: flockId?.toString(),
-        limit: range,
-        today: today,
-      },
-    ],
+  const logsData = trpc.stats.getStats.useQuery(
+    {
+      flockId: flockId as string,
+      limit: range,
+      today: today,
+    },
     {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
-  const expenseData = trpc.useQuery(
-    ["stats.getExpenseStats", { today: today }],
+  const expenseData = trpc.stats.getExpenseStats.useQuery(
+    { today: today },
     {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
@@ -80,7 +77,7 @@ export function useFlockData() {
 
 export function useAllFlocks() {
   const { data } = useSession({ required: true });
-  const flocks = trpc.useQuery(["flocks.getFlocks"], { enabled: !!data?.user });
+  const flocks = trpc.flocks.getFlocks.useQuery();
 
   return {
     flocks: flocks.data,

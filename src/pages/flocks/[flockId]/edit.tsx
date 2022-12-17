@@ -1,5 +1,5 @@
 import Card from "../../../components/Card";
-import { useFlockData, useUserData } from "../../../libs/hooks";
+import { useFlockData, useUserData } from "../../../lib/hooks";
 import Loader from "../../../components/Loader";
 import FlockForm from "../../../components/FlockEditForm";
 
@@ -9,7 +9,7 @@ export default function Edit() {
 
   return (
     <main>
-      <Card title='Edit Flock'>
+      <Card title="Edit Flock">
         {flock && user ? (
           <FlockForm flock={flock} userId={user.id}></FlockForm>
         ) : (

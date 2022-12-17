@@ -4,8 +4,8 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { trpc } from "../utils/trpc";
 import { Breed } from "@prisma/client";
 import Loader from "./Loader";
-import { useUserData } from "../libs/hooks";
-import { storage } from "../libs/firebase";
+import { useUserData } from "../lib/hooks";
+import { storage } from "../lib/firebase";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 
@@ -27,21 +27,21 @@ const BreedModal = ({
   });
   const utils = trpc.useContext();
 
-  const createNewBreed = trpc.useMutation(["breeds.createBreed"], {
+  const createNewBreed = trpc.breeds.createBreed.useMutation({
     onSuccess: () => {
       toast.success("New breed created!");
       invalidateAllFlockPageQueries();
     },
   });
 
-  const updateBreed = trpc.useMutation(["breeds.updateBreed"], {
+  const updateBreed = trpc.breeds.updateBreed.useMutation({
     onSuccess: () => {
       toast.success("Breed updated!");
       invalidateAllFlockPageQueries();
     },
   });
 
-  const deleteBreed = trpc.useMutation(["breeds.deleteBreed"], {
+  const deleteBreed = trpc.breeds.deleteBreed.useMutation({
     onSuccess: () => {
       toast.success("Breed deleted!");
       invalidateAllFlockPageQueries();
@@ -49,9 +49,9 @@ const BreedModal = ({
   });
 
   function invalidateAllFlockPageQueries() {
-    utils.invalidateQueries(["flocks.getFlock"]);
-    utils.invalidateQueries(["stats.getStats"]);
-    utils.invalidateQueries(["logs.getLogs"]);
+    utils.flocks.getFlock.invalidate();
+    utils.stats.getStats.invalidate();
+    utils.logs.getLogs.invalidate();
   }
 
   const [progress, setProgress] = useState(0);
@@ -164,116 +164,122 @@ const BreedModal = ({
     <>
       {show ? (
         <>
-          <div className='flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none modal-overlay'>
-            <div className='relative w-auto my-6 mx-auto max-w-3xl min-w-[350px]'>
-              <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-                <div className='flex items-center justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
-                  <h3 className='text-xl font=semibold'>
+          <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+            <div className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl">
+              <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
+                <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+                  <h3 className="font=semibold text-xl">
                     {breed?.id ? "Edit Breed" : "Add Chickens"}
                   </h3>
                   {breed?.id ? (
                     <button
                       onClick={() => deleteBreedClick(breed?.id)}
-                      className=' text-xl text-red-600 hover:bg-slate-50 p-3 hover:shadow rounded'>
+                      className=" rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
+                    >
                       <MdOutlineDelete />
                     </button>
                   ) : null}
                 </div>
-                <div className='relative flex-auto'>
+                <div className="relative flex-auto">
                   <form
-                    className='px-8 pt-6 pb-8 w-full'
-                    onSubmit={handleSubmit(createOrUpdateBreed)}>
-                    <fieldset className='mb-3'>
+                    className="w-full px-8 pt-6 pb-8"
+                    onSubmit={handleSubmit(createOrUpdateBreed)}
+                  >
+                    <fieldset className="mb-3">
                       {uploading ? (
                         <Loader show={true} />
                       ) : (!uploading && downloadURL) || breed?.imageUrl ? (
                         <img
                           src={downloadURL ? downloadURL : breed!.imageUrl!}
-                          width='100'
-                          height='100'
-                          className='flock-image'
+                          width="100"
+                          height="100"
+                          className="flock-image"
                         />
                       ) : (
                         <></>
                       )}
                       <label
-                        className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
-                        htmlFor='image'>
+                        className="mt-3 inline-flex items-center rounded bg-gray-400 px-3 py-2 text-white hover:cursor-pointer hover:bg-gray-500"
+                        htmlFor="image"
+                      >
                         <MdImage />
                         &nbsp;Upload image
                         <input
-                          className='hidden'
-                          aria-describedby='file_input_help'
-                          id='image'
-                          type='file'
-                          accept='image/x-png,image/gif,image/jpeg'
+                          className="hidden"
+                          aria-describedby="file_input_help"
+                          id="image"
+                          type="file"
+                          accept="image/x-png,image/gif,image/jpeg"
                           {...register("image")}
                         />
                       </label>
                       <p
-                        className='mt-1 text-sm text-gray-500 dark:text-gray-300'
-                        id='file_input_help'>
+                        className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                        id="file_input_help"
+                      >
                         SVG, PNG, JPG or GIF (MAX. 850kb).
                       </p>
                     </fieldset>
-                    <label className='block text-black text-sm font-bold mb-1'>
+                    <label className="mb-1 block text-sm font-bold text-black">
                       Name
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       {...register("name")}
-                      type='text'
+                      type="text"
                     />
 
-                    <label className='block text-black text-sm font-bold mb-1'>
+                    <label className="mb-1 block text-sm font-bold text-black">
                       Breed
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       {...register("breed")}
-                      type='text'
+                      type="text"
                     />
-                    <label className='block text-black text-sm font-bold mb-1'>
+                    <label className="mb-1 block text-sm font-bold text-black">
                       Description
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       {...register("description")}
-                      type='text'
+                      type="text"
                     />
-                    <label className='block text-black text-sm font-bold mb-1 mt-2'>
+                    <label className="mb-1 mt-2 block text-sm font-bold text-black">
                       Count
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       {...register("count")}
-                      type='text'
+                      type="text"
                     />
-                    <label className='block text-black text-sm font-bold mb-1 mt-2'>
+                    <label className="mb-1 mt-2 block text-sm font-bold text-black">
                       Average Weekly Production
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       {...register("averageProduction")}
-                      type='text'
+                      type="text"
                     />
                   </form>
                 </div>
-                <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b'>
+                <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
                   <button
-                    className='text-black background-transparent uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 hover:bg-slate-50 rounded'
-                    type='button'
-                    onClick={closeModal}>
+                    className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                    type="button"
+                    onClick={closeModal}
+                  >
                     Close
                   </button>
                   <button
-                    className='text-white bg-secondary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1'
-                    type='submit'
-                    onClick={handleSubmit(createOrUpdateBreed)}>
+                    className="bg-secondary mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                    type="submit"
+                    onClick={handleSubmit(createOrUpdateBreed)}
+                  >
                     Submit
                   </button>
                 </div>

@@ -3,15 +3,15 @@ import Card from "../../components/Card";
 import { trpc } from "../../utils/trpc";
 
 export default function Logs() {
-  const flocks = trpc.useQuery(["logs.getLogs"]);
+  const flocks = trpc.logs.getLogs.useQuery();
   const logs = flocks.data?.flatMap((f) => f.logs);
 
   const utils = trpc.useContext();
 
-  const mutation = trpc.useMutation("logs.deleteLog", {
+  const mutation = trpc.logs.deleteLog.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("stats.getStats");
-      utils.invalidateQueries("logs.getLogs");
+      utils.stats.getStats.invalidate();
+      utils.logs.getLogs.invalidate();
       toast.success("Log deleted!");
     },
   });
@@ -22,29 +22,31 @@ export default function Logs() {
 
   return (
     <main>
-      <div className='shadow-xl'>
-        <Card title='All Logs'>
-          <ul className='flex flex-col mt-4'>
+      <div className="shadow-xl">
+        <Card title="All Logs">
+          <ul className="mt-4 flex flex-col">
             {logs?.map((log) => {
               return (
                 <li
-                  className='mb-3 shadow min-h-[50px] flex items-center px-3 py-2 border-solid border rounded'
-                  key={log.id}>
-                  <div className='basis-1/3 md:basis-1/4'>
+                  className="mb-3 flex min-h-[50px] items-center rounded border border-solid px-3 py-2 shadow"
+                  key={log.id}
+                >
+                  <div className="basis-1/3 md:basis-1/4">
                     {log.date.toDateString()}
                   </div>
-                  <span className='basis-1/3 md:basis-1/6'>
+                  <span className="basis-1/3 md:basis-1/6">
                     Count: {log.count}
                   </span>
-                  <span className='basis-1/3 hidden md:block'>
+                  <span className="hidden basis-1/3 md:block">
                     Notes: {log.notes}
                   </span>
-                  <div className='ml-auto'>
+                  <div className="ml-auto">
                     <button
-                      className='bg-red-500 text-white hover:shadow-lg hover:cursor-pointer rounded py-1 px-2'
+                      className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
                       onClick={async () => {
                         await deleteLog(log.id);
-                      }}>
+                      }}
+                    >
                       Delete
                     </button>
                   </div>

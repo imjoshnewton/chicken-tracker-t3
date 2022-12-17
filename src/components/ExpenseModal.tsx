@@ -13,9 +13,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const utils = trpc.useContext();
 
-  const createExpenseMutation = trpc.useMutation(["expenses.createExpense"], {
+  const createExpenseMutation = trpc.expenses.createExpense.useMutation({
     onSuccess: () => {
-      utils.invalidateQueries("stats.getExpenseStats");
+      utils.stats.getExpenseStats.invalidate();
       toast.success("Expense added!");
     },
   });
@@ -55,23 +55,24 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   return (
     <>
       <button
-        className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 btn w-full md:w-auto h-10 transition-all'
-        type='button'
-        onClick={() => setShowModal(true)}>
-        <AiOutlineDollar className='text-xl' />
+        className="btn mr-1 mb-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+        type="button"
+        onClick={() => setShowModal(true)}
+      >
+        <AiOutlineDollar className="text-xl" />
         &nbsp;Add New Expense
       </button>
       {showModal ? (
         <>
-          <div className='flex justify-center items-center overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none modal-overlay'>
-            <div className='relative w-auto my-6 mx-auto max-w-3xl min-w-[350px]'>
-              <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
-                <div className='flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t '>
-                  <h3 className='text-xl font=semibold'>New Expense</h3>
+          <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
+            <div className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl">
+              <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
+                <div className="flex items-start justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+                  <h3 className="font=semibold text-xl">New Expense</h3>
                 </div>
-                <div className='relative flex-auto'>
+                <div className="relative flex-auto">
                   <form
-                    className='px-8 pt-6 pb-8 w-full'
+                    className="w-full px-8 pt-6 pb-8"
                     onSubmit={async (e) => {
                       e.preventDefault();
                       // await createNewLog(flockId, date, count, notes);
@@ -84,12 +85,13 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                           memo
                         );
                       }
-                    }}>
-                    <label className='block text-black text-sm font-bold mb-1'>
+                    }}
+                  >
+                    <label className="mb-1 block text-sm font-bold text-black">
                       Date
                     </label>
                     <input
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       onChange={(e) => {
                         if (e.target.valueAsDate) {
@@ -102,58 +104,60 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                           );
                         }
                       }}
-                      type='date'
+                      type="date"
                     />
-                    <label className='block text-black text-sm font-bold mb-1 mt-2'>
+                    <label className="mb-1 mt-2 block text-sm font-bold text-black">
                       Amount
                     </label>
                     <CurrencyInput
-                      id='amount-input'
-                      name='amount-input'
-                      prefix='$'
-                      placeholder='0.00'
+                      id="amount-input"
+                      name="amount-input"
+                      prefix="$"
+                      placeholder="0.00"
                       defaultValue={100.0}
                       decimalsLimit={2}
                       decimalScale={2}
                       onValueChange={(value, name) => setAmount(Number(value))}
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                     />
-                    <fieldset className='my-3'>
-                      <label className='block text-black text-sm font-bold mb-1 mt-2'>
+                    <fieldset className="my-3">
+                      <label className="mb-1 mt-2 block text-sm font-bold text-black">
                         Category:&nbsp;&nbsp;
                       </label>
                       <select
                         onChange={(e) => setCategory(e.target.value)}
                         value={category}
-                        className='border rounded w-full py-2 px-1 text-black'>
-                        <option value='feed'>Feed</option>
-                        <option value='suplements'>Suplements</option>
-                        <option value='medication'>Medication</option>
-                        <option value='other'>Other</option>
+                        className="w-full rounded border py-2 px-1 text-black"
+                      >
+                        <option value="feed">Feed</option>
+                        <option value="suplements">Suplements</option>
+                        <option value="medication">Medication</option>
+                        <option value="other">Other</option>
                       </select>
                     </fieldset>
 
-                    <label className='block text-black text-sm font-bold mb-1'>
+                    <label className="mb-1 block text-sm font-bold text-black">
                       Memo
                     </label>
                     <textarea
-                      className='appearance-none border rounded w-full py-2 px-1 text-black'
+                      className="w-full appearance-none rounded border py-2 px-1 text-black"
                       value={memo}
                       onChange={(e) => setMemo(e.target.value)}
-                      placeholder='Memo...'
+                      placeholder="Memo..."
                     />
                   </form>
                 </div>
-                <div className='flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b'>
+                <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
                   <button
-                    className='text-black background-transparent uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 hover:bg-slate-50 rounded'
-                    type='button'
-                    onClick={closeModal}>
+                    className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                    type="button"
+                    onClick={closeModal}
+                  >
                     Close
                   </button>
                   <button
-                    className='text-white bg-secondary font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1'
-                    type='button'
+                    className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                    type="button"
                     onClick={async () => {
                       // await createNewLog(flockId, date, count, notes);
                       if (date && amount) {
@@ -165,7 +169,8 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                           memo
                         );
                       }
-                    }}>
+                    }}
+                  >
                     Submit
                   </button>
                 </div>

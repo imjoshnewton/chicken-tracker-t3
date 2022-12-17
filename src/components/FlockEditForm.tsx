@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { storage } from "../libs/firebase";
+import { storage } from "../lib/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
@@ -32,21 +32,21 @@ export default function FlockForm({
 
   const utils = trpc.useContext();
 
-  const updateFlock = trpc.useMutation(["flocks.updateFlock"], {
+  const updateFlock = trpc.flocks.updateFlock.useMutation({
     onSuccess: (data) => {
-      utils.invalidateQueries("flocks.getFlock");
+      utils.flocks.getFlocks.invalidate();
       router.push(`/flocks/${data.id}`);
       toast.success("Flock updated!");
     },
   });
-  const createFlock = trpc.useMutation(["flocks.createFlock"], {
+  const createFlock = trpc.flocks.createFlock.useMutation({
     onSuccess: (data) => {
-      utils.invalidateQueries("flocks.getFlock");
+      utils.flocks.getFlock.invalidate();
       router.push(`/flocks/${data.id}`);
       toast.success("Flock created!");
     },
   });
-  const setDefaultFlock = trpc.useMutation(["user.setDefaultFlock"]);
+  const setDefaultFlock = trpc.auth.setDefaultFlock.useMutation();
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -132,7 +132,7 @@ export default function FlockForm({
       <div>
         {/* <ImageUploader /> */}
 
-        <fieldset className='mb-3'>
+        <fieldset className="mb-3">
           {uploading ? (
             <>
               <Loader show={true} />
@@ -141,79 +141,83 @@ export default function FlockForm({
           ) : (!uploading && downloadURL) || flock?.imageUrl ? (
             <img
               src={downloadURL ? downloadURL : flock!.imageUrl!}
-              width='100'
-              height='100'
-              className='flock-image'
+              width="100"
+              height="100"
+              className="flock-image"
             />
           ) : (
             <></>
           )}
           <label
-            className='inline-flex items-center px-3 py-2 bg-gray-400 text-white mt-3 rounded hover:bg-gray-500 hover:cursor-pointer'
-            htmlFor='image'>
+            className="mt-3 inline-flex items-center rounded bg-gray-400 px-3 py-2 text-white hover:cursor-pointer hover:bg-gray-500"
+            htmlFor="image"
+          >
             <MdImage />
             &nbsp;Upload image
             <input
-              className='hidden'
-              aria-describedby='file_input_help'
-              id='image'
-              type='file'
-              accept='image/x-png,image/gif,image/jpeg'
+              className="hidden"
+              aria-describedby="file_input_help"
+              id="image"
+              type="file"
+              accept="image/x-png,image/gif,image/jpeg"
               {...register("image")}
             />
           </label>
           <p
-            className='mt-1 text-sm text-gray-500 dark:text-gray-300'
-            id='file_input_help'>
+            className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+            id="file_input_help"
+          >
             SVG, PNG, JPG or GIF (MAX. 850kb).
           </p>
         </fieldset>
 
-        <fieldset className='mb-3'>
+        <fieldset className="mb-3">
           <label>Name</label>
           <input
-            className='appearance-none border rounded w-full py-2 px-1 text-black'
+            className="w-full appearance-none rounded border py-2 px-1 text-black"
             // name='name'
-            type='text'
+            type="text"
             {...register("name")}
           />
         </fieldset>
-        <fieldset className='mb-3'>
+        <fieldset className="mb-3">
           <label>Description</label>
           <input
-            className='appearance-none border rounded w-full py-2 px-1 text-black'
+            className="w-full appearance-none rounded border py-2 px-1 text-black"
             // name='description'
-            type='text'
+            type="text"
             {...register("description")}
           />
         </fieldset>
-        <fieldset className='mb-6'>
+        <fieldset className="mb-6">
           <label>Make default:&nbsp;</label>
-          <input type='checkbox' {...register("default")}></input>
+          <input type="checkbox" {...register("default")}></input>
         </fieldset>
-        <fieldset className='mb-6'>
+        <fieldset className="mb-6">
           <label>Type:&nbsp;</label>
           <select {...register("type")}>
-            <option value='egg-layers'>Egg Layers</option>
-            <option value='meat-birds'>Meat Birds</option>
+            <option value="egg-layers">Egg Layers</option>
+            <option value="meat-birds">Meat Birds</option>
           </select>
         </fieldset>
 
-        <div className='flex items-center mt-4'>
+        <div className="mt-4 flex items-center">
           {flock.id ? (
             <button
-              type='button'
+              type="button"
               onClick={() => router.push(`/flocks/${flock.id}`)}
-              className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 w-full md:w-auto h-10 mr-3 transition-all'>
+              className="mb-1 mr-3 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+            >
               Cancel
             </button>
           ) : (
             <></>
           )}
           <button
-            type='submit'
-            className='px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 btn w-full md:w-auto h-10 mr-3 transition-all'
-            disabled={!isDirty || !isValid}>
+            type="submit"
+            className="btn mb-1 mr-3 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+            disabled={!isDirty || !isValid}
+          >
             {flock.id ? "Save Changes" : "Create Flock"}
           </button>
         </div>
