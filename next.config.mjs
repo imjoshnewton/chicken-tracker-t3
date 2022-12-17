@@ -28,15 +28,5 @@ const config = {
     formats: ["image/avif", "image/webp"],
   },
 };
-// export default config;
+
 export default pwa(config);
-// export default withPWA({
-// pwa: {
-//   dest: "./public",
-//   register: true,
-//   skipWaiting: true,
-//   runtimeCaching,
-//   disable: process.env.NODE_ENV === "development",
-// },
-// ...config,
-// });
