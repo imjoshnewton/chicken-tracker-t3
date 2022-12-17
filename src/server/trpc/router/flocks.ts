@@ -1,49 +1,42 @@
 import { z } from "zod";
-import { createProtectedRouter } from "./protected-router";
+import { router, protectedProcedure } from "../trpc";
 import { JWT } from "google-auth-library";
 
-export const flocksRouter = createProtectedRouter()
-  .query("getFlock", {
-    input: z.object({
-      flockId: z.string().nullish(),
+export const flocksRouter = router({
+  getFlock: protectedProcedure
+    .input(
+      z.object({
+        flockId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      return await ctx.prisma.flock.findFirst({
+        where: {
+          id: input.flockId,
+          userId: ctx.session.user.id,
+        },
+        include: {
+          breeds: true,
+        },
+      });
     }),
-    async resolve({ input, ctx }) {
-      if (input?.flockId && ctx.session?.user?.id) {
-        return await ctx.prisma.flock.findFirst({
-          where: {
-            id: input.flockId,
-            userId: ctx.session.user.id,
-          },
-          include: {
-            breeds: true,
-          },
-        });
-      } else {
-        return null;
-      }
-    },
-  })
-  .query("getFlocks", {
-    async resolve({ input, ctx }) {
-      if (ctx.session?.user) {
-        return await ctx.prisma.flock.findMany({
-          where: {
-            userId: ctx.session.user.id,
-          },
-        });
-      } else {
-        return null;
-      }
-    },
-  })
-  .mutation("createFlock", {
-    input: z.object({
-      name: z.string(),
-      description: z.string(),
-      type: z.string(),
-      imageUrl: z.string().nullable(),
-    }),
-    async resolve({ input, ctx }) {
+  getFlocks: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.flock.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
+  createFlock: protectedProcedure
+    .input(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        type: z.string(),
+        imageUrl: z.string().nullable(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
       return await ctx.prisma.flock.create({
         data: {
           userId: ctx.session.user.id,
@@ -53,18 +46,19 @@ export const flocksRouter = createProtectedRouter()
           imageUrl: input.imageUrl ? input.imageUrl : "",
         },
       });
-    },
-  })
-  .mutation("updateFlock", {
-    input: z.object({
-      id: z.string(),
-      name: z.string(),
-      description: z.string(),
-      type: z.string(),
-      imageUrl: z.string().nullable(),
-      default: z.boolean().optional(),
     }),
-    async resolve({ input, ctx }) {
+  updateFlock: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        type: z.string(),
+        imageUrl: z.string().nullable(),
+        default: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
       const flockRes = await ctx.prisma.flock.update({
         where: {
           id: input.id,
@@ -89,6 +83,7 @@ export const flocksRouter = createProtectedRouter()
         const client = new JWT({
           email: process.env.GCP_CLIENT_EMAIL,
           key: JSON.parse(process.env.GCP_PRIVATE_KEY!),
+
           scopes: ["https://www.googleapis.com/auth/cloud-platform"],
         });
 
@@ -146,27 +141,5 @@ export const flocksRouter = createProtectedRouter()
       }
 
       return flockRes;
-    },
-  });
-
-// const topicName = "test-topic";
-
-// module.exports.publisher = async (event) => {
-//   console.log(event.body);
-//   const dataBuffer = Buffer.from(event.body).toString("base64");
-//   const url = `https://pubsub.googleapis.com/v1/${topicName}:publish`;
-//   const options = {
-//     url: url,
-//     method: "POST",
-//     data: {
-//       messages: [
-//         {
-//           data: dataBuffer,
-//         },
-//       ],
-//     },
-//   };
-//   const res = await client.request(options);
-//   console.log(res.data);
-//   return res.data;
-// };
+    }),
+});

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useUserData } from "../libs/hooks";
+import { useUserData } from "../lib/hooks";
 
 import {
   MdOutlineEditNote,
@@ -26,19 +26,20 @@ export default function Navbar({ children }: { children: any }) {
 
   return (
     <>
-      <nav className='navbar h-[60px] lg:h-[65px] pr-5 pl-2 lg:px-6'>
+      <nav className="navbar h-[60px] pr-5 pl-2 lg:h-[65px] lg:px-6">
         <ul>
-          <li className='inline lg:hidden'>
+          <li className="inline lg:hidden">
             <button
-              className='flex flex-col h-12 w-12 rounded justify-center items-center group'
+              className="group flex h-12 w-12 flex-col items-center justify-center rounded"
               onClick={() => {
                 setSideBarOpen(!sideBarOpen);
-              }}>
+              }}
+            >
               {/* <MdMenu className=' text-2xl' /> */}
               <div
                 className={`${genericHamburgerLine} ${
                   sideBarOpen
-                    ? "rotate-45 translate-y-[7px] group-hover:opacity-100"
+                    ? "translate-y-[7px] rotate-45 group-hover:opacity-100"
                     : "group-hover:opacity-100"
                 }`}
               />
@@ -50,23 +51,23 @@ export default function Navbar({ children }: { children: any }) {
               <div
                 className={`${genericHamburgerLine} ${
                   sideBarOpen
-                    ? "-rotate-45 -translate-y-[7px] group-hover:opacity-100"
+                    ? "-translate-y-[7px] -rotate-45 group-hover:opacity-100"
                     : "group-hover:opacity-100"
                 }`}
               />
             </button>
           </li>
-          <li className='cursor-pointer translate-x-2 sm:translate-x-0'>
-            <Link href='/'>
-              <span className='flex items-center'>
-                <span className='hidden sm:inline'>Chicken&nbsp;</span>
+          <li className="translate-x-2 cursor-pointer sm:translate-x-0">
+            <Link href="/">
+              <span className="flex items-center">
+                <span className="hidden sm:inline">Chicken&nbsp;</span>
                 <Image
                   src={logo}
-                  width='40'
-                  height='40'
-                  alt='Chicken tracker logo the white outline of a chicken'
+                  width="40"
+                  height="40"
+                  alt="Chicken tracker logo the white outline of a chicken"
                 />
-                <span className='hidden sm:inline'>&nbsp;Tracker</span>
+                <span className="hidden sm:inline">&nbsp;Tracker</span>
               </span>
             </Link>
           </li>
@@ -74,21 +75,21 @@ export default function Navbar({ children }: { children: any }) {
           {/* user is signed-in */}
           {user && (
             <>
-              <li className='ml-4 flex items-center multilink cursor-pointer'>
-                <div className='mr-3 user-name hidden lg:block'>
+              <li className="multilink ml-4 flex cursor-pointer items-center">
+                <div className="user-name mr-3 hidden lg:block">
                   {user.name}
                 </div>
                 {user.image && (
                   <img
                     src={user.image as string}
-                    width='35'
-                    height='35'
-                    className='h-9 lg:h-11 w-9 lg:w-11 user-img'
-                    alt='Current user profile image'
+                    width="35"
+                    height="35"
+                    className="user-img h-9 w-9 lg:h-11 lg:w-11"
+                    alt="Current user profile image"
                   />
                 )}
                 {/* </Link> */}
-                <div className='multilink-content fadeIn top-16 right-2 lg:right-auto'>
+                <div className="multilink-content fadeIn top-16 right-2 lg:right-auto">
                   {/* <Link href={`/flocks/`}>
                     <a className='flex items-center'>
                       <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
@@ -107,8 +108,8 @@ export default function Navbar({ children }: { children: any }) {
                       All Expenses
                     </a>
                   </Link> */}
-                  <Link href='/api/auth/signout' className='flex items-center'>
-                    <MdLogout className='mr-3 inline text-xl' />
+                  <Link href="/api/auth/signout" className="flex items-center">
+                    <MdLogout className="mr-3 inline text-xl" />
                     Logout
                   </Link>
                 </div>
@@ -119,8 +120,8 @@ export default function Navbar({ children }: { children: any }) {
           {/* user is not signed-in */}
           {!user && (
             <li>
-              <Link href='/api/auth/signin'>
-                <button className='btn p-4'>Log in</button>
+              <Link href="/api/auth/signin">
+                <button className="btn p-4">Log in</button>
               </Link>
             </li>
           )}
@@ -128,90 +129,102 @@ export default function Navbar({ children }: { children: any }) {
       </nav>
       <section
         className={
-          sideBarOpen ? "lg:ml-52 transition-all" : "lg:ml-52 transition-all"
-        }>
+          sideBarOpen ? "transition-all lg:ml-52" : "transition-all lg:ml-52"
+        }
+      >
         {children}
       </section>
       <aside
         className={
           sideBarOpen
-            ? "h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-2xl"
-            : "-translate-x-52 lg:translate-x-0 h-[calc(100vh_-_60px)] lg:h-[calc(100vh_-_65px)] fixed top-[60px] w-52 bg-gray-50 transition-transform shadow-lg"
-        }>
+            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:h-[calc(100vh_-_65px)]"
+            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+        }
+      >
         {/* {router.pathname} */}
-        <ul className='pt-7 side-nav'>
+        <ul className="side-nav pt-7">
           <li
             className={`mb-0 px-2 ${
               router.pathname.startsWith("/flocks")
                 ? "bg-gray-400 text-white"
                 : ""
-            } hover:bg-gray-300`}>
+            } hover:bg-gray-300`}
+          >
             <Link
               href={`/flocks/`}
-              className='flex items-center px-2 py-3'
+              className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
-              }}>
-              <MdHomeFilled className='mr-5 inline text-2xl mt-[-3px]' />
+              }}
+            >
+              <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />
               My Flocks
             </Link>
           </li>
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/logs" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}>
+            } hover:bg-gray-300`}
+          >
             <Link
               href={`/logs`}
-              className='flex items-center px-2 py-3'
+              className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
-              }}>
-              <MdOutlineEditNote className='mr-[14px] inline text-3xl' /> All
+              }}
+            >
+              <MdOutlineEditNote className="mr-[14px] inline text-3xl" /> All
               Logs
             </Link>
           </li>
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/expenses" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}>
+            } hover:bg-gray-300`}
+          >
             <Link
               href={`/expenses`}
-              className='flex items-center px-2 py-3'
+              className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
-              }}>
-              <AiOutlineDollar className='mr-5 inline text-2xl mt-[-3px]' />
+              }}
+            >
+              <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />
               All Expenses
             </Link>
           </li>
-          <li className='mt-auto px-3'>
-            <div className='divider my-3 dark:border-t-gray-500'></div>
+          <li className="mt-auto px-3">
+            <div className="divider my-3 dark:border-t-gray-500"></div>
           </li>
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/settings" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}>
+            } hover:bg-gray-300`}
+          >
             <Link
-              href='/settings'
-              className='flex items-center px-2 py-3'
+              href="/settings"
+              className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
-              }}>
-              <MdSettings className='mr-5 inline text-2xl' />
+              }}
+            >
+              <MdSettings className="mr-5 inline text-2xl" />
               Settings
             </Link>
           </li>
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/logout" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}>
+            } hover:bg-gray-300`}
+          >
             <button
-              className='flex items-center px-2 py-3'
+              className="flex items-center px-2 py-3"
               onClick={() => {
                 signOut();
                 setSideBarOpen(false);
-              }}>
-              <MdLogout className='ml-[2px] mr-[18.5px] inline text-2xl' />
+              }}
+            >
+              <MdLogout className="ml-[2px] mr-[18.5px] inline text-2xl" />
               Logout
             </button>
           </li>

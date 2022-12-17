@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { useFlockData } from "../../../libs/hooks";
+import { useFlockData } from "../../../lib/hooks";
 
 import Card from "../../../components/Card";
 import Loader from "../../../components/Loader";
@@ -29,58 +29,61 @@ export default function Flocks() {
   return (
     <main>
       {flock ? (
-        <div className='shadow-xl'>
-          <Card title='Flock Details' key={flockId?.toString()}>
+        <div className="shadow-xl">
+          <Card title="Flock Details" key={flockId?.toString()}>
             <Link
               href={`/flocks/${flockId}/edit`}
-              className='flex hover:cursor-pointer items-center absolute top-0 right-0 p-3 mt-3 mr-5 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors'>
+              className="absolute top-0 right-0 mt-3 mr-5 flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
+            >
               Edit&nbsp;&nbsp;
               <MdOutlineEdit />
             </Link>
-            <div className='flex items-center flex-wrap'>
+            <div className="flex flex-wrap items-center">
               <Image
                 src={flock?.imageUrl}
-                width='150'
-                height='150'
-                className='flock-image'
-                alt='A user uploaded image that represents this flock'
+                width="150"
+                height="150"
+                className="flock-image"
+                alt="A user uploaded image that represents this flock"
               />
               {/* <pre>{limit}</pre> */}
-              <div className='ml-0 md:ml-6'>
-                <div className='flex items-center'>
-                  <h1 className='mr-3 dark:text-gray-300'>{flock?.name}</h1>
+              <div className="ml-0 md:ml-6">
+                <div className="flex items-center">
+                  <h1 className="mr-3 dark:text-gray-300">{flock?.name}</h1>
                 </div>
-                <p className='description dark:text-gray-300'>
+                <p className="description dark:text-gray-300">
                   {flock?.description}
                 </p>
-                <p className='text-gray-400 mt-2 dark:text-gray-400'>
+                <p className="mt-2 text-gray-400 dark:text-gray-400">
                   {flock?.type}
                 </p>
               </div>
-              <div className='w-full ml-0 mt-4 lg:ml-auto lg:mt-0 lg:w-auto flex self-start flex-wrap'>
+              <div className="ml-0 mt-4 flex w-full flex-wrap self-start lg:ml-auto lg:mt-0 lg:w-auto">
                 <LogModal flockId={flockId?.toString()} />
-                <div className='p-1'></div>
+                <div className="p-1"></div>
                 <ExpenseModal flockId={flockId?.toString()} />
               </div>
             </div>
-            <div className='divider my-6 dark:border-t-gray-500'></div>
-            <div className='flex flex-wrap justify-evently'>
+            <div className="divider my-6 dark:border-t-gray-500"></div>
+            <div className="justify-evently flex flex-wrap">
               <Breeds
                 flockId={flockId?.toString()}
                 breeds={flock?.breeds}
-                className='basis-full xl:basis-[23%]'></Breeds>
-              <div className='p-3 basis-[2%]'></div>
+                className="basis-full xl:basis-[23%]"
+              ></Breeds>
+              <div className="basis-[2%] p-3"></div>
               <Stats
                 stats={stats}
                 flock={flock}
-                className='basis-full xl:basis-[75%]'
+                className="basis-full xl:basis-[75%]"
                 limit={range.toString()}
-                onRangeChange={onRangeChange}></Stats>
+                onRangeChange={onRangeChange}
+              ></Stats>
             </div>
           </Card>
         </div>
       ) : (
-        <div className='flex justify-center'>
+        <div className="flex justify-center">
           <Loader show={true}></Loader>
         </div>
       )}
