@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { MdImage } from "react-icons/md";
 import { storage } from "../lib/firebase";
 import { trpc } from "../utils/trpc";
-import Loader from "./Loader";
+import Loader from "./shared/Loader";
 
 export default function NewUserForm({
   user,

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { storage } from "../lib/firebase";
+import { storage } from "../../lib/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { Breed, Flock } from "@prisma/client";
-import { trpc } from "../utils/trpc";
-import Loader from "./Loader";
+import { trpc } from "../../utils/trpc";
+import Loader from "../shared/Loader";
 import { MdImage } from "react-icons/md";
 import toast from "react-hot-toast";
 

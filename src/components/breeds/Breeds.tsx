@@ -7,7 +7,7 @@ import {
   MdOutlineExpandMore,
 } from "react-icons/md";
 import BreedModal from "./BreedModal";
-import Loader from "./Loader";
+import Loader from "../shared/Loader";
 
 export default function Breeds({
   flockId,

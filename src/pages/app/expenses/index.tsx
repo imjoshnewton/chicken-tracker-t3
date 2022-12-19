@@ -1,5 +1,5 @@
 import toast from "react-hot-toast";
-import Card from "../../../components/Card";
+import Card from "../../../components/shared/Card";
 import AppLayout from "../../../layouts/AppLayout";
 import { trpc } from "../../../utils/trpc";
 

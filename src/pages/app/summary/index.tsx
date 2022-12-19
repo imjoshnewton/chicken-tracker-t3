@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import Card from "../../../components/Card";
+import Card from "../../../components/shared/Card";
 import AppLayout from "../../../layouts/AppLayout";
 
 const Summary = () => {

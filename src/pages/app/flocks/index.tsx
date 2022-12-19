@@ -1,8 +1,8 @@
-import Card from "../../../components/Card";
+import Card from "../../../components/shared/Card";
 import Image from "next/image";
 import { useAllFlocks } from "../../../lib/hooks";
 import Link from "next/link";
-import FlockForm from "../../../components/FlockEditForm";
+import FlockForm from "../../../components/flocks/FlockEditForm";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import AppLayout from "../../../layouts/AppLayout";

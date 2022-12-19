@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
-import Card from "../../../components/Card";
-import Loader from "../../../components/Loader";
+import Card from "../../../components/shared/Card";
+import Loader from "../../../components/shared/Loader";
 import NewUserForm from "../../../components/NewUserForm";
 import AppLayout from "../../../layouts/AppLayout";
 

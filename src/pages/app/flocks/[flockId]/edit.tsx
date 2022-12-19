@@ -1,7 +1,7 @@
-import Card from "../../../../components/Card";
+import Card from "../../../../components/shared/Card";
 import { useFlockData, useUserData } from "../../../../lib/hooks";
-import Loader from "../../../../components/Loader";
-import FlockForm from "../../../../components/FlockEditForm";
+import Loader from "../../../../components/shared/Loader";
+import FlockForm from "../../../../components/flocks/FlockEditForm";
 import AppLayout from "../../../../layouts/AppLayout";
 
 const Edit = () => {

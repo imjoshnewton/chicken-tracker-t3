@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { AiOutlineDollar } from "react-icons/ai";
 import toast from "react-hot-toast";
 

@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
-import Card from "../../../components/Card";
-import FlockForm from "../../../components/FlockEditForm";
-import Loader from "../../../components/Loader";
+import Card from "../../../components/shared/Card";
+import FlockForm from "../../../components/flocks/FlockEditForm";
+import Loader from "../../../components/shared/Loader";
 import NewUserForm from "../../../components/NewUserForm";
 
 export default function NewUser() {

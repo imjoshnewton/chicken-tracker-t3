@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../../utils/trpc";
 import { Breed } from "@prisma/client";
-import Loader from "./Loader";
-import { useUserData } from "../lib/hooks";
-import { storage } from "../lib/firebase";
+import Loader from "../shared/Loader";
+import { useUserData } from "../../lib/hooks";
+import { storage } from "../../lib/firebase";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 

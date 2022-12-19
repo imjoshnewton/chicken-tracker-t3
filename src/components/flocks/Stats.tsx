@@ -1,5 +1,5 @@
 import { Breed, Flock } from "@prisma/client";
-import Loader from "./Loader";
+import Loader from "../shared/Loader";
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
 
@@ -18,7 +18,7 @@ export default function Stats({
 }) {
   if (!flock || !stats.logs) {
     return (
-      <div className='flex justify-center items-center basis-[48%]'>
+      <div className="flex basis-[48%] items-center justify-center">
         <Loader show={true}></Loader>
       </div>
     );
@@ -26,10 +26,10 @@ export default function Stats({
 
   return (
     <div className={className}>
-      <div className='flex justify-between'>
-        <h2 className='mb-4 dark:text-gray-300'>Stats</h2>
+      <div className="flex justify-between">
+        <h2 className="mb-4 dark:text-gray-300">Stats</h2>
       </div>
-      <div className='flex flex-wrap'>
+      <div className="flex flex-wrap">
         <ProductionChart
           stats={stats}
           flock={flock}
@@ -37,7 +37,7 @@ export default function Stats({
           limit={limit}
           onRangeChange={onRangeChange}
         />
-        <div className='p-2'></div>
+        <div className="p-2"></div>
         <ExpenseChart stats={stats} className={"flex-48"} />
       </div>
     </div>

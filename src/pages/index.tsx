@@ -1,8 +1,8 @@
-import { type NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
+import SiteLayout from "../layouts/SiteLayout";
+import { type NextPageWithLayout } from "./_app";
 
-const Home: NextPage = () => {
+const Home: NextPageWithLayout = () => {
   return (
     <>
       <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
@@ -38,6 +38,10 @@ const Home: NextPage = () => {
       </main>
     </>
   );
+};
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <SiteLayout>{page}</SiteLayout>;
 };
 
 export default Home;

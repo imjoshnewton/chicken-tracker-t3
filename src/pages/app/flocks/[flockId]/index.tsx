@@ -2,12 +2,12 @@ import Image from "next/image";
 
 import { useFlockData } from "../../../../lib/hooks";
 
-import Card from "../../../../components/Card";
-import Loader from "../../../../components/Loader";
-import Breeds from "../../../../components/Breeds";
-import Stats from "../../../../components/Stats";
-import LogModal from "../../../../components/LogModal";
-import ExpenseModal from "../../../../components/ExpenseModal";
+import Card from "../../../../components/shared/Card";
+import Loader from "../../../../components/shared/Loader";
+import Breeds from "../../../../components/breeds/Breeds";
+import Stats from "../../../../components/flocks/Stats";
+import LogModal from "../../../../components/flocks/LogModal";
+import ExpenseModal from "../../../../components/flocks/ExpenseModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { MdOutlineEdit } from "react-icons/md";
