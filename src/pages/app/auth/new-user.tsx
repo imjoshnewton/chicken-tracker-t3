@@ -1,8 +1,8 @@
 import { useSession } from "next-auth/react";
-import Card from "../../components/Card";
-import FlockForm from "../../components/FlockEditForm";
-import Loader from "../../components/Loader";
-import NewUserForm from "../../components/NewUserForm";
+import Card from "../../../components/Card";
+import FlockForm from "../../../components/FlockEditForm";
+import Loader from "../../../components/Loader";
+import NewUserForm from "../../../components/NewUserForm";
 
 export default function NewUser() {
   const { data } = useSession();
@@ -10,9 +10,9 @@ export default function NewUser() {
   if (!data?.user) {
     return (
       <main>
-        <div className='shadow-xl'>
-          <Card title='New user'>
-            <div className='flex justify-center'>
+        <div className="shadow-xl">
+          <Card title="New user">
+            <div className="flex justify-center">
               <Loader show={true} />
             </div>
           </Card>
@@ -24,12 +24,12 @@ export default function NewUser() {
   if (!data.user.image && !data.user.name) {
     return (
       <main>
-        <div className='shadow-xl'>
-          <Card title='New user info'>
-            <div className='flex'>
+        <div className="shadow-xl">
+          <Card title="New user info">
+            <div className="flex">
               <section>
-                <h2 className='mb-3'>Welcome!</h2>
-                <p className='mb-3'>
+                <h2 className="mb-3">Welcome!</h2>
+                <p className="mb-3">
                   Let&apos;s get to know you a little better...
                   <br />
                   Complete your profile by uploading a profile picture and
@@ -46,12 +46,12 @@ export default function NewUser() {
 
   return (
     <main>
-      <div className='shadow-xl'>
-        <Card title='New flock'>
-          <div className='flex flex-col'>
+      <div className="shadow-xl">
+        <Card title="New flock">
+          <div className="flex flex-col">
             <section>
-              <h2 className='mb-3'>Welcome!</h2>
-              <p className='mb-3'>
+              <h2 className="mb-3">Welcome!</h2>
+              <p className="mb-3">
                 Let&apos;s make a new flock.
                 <br />
                 Give your flock a name, description (optional), and select

@@ -37,8 +37,8 @@ export default function ExpenseChart({
     const chartArray = createChartArray(stats.expenses);
     const prodArray = createProdOverlayArray(stats.production);
 
-    console.log("Chart Array: ", chartArray);
-    console.log("Prod Array: ", prodArray);
+    console.log("Chart Bar Data: ", chartArray);
+    console.log("Production Line Data: ", prodArray);
 
     return {
       datasets: [
@@ -264,21 +264,22 @@ export default function ExpenseChart({
 
   return (
     <div className={className}>
-      <div className='flex justify-between'>
-        <h3 className='mb-4 dark:text-gray-300'>Expenses</h3>
+      <div className="flex justify-between">
+        <h3 className="mb-4 dark:text-gray-300">Expenses</h3>
         {/* <select defaultValue={limit} onChange={onRangeChange} className='mb-4'>
           <option value='7'>Last 7 Days</option>
           <option value='15'>Last 15 Days</option>
           <option value='30'>Last 30 Days</option>
         </select> */}
       </div>
-      <div className='flex flex-col'>
-        <div className='w-[99%] min-h-[300px] md:min-h-[275px]'>
+      <div className="flex flex-col">
+        <div className="min-h-[300px] w-[99%] md:min-h-[275px]">
           <Chart
-            type='bar'
+            type="bar"
             data={chartData(stats.expenses)}
             options={options}
-            id='expenseChart'></Chart>
+            id="expenseChart"
+          ></Chart>
         </div>
         {/* <div className='p-2'></div>
         <div className='flex justify-between'>
@@ -318,10 +319,11 @@ export default function ExpenseChart({
             </span>
           </div>
         </div> */}
-        <div className='p-2'></div>
+        <div className="p-2"></div>
         <Link
-          href='/expenses'
-          className='text-stone-400 hover:text-stone-700 transition-colors'>
+          href="/app/expenses"
+          className="text-stone-400 transition-colors hover:text-stone-700"
+        >
           See all expenses &gt;
         </Link>
       </div>

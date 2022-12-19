@@ -18,7 +18,7 @@ import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 
 // Top navbar
-export default function Navbar({ children }: { children: any }) {
+export default function AppLayout({ children }: { children: any }) {
   const { user } = useUserData();
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
@@ -136,21 +136,21 @@ export default function Navbar({ children }: { children: any }) {
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:h-[calc(100vh_-_65px)]"
-            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
+            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
         }
       >
         {/* {router.pathname} */}
         <ul className="side-nav pt-7">
           <li
             className={`mb-0 px-2 ${
-              router.pathname.startsWith("/flocks")
+              router.pathname.startsWith("/app/flocks")
                 ? "bg-gray-400 text-white"
                 : ""
             } hover:bg-gray-300`}
           >
             <Link
-              href={`/flocks/`}
+              href={`/app/flocks/`}
               className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
@@ -162,11 +162,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/logs" ? "bg-gray-400 text-white" : ""
+              router.pathname == "/app/logs" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}
           >
             <Link
-              href={`/logs`}
+              href={`/app/logs`}
               className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
@@ -178,11 +178,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/expenses" ? "bg-gray-400 text-white" : ""
+              router.pathname == "/app/expenses" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}
           >
             <Link
-              href={`/expenses`}
+              href={`/app/expenses`}
               className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);
@@ -197,11 +197,11 @@ export default function Navbar({ children }: { children: any }) {
           </li>
           <li
             className={`mb-0 px-2 ${
-              router.pathname == "/settings" ? "bg-gray-400 text-white" : ""
+              router.pathname == "/app/settings" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}
           >
             <Link
-              href="/settings"
+              href="/app/settings"
               className="flex items-center px-2 py-3"
               onClick={() => {
                 setSideBarOpen(false);

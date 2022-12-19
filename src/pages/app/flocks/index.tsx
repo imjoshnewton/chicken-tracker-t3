@@ -1,13 +1,14 @@
-import Card from "../../components/Card";
+import Card from "../../../components/Card";
 import Image from "next/image";
-import { useAllFlocks } from "../../lib/hooks";
+import { useAllFlocks } from "../../../lib/hooks";
 import Link from "next/link";
-import FlockForm from "../../components/FlockEditForm";
+import FlockForm from "../../../components/FlockEditForm";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
+import AppLayout from "../../../layouts/AppLayout";
 
 // TO-DO: Add list of all flocks
-export default function Flocks() {
+const Flocks = () => {
   const { flocks, userId, loading } = useAllFlocks();
   const [addFlock, setAddFlock] = useState(false);
 
@@ -52,7 +53,7 @@ export default function Flocks() {
         {flocks?.map((flock) => {
           return (
             <li className="basis-full sm:basis-1/2 lg:basis-1/3" key={flock.id}>
-              <Link href={`/flocks/${flock.id}`}>
+              <Link href={`/app/flocks/${flock.id}`}>
                 <div className="shadow hover:shadow-2xl">
                   <Card title={"Flock"}>
                     <div className="flex flex-wrap items-center sm:flex-nowrap">
@@ -88,4 +89,10 @@ export default function Flocks() {
       </ul>
     </main>
   );
-}
+};
+
+Flocks.getLayout = function getLayout(page: React.ReactElement) {
+  return <AppLayout>{page}</AppLayout>;
+};
+
+export default Flocks;

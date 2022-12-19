@@ -1,18 +1,19 @@
 import Image from "next/image";
 
-import { useFlockData } from "../../../lib/hooks";
+import { useFlockData } from "../../../../lib/hooks";
 
-import Card from "../../../components/Card";
-import Loader from "../../../components/Loader";
-import Breeds from "../../../components/Breeds";
-import Stats from "../../../components/Stats";
-import LogModal from "../../../components/LogModal";
-import ExpenseModal from "../../../components/ExpenseModal";
+import Card from "../../../../components/Card";
+import Loader from "../../../../components/Loader";
+import Breeds from "../../../../components/Breeds";
+import Stats from "../../../../components/Stats";
+import LogModal from "../../../../components/LogModal";
+import ExpenseModal from "../../../../components/ExpenseModal";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { MdOutlineEdit } from "react-icons/md";
+import AppLayout from "../../../../layouts/AppLayout";
 
-export default function Flocks() {
+const Flock = () => {
   const router = useRouter();
   const { flockId, flock, stats, range } = useFlockData();
 
@@ -32,7 +33,7 @@ export default function Flocks() {
         <div className="shadow-xl">
           <Card title="Flock Details" key={flockId?.toString()}>
             <Link
-              href={`/flocks/${flockId}/edit`}
+              href={`/app/flocks/${flockId}/edit`}
               className="absolute top-0 right-0 mt-3 mr-5 flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
             >
               Edit&nbsp;&nbsp;
@@ -89,4 +90,10 @@ export default function Flocks() {
       )}
     </main>
   );
-}
+};
+
+Flock.getLayout = function getLayout(page: React.ReactElement) {
+  return <AppLayout>{page}</AppLayout>;
+};
+
+export default Flock;

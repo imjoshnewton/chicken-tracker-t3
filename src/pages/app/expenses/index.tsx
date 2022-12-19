@@ -1,18 +1,19 @@
 import toast from "react-hot-toast";
-import Card from "../../components/Card";
-import { trpc } from "../../utils/trpc";
+import Card from "../../../components/Card";
+import AppLayout from "../../../layouts/AppLayout";
+import { trpc } from "../../../utils/trpc";
 
-export default function Logs() {
-  const flocks = trpc.logs.getLogs.useQuery();
-  const logs = flocks.data?.flatMap((f) => f.logs);
+const Expenses = () => {
+  const flocks = trpc.expenses.getExpenses.useQuery();
+  const expenses = flocks.data?.flatMap((f) => f.expenses);
 
   const utils = trpc.useContext();
 
-  const mutation = trpc.logs.deleteLog.useMutation({
+  const mutation = trpc.expenses.deleteExpense.useMutation({
     onSuccess: () => {
-      utils.stats.getStats.invalidate();
-      utils.logs.getLogs.invalidate();
-      toast.success("Log deleted!");
+      utils.stats.getExpenseStats.invalidate();
+      utils.expenses.getExpenses.invalidate();
+      toast.success("Expense deleted!");
     },
   });
 
@@ -23,28 +24,28 @@ export default function Logs() {
   return (
     <main>
       <div className="shadow-xl">
-        <Card title="All Logs">
+        <Card title="All Expenses">
           <ul className="mt-4 flex flex-col">
-            {logs?.map((log) => {
+            {expenses?.map((expense) => {
               return (
                 <li
                   className="mb-3 flex min-h-[50px] items-center rounded border border-solid px-3 py-2 shadow"
-                  key={log.id}
+                  key={expense.id}
                 >
                   <div className="basis-1/3 md:basis-1/4">
-                    {log.date.toDateString()}
+                    {expense.date.toDateString()}
                   </div>
                   <span className="basis-1/3 md:basis-1/6">
-                    Count: {log.count}
+                    Amount: ${expense.amount}
                   </span>
                   <span className="hidden basis-1/3 md:block">
-                    Notes: {log.notes}
+                    Memo: {expense.memo}
                   </span>
                   <div className="ml-auto">
                     <button
                       className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
                       onClick={async () => {
-                        await deleteLog(log.id);
+                        await deleteLog(expense.id);
                       }}
                     >
                       Delete
@@ -58,4 +59,10 @@ export default function Logs() {
       </div>
     </main>
   );
-}
+};
+
+Expenses.getLayout = function getLayout(page: React.ReactElement) {
+  return <AppLayout>{page}</AppLayout>;
+};
+
+export default Expenses;

@@ -55,8 +55,6 @@ export function useFlockData() {
     }
   );
 
-  console.log("Expense Data: ", expenseData);
-
   return {
     flockId,
     flock: flockData.data,
