@@ -42,15 +42,16 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?        @unique
   emailVerified DateTime?
-  image         String?   @db.Text
-  defaultFlock  String    @default("")
+  image         String?        @db.Text
+  defaultFlock  String         @default("")
   accounts      Account[]
   sessions      Session[]
   flocks        Flock[]
+  notification  Notification[]
 }
 
 model VerificationToken {
@@ -112,4 +113,18 @@ model Expense {
   flock    Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
 
   @@index([flockId])
+}
+
+model Notification {
+  id       String    @id @default(cuid())
+  title    String
+  message  String    @db.Text
+  date     DateTime  @default(now())
+  read     Boolean   @default(false)
+  readDate DateTime? @updatedAt
+  link     String
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+
+  @@index([userId])
 }

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { subMonths } from "date-fns";
+import { addMonths, getDaysInMonth, getMonth, subMonths } from "date-fns";
 
 export const statsRouter = router({
   getStats: protectedProcedure
@@ -117,6 +117,87 @@ export const statsRouter = router({
       return {
         expenses: getExpenses,
         production: getProduction,
+      };
+    }),
+  getFlockSummary: protectedProcedure
+    .input(
+      z.object({ flockId: z.string(), month: z.string(), year: z.string() })
+    )
+    .query(async ({ input, ctx }) => {
+      const startOfMonth = new Date(`${input.month}/01/${input.year}`);
+      const startOfNextMonth = addMonths(startOfMonth, 1);
+
+      console.log("Start of this month: ", startOfMonth);
+      console.log("Start of next month: ", startOfNextMonth);
+
+      const flockData = await ctx.prisma.flock.findUniqueOrThrow({
+        where: {
+          id: input.flockId,
+        },
+        include: {
+          breeds: true,
+        },
+      });
+
+      const expenseData = await ctx.prisma.expense.groupBy({
+        where: {
+          flockId: input.flockId,
+          date: {
+            gte: startOfMonth,
+            lt: startOfNextMonth,
+          },
+        },
+        by: ["category"],
+        _sum: {
+          amount: true,
+        },
+      });
+
+      const logData = await ctx.prisma.eggLog.aggregate({
+        where: {
+          flockId: input.flockId,
+          date: {
+            gte: startOfMonth,
+            lt: startOfNextMonth,
+          },
+        },
+        _avg: {
+          count: true,
+        },
+        _sum: {
+          count: true,
+        },
+        _max: {
+          count: true,
+        },
+        _count: {
+          id: true,
+        },
+      });
+
+      const totalExpenses = expenseData
+        .map((exp) => exp._sum.amount ?? 0)
+        .reduce((acc, cur) => acc + cur);
+
+      return {
+        flock: {
+          id: flockData.id,
+          name: flockData.name,
+          image: flockData.imageUrl,
+        },
+        expenses: {
+          total: totalExpenses,
+          categories: expenseData,
+        },
+        logs: {
+          total: logData._sum.count,
+          numLogs: logData._count.id,
+          average: logData._avg.count,
+          calcAvg: (logData._sum.count ?? 0) / getDaysInMonth(startOfMonth),
+          largest: logData._max.count,
+        },
+        year: startOfMonth.toLocaleString("default", { year: "numeric" }),
+        month: startOfMonth.toLocaleString("default", { month: "long" }),
       };
     }),
 });

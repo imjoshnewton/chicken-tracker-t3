@@ -52,4 +52,11 @@ export const authRouter = router({
         },
       });
     }),
+  getUserNotifications: protectedProcedure.query(async ({ input, ctx }) => {
+    return await ctx.prisma.notification.findMany({
+      where: {
+        userId: ctx.session.user.id,
+      },
+    });
+  }),
 });
