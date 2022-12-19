@@ -12,7 +12,7 @@ import {
 } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
 
-import logo from "../../public/chicken.svg";
+import logo from "../../public/FlockNerd-logo-v2.png";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
@@ -60,14 +60,13 @@ export default function Navbar({ children }: { children: any }) {
           <li className="translate-x-2 cursor-pointer sm:translate-x-0">
             <Link href="/">
               <span className="flex items-center">
-                <span className="hidden sm:inline">Flock&nbsp;</span>
+                {/* <span className="hidden sm:inline">Flock&nbsp;</span> */}
                 <Image
                   src={logo}
-                  width="40"
-                  height="40"
+                  height="55"
                   alt="Flock Nerd logo the white outline of a chicken"
                 />
-                <span className="hidden sm:inline">&nbsp;Nerd</span>
+                {/* <span className="hidden sm:inline">&nbsp;Nerd</span> */}
               </span>
             </Link>
           </li>
