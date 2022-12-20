@@ -25,6 +25,8 @@ export const serverSchema = z.object({
   FACEBOOK_CLIENT_SECRET: z.string(),
   GCP_CLIENT_EMAIL: z.string(),
   GCP_PRIVATE_KEY: z.string(),
+  QSTASH_NEXT_SIGNING_KEY: z.string(),
+  QSTASH_CURRENT_SIGNING_KEY: z.string(),
 });
 
 /**
