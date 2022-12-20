@@ -19,17 +19,17 @@ export default function NotificationsList({
   });
 
   return (
-    <>
-      <ul className="flex flex-col gap-2">
-        <button
-          className="absolute top-3 right-3 flex items-center justify-center rounded p-1 transition-all hover:bg-slate-400/10"
-          onClick={closeMenu}
-        >
-          <MdClose className="text-xl" />
-        </button>
-        <h3 className="mb-0 self-start text-lg font-semibold text-gray-800">
-          Notifications
-        </h3>
+    <div className="flex h-full flex-col">
+      <button
+        className="absolute top-3 right-3 flex items-center justify-center rounded p-1 transition-all hover:bg-slate-400/10"
+        onClick={closeMenu}
+      >
+        <MdClose className="text-xl" />
+      </button>
+      <h3 className="mb-0 self-start text-lg font-semibold text-gray-800">
+        Notifications
+      </h3>
+      <ul className="flex flex-col gap-2 overflow-y-scroll">
         {notifications.map((not) => {
           return (
             <li
@@ -72,6 +72,6 @@ export default function NotificationsList({
           );
         })}
       </ul>
-    </>
+    </div>
   );
 }
