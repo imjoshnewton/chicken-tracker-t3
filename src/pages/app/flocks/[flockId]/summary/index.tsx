@@ -16,16 +16,18 @@ const Summary: NextPageWithLayout = () => {
     year: typeof year == "string" ? year : "",
   });
 
+  const emojis: { [x: string]: string } = {
+    feed: "🌾",
+    other: "🪣",
+    suplements: "🐛",
+    medication: "💉",
+  };
+
   return (
     <>
       <main>
         <section className="max-w-xl">
           <Card title="Monthly Summary">
-            {/* <div>
-              <p>{flockId}</p>
-              <p>{month}</p>
-              <p>{year}</p>
-            </div> */}
             {summary.isLoading ? (
               <Loader show={true} />
             ) : summary.isError ? (
@@ -40,7 +42,6 @@ const Summary: NextPageWithLayout = () => {
                     className="flock-image"
                     alt="A user uploaded image that represents this flock"
                   />
-                  {/* <pre>{limit}</pre> */}
                   <div className="ml-0 md:ml-6">
                     <div className="flex items-center">
                       <h1 className="mr-3 dark:text-gray-300">
@@ -50,15 +51,7 @@ const Summary: NextPageWithLayout = () => {
                     <p className="description dark:text-gray-300">
                       Summary for {summary.data.month}&nbsp;{summary.data.year}
                     </p>
-                    {/* <p className="mt-2 text-gray-400 dark:text-gray-400">
-                    {flock?.type}
-                  </p> */}
                   </div>
-                  {/* <div className="ml-0 mt-4 flex w-full flex-wrap self-start lg:ml-auto lg:mt-0 lg:w-auto">
-                  <LogModal flockId={flockId?.toString()} />
-                  <div className="p-1"></div>
-                  <ExpenseModal flockId={flockId?.toString()} />
-                </div> */}
                 </div>
                 <div className="divider my-6 dark:border-t-gray-500"></div>
                 <div className="justify-evently flex flex-col">
@@ -81,7 +74,19 @@ const Summary: NextPageWithLayout = () => {
                   </div>
                 </div>
                 <div className="justify-evently flex flex-col">
-                  <h2 className="mb-4 mt-6 flex justify-between">Expenses:</h2>
+                  <h2 className="mb-4 mt-6 flex justify-between">Expenses</h2>
+                  {summary.data.expenses.categories.map((cat) => {
+                    return (
+                      <div className="flex justify-between">
+                        <strong className=" capitalize">
+                          {emojis[cat.category]}&nbsp;
+                          {cat.category}:&nbsp;
+                        </strong>
+                        <span>$&nbsp;{cat._sum.amount}</span>
+                      </div>
+                    );
+                  })}
+                  <div className="divider my-2 dark:border-t-gray-500"></div>
                   <div className="flex justify-between">
                     <strong>💰 Total: </strong>
                     <span>$&nbsp;{summary.data.expenses.total.toFixed(2)}</span>
