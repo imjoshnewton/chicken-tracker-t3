@@ -30,7 +30,7 @@ export default function AppLayout({ children }: { children: any }) {
   });
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
 
   return (
@@ -44,7 +44,6 @@ export default function AppLayout({ children }: { children: any }) {
                 setSideBarOpen(!sideBarOpen);
               }}
             >
-              {/* <MdMenu className=' text-2xl' /> */}
               <div
                 className={`${genericHamburgerLine} ${
                   sideBarOpen
@@ -69,13 +68,11 @@ export default function AppLayout({ children }: { children: any }) {
           <li className="translate-x-2 cursor-pointer sm:translate-x-0">
             <Link href="/">
               <span className="flex items-center">
-                {/* <span className="hidden sm:inline">Flock&nbsp;</span> */}
                 <Image
                   src={logo}
                   height="55"
                   alt="Flock Nerd logo the white outline of a chicken"
                 />
-                {/* <span className="hidden sm:inline">&nbsp;Nerd</span> */}
               </span>
             </Link>
           </li>
@@ -85,10 +82,10 @@ export default function AppLayout({ children }: { children: any }) {
             <>
               <li
                 className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10 ${
-                  userMenuOpen ? "open" : ""
+                  notificationsOpen ? "open" : ""
                 }`}
                 onClick={() => {
-                  setUserMenuOpen(!userMenuOpen);
+                  setNotificationsOpen(!notificationsOpen);
                 }}
               >
                 <div className="user-name mr-3 hidden lg:block">
@@ -112,52 +109,6 @@ export default function AppLayout({ children }: { children: any }) {
                     </div>
                   </div>
                 )}
-                {/* </Link> */}
-                <div
-                  className={`multilink-content fadeIn top-16 right-2 bg-white p-3 shadow-xl`}
-                >
-                  {isLoading ? (
-                    <Loader show={true} />
-                  ) : isError ? (
-                    <p>Error loading notifications.</p>
-                  ) : notifications.length ? (
-                    <NotificationsList
-                      notifications={notifications}
-                      closeMenu={() => setUserMenuOpen(false)}
-                    />
-                  ) : (
-                    <Link
-                      href="/api/auth/signout"
-                      className="flex items-center text-black"
-                    >
-                      <MdLogout className="mr-3 inline text-xl" />
-                      Logout
-                    </Link>
-                  )}
-
-                  {/* <Link href={`/flocks/`}>
-                    <a className='flex items-center'>
-                      <MdHomeFilled className='mr-3 inline text-xl mt-[-3px]' />
-                      My Flocks
-                    </a>
-                  </Link>
-                  <Link href={`/logs`}>
-                    <a className='flex items-center'>
-                      <MdOutlineEditNote className='mr-1 inline text-2xl' /> All
-                      Logs
-                    </a>
-                  </Link>
-                  <Link href={`/expenses`}>
-                    <a className='flex items-center'>
-                      <AiOutlineDollar className='mr-3 inline text-xl mt-[-3px]' />
-                      All Expenses
-                    </a>
-                  </Link> 
-                  <Link href="/api/auth/signout" className="flex items-center">
-                    <MdLogout className="mr-3 inline text-xl" />
-                    Logout
-                  </Link> */}
-                </div>
               </li>
             </>
           )}
@@ -180,13 +131,30 @@ export default function AppLayout({ children }: { children: any }) {
         {children}
       </section>
       <aside
+        className={`fadeIn fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] ${
+          notificationsOpen ? "translate-x-0" : "translate-x-80"
+        }`}
+      >
+        {isLoading ? (
+          <Loader show={true} />
+        ) : isError ? (
+          <p>Error loading notifications.</p>
+        ) : notifications.length ? (
+          <NotificationsList
+            notifications={notifications}
+            closeMenu={() => setNotificationsOpen(false)}
+          />
+        ) : (
+          <p>Error loading notifications.</p>
+        )}
+      </aside>
+      <aside
         className={
           sideBarOpen
             ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
             : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
         }
       >
-        {/* {router.pathname} */}
         <ul className="side-nav pt-7">
           <li
             className={`mb-0 px-2 ${

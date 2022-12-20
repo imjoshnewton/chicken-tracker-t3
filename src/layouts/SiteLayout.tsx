@@ -79,7 +79,8 @@ export default function SiteLayout({ children }: { children: any }) {
                   userMenuOpen ? "open" : ""
                 }`}
                 onClick={() => {
-                  setUserMenuOpen(!userMenuOpen);
+                  // setUserMenuOpen(!userMenuOpen);
+                  router.push("/app/flocks");
                 }}
               >
                 {/* <div className="user-name mr-3 hidden lg:block">
@@ -131,7 +132,6 @@ export default function SiteLayout({ children }: { children: any }) {
             : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:hidden lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
         }
       >
-        {/* {router.pathname} */}
         {data?.user ? (
           <>
             <ul className="side-nav pt-7">
@@ -229,79 +229,6 @@ export default function SiteLayout({ children }: { children: any }) {
         ) : (
           <>
             <ul className="side-nav pt-7">
-              {/* <li
-                className={`mb-0 px-2 ${
-                  router.pathname.startsWith("/app/flocks")
-                    ? "bg-gray-400 text-white"
-                    : ""
-                } hover:bg-gray-300`}
-              >
-                <Link
-                  href={`/app/flocks/`}
-                  className="flex items-center px-2 py-3"
-                  onClick={() => {
-                    setSideBarOpen(false);
-                  }}
-                >
-                  <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />
-                  My Flocks
-                </Link>
-              </li>
-              <li
-                className={`mb-0 px-2 ${
-                  router.pathname == "/app/logs" ? "bg-gray-400 text-white" : ""
-                } hover:bg-gray-300`}
-              >
-                <Link
-                  href={`/app/logs`}
-                  className="flex items-center px-2 py-3"
-                  onClick={() => {
-                    setSideBarOpen(false);
-                  }}
-                >
-                  <MdOutlineEditNote className="mr-[14px] inline text-3xl" />{" "}
-                  All Logs
-                </Link>
-              </li>
-              <li
-                className={`mb-0 px-2 ${
-                  router.pathname == "/app/expenses"
-                    ? "bg-gray-400 text-white"
-                    : ""
-                } hover:bg-gray-300`}
-              >
-                <Link
-                  href={`/app/expenses`}
-                  className="flex items-center px-2 py-3"
-                  onClick={() => {
-                    setSideBarOpen(false);
-                  }}
-                >
-                  <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />
-                  All Expenses
-                </Link>
-              </li>
-              <li className="mt-auto px-3">
-                <div className="divider my-3 dark:border-t-gray-500"></div>
-              </li>
-              <li
-                className={`mb-0 px-2 ${
-                  router.pathname == "/app/settings"
-                    ? "bg-gray-400 text-white"
-                    : ""
-                } hover:bg-gray-300`}
-              >
-                <Link
-                  href="/app/settings"
-                  className="flex items-center px-2 py-3"
-                  onClick={() => {
-                    setSideBarOpen(false);
-                  }}
-                >
-                  <MdSettings className="mr-5 inline text-2xl" />
-                  Settings
-                </Link>
-              </li> */}
               <li
                 className={`mb-0 px-2 ${
                   router.pathname == "/signin" ? "bg-gray-400 text-white" : ""
