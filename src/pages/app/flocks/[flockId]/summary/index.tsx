@@ -75,9 +75,9 @@ const Summary: NextPageWithLayout = () => {
                 </div>
                 <div className="justify-evently flex flex-col">
                   <h2 className="mb-4 mt-6 flex justify-between">Expenses</h2>
-                  {summary.data.expenses.categories.map((cat) => {
+                  {summary.data.expenses.categories.map((cat, index) => {
                     return (
-                      <div className="flex justify-between">
+                      <div className="flex justify-between" key={index}>
                         <strong className=" capitalize">
                           {emojis[cat.category]}&nbsp;
                           {cat.category}:&nbsp;
