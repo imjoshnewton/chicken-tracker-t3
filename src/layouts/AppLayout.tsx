@@ -114,7 +114,7 @@ export default function AppLayout({ children }: { children: any }) {
                 )}
                 {/* </Link> */}
                 <div
-                  className={`multilink-content fadeIn top-16 right-2 bg-white p-3`}
+                  className={`multilink-content fadeIn top-16 right-2 bg-white p-3 shadow-xl`}
                 >
                   {isLoading ? (
                     <Loader show={true} />
