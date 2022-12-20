@@ -26,7 +26,7 @@ const Summary: NextPageWithLayout = () => {
   return (
     <>
       <main>
-        <section className="max-w-xl">
+        <section className="mx-auto max-w-xl">
           <Card title="Monthly Summary">
             {summary.isLoading ? (
               <Loader show={true} />
