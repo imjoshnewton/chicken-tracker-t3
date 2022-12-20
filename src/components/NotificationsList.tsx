@@ -19,11 +19,14 @@ export default function NotificationsList({
 
   return (
     <>
-      <ul className="flex-col">
-        <h3 className="mb-1 self-start text-gray-800">Notifications</h3>
+      <ul className="flex-col gap-2">
+        <h3 className="mb-0 self-start text-gray-800">Notifications</h3>
         {notifications.map((not) => {
           return (
-            <li key={not.id} className="rounded bg-slate-200 p-3 text-gray-900">
+            <li
+              key={not.id}
+              className="w-full rounded bg-slate-200 p-3 text-gray-900"
+            >
               {/* <Link href={not.link}> */}
               <h4 className="mb-1">{not.title}</h4>
               <p className=" font-normal">{not.message}</p>

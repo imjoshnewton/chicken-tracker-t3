@@ -58,6 +58,9 @@ export const authRouter = router({
         userId: ctx.session.user.id,
         read: false,
       },
+      orderBy: {
+        date: "desc",
+      },
       take: 10,
     });
   }),
