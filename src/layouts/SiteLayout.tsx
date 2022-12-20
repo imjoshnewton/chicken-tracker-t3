@@ -86,7 +86,7 @@ export default function SiteLayout({ children }: { children: any }) {
                     alt="Current user profile image"
                   />
                 )}
-                <div className="multilink-content fadeIn top-16 right-2">
+                <div className="multilink-content fadeIn top-16 right-2 bg-white p-2">
                   <Link href={`/app/flocks/`} className="flex items-center">
                     <MdHomeFilled className="mr-3 mt-[-3px] inline text-xl" />
                     My Flocks

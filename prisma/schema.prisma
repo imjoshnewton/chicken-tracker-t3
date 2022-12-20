@@ -122,6 +122,7 @@ model Notification {
   date     DateTime  @default(now())
   read     Boolean   @default(false)
   readDate DateTime? @updatedAt
+  action   String    @default("View")
   link     String
   user     User      @relation(fields: [userId], references: [id])
   userId   String

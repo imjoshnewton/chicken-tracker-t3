@@ -56,7 +56,21 @@ export const authRouter = router({
     return await ctx.prisma.notification.findMany({
       where: {
         userId: ctx.session.user.id,
+        read: false,
       },
+      take: 10,
     });
   }),
+  markNotificationasRead: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.prisma.notification.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          read: true,
+        },
+      });
+    }),
 });
