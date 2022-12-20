@@ -82,7 +82,7 @@ const Summary: NextPageWithLayout = () => {
                           {emojis[cat.category]}&nbsp;
                           {cat.category}:&nbsp;
                         </strong>
-                        <span>$&nbsp;{cat._sum.amount}</span>
+                        <span>$&nbsp;{cat._sum.amount?.toFixed(2)}</span>
                       </div>
                     );
                   })}
