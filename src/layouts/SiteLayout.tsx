@@ -21,6 +21,7 @@ export default function SiteLayout({ children }: { children: any }) {
   const { data } = useSession();
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
 
   return (
@@ -73,7 +74,14 @@ export default function SiteLayout({ children }: { children: any }) {
           {/* user is signed-in */}
           {data?.user && (
             <>
-              <li className="multilink ml-4 flex cursor-pointer items-center">
+              <li
+                className={`multilink ml-4 flex cursor-pointer items-center ${
+                  userMenuOpen ? "open" : ""
+                }`}
+                onClick={() => {
+                  setUserMenuOpen(!userMenuOpen);
+                }}
+              >
                 {/* <div className="user-name mr-3 hidden lg:block">
                   {user.name}
                 </div> */}
@@ -86,7 +94,9 @@ export default function SiteLayout({ children }: { children: any }) {
                     alt="Current user profile image"
                   />
                 )}
-                <div className="multilink-content fadeIn top-16 right-2 bg-white p-2">
+                <div
+                  className={`multilink-content fadeIn top-16 right-2 bg-white p-2 shadow-xl`}
+                >
                   <Link href={`/app/flocks/`} className="flex items-center">
                     <MdHomeFilled className="mr-3 mt-[-3px] inline text-xl" />
                     My Flocks
