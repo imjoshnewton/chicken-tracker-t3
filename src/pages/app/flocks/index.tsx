@@ -7,7 +7,6 @@ import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import AppLayout from "../../../layouts/AppLayout";
 
-// TO-DO: Add list of all flocks
 const Flocks = () => {
   const { flocks, userId, loading } = useAllFlocks();
   const [addFlock, setAddFlock] = useState(false);
@@ -52,7 +51,10 @@ const Flocks = () => {
       <ul className="flex flex-wrap items-center justify-between">
         {flocks?.map((flock) => {
           return (
-            <li className="basis-full sm:basis-1/2 lg:basis-1/3" key={flock.id}>
+            <li
+              className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/2 xl:basis-1/3"
+              key={flock.id}
+            >
               <Link href={`/app/flocks/${flock.id}`}>
                 <div className="shadow hover:shadow-2xl">
                   <Card title={"Flock"}>
