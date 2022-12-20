@@ -102,7 +102,11 @@ export default function AppLayout({ children }: { children: any }) {
                     />
                     <div
                       className={`${
-                        notifications?.length ? "opacity-100" : "opacity-0"
+                        notifications?.length
+                          ? notifications.filter((not) => !not.read).length > 0
+                            ? "opacity-100"
+                            : "opacity-0"
+                          : "opacity-0"
                       } absolute top-1 right-3 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                     >
                       {notifications?.filter((not) => !not.read).length}
