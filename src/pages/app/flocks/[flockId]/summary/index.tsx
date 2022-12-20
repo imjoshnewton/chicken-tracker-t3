@@ -23,7 +23,7 @@ const Summary: NextPageWithLayout = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   const getFileName = (fileType: string) =>
-    `${format(new Date(), "'SomeName-'HH-mm-ss")}.${fileType}`;
+    `${summary.data?.flock.name}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
   const downloadPng = useCallback(() => {
     if (ref.current === null) {
@@ -68,8 +68,8 @@ const Summary: NextPageWithLayout = () => {
 
   return (
     <>
-      <main>
-        <div className="mx-auto flex max-w-xl flex-col gap-2">
+      <main className="flex flex-col items-center justify-center">
+        <div className="flex w-full max-w-xl flex-col gap-2">
           <button
             type="button"
             onClick={downloadPng}
@@ -87,7 +87,7 @@ const Summary: NextPageWithLayout = () => {
             &nbsp;Save as JPEG
           </button>
         </div>
-        <div className="mx-auto max-w-xl" ref={ref}>
+        <div className="w-full max-w-xl" ref={ref}>
           <Card title="Monthly Summary">
             {summary.isLoading ? (
               <Loader show={true} />
@@ -118,19 +118,19 @@ const Summary: NextPageWithLayout = () => {
                 <div className="justify-evently flex flex-col">
                   <h2 className="mb-4">Egg Production</h2>
                   <div className="flex justify-between">
-                    <strong>🥚 Total: </strong>
+                    <strong>🥚&nbsp;Total:&nbsp;</strong>
                     <span>{summary.data.logs.total}</span>
                   </div>
                   <div className="flex justify-between">
-                    <strong>📝 # of Entries: </strong>
+                    <strong>📝&nbsp;#&nbsp;of&nbsp;Entries:&nbsp;</strong>
                     <span>{summary.data.logs.numLogs}</span>
                   </div>
                   <div className="flex justify-between">
-                    <strong>📆 Daily Average: </strong>
+                    <strong>📆&nbsp;Daily&nbsp;Average:&nbsp;</strong>
                     <span>{summary.data.logs.calcAvg.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <strong>💪 Largest Haul: </strong>
+                    <strong>💪&nbsp;Largest&nbsp;Haul:&nbsp;</strong>
                     <span>{summary.data.logs.largest}</span>
                   </div>
                 </div>
@@ -149,7 +149,7 @@ const Summary: NextPageWithLayout = () => {
                   })}
                   <div className="divider my-2 dark:border-t-gray-500"></div>
                   <div className="flex justify-between">
-                    <strong>💰 Total: </strong>
+                    <strong>💰&nbsp;Total:&nbsp;</strong>
                     <span>$&nbsp;{summary.data.expenses.total.toFixed(2)}</span>
                   </div>
                 </div>
