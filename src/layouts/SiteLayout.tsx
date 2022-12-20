@@ -87,7 +87,7 @@ export default function SiteLayout({ children }: { children: any }) {
                   {user.name}
                 </div> */}
                 {data.user.image && (
-                  <img
+                  <Image
                     src={data.user.image as string}
                     width="35"
                     height="35"

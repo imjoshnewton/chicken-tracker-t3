@@ -94,7 +94,7 @@ export default function AppLayout({ children }: { children: any }) {
                 </div>
                 {user.image && (
                   <div>
-                    <img
+                    <Image
                       src={user.image as string}
                       width="35"
                       height="35"
