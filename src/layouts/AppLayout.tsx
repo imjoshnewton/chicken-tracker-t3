@@ -16,11 +16,11 @@ import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Loader from "../components/shared/Loader";
+import NotificationsList from "../components/NotificationsList";
 
 // Top navbar
 export default function AppLayout({ children }: { children: any }) {
   const { user } = useUserData();
-  const utils = trpc.useContext();
   const {
     data: notifications,
     isLoading,
@@ -28,13 +28,9 @@ export default function AppLayout({ children }: { children: any }) {
   } = trpc.auth.getUserNotifications.useQuery(undefined, {
     refetchInterval: 5 * 60 * 1000,
   });
-  const markAsRead = trpc.auth.markNotificationasRead.useMutation({
-    onSuccess(data, variables, context) {
-      utils.auth.getUserNotifications.invalidate();
-    },
-  });
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
 
   return (
@@ -87,7 +83,14 @@ export default function AppLayout({ children }: { children: any }) {
           {/* user is signed-in */}
           {user && (
             <>
-              <li className="multilink ml-4 flex cursor-pointer items-center">
+              <li
+                className={`multilink ml-4 flex cursor-pointer items-center ${
+                  userMenuOpen ? "open" : ""
+                }`}
+                onClick={() => {
+                  setUserMenuOpen(!userMenuOpen);
+                }}
+              >
                 <div className="user-name mr-3 hidden lg:block">
                   {user.name}
                 </div>
@@ -110,48 +113,18 @@ export default function AppLayout({ children }: { children: any }) {
                   </div>
                 )}
                 {/* </Link> */}
-                <div className="multilink-content fadeIn top-16 right-2 bg-white p-3">
+                <div
+                  className={`multilink-content fadeIn top-16 right-2 bg-white p-3`}
+                >
                   {isLoading ? (
                     <Loader show={true} />
                   ) : isError ? (
                     <p>Error loading notifications.</p>
                   ) : notifications.length ? (
-                    <>
-                      <ul className="flex-col">
-                        <h3 className="mb-1 self-start text-gray-800">
-                          Notifications
-                        </h3>
-                        {notifications.map((not) => {
-                          return (
-                            <li
-                              key={not.id}
-                              className="rounded bg-slate-200 p-3 text-gray-900"
-                            >
-                              {/* <Link href={not.link}> */}
-                              <h4 className="mb-1">{not.title}</h4>
-                              <p className=" font-normal">{not.message}</p>
-                              <div className="mt-2 flex gap-2">
-                                <button
-                                  className="rounded border border-gray-700 px-4 py-2 font-normal text-gray-700 transition-all hover:border-slate-200 hover:bg-slate-200"
-                                  onClick={() => {
-                                    markAsRead.mutate({ id: not.id });
-                                  }}
-                                >
-                                  Mark as read
-                                </button>
-                                <Link
-                                  href={not.link}
-                                  className="rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
-                                >
-                                  {not.action}
-                                </Link>
-                              </div>
-                              {/* </Link> */}
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </>
+                    <NotificationsList
+                      notifications={notifications}
+                      closeMenu={() => setUserMenuOpen(false)}
+                    />
                   ) : (
                     <Link
                       href="/api/auth/signout"

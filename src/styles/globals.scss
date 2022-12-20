@@ -303,7 +303,8 @@ button.btn-logo {
     transition-delay: 0.15s;
     box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 
-    &>a {
+    &>a,
+    li {
         opacity: 0;
         transform: translateY(-10px);
         transition: opacity 0.15s ease-in-out, transform 0.15s ease-in-out;
@@ -324,12 +325,15 @@ button.btn-logo {
     }
 }
 
-.multilink:hover .multilink-content {
+// .multilink:hover .multilink-content,
+.multilink.open .multilink-content {
     transform: scale(1, 1);
     transition-delay: 0s;
 }
 
-.multilink:hover .multilink-content>a {
+// .multilink:hover .multilink-content>a,
+.multilink.open .multilink-content>a,
+.multilink.open .multilink-content li {
     opacity: 1;
     transform: translateY(0px);
     transition-delay: 0.15s;
