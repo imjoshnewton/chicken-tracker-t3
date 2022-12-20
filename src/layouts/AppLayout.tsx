@@ -35,7 +35,7 @@ export default function AppLayout({ children }: { children: any }) {
 
   return (
     <>
-      <nav className="navbar h-[60px] pr-5 pl-2 lg:h-[65px] lg:px-6">
+      <nav className="navbar h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button
@@ -84,7 +84,7 @@ export default function AppLayout({ children }: { children: any }) {
           {user && (
             <>
               <li
-                className={`multilink ml-4 flex cursor-pointer items-center ${
+                className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10 ${
                   userMenuOpen ? "open" : ""
                 }`}
                 onClick={() => {
