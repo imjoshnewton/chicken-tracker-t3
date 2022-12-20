@@ -5,13 +5,18 @@ import { prisma } from "../../server/db/client";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const today = new Date();
-  const monthNum = subMonths(today, 1).getMonth();
+  const monthNum = subMonths(today, 1).getMonth() + 1;
   const monthString = monthNum < 10 ? `0${monthNum}` : monthNum.toString();
   const monthName = subMonths(today, 1).toLocaleString("default", {
     month: "long",
   });
   const year = subMonths(today, 1).getFullYear();
   const yearString = year.toString();
+
+  console.log("Month Number: ", monthNum);
+  console.log("Month String: ", monthString);
+  console.log("Year: ", year);
+  console.log("Year String: ", yearString);
 
   const flocks = await prisma.flock.findMany();
 
