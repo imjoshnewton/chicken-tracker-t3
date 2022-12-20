@@ -7,6 +7,7 @@ import {
   MdLogout,
   MdHomeFilled,
   MdSettings,
+  MdLogin,
 } from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
 
@@ -121,7 +122,10 @@ export default function AppLayout({ children }: { children: any }) {
           {!user && (
             <li>
               <Link href="/api/auth/signin">
-                <button className="btn p-4">Log in</button>
+                <button className="rounded border-2 bg-transparent py-2 px-2 pr-3 transition-all hover:bg-white hover:text-primary">
+                  <MdLogin />
+                  &nbsp;Sign in
+                </button>
               </Link>
             </li>
           )}
