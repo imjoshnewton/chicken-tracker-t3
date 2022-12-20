@@ -52,7 +52,19 @@ export const authRouter = router({
         },
       });
     }),
-  getUserNotifications: protectedProcedure.query(async ({ input, ctx }) => {
+  getUserNotifications: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.notification.findMany({
+      where: {
+        userId: ctx.session.user.id,
+        // read: false,
+      },
+      orderBy: {
+        date: "desc",
+      },
+      take: 10,
+    });
+  }),
+  getUserUnreadNotifications: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.notification.findMany({
       where: {
         userId: ctx.session.user.id,
