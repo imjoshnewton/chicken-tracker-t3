@@ -84,7 +84,7 @@ const Summary: NextPageWithLayout = () => {
                   <h2 className="mb-4 mt-6 flex justify-between">Expenses:</h2>
                   <div className="flex justify-between">
                     <strong>💰 Total: </strong>
-                    <span>{summary.data.expenses.total.toFixed(2)}</span>
+                    <span>$&nbsp;{summary.data.expenses.total.toFixed(2)}</span>
                   </div>
                 </div>
               </>
