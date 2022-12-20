@@ -1,10 +1,14 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useCallback, useRef } from "react";
 import Card from "../../../../../components/shared/Card";
 import Loader from "../../../../../components/shared/Loader";
 import AppLayout from "../../../../../layouts/AppLayout";
 import { trpc } from "../../../../../utils/trpc";
 import { type NextPageWithLayout } from "../../../../_app";
+import { toJpeg, toPng } from "html-to-image";
+import format from "date-fns/format";
+import { MdSave } from "react-icons/md";
 
 const Summary: NextPageWithLayout = () => {
   const router = useRouter();
@@ -16,6 +20,45 @@ const Summary: NextPageWithLayout = () => {
     year: typeof year == "string" ? year : "",
   });
 
+  const ref = useRef<HTMLDivElement>(null);
+
+  const getFileName = (fileType: string) =>
+    `${format(new Date(), "'SomeName-'HH-mm-ss")}.${fileType}`;
+
+  const downloadPng = useCallback(() => {
+    if (ref.current === null) {
+      return;
+    }
+    toPng(ref.current, {
+      cacheBust: true,
+    })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `${getFileName("png")}`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [ref]);
+
+  const downloadJpg = useCallback(() => {
+    if (ref.current === null) {
+      return;
+    }
+    toJpeg(ref.current, { cacheBust: true })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `${getFileName("jpg")}`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [ref]);
+
   const emojis: { [x: string]: string } = {
     feed: "🌾",
     other: "🪣",
@@ -26,7 +69,25 @@ const Summary: NextPageWithLayout = () => {
   return (
     <>
       <main>
-        <section className="mx-auto max-w-xl">
+        <div className="mx-auto flex max-w-xl flex-col gap-2">
+          <button
+            type="button"
+            onClick={downloadPng}
+            className="w-full rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
+          >
+            <MdSave />
+            &nbsp;Save as PNG
+          </button>
+          <button
+            type="button"
+            onClick={downloadJpg}
+            className="w-full rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
+          >
+            <MdSave />
+            &nbsp;Save as JPEG
+          </button>
+        </div>
+        <div className="mx-auto max-w-xl" ref={ref}>
           <Card title="Monthly Summary">
             {summary.isLoading ? (
               <Loader show={true} />
@@ -95,7 +156,7 @@ const Summary: NextPageWithLayout = () => {
               </>
             ) : null}
           </Card>
-        </section>
+        </div>
       </main>
     </>
   );
