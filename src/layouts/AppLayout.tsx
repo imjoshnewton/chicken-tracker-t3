@@ -133,7 +133,9 @@ export default function AppLayout({ children }: { children: any }) {
       </nav>
       <section
         className={
-          sideBarOpen ? "transition-all lg:ml-52" : "transition-all lg:ml-52"
+          sideBarOpen
+            ? "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
+            : "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
         }
       >
         {children}
