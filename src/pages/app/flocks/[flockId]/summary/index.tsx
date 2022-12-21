@@ -42,19 +42,19 @@ const Summary: NextPageWithLayout = () => {
       });
   }, [ref, summary.data?.flock.name]);
 
-  // const downloadImage = async () => {
-  //   if (ref.current == null) {
-  //     return;
-  //   }
+  const downloadImage2 = async () => {
+    if (ref.current == null) {
+      return;
+    }
 
-  //   const dataUrl = await toPng(ref.current, { cacheBust: true });
+    const dataUrl = await toPng(ref.current, { cacheBust: true });
 
-  //   // download image
-  //   // const link = document.createElement("a");
-  //   // link.download = "html-to-img.png";
-  //   // link.href = dataUrl;
-  //   // link.click();
-  // };
+    // download image
+    const link = document.createElement("a");
+    link.download = getFileName("png", `${summary.data?.flock.name}`);
+    link.href = dataUrl;
+    link.click();
+  };
 
   const emojis: { [x: string]: string } = {
     feed: "🌾",
@@ -74,6 +74,14 @@ const Summary: NextPageWithLayout = () => {
           >
             <MdSave />
             &nbsp;Save as PNG
+          </button>
+          <button
+            type="button"
+            onClick={downloadImage}
+            className="w-full rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
+          >
+            <MdSave />
+            &nbsp;Save as PNG 2
           </button>
           {/* <button
             type="button"
