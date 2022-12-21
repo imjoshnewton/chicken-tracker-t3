@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         data: {
           title: `Your ${monthName} summary is ready!`,
           message: `Check out your flock stats for ${monthName}.`,
-          link: `https://chicken-tracker-t3.vercel.app/app/flocks/${flock.id}/summary?month=${monthString}&year=${yearString}`,
+          link: `/app/flocks/${flock.id}/summary?month=${monthString}&year=${yearString}`,
           userId: flock.userId,
           readDate: null,
         },
