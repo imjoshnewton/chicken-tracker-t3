@@ -6,9 +6,10 @@ import Loader from "../../../../../components/shared/Loader";
 import AppLayout from "../../../../../layouts/AppLayout";
 import { trpc } from "../../../../../utils/trpc";
 import { type NextPageWithLayout } from "../../../../_app";
-import { toJpeg, toPng } from "html-to-image";
+import { toBlob, toJpeg, toPng } from "html-to-image";
 import format from "date-fns/format";
 import { MdSave } from "react-icons/md";
+import { saveAs } from "file-saver";
 
 const Summary: NextPageWithLayout = () => {
   const router = useRouter();
@@ -25,22 +26,44 @@ const Summary: NextPageWithLayout = () => {
   const getFileName = (fileType: string) =>
     `${summary.data?.flock.name}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
-  const downloadPng = useCallback(() => {
+  const downloadPng = useCallback(async () => {
+    console.log("Downloading PNG...");
+
+    console.log("Current: ", ref.current);
+
     if (ref.current === null) {
+      console.log("Ref is null...");
+
       return;
     }
-    toPng(ref.current, {
-      cacheBust: true,
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = `${getFileName("png")}`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    const blob = await toBlob(ref.current);
+
+    console.log("Blob: ", blob);
+
+    console.log("Window saves: ", (window as any).saveAs);
+
+    if ((window as any).saveAs) {
+      console.log("Window.saveAs exists");
+      (window as any).saveAs(blob, "my-node.png");
+    } else if (blob !== null) {
+      console.log("trying filesaver.");
+      saveAs(blob, "my-node.png");
+    } else {
+      console.log("Fail...");
+    }
+    // toPng(ref.current, {
+    //   cacheBust: true,
+    // })
+    //   .then((dataUrl) => {
+    //     const link = document.createElement("a");
+    //     link.download = `${getFileName("png")}`;
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, [ref]);
 
   const downloadJpg = useCallback(() => {

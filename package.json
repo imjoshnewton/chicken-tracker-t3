@@ -20,6 +20,7 @@
     "@upstash/qstash": "^0.3.2",
     "chart.js": "^4.1.0",
     "date-fns": "^2.29.3",
+    "file-saver": "^2.0.5",
     "firebase": "^9.15.0",
     "google-auth-library": "^8.7.0",
     "html-to-image": "^1.11.3",
@@ -39,6 +40,7 @@
     "zod": "^3.18.0"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.5",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
