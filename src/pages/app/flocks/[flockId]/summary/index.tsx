@@ -1,15 +1,9 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
 import Card from "../../../../../components/shared/Card";
 import Loader from "../../../../../components/shared/Loader";
-import AppLayout from "../../../../../layouts/AppLayout";
 import { trpc } from "../../../../../utils/trpc";
 import { type NextPageWithLayout } from "../../../../_app";
-import { toBlob, toJpeg, toPng } from "html-to-image";
-import format from "date-fns/format";
-import { MdSave } from "react-icons/md";
-import { saveAs } from "file-saver";
 
 const Summary: NextPageWithLayout = () => {
   const router = useRouter();
@@ -21,67 +15,6 @@ const Summary: NextPageWithLayout = () => {
     year: typeof year == "string" ? year : "",
   });
 
-  const ref = useRef<HTMLDivElement>(null);
-
-  const getFileName = (fileType: string) =>
-    `${summary.data?.flock.name}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
-
-  const downloadPng = useCallback(async () => {
-    console.log("Downloading PNG...");
-
-    console.log("Current: ", ref.current);
-
-    if (ref.current === null) {
-      console.log("Ref is null...");
-
-      return;
-    }
-
-    const blob = await toBlob(ref.current);
-
-    console.log("Blob: ", blob);
-
-    console.log("Window saves: ", (window as any).saveAs);
-
-    if ((window as any).saveAs) {
-      console.log("Window.saveAs exists");
-      (window as any).saveAs(blob, "my-node.png");
-    } else if (blob !== null) {
-      console.log("trying filesaver.");
-      saveAs(blob, "my-node.png");
-    } else {
-      console.log("Fail...");
-    }
-    // toPng(ref.current, {
-    //   cacheBust: true,
-    // })
-    //   .then((dataUrl) => {
-    //     const link = document.createElement("a");
-    //     link.download = `${getFileName("png")}`;
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-  }, [ref]);
-
-  const downloadJpg = useCallback(() => {
-    if (ref.current === null) {
-      return;
-    }
-    toJpeg(ref.current, { cacheBust: true })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = `${getFileName("jpg")}`;
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [ref]);
-
   const emojis: { [x: string]: string } = {
     feed: "🌾",
     other: "🪣",
@@ -92,10 +25,10 @@ const Summary: NextPageWithLayout = () => {
   return (
     <>
       <main className="flex flex-col items-center justify-center">
-        <div className="flex w-full max-w-xl flex-col gap-2">
+        {/* <div className="flex w-full max-w-xl flex-col gap-2">
           <button
             type="button"
-            onClick={downloadPng}
+            onClick={onButtonClick}
             className="w-full rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
           >
             <MdSave />
@@ -109,8 +42,8 @@ const Summary: NextPageWithLayout = () => {
             <MdSave />
             &nbsp;Save as JPEG
           </button>
-        </div>
-        <div className="w-full max-w-xl" ref={ref}>
+        </div> */}
+        <div className="w-full max-w-xl">
           <Card title="Monthly Summary">
             {summary.isLoading ? (
               <Loader show={true} />
@@ -186,7 +119,7 @@ const Summary: NextPageWithLayout = () => {
 };
 
 Summary.getLayout = function getLayout(page: React.ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
+  return <>{page}</>;
 };
 
 export default Summary;
