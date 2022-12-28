@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import Card from "../../../../../components/shared/Card";
 import Loader from "../../../../../components/shared/Loader";
 import AppLayout from "../../../../../layouts/AppLayout";
@@ -13,6 +13,7 @@ import { format } from "date-fns";
 const Summary: NextPageWithLayout = () => {
   const router = useRouter();
   const { flockId, month, year } = router.query;
+  const [showExpenses, setShowExpenses] = useState(true);
 
   const summary = trpc.stats.getFlockSummary.useQuery({
     flockId: typeof flockId == "string" ? flockId : "",
@@ -56,6 +57,10 @@ const Summary: NextPageWithLayout = () => {
     link.click();
   };
 
+  const handleChange = () => {
+    setShowExpenses(!showExpenses);
+  };
+
   const emojis: { [x: string]: string } = {
     feed: "🌾",
     other: "🪣",
@@ -91,7 +96,20 @@ const Summary: NextPageWithLayout = () => {
             <MdSave />
             &nbsp;Save as JPEG
           </button> */}
+          <label
+            htmlFor="hide-expenses"
+            className="flex items-center justify-center"
+          >
+            <input
+              type="checkbox"
+              id="hide-expenses"
+              checked={showExpenses}
+              onChange={handleChange}
+            />
+            &nbsp;Show Expenses
+          </label>
         </div>
+        {/* <div className="w-full max-w-xl"></div> */}
         <div className="w-full max-w-xl" ref={ref}>
           <Card title="Monthly Summary">
             {summary.isLoading ? (
@@ -139,25 +157,29 @@ const Summary: NextPageWithLayout = () => {
                     <span>{summary.data.logs.largest}</span>
                   </div>
                 </div>
-                <div className="justify-evently flex flex-col">
-                  <h2 className="mb-4 mt-6 flex justify-between">Expenses</h2>
-                  {summary.data.expenses.categories.map((cat, index) => {
-                    return (
-                      <div className="flex justify-between" key={index}>
-                        <strong className="capitalize">
-                          {emojis[cat.category]}&nbsp;
-                          {cat.category}:&nbsp;
-                        </strong>
-                        <span>$&nbsp;{cat._sum.amount?.toFixed(2)}</span>
-                      </div>
-                    );
-                  })}
-                  <div className="divider my-2 dark:border-t-gray-500"></div>
-                  <div className="flex justify-between">
-                    <strong>💰&nbsp;Total:&nbsp;</strong>
-                    <span>$&nbsp;{summary.data.expenses.total.toFixed(2)}</span>
+                {showExpenses && (
+                  <div className="justify-evently flex flex-col">
+                    <h2 className="mb-4 mt-6 flex justify-between">Expenses</h2>
+                    {summary.data.expenses.categories.map((cat, index) => {
+                      return (
+                        <div className="flex justify-between" key={index}>
+                          <strong className="capitalize">
+                            {emojis[cat.category]}&nbsp;
+                            {cat.category}:&nbsp;
+                          </strong>
+                          <span>$&nbsp;{cat._sum.amount?.toFixed(2)}</span>
+                        </div>
+                      );
+                    })}
+                    <div className="divider my-2 dark:border-t-gray-500"></div>
+                    <div className="flex justify-between">
+                      <strong>💰&nbsp;Total:&nbsp;</strong>
+                      <span>
+                        $&nbsp;{summary.data.expenses.total.toFixed(2)}
+                      </span>
+                    </div>
                   </div>
-                </div>
+                )}
               </>
             ) : null}
           </Card>
