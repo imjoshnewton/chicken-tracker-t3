@@ -124,7 +124,7 @@ const Summary: NextPageWithLayout = () => {
         </div>
         {/* <div className="w-full max-w-xl"></div> */}
         <div className="w-full max-w-xl" ref={ref}>
-          <Card title="Monthly Summary">
+          <Card title="FlockNerd Summary">
             {summary.isLoading ? (
               <Loader show={true} />
             ) : summary.isError ? (
