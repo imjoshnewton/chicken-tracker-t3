@@ -80,14 +80,14 @@ const Summary: NextPageWithLayout = () => {
             <MdSave />
             &nbsp;Save as PNG
           </button>
-          <button
+          {/* <button
             type="button"
             onClick={downloadImage}
             className="w-full rounded bg-secondary px-4 py-2 text-white transition-all hover:bg-secondary/80"
           >
             <MdSave />
             &nbsp;Save as PNG 2
-          </button>
+          </button> */}
           {/* <button
             type="button"
             onClick={downloadJpg}
