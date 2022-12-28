@@ -6,7 +6,7 @@ import AppLayout from "../../../../../layouts/AppLayout";
 import { trpc } from "../../../../../utils/trpc";
 import { type NextPageWithLayout } from "../../../../_app";
 import { toPng } from "html-to-image";
-import { MdSave } from "react-icons/md";
+import { MdClose, MdSave } from "react-icons/md";
 import { saveAs } from "file-saver";
 import { format } from "date-fns";
 
@@ -108,6 +108,19 @@ const Summary: NextPageWithLayout = () => {
             />
             &nbsp;Show Expenses
           </label>
+          {/* <fieldset className="flex items-center justify-center">
+            <h3 className="mr-4">Dimensions:</h3>
+            <label htmlFor="width" className="flex items-center justify-center">
+              <input type="text" id="width" className="w-20" />
+            </label>
+            <MdClose className="mx-4" />
+            <label
+              htmlFor="height"
+              className="flex items-center justify-center"
+            >
+              <input type="text" id="height" className="w-20" />
+            </label>
+          </fieldset> */}
         </div>
         {/* <div className="w-full max-w-xl"></div> */}
         <div className="w-full max-w-xl" ref={ref}>
