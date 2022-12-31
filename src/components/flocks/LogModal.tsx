@@ -25,7 +25,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   function resetFormValues(): void {
     setDate(undefined);
     setNotes(undefined);
-    setCount(0);
+    setCount(undefined);
   }
 
   async function createNewLog(
@@ -95,12 +95,12 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       Count
                     </label>
                     <input
+                    type="tel"
                       className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       value={count}
                       onChange={(e) => setCount(Number(e.target.value))}
-                      placeholder=""
-                      type="number"
+                      placeholder="0"
                     />
                     <label className="mb-1 block text-sm font-bold text-black">
                       Notes
