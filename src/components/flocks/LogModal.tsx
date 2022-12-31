@@ -14,6 +14,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const createLogMutation = trpc.logs.createLog.useMutation({
     onSuccess: () => {
       utils.stats.getStats.invalidate();
+      utils.stats.getExpenseStats.invalidate();
       toast.success("New log created!");
     },
   });
