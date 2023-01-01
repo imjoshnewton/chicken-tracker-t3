@@ -35,14 +35,14 @@ export default function FlockForm({
   const updateFlock = trpc.flocks.updateFlock.useMutation({
     onSuccess: (data) => {
       utils.flocks.getFlocks.invalidate();
-      router.push(`/flocks/${data.id}`);
+      router.push(`/app/flocks/${data.id}`);
       toast.success("Flock updated!");
     },
   });
   const createFlock = trpc.flocks.createFlock.useMutation({
     onSuccess: (data) => {
       utils.flocks.getFlock.invalidate();
-      router.push(`/flocks/${data.id}`);
+      router.push(`/app/flocks/${data.id}`);
       toast.success("Flock created!");
     },
   });
