@@ -114,7 +114,6 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       name="amount-input"
                       prefix="$"
                       placeholder="0.00"
-                      defaultValue={100.0}
                       decimalsLimit={2}
                       decimalScale={2}
                       onValueChange={(value, name) => setAmount(Number(value))}
