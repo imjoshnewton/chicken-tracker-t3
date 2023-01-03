@@ -24,14 +24,14 @@ const Home: NextPageWithLayout = () => {
               <p className="pb-4">
                 With FlockNerd, you can easily track the number of eggs laid by
                 your birds, as well as record expenses such as feed costs,
-                supplements and medications. Plus, you'll get access to helpful
-                statistics about your flock, including average egg production
-                per week, and total expenses.
+                supplements and medications. Plus, you&apos;ll get access to
+                helpful statistics about your flock, including average egg
+                production per week, and total expenses.
               </p>
               <p className="pb-4">
-                But FlockNerd isn't just for egg farmers. It's also a great tool
-                for farmers who raise poultry for meat or who simply keep birds
-                as pets.
+                But FlockNerd isn&apos;t just for egg farmers. It&apos;s also a
+                great tool for farmers who raise poultry for meat or who simply
+                keep birds as pets.
               </p>
               <p>
                 So why wait? Sign up for FlockNerd today and take the first step
