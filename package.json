@@ -28,6 +28,7 @@
     "next-auth": "^4.18.3",
     "next-pwa": "^5.6.0",
     "nodemailer": "^6.8.0",
+    "pwa-asset-generator": "^6.2.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.0.1",
     "react-currency-input-field": "^3.6.9",
