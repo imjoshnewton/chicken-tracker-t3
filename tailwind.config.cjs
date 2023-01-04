@@ -10,6 +10,9 @@ module.exports = {
         accent1: "#e76f51",
         accent2: "#e9c46a",
       },
+      margin: {
+        3.5: "-3.5vw",
+      },
     },
   },
   plugins: [],
