@@ -30,11 +30,11 @@ const Home: NextPageWithLayout = () => {
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <video autoPlay loop muted playsInline>
               <source src="/FlockNerd-Demo.webm" type="video/webm" />
-              {/* <source src="/FlockNerd-Demo.mp4" type="video/mp4" /> */}
+              <source src="/FlockNerd-Demo.mp4" type="video/mp4" />
             </video>
 
             <div className="flex flex-col text-black">
-              <h2 className="mb-4 text-3xl">Track Your Flock</h2>
+              <h2 className="mb-4 text-3xl">Track Your Flock 🐓🦆🦃</h2>
               <p className="pb-4">
                 With FlockNerd, you can easily track the number of eggs laid by
                 your birds, as well as record expenses such as feed costs,
@@ -65,28 +65,37 @@ const Home: NextPageWithLayout = () => {
             <div className="order-1 flex flex-col text-black lg:order-none">
               <h2 className="mb-4 text-3xl">Egg-ceptional Insights</h2>
               <p className="pb-4">
-                FlockNerd is more than just a tool for tracking egg production
-                and expenses for your poultry farm or backyard flock. It also
-                provides valuable insights that can help you improve your farm's
-                efficiency and profitability. With FlockNerd, you'll have access
-                to data-driven insights such as:
+                FlockNerd provides valuable insights that can help you improve
+                your farm, homestead, or backyard flock&apos;s efficiency and
+                profitability. With FlockNerd, you'll have access to data-driven
+                insights such as:
               </p>
               <ul className="insights pb-4">
                 <li>
-                  Average egg production per bird: see which birds are your top
-                  performers and identify any underperformers.
+                  <strong>Egg production trends:</strong> track your egg
+                  production over time to identify patterns and make informed
+                  decisions about your flock.
                 </li>
                 <li>
-                  Total expenses: keep track of all your farm-related costs in
-                  one place and see where you may be able to cut expenses.
+                  <strong>Average daily egg production:</strong> insert a target
+                  weekly average for each breed and see how your flock is
+                  performing in comparison.
                 </li>
                 <li>
-                  Egg production trends: track your egg production over time to
-                  identify patterns and make informed decisions about your farm.
+                  <strong>Average egg production per bird:</strong> see which
+                  birds are your top performers and identify any
+                  underperformers.
                 </li>
                 <li>
-                  Health and wellness data: record information about your birds'
-                  health, including visits to the veterinarian and any
+                  <strong>Expenses by Category:</strong> keep track of all your
+                  flock-related costs in one place and see where you may be able
+                  to cut expenses.
+                </li>
+
+                <li>
+                  <strong>Health and wellness data:</strong>&nbsp;
+                  <em>{"coming soon!"}</em>&nbsp;record information about your
+                  birds' health, including visits to the veterinarian and any
                   medications they may be taking.
                 </li>
               </ul>
