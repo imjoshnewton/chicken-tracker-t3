@@ -150,7 +150,7 @@ const Home: NextPageWithLayout = () => {
               </ol>
             </div>
             <h2 className="mt-8 pb-4 text-3xl">Installation Instructions</h2>
-            <div className="flex flex-wrap gap-8 lg:flex-nowrap lg:gap-14">
+            <div className="flex flex-wrap items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
               <video autoPlay loop muted playsInline className="flex-1">
                 <source src="/FlockNerd-Installation.webm" type="video/webm" />
                 <source src="/FlockNerd-Installation.mp4" type="video/mp4" />
@@ -160,7 +160,7 @@ const Home: NextPageWithLayout = () => {
                 loop
                 muted
                 playsInline
-                className="max-w-full flex-1"
+                className="max-w-[300px] flex-1"
               >
                 <source
                   src="/FlockNerd-AndroidInstallation.webm"
