@@ -2,8 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import SiteLayout from "../layouts/SiteLayout";
 import { type NextPageWithLayout } from "./_app";
-import demo from "../../public/FlockNerd-Demo-new.gif";
 import header from "../../public/site-header.jpg";
+import stats from "../../public/FlockNerd-Stats-mobile.png";
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -27,10 +27,14 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
-          <div className="flex max-w-5xl flex-wrap items-center justify-center gap-14 px-8 lg:flex-nowrap">
-            <Image src={demo} alt="Demo of Flock Nerd App" />
+          <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
+            <video autoPlay loop muted playsInline>
+              <source src="/FlockNerd-Demo.webm" type="video/webm" />
+              {/* <source src="/FlockNerd-Demo.mp4" type="video/mp4" /> */}
+            </video>
+
             <div className="flex flex-col text-black">
-              <h2 className="mb-4 text-3xl">Track Your Flock!</h2>
+              <h2 className="mb-4 text-3xl">Track Your Flock</h2>
               <p className="pb-4">
                 With FlockNerd, you can easily track the number of eggs laid by
                 your birds, as well as record expenses such as feed costs,
@@ -56,33 +60,50 @@ const Home: NextPageWithLayout = () => {
             </div>
           </div>
         </div>
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
-            </Link>
+        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-50 py-14">
+          <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
+            <div className="order-1 flex flex-col text-black lg:order-none">
+              <h2 className="mb-4 text-3xl">Egg-ceptional Insights</h2>
+              <p className="pb-4">
+                FlockNerd is more than just a tool for tracking egg production
+                and expenses for your poultry farm or backyard flock. It also
+                provides valuable insights that can help you improve your farm's
+                efficiency and profitability. With FlockNerd, you'll have access
+                to data-driven insights such as:
+              </p>
+              <ul className="insights pb-4">
+                <li>
+                  Average egg production per bird: see which birds are your top
+                  performers and identify any underperformers.
+                </li>
+                <li>
+                  Total expenses: keep track of all your farm-related costs in
+                  one place and see where you may be able to cut expenses.
+                </li>
+                <li>
+                  Egg production trends: track your egg production over time to
+                  identify patterns and make informed decisions about your farm.
+                </li>
+                <li>
+                  Health and wellness data: record information about your birds'
+                  health, including visits to the veterinarian and any
+                  medications they may be taking.
+                </li>
+              </ul>
+              <p>
+                By taking advantage of the insights provided by FlockNerd,
+                you'll be able to make data-driven decisions that can help your
+                farm thrive. So why wait? Download FlockNerd today and start
+                seeing the benefits for yourself.
+              </p>
+              <Link
+                href="/api/auth/signin"
+                className="mt-4 rounded bg-primary py-2 px-8 text-center text-white transition-all hover:bg-primary/90 hover:shadow-xl lg:self-start"
+              >
+                Sign up
+              </Link>
+            </div>
+            <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
           </div>
         </div>
       </main>

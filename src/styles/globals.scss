@@ -378,6 +378,15 @@ button.btn-logo {
     flex-basis: 50%;
 }
 
+.insights li {
+    padding-left: 1rem;
+    text-indent: -1.25rem;
+
+    &::before {
+        content: '🥚  ';
+    }
+}
+
 @media screen and (max-width:1150px) {
 
     .flex-48,
