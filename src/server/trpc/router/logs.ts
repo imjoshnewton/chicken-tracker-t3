@@ -22,6 +22,7 @@ export const logsRouter = router({
         flockId: z.string(),
         date: z.date(),
         count: z.number(),
+        breedId: z.string().optional(),
         notes: z.string().optional(),
       })
     )

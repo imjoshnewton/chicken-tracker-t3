@@ -60,7 +60,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
         onClick={() => setShowModal(true)}
       >
         <AiOutlineDollar className="text-xl" />
-        &nbsp;Add New Expense
+        &nbsp;Log an Expense
       </button>
       {showModal ? (
         <>

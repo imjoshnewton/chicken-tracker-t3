@@ -2,12 +2,14 @@ import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { MdOutlineEditNote } from "react-icons/md";
 import toast from "react-hot-toast";
+import { type Breed } from "@prisma/client";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
   const [date, setDate] = useState<Date>();
   const [count, setCount] = useState<number>();
   const [notes, setNotes] = useState<string>();
+  const [breedId, setBreedId] = useState<string>();
 
   const utils = trpc.useContext();
 
@@ -17,6 +19,10 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       utils.stats.getExpenseStats.invalidate();
       toast.success("New log created!");
     },
+  });
+
+  const flockQuery = trpc.flocks.getFlock.useQuery({
+    flockId: flockId as string,
   });
 
   function closeModal(): void {
@@ -35,7 +41,13 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
     count: number,
     notes?: string
   ): Promise<void> {
-    await createLogMutation.mutateAsync({ flockId, date, count, notes });
+    await createLogMutation.mutateAsync({
+      flockId,
+      date,
+      count,
+      notes,
+      breedId,
+    });
     closeModal();
     resetFormValues();
   }
@@ -52,7 +64,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
         onClick={() => setShowModal(true)}
       >
         <MdOutlineEditNote className="text-2xl" />
-        &nbsp;Add Log Entry
+        &nbsp;Log Eggs
       </button>
       {showModal ? (
         <>
@@ -96,13 +108,35 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       Count
                     </label>
                     <input
-                    type="tel"
+                      type="tel"
                       className="w-full appearance-none rounded border py-2 px-1 text-black"
                       required
                       value={count}
                       onChange={(e) => setCount(Number(e.target.value))}
                       placeholder="0"
                     />
+                    <fieldset className="my-3">
+                      <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                        Bird(s)
+                      </label>
+                      <select
+                        onChange={(e) => setBreedId(e.target.value)}
+                        value={breedId}
+                        className="w-full rounded border py-2 px-1 text-black"
+                      >
+                        <option value="">Select Bird(s)</option>
+                        {flockQuery.data?.breeds
+                          .filter((breed) => breed.averageProduction > 0)
+                          .map((breed) => {
+                            return (
+                              <option value={breed.id} key={breed.id}>
+                                {breed.name && `${breed.name} - `}
+                                {breed.breed}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    </fieldset>
                     <label className="mb-1 block text-sm font-bold text-black">
                       Notes
                     </label>

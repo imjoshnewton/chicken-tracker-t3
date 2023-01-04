@@ -79,15 +79,16 @@ model Flock {
 }
 
 model Breed {
-  id                String  @id @default(cuid())
-  name              String? @db.Text
-  breed             String  @default("") @db.Text
-  description       String? @db.Text
+  id                String   @id @default(cuid())
+  name              String?  @db.Text
+  breed             String   @default("") @db.Text
+  description       String?  @db.Text
   count             Int
-  imageUrl          String? @db.Text
+  imageUrl          String?  @db.Text
   averageProduction Float
   flockId           String
-  flock             Flock   @relation(fields: [flockId], references: [id], onDelete: Cascade)
+  flock             Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+  EggLog            EggLog[]
 
   @@index([flockId])
 }
@@ -99,8 +100,11 @@ model EggLog {
   date    DateTime
   flockId String
   flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+  breed   Breed?   @relation(fields: [breedId], references: [id], onDelete: NoAction)
+  breedId String?
 
   @@index([flockId])
+  @@index([breedId])
 }
 
 model Expense {
