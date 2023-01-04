@@ -4,13 +4,14 @@ import SiteLayout from "../layouts/SiteLayout";
 import { type NextPageWithLayout } from "./_app";
 import header from "../../public/site-header.jpg";
 import stats from "../../public/FlockNerd-Stats-mobile.png";
+import logo from "../../public/FlockNerd-logo-square.png";
 
 const Home: NextPageWithLayout = () => {
   return (
     <>
       <main className="justify-cente flex min-h-screen flex-col items-center p-0">
         <div className="relative flex h-auto w-full flex-col items-center justify-center py-36 lg:h-[75vh]">
-          <div className="flex max-w-5xl flex-col items-center justify-center gap-10 text-white">
+          <div className="flex max-w-5xl flex-col items-center justify-center gap-0 text-white">
             <Image
               src={header}
               alt="FlockNerd Track your flock - get insights"
@@ -18,7 +19,14 @@ const Home: NextPageWithLayout = () => {
               fill={true}
             />
             <div className="absolute top-0 bottom-0 right-0 left-0 bg-gray-900/50"></div>
-            <h1 className="z-0 text-3xl lg:text-6xl">Welcome to FlockNerd!</h1>
+            <Image
+              src={logo}
+              alt="FlockNerd Logo - chicken with rimmed glasses"
+              height="75"
+            />
+            <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
+              Welcome to FlockNerd!
+            </h1>
             <p className="z-0 max-w-3xl px-3 text-center lg:px-0">
               Are you a backyard chicken, duck, or quail farmer looking to track
               egg production and expenses for your flock? Look no further.
@@ -55,7 +63,7 @@ const Home: NextPageWithLayout = () => {
                 href="/api/auth/signin"
                 className="mt-4 rounded bg-primary py-2 px-8 text-center text-white transition-all hover:bg-primary/90 hover:shadow-xl lg:self-start"
               >
-                Sign up
+                Start Tracking Now
               </Link>
             </div>
           </div>
@@ -109,7 +117,7 @@ const Home: NextPageWithLayout = () => {
                 href="/api/auth/signin"
                 className="mt-4 rounded bg-primary py-2 px-8 text-center text-white transition-all hover:bg-primary/90 hover:shadow-xl lg:self-start"
               >
-                Sign up
+                Sign me up!
               </Link>
             </div>
             <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
