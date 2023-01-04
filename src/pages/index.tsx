@@ -75,8 +75,8 @@ const Home: NextPageWithLayout = () => {
               <p className="pb-4">
                 FlockNerd provides valuable insights that can help you improve
                 your farm, homestead, or backyard flock&apos;s efficiency and
-                profitability. With FlockNerd, you'll have access to data-driven
-                insights such as:
+                profitability. With FlockNerd, you&apos;ll have access to
+                data-driven insights such as:
               </p>
               <ul className="insights pb-4">
                 <li>
@@ -103,15 +103,15 @@ const Home: NextPageWithLayout = () => {
                 <li>
                   <strong>Health and wellness data:</strong>&nbsp;
                   <em>{"coming soon!"}</em>&nbsp;record information about your
-                  birds' health, including visits to the veterinarian and any
-                  medications they may be taking.
+                  birds&apos; health, including visits to the veterinarian and
+                  any medications they may be taking.
                 </li>
               </ul>
               <p>
                 By taking advantage of the insights provided by FlockNerd,
-                you'll be able to make data-driven decisions that can help your
-                farm thrive. So why wait? Download FlockNerd today and start
-                seeing the benefits for yourself.
+                you&apos;ll be able to make data-driven decisions that can help
+                your farm thrive. So why wait? Download FlockNerd today and
+                start seeing the benefits for yourself.
               </p>
               <Link
                 href="/api/auth/signin"
