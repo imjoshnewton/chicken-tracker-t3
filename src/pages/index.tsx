@@ -23,6 +23,7 @@ const Home: NextPageWithLayout = () => {
               src={logo}
               alt="FlockNerd Logo - chicken with rimmed glasses"
               height="75"
+              className="z-0"
             />
             <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
               Welcome to FlockNerd!
