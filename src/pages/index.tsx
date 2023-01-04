@@ -123,6 +123,54 @@ const Home: NextPageWithLayout = () => {
             <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
           </div>
         </div>
+        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
+          <div className="flex max-w-5xl flex-col flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-0">
+            <div className="flex max-w-2xl flex-col items-center justify-center">
+              <h2 className="mb-4 text-3xl">Installing the App</h2>
+              <p className="pb-4">
+                FlockNerd is a Progressive Web App {"(PWA)"}. A PWA is a type of
+                web application that can be installed on a device and behaves
+                like a native app. So it is 'installed' differently than most of
+                the apps on your phone. It is installed from this website and
+                not through the App Store or Google Play store.
+              </p>
+              <strong>Why a PWA?</strong>
+              <ol className=" list-decimal pb-4">
+                <li className="pb-4">
+                  I'm a web developer - PWAs are created using the same
+                  technologies as most websites: HTML, CSS, JavaScript. That's
+                  my comfortzone and how I can create the best experience for
+                  you!
+                </li>
+                <li>
+                  PWAs are 'cross-platform' - This means I can write one app and
+                  it works in your web browser, on iPhones/iPads, and Android
+                  devices.
+                </li>
+              </ol>
+            </div>
+            <h2 className="mt-8 pb-4 text-3xl">Installation Instructions</h2>
+            <div className="flex flex-wrap gap-8 lg:flex-nowrap lg:gap-14">
+              <video autoPlay loop muted playsInline className="flex-1">
+                <source src="/FlockNerd-Installation.webm" type="video/webm" />
+                <source src="/FlockNerd-Installation.mp4" type="video/mp4" />
+              </video>
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="max-w-full flex-1"
+              >
+                <source
+                  src="/FlockNerd-AndroidInstallation.webm"
+                  type="video/webm"
+                />
+                {/* <source src="/FlockNerd-Demo.mp4" type="video/mp4" /> */}
+              </video>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
