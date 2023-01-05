@@ -6,6 +6,7 @@ import header from "../../public/site-header.jpg";
 import stats from "../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../public/FlockNerd-logo-square.png";
 import { useState } from "react";
+import { FaEgg } from "react-icons/fa";
 
 const Home: NextPageWithLayout = () => {
   const [showAndroid, setShowAndroid] = useState(false);
@@ -31,15 +32,20 @@ const Home: NextPageWithLayout = () => {
             <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
               Welcome to FlockNerd!
             </h1>
-            <p className="z-0 max-w-3xl px-3 text-center lg:px-0 mb-4">
+            <p className="z-0 mb-4 max-w-3xl px-3 text-center lg:px-0">
               Are you a backyard chicken, duck, or quail farmer looking to track
               egg production and expenses for your flock? Look no further.
               FlockNerd is the perfect app for you.
             </p>
-            <Link href="#track" className="z-0">Learn more &gt;</Link>
+            <Link href="#track" className="z-0">
+              Learn more &gt;
+            </Link>
           </div>
         </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14" id="track">
+        <div
+          className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14"
+          id="track"
+        >
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <video autoPlay loop muted playsInline>
               <source src="/FlockNerd-Demo.webm" type="video/webm" />
@@ -66,7 +72,7 @@ const Home: NextPageWithLayout = () => {
               </p>
               <Link
                 href="/api/auth/signin"
-                className="mt-4 rounded bg-primary py-2 px-8 text-center text-white transition-all hover:bg-primary/90 hover:shadow-xl lg:self-start"
+                className="mt-4 rounded bg-secondary py-2 px-8 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
               >
                 Start Tracking Now
               </Link>
@@ -120,7 +126,7 @@ const Home: NextPageWithLayout = () => {
               </p>
               <Link
                 href="/api/auth/signin"
-                className="mt-4 rounded bg-primary py-2 px-8 text-center text-white transition-all hover:bg-primary/90 hover:shadow-xl lg:self-start"
+                className="mt-4 rounded bg-secondary py-2 px-8 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
               >
                 Sign me up!
               </Link>
