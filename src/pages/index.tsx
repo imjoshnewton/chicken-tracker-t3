@@ -26,6 +26,7 @@ const Home: NextPageWithLayout = () => {
               src={logo}
               alt="FlockNerd Logo - chicken with rimmed glasses"
               height="75"
+              className="z-0"
             />
             <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
               Welcome to FlockNerd!
@@ -199,22 +200,22 @@ const Home: NextPageWithLayout = () => {
               <p className="pb-4">
                 FlockNerd is a Progressive Web App {"(PWA)"}. A PWA is a type of
                 web application that can be installed on a device and behaves
-                like a native app. So it is 'installed' differently than most of
-                the apps on your phone. It is installed from this website and
-                not through the App Store or Google Play store.
+                like a native app. So it is &apos;installed&apos; differently
+                than most of the apps on your phone. It is installed from this
+                website and not through the App Store or Google Play store.
               </p>
               <h3 className="mb-4 text-xl">Why a PWA?</h3>
               <ol className="list-decimal pb-4">
                 <li className="ml-5 pl-2 pb-4">
-                  I'm a web developer - PWAs are created using the same
-                  technologies as most websites: HTML, CSS, JavaScript. That's
-                  my comfortzone and how I can create the best experience for
-                  you!
+                  I&apos;m a web developer - PWAs are created using the same
+                  technologies as most websites: HTML, CSS, JavaScript.
+                  That&apos;s my comfortzone and how I can create the best
+                  experience for you!
                 </li>
                 <li className="ml-5 pl-2">
-                  PWAs are 'cross-platform' - This means I can write one app and
-                  it works in your web browser, on iPhones/iPads, and Android
-                  devices.
+                  PWAs are &apos;cross-platform&apos; - This means I can write
+                  one app and it works in your web browser, on iPhones/iPads,
+                  and Android devices.
                 </li>
               </ol>
             </div>
