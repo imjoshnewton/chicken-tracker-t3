@@ -36,7 +36,7 @@ const Home: NextPageWithLayout = () => {
               egg production and expenses for your flock? Look no further.
               FlockNerd is the perfect app for you.
             </p>
-            <Link href="#track">Learn more &gt;</Link>
+            <Link href="#track" className="z-0">Learn more &gt;</Link>
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14" id="track">
