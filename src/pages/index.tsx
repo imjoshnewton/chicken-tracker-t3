@@ -31,14 +31,15 @@ const Home: NextPageWithLayout = () => {
             <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
               Welcome to FlockNerd!
             </h1>
-            <p className="z-0 max-w-3xl px-3 text-center lg:px-0">
+            <p className="z-0 max-w-3xl px-3 text-center lg:px-0 mb-4">
               Are you a backyard chicken, duck, or quail farmer looking to track
               egg production and expenses for your flock? Look no further.
               FlockNerd is the perfect app for you.
             </p>
+            <Link href="#track">Learn more &gt;</Link>
           </div>
         </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
+        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14" id="track">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <video autoPlay loop muted playsInline>
               <source src="/FlockNerd-Demo.webm" type="video/webm" />
