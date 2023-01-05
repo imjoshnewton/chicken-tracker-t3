@@ -26,7 +26,11 @@ export default function SiteLayout({ children }: { children: any }) {
 
   return (
     <>
-      <nav className="navbar h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
+      <nav
+        className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 ${
+          data?.user ? "pr-3" : "pr-6"
+        }`}
+      >
         <ul>
           <li className="inline lg:hidden">
             <button
