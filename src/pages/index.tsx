@@ -5,8 +5,11 @@ import { type NextPageWithLayout } from "./_app";
 import header from "../../public/site-header.jpg";
 import stats from "../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../public/FlockNerd-logo-square.png";
+import { useState } from "react";
 
 const Home: NextPageWithLayout = () => {
+  const [showAndroid, setShowAndroid] = useState(false);
+
   return (
     <>
       <main className="justify-cente flex min-h-screen flex-col items-center p-0">
@@ -50,7 +53,7 @@ const Home: NextPageWithLayout = () => {
                 helpful statistics about your flock, including average egg
                 production per week, and total expenses.
               </p>
-              <p className="pb-4">
+              <p className="pb-2">
                 But FlockNerd isn&apos;t just for egg farmers. It&apos;s also a
                 great tool for farmers who raise poultry for meat or who simply
                 keep birds as pets.
@@ -107,7 +110,7 @@ const Home: NextPageWithLayout = () => {
                   any medications they may be taking.
                 </li>
               </ul>
-              <p>
+              <p className="pb-2">
                 By taking advantage of the insights provided by FlockNerd,
                 you&apos;ll be able to make data-driven decisions that can help
                 your farm thrive. So why wait? Download FlockNerd today and
@@ -124,8 +127,74 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
-          <div className="flex max-w-5xl flex-col flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-0">
-            <div className="flex max-w-2xl flex-col items-center justify-center">
+          <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
+            <div className="flex flex-col items-center">
+              <div className="flex items-center">
+                <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  iOS
+                </span>
+                <label className="relative inline-flex cursor-pointer items-center gap-0">
+                  <input
+                    type="checkbox"
+                    checked={showAndroid}
+                    onChange={() => setShowAndroid(!showAndroid)}
+                    className="peer sr-only"
+                  />
+                  <div className="peer h-6 w-11 rounded-full bg-gray-200 after:absolute after:top-[2px] after:left-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-blue-600 peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:border-gray-600 dark:bg-gray-700 dark:peer-focus:ring-blue-800"></div>
+                </label>
+                <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Android
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
+                {!showAndroid ? (
+                  <div className="flex flex-col items-center">
+                    {/* <strong className="text-xl">iOS</strong> */}
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="flex-1"
+                      key="iOS"
+                    >
+                      <source
+                        src="/FlockNerd-Installation.webm"
+                        type="video/webm"
+                      />
+                      <source
+                        src="/FlockNerd-Installation.mp4"
+                        type="video/mp4"
+                      />
+                    </video>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    {/* <strong className="text-xl">Android</strong> */}
+                    <video
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="flex-1"
+                      key="Android"
+                    >
+                      <source
+                        src="/FlockNerd-AndroidInstallation.webm"
+                        type="video/webm"
+                      />
+                      <source
+                        src="/FlockNerd-AndroidInstallation.mp4"
+                        type="video/mp4"
+                      />
+                    </video>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex max-w-2xl flex-col justify-center">
               <h2 className="mb-4 text-3xl">Installing the App</h2>
               <p className="pb-4">
                 FlockNerd is a Progressive Web App {"(PWA)"}. A PWA is a type of
@@ -134,40 +203,20 @@ const Home: NextPageWithLayout = () => {
                 the apps on your phone. It is installed from this website and
                 not through the App Store or Google Play store.
               </p>
-              <strong>Why a PWA?</strong>
-              <ol className=" list-decimal pb-4">
-                <li className="pb-4">
+              <h3 className="mb-4 text-xl">Why a PWA?</h3>
+              <ol className="list-decimal pb-4">
+                <li className="ml-5 pl-2 pb-4">
                   I'm a web developer - PWAs are created using the same
                   technologies as most websites: HTML, CSS, JavaScript. That's
                   my comfortzone and how I can create the best experience for
                   you!
                 </li>
-                <li>
+                <li className="ml-5 pl-2">
                   PWAs are 'cross-platform' - This means I can write one app and
                   it works in your web browser, on iPhones/iPads, and Android
                   devices.
                 </li>
               </ol>
-            </div>
-            <h2 className="mt-8 pb-4 text-3xl">Installation Instructions</h2>
-            <div className="flex flex-wrap items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
-              <video autoPlay loop muted playsInline className="flex-1">
-                <source src="/FlockNerd-Installation.webm" type="video/webm" />
-                <source src="/FlockNerd-Installation.mp4" type="video/mp4" />
-              </video>
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="max-w-[300px] flex-1"
-              >
-                <source
-                  src="/FlockNerd-AndroidInstallation.webm"
-                  type="video/webm"
-                />
-                {/* <source src="/FlockNerd-Demo.mp4" type="video/mp4" /> */}
-              </video>
             </div>
           </div>
         </div>
