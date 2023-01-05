@@ -228,7 +228,7 @@ const Home: NextPageWithLayout = () => {
             </div>
           </div>
         </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-10 text-white">
+        <div className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-8 text-white">
         <span>&copy;&nbsp;FlockNerd 2022</span>
         </div>
       </main>
