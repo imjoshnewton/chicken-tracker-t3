@@ -166,10 +166,10 @@ const Home: NextPageWithLayout = () => {
                 </span>
               </div>
 
-              <div className="grid grid-cols-1 grid-rows-1 items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
+              <div className="grid grid-cols-1 grid-rows-1">
                 {/* {!showAndroid ? ( */}
                 <div
-                  className={`col-start-1 col-end-2 row-start-1 row-end-2 flex flex-col items-center transition-all ${
+                  className={`col-start-1 col-end-2 row-start-1 row-end-2 transition-all ${
                     showAndroid
                       ? "translate-x-14 opacity-0"
                       : "translate-x-0 opacity-100"
@@ -196,7 +196,7 @@ const Home: NextPageWithLayout = () => {
                 </div>
                 {/*) : (*/}
                 <div
-                  className={`col-start-1 col-end-2 row-start-1 row-end-2 flex flex-col items-center transition-all ${
+                  className={`col-start-1 col-end-2 row-start-1 row-end-2 transition-all ${
                     showAndroid
                       ? "-translate-x-0 opacity-100"
                       : "-translate-x-14 opacity-0"
