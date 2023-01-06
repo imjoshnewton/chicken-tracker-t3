@@ -5,11 +5,13 @@ import { type NextPageWithLayout } from "./_app";
 import header from "../../public/site-header.jpg";
 import stats from "../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../public/FlockNerd-logo-square.png";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaEgg } from "react-icons/fa";
+import { MdArrowDownward } from "react-icons/md";
 
 const Home: NextPageWithLayout = () => {
   const [showAndroid, setShowAndroid] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -37,14 +39,23 @@ const Home: NextPageWithLayout = () => {
               egg production and expenses for your flock? Look no further.
               FlockNerd is the perfect app for you.
             </p>
-            <Link href="#track" className="z-0">
-              Learn more &gt;
-            </Link>
+            <button
+              className="z-0 flex flex-col items-center gap-2 capitalize transition-all"
+              onClick={() => {
+                ref.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
+              }}
+            >
+              learn more
+              <MdArrowDownward className=" animate-bounce" />
+            </button>
           </div>
         </div>
         <div
           className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14"
           id="track"
+          ref={ref}
         >
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <video autoPlay loop muted playsInline>
@@ -155,50 +166,62 @@ const Home: NextPageWithLayout = () => {
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
-                {!showAndroid ? (
-                  <div className="flex flex-col items-center">
-                    {/* <strong className="text-xl">iOS</strong> */}
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="flex-1"
-                      key="iOS"
-                    >
-                      <source
-                        src="/FlockNerd-Installation.webm"
-                        type="video/webm"
-                      />
-                      <source
-                        src="/FlockNerd-Installation.mp4"
-                        type="video/mp4"
-                      />
-                    </video>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center">
-                    {/* <strong className="text-xl">Android</strong> */}
-                    <video
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="flex-1"
-                      key="Android"
-                    >
-                      <source
-                        src="/FlockNerd-AndroidInstallation.webm"
-                        type="video/webm"
-                      />
-                      <source
-                        src="/FlockNerd-AndroidInstallation.mp4"
-                        type="video/mp4"
-                      />
-                    </video>
-                  </div>
-                )}
+              <div className="grid grid-cols-1 grid-rows-1 items-center justify-between gap-8 lg:flex-nowrap lg:gap-14">
+                {/* {!showAndroid ? ( */}
+                <div
+                  className={`col-start-1 col-end-2 row-start-1 row-end-2 flex flex-col items-center transition-all ${
+                    showAndroid
+                      ? "translate-x-14 opacity-0"
+                      : "translate-x-0 opacity-100"
+                  }`}
+                >
+                  {/* <strong className="text-xl">iOS</strong> */}
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="flex-1"
+                    key="iOS"
+                  >
+                    <source
+                      src="/FlockNerd-Installation.webm"
+                      type="video/webm"
+                    />
+                    <source
+                      src="/FlockNerd-Installation.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+                {/*) : (*/}
+                <div
+                  className={`col-start-1 col-end-2 row-start-1 row-end-2 flex flex-col items-center transition-all ${
+                    showAndroid
+                      ? "-translate-x-0 opacity-100"
+                      : "-translate-x-14 opacity-0"
+                  }`}
+                >
+                  {/* <strong className="text-xl">Android</strong> */}
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="flex-1"
+                    key="Android"
+                  >
+                    <source
+                      src="/FlockNerd-AndroidInstallation.webm"
+                      type="video/webm"
+                    />
+                    <source
+                      src="/FlockNerd-AndroidInstallation.mp4"
+                      type="video/mp4"
+                    />
+                  </video>
+                </div>
+                {/* )} */}
               </div>
             </div>
 
@@ -229,7 +252,7 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-8 text-white">
-        <span>&copy;&nbsp;FlockNerd 2022</span>
+          <span>&copy;&nbsp;FlockNerd 2022</span>
         </div>
       </main>
     </>
