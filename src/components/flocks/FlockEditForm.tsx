@@ -8,6 +8,7 @@ import { trpc } from "../../utils/trpc";
 import Loader from "../shared/Loader";
 import { MdImage } from "react-icons/md";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function FlockForm({
   flock,
@@ -153,11 +154,12 @@ export default function FlockForm({
               <h3>{progress}%</h3>
             </>
           ) : (!uploading && downloadURL) || flock?.imageUrl ? (
-            <img
+            <Image
               src={downloadURL ? downloadURL : flock!.imageUrl!}
+              alt="New Flock Image"
               width="100"
               height="100"
-              className="flock-image"
+              className="flock-image aspect-square object-cover"
             />
           ) : (
             <></>

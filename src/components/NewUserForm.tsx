@@ -1,4 +1,5 @@
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -112,11 +113,12 @@ export default function NewUserForm({
               <h3>{progress}%</h3>
             </>
           ) : (!uploading && downloadURL) || user.image ? (
-            <img
+            <Image
               src={downloadURL ? downloadURL : user.image!}
+              alt="User Profile Image"
               width="100"
               height="100"
-              className="flock-image"
+              className="flock-image aspect-square object-cover"
             />
           ) : (
             <></>

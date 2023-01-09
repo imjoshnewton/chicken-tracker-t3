@@ -156,6 +156,16 @@ export default function ProductionChart({
         text: "Chart.js Line Chart",
       },
     },
+    scales: {
+      y: {
+        beginAtZero: true,
+        min: 0,
+        ticks: {
+          // forces step size to be 50 units
+          stepSize: 2,
+        },
+      },
+    },
   };
 
   const targetDailyAvg = calcDailyAverage(flock);

@@ -48,11 +48,11 @@ const Flocks = () => {
           <MdAdd className="text-2xl" /> &nbsp;Add New Flock
         </button>
       </div>
-      <ul className="flex flex-wrap items-center justify-between">
+      <ul className="flex flex-wrap items-center justify-between gap-6">
         {flocks?.map((flock) => {
           return (
             <li
-              className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/2 xl:basis-1/3"
+              className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-2/5 xl:basis-2/5"
               key={flock.id}
             >
               <Link href={`/app/flocks/${flock.id}`}>
@@ -63,7 +63,7 @@ const Flocks = () => {
                         src={flock?.imageUrl}
                         width="150"
                         height="150"
-                        className="flock-image"
+                        className="flock-image aspect-square object-cover"
                         alt=""
                       />
                       {/* <pre>{limit}</pre> */}

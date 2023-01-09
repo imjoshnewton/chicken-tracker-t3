@@ -50,7 +50,7 @@ const Flock = () => {
                 src={flock?.imageUrl}
                 width="150"
                 height="150"
-                className="flock-image"
+                className="flock-image aspect-square object-cover"
                 alt="A user uploaded image that represents this flock"
               />
               {/* <pre>{limit}</pre> */}

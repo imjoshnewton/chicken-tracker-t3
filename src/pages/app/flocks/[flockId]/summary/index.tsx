@@ -136,7 +136,7 @@ const Summary: NextPageWithLayout = () => {
                     src={summary.data.flock.image}
                     width="150"
                     height="150"
-                    className="flock-image"
+                    className="flock-image aspect-square object-cover"
                     alt="A user uploaded image that represents this flock"
                   />
                   <div className="ml-0 md:ml-6">

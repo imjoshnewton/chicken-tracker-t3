@@ -62,10 +62,8 @@ export default function Breeds({
       >
         {breeds.length < 1 && (
           <div className="basis-full text-center">
-            <p className="mb-3">
-              A flock isn&apos;t much of a flock without any birds...
-            </p>
-            <p className="mb-4">Click here to add some. 👇</p>
+            <p className="mb-3">Your flock doesn&apos;t have any birds...</p>
+            <p className="mb-4">Click here to add some 👇</p>
           </div>
         )}
         {breeds?.map((breed: Breed, index: number) => {

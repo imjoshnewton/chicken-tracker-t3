@@ -8,6 +8,7 @@ import { useUserData } from "../../lib/hooks";
 import { storage } from "../../lib/firebase";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
+import Image from "next/image";
 
 const BreedModal = ({
   flockId,
@@ -189,11 +190,12 @@ const BreedModal = ({
                       {uploading ? (
                         <Loader show={true} />
                       ) : (!uploading && downloadURL) || breed?.imageUrl ? (
-                        <img
+                        <Image
                           src={downloadURL ? downloadURL : breed!.imageUrl!}
+                          alt="Breed Image"
                           width="100"
                           height="100"
-                          className="flock-image"
+                          className="flock-image aspect-square object-cover"
                         />
                       ) : (
                         <></>
