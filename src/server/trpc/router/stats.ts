@@ -9,6 +9,7 @@ export const statsRouter = router({
         flockId: z.string(),
         limit: z.number(),
         today: z.date(),
+        breedFilter: z.array(z.string()).optional(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -25,6 +26,9 @@ export const statsRouter = router({
           date: {
             lte: today,
             gte: pastDate,
+          },
+          breedId: {
+            in: input.breedFilter,
           },
         },
         by: ["date"],
@@ -81,6 +85,7 @@ export const statsRouter = router({
     .input(
       z.object({
         today: z.date(),
+        flockId: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -91,7 +96,7 @@ export const statsRouter = router({
       }
 
       const getExpenses = await ctx.prisma
-        .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, SUM(expen.amount) AS Tot
+        .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
                     FROM Expense AS expen
                     WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
@@ -99,11 +104,12 @@ export const statsRouter = router({
       }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
         dates[4]?.getMonth()! + 1
       }, ${dates[5]?.getMonth()! + 1})
-                    GROUP BY MonthYear, Cat
+                    AND expen.flockId = ${input.flockId}
+                    GROUP BY flockId, MonthYear, Cat
                     ORDER BY MonthYear ASC`;
 
       const getProduction = await ctx.prisma
-        .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, SUM(logs.count) AS Tot
+        .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
                     FROM EggLog AS logs
                     WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
@@ -111,7 +117,8 @@ export const statsRouter = router({
       }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
         dates[4]?.getMonth()! + 1
       }, ${dates[5]?.getMonth()! + 1})
-                    GROUP BY MonthYear
+                    AND logs.flockId = ${input.flockId}
+                    GROUP BY flockId, MonthYear
                     ORDER BY MonthYear ASC`;
 
       return {

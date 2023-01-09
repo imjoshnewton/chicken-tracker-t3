@@ -25,7 +25,7 @@ export function useFlockData() {
     required: true,
   });
   const router = useRouter();
-  const { flockId, statsRange } = router.query;
+  const { flockId, statsRange, breedFilter } = router.query;
   const range = statsRange ? Number(statsRange) : 7;
 
   const now = new Date(Date.now());
@@ -43,13 +43,14 @@ export function useFlockData() {
       flockId: flockId as string,
       limit: range,
       today: today,
+      breedFilter: typeof breedFilter == "string" ? [breedFilter] : breedFilter,
     },
     {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
   const expenseData = trpc.stats.getExpenseStats.useQuery(
-    { today: today },
+    { today: today, flockId: flockId as string },
     {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }

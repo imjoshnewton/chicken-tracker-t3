@@ -2,6 +2,7 @@ import { Breed, Flock } from "@prisma/client";
 import Loader from "../shared/Loader";
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
+import { MdFilterAlt } from "react-icons/md";
 
 export default function Stats({
   stats,
@@ -9,12 +10,14 @@ export default function Stats({
   className,
   limit,
   onRangeChange,
+  filter,
 }: {
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
   limit: string;
   onRangeChange: any;
+  filter?: string;
 }) {
   if (!flock || !stats.logs) {
     return (
@@ -26,8 +29,14 @@ export default function Stats({
 
   return (
     <div className={className}>
-      <div className="flex justify-between">
-        <h2 className="mb-4 dark:text-gray-300">Stats</h2>
+      <div className="mb-4 flex justify-between">
+        <h2 className="dark:text-gray-300">Stats</h2>
+        {filter && (
+          <span className="flex items-center rounded-full bg-gray-200 px-3 text-xs">
+            <MdFilterAlt className="mt-0" />
+            &nbsp;{filter}
+          </span>
+        )}
       </div>
       <div className="flex flex-wrap">
         <ProductionChart

@@ -36,14 +36,14 @@ export default function FlockForm({
     onSuccess: (data) => {
       utils.flocks.getFlocks.invalidate();
       router.push(`/app/flocks/${data.id}`);
-      toast.success("Flock updated!");
+      // toast.success("Flock updated!");
     },
   });
   const createFlock = trpc.flocks.createFlock.useMutation({
     onSuccess: (data) => {
       utils.flocks.getFlock.invalidate();
       router.push(`/app/flocks/${data.id}`);
-      toast.success("Flock created!");
+      // toast.success("Flock created!");
     },
   });
   const setDefaultFlock = trpc.auth.setDefaultFlock.useMutation();
@@ -109,21 +109,35 @@ export default function FlockForm({
     );
 
     if (flockData.id) {
-      updateFlock.mutate({
-        id: flockData.id,
-        name: flockData.name,
-        description: flockData.description ? flockData.description : "",
-        type: flockData.type,
-        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-        default: flockData.default,
-      });
+      toast.promise(
+        updateFlock.mutateAsync({
+          id: flockData.id,
+          name: flockData.name,
+          description: flockData.description ? flockData.description : "",
+          type: flockData.type,
+          imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+          default: flockData.default,
+        }),
+        {
+          loading: `Saving flock`,
+          success: (data) => `${data.name} updated successfully!!`,
+          error: (err) => `This just happened: ${err.toString()}`,
+        }
+      );
     } else {
-      createFlock.mutate({
-        name: flockData.name,
-        description: flockData.description ? flockData.description : "",
-        type: flockData.type,
-        imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-      });
+      toast.promise(
+        createFlock.mutateAsync({
+          name: flockData.name,
+          description: flockData.description ? flockData.description : "",
+          type: flockData.type,
+          imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+        }),
+        {
+          loading: `Creating flock`,
+          success: (data) => `${data.name} created successfully!`,
+          error: (err) => `This just happened: ${err.toString()}`,
+        }
+      );
     }
   };
 

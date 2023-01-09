@@ -15,6 +15,7 @@ import AppLayout from "../../../../layouts/AppLayout";
 
 const Flock = () => {
   const router = useRouter();
+  const { breedFilter } = router.query;
   const { flockId, flock, stats, range } = useFlockData();
 
   console.log("Logs: ", stats.logs);
@@ -26,6 +27,11 @@ const Flock = () => {
       query: { ...router.query, statsRange: newRange },
     });
   };
+
+  const filterBreed = flock?.breeds.find(
+    (breed) => breed.id == (breedFilter as string)
+  );
+  const filterText = filterBreed?.name || filterBreed?.breed || undefined;
 
   return (
     <main>
@@ -79,6 +85,7 @@ const Flock = () => {
                 className="basis-full xl:basis-[75%]"
                 limit={range.toString()}
                 onRangeChange={onRangeChange}
+                filter={filterText}
               ></Stats>
             </div>
           </Card>
