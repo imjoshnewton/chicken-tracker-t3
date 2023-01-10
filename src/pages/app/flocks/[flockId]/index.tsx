@@ -28,6 +28,14 @@ const Flock = () => {
     });
   };
 
+  const clearFilter = () => {
+    delete router.query["breedFilter"];
+
+    router.replace({
+      query: { ...router.query },
+    });
+  };
+
   const filterBreed = flock?.breeds.find(
     (breed) => breed.id == (breedFilter as string)
   );
@@ -86,6 +94,7 @@ const Flock = () => {
                 limit={range.toString()}
                 onRangeChange={onRangeChange}
                 filter={filterText}
+                clearFilter={clearFilter}
               ></Stats>
             </div>
           </Card>

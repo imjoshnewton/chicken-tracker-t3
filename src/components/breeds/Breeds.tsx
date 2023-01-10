@@ -113,7 +113,7 @@ export default function Breeds({
                 {/* </p> */}
               </div>
               <button
-                className="ml-auto h-8 w-8 rounded-lg border-gray-400 text-gray-700 opacity-100 transition-all hover:border-2 hover:text-gray-700 hover:shadow group-hover:opacity-100 group-[.active]:text-gray-300 group-[.active]:hover:border-white group-[.active]:hover:text-white lg:text-gray-400 lg:opacity-0"
+                className="ml-auto h-8 w-8 rounded-lg border-gray-400 p-0 text-gray-700 opacity-100 transition-all hover:border-2 hover:text-gray-700 hover:shadow group-hover:opacity-100 group-[.active]:text-gray-300 group-[.active]:hover:border-white group-[.active]:hover:text-white lg:text-gray-400 lg:opacity-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   setSellectedBreed(breed);
