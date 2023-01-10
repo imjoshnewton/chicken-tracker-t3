@@ -48,26 +48,23 @@ const Flocks = () => {
           <MdAdd className="text-2xl" /> &nbsp;Add New Flock
         </button>
       </div>
-      <ul className="flex flex-wrap items-center justify-between gap-6">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {flocks?.map((flock) => {
           return (
-            <li
-              className="basis-full sm:basis-1/2 md:basis-1/2 lg:basis-2/5 xl:basis-2/5"
-              key={flock.id}
-            >
+            <li className="" key={flock.id}>
               <Link href={`/app/flocks/${flock.id}`}>
                 <div className="shadow transition-all hover:shadow-2xl">
                   <Card title={"Flock"}>
-                    <div className="flex flex-wrap items-center sm:flex-nowrap">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
                       <Image
                         src={flock?.imageUrl}
                         width="150"
                         height="150"
                         className="flock-image aspect-square object-cover"
-                        alt=""
+                        alt="Image that represents the user's flock"
                       />
                       {/* <pre>{limit}</pre> */}
-                      <div className="ml-0 md:ml-6">
+                      <div>
                         <div className="flex items-center">
                           <h1 className="mr-3 dark:text-gray-300">
                             {flock?.name}
