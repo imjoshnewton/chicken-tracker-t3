@@ -36,15 +36,17 @@ export default function ProductionChart({
   className,
   limit,
   onRangeChange,
+  breedFilter,
 }: {
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
   limit: string;
   onRangeChange: any;
+  breedFilter?: string;
 }) {
   function chartData(logs: any[], flock: Flock & { breeds: Breed[] }) {
-    const flockDailyAverage = calcDailyAverage(flock);
+    const flockDailyAverage = calcDailyAverage(flock, breedFilter);
     const chartArray = createChartArray(logs, Number(limit));
 
     return {
@@ -116,11 +118,20 @@ export default function ProductionChart({
     return retArray;
   }
 
-  function calcDailyAverage(flock: Flock & { breeds: Breed[] }): number {
+  function calcDailyAverage(
+    flock: Flock & { breeds: Breed[] },
+    breedFilter?: string
+  ): number {
     const breedAverages = flock.breeds.length
-      ? flock.breeds.map((breed) => (breed.averageProduction * breed.count) / 7)
+      ? breedFilter
+        ? flock.breeds
+            .filter((breed) => breed.id == breedFilter)
+            .map((breed) => (breed.averageProduction * breed.count) / 7)
+        : flock.breeds.map(
+            (breed) => (breed.averageProduction * breed.count) / 7
+          )
       : [0];
-    const dailyAverage = breedAverages.reduce((a, b) => a + b);
+    const dailyAverage = breedAverages.reduce((a, b) => a + b, 0);
 
     return dailyAverage;
   }

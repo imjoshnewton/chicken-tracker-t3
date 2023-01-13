@@ -11,6 +11,7 @@ export default function Stats({
   limit,
   onRangeChange,
   filter,
+  filterId,
   clearFilter,
 }: {
   stats: any | null | undefined;
@@ -19,6 +20,7 @@ export default function Stats({
   limit: string;
   onRangeChange: any;
   filter?: string;
+  filterId?: string;
   clearFilter?: () => void;
 }) {
   if (!flock || !stats.logs) {
@@ -28,6 +30,8 @@ export default function Stats({
       </div>
     );
   }
+
+  console.log("Filter: ", filter);
 
   return (
     <div className={className}>
@@ -53,6 +57,7 @@ export default function Stats({
           className={"flex-48"}
           limit={limit}
           onRangeChange={onRangeChange}
+          breedFilter={filterId}
         />
         <div className="p-2"></div>
         <ExpenseChart stats={stats} className={"flex-48"} />

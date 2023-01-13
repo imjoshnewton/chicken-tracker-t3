@@ -94,6 +94,7 @@ const Flock = () => {
                 limit={range.toString()}
                 onRangeChange={onRangeChange}
                 filter={filterText}
+                filterId={breedFilter as string}
                 clearFilter={clearFilter}
               ></Stats>
             </div>
