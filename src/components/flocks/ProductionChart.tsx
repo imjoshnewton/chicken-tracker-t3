@@ -179,7 +179,7 @@ export default function ProductionChart({
     },
   };
 
-  const targetDailyAvg = calcDailyAverage(flock);
+  const targetDailyAvg = calcDailyAverage(flock, breedFilter);
   const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
   return (
@@ -222,9 +222,9 @@ export default function ProductionChart({
               <span className="ml-1">
                 {actualDailyAvg < targetDailyAvg ? (
                   <MdArrowDownward className="text-red-600" />
-                ) : (
+                ) : actualDailyAvg > targetDailyAvg ? (
                   <MdArrowUpward className=" text-green-600" />
-                )}
+                ) : null}
               </span>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function ProductionChart({
           <div className="flex flex-col items-center justify-center text-center">
             Last Weeks Avg
             <br />
-            {stats.lastWeekAvg._avg.count
+            {stats.lastWeekAvg?._avg.count
               ? stats.lastWeekAvg._avg.count.toFixed(2)
               : "n/a"}
           </div>
@@ -242,14 +242,17 @@ export default function ProductionChart({
             <br />
             <div className="flex items-center">
               <span className="ml-1">
-                {stats.thisWeekAvg._avg.count?.toFixed(2)}
+                {stats.thisWeekAvg?._avg.count
+                  ? stats.thisWeekAvg._avg.count.toFixed(2)
+                  : "n/a"}
               </span>
               <span className="ml-1">
                 {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
                   <MdOutlineTrendingDown className="text-red-600" />
-                ) : (
+                ) : stats.thisWeekAvg._avg.count >
+                  stats.lastWeekAvg._avg.count ? (
                   <MdOutlineTrendingUp className=" text-green-600" />
-                )}
+                ) : null}
               </span>
             </div>
           </div>
