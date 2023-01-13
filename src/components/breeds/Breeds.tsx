@@ -74,7 +74,7 @@ export default function Breeds({
                   ? "active bg-secondary/95 text-white"
                   : null
               }`}
-              key={index}
+              key={breed.id}
               onClick={() => {
                 if (router.query["breedFilter"] == breed.id) {
                   delete router.query["breedFilter"];
@@ -95,9 +95,8 @@ export default function Breeds({
               <div className="relative h-full basis-1/5">
                 <Image
                   src={breed.imageUrl!}
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-l-lg"
+                  fill={true}
+                  className="rounded-l-lg object-cover"
                   alt={breed.name ?? ""}
                 />
               </div>
