@@ -16,7 +16,12 @@ export const flocksRouter = router({
           userId: ctx.session.user.id,
         },
         include: {
-          breeds: true,
+          breeds: {
+            orderBy: {
+              // name: "asc",
+              breed: "asc",
+            },
+          },
         },
       });
     }),
