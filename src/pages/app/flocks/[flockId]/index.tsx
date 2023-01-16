@@ -16,9 +16,10 @@ import AppLayout from "../../../../layouts/AppLayout";
 const Flock = () => {
   const router = useRouter();
   const { breedFilter } = router.query;
-  const { flockId, flock, stats, range } = useFlockData();
+  const { flockId, flock, stats, range, breedStats } = useFlockData();
 
-  console.log("Logs: ", stats.logs);
+  // console.log("Logs: ", stats.logs);
+  console.log("Breed Stats: ", breedStats);
 
   const onRangeChange = (event: any) => {
     const newRange = event.target.value;
@@ -84,6 +85,7 @@ const Flock = () => {
               <Breeds
                 flockId={flockId?.toString()}
                 breeds={flock?.breeds}
+                top={breedStats?.at(0)?.breedId}
                 className="basis-full xl:basis-[23%]"
               ></Breeds>
               <div className="basis-[2%] p-3"></div>

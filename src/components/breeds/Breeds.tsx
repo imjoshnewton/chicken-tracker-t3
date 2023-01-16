@@ -6,6 +6,7 @@ import {
   MdOutlineEdit,
   MdOutlineExpandLess,
   MdOutlineExpandMore,
+  MdStar,
 } from "react-icons/md";
 import BreedModal from "./BreedModal";
 import Loader from "../shared/Loader";
@@ -15,10 +16,12 @@ export default function Breeds({
   flockId,
   breeds,
   className,
+  top,
 }: {
   flockId: string | undefined;
   breeds: Breed[];
   className: string;
+  top?: string | null;
 }) {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
@@ -69,7 +72,7 @@ export default function Breeds({
         {breeds?.map((breed: Breed, index: number) => {
           return (
             <li
-              className={`group mb-4 flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg ${
+              className={`group relative mb-4 flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg ${
                 router.query.breedFilter == breed.id
                   ? "active bg-secondary/95 text-white"
                   : null
@@ -121,6 +124,11 @@ export default function Breeds({
               >
                 <MdOutlineEdit />
               </button>
+              <MdStar
+                className={`absolute -top-3 -right-3 text-2xl text-accent2 ${
+                  breed.id == top ? "" : "hidden"
+                }`}
+              />
             </li>
           );
         })}

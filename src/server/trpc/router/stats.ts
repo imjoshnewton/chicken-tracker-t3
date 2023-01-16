@@ -207,6 +207,34 @@ export const statsRouter = router({
         month: startOfMonth.toLocaleString("default", { month: "long" }),
       };
     }),
+  getBreedStats: protectedProcedure
+    .input(z.object({ today: z.date(), flockId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      var today = input.today;
+      today.setHours(23, 59, 59, 999);
+
+      const [beginThisWeek, endThisWeek] = getThisWeek(today);
+
+      return await ctx.prisma.eggLog.groupBy({
+        where: {
+          flockId: input.flockId,
+          date: {
+            lte: endThisWeek,
+            gte: beginThisWeek,
+          },
+        },
+        _avg: {
+          count: true,
+        },
+        by: ["breedId"],
+        orderBy: {
+          _avg: {
+            count: "desc",
+          },
+        },
+        take: 1,
+      });
+    }),
 });
 
 function getThisWeek(today: Date): [beginningofWeek: Date, endofWeek: Date] {

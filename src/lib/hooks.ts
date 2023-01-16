@@ -1,6 +1,8 @@
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
+import { number } from "zod";
+import type { Flock, Breed } from "@prisma/client";
 
 //s
 // Custom hook to get user's session data
@@ -55,6 +57,10 @@ export function useFlockData() {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
+  const breedStats = trpc.stats.getBreedStats.useQuery({
+    today: today,
+    flockId: flockId as string,
+  });
 
   return {
     flockId,
@@ -66,6 +72,7 @@ export function useFlockData() {
       thisWeekAvg: logsData.data?.thisWeeksAvg,
     },
     range,
+    breedStats: breedStats.data,
     loading: flockData.isLoading && logsData.isLoading,
     error: {
       flock: flockData.error,
