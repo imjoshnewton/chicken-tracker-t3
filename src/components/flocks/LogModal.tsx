@@ -117,7 +117,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                     />
                     <fieldset className="my-3">
                       <label className="mb-1 mt-2 block text-sm font-bold text-black">
-                        Bird(s)
+                        Bird(s) (optional)
                       </label>
                       <select
                         onChange={(e) => setBreedId(e.target.value)}
