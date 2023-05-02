@@ -11,7 +11,7 @@ import {
 import BreedModal from "./BreedModal";
 import Loader from "../shared/Loader";
 import { useRouter } from "next/router";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function Breeds({
   flockId,
@@ -152,19 +152,22 @@ export default function Breeds({
           &nbsp;Add Birds
         </button>
       </motion.ul>
-      {showModal ? (
-        <BreedModal
-          flockId={flockId}
-          breed={selectedBreed}
-          show={true}
-          closeModal={() => {
-            setShowModal(false);
-            setSellectedBreed(null);
-          }}
-        />
-      ) : (
-        <></>
-      )}
+      <AnimatePresence
+        // Disable any initial animations on children that
+        // are present when the component is first rendered
+        initial={false}
+      >
+        {showModal && (
+          <BreedModal
+            flockId={flockId}
+            breed={selectedBreed}
+            closeModal={() => {
+              setShowModal(false);
+              setSellectedBreed(null);
+            }}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
