@@ -11,6 +11,7 @@ import {
 import BreedModal from "./BreedModal";
 import Loader from "../shared/Loader";
 import { useRouter } from "next/router";
+import { motion } from "framer-motion";
 
 export default function Breeds({
   flockId,
@@ -56,7 +57,7 @@ export default function Breeds({
           <MdOutlineExpandMore className="inline lg:hidden" />
         )}
       </h2>
-      <ul
+      <motion.ul
         className={
           isActive
             ? "flex flex-wrap justify-between dark:text-gray-300"
@@ -71,7 +72,14 @@ export default function Breeds({
         )}
         {breeds?.map((breed: Breed, index: number) => {
           return (
-            <li
+            <motion.li
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.3,
+                delay: index * 0.1,
+              }}
               className={`group relative mb-4 flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg ${
                 router.query.breedFilter == breed.id
                   ? "active bg-secondary/95 text-white"
@@ -129,7 +137,7 @@ export default function Breeds({
                   breed.id == top ? "" : "hidden"
                 }`}
               />
-            </li>
+            </motion.li>
           );
         })}
         <button
@@ -143,7 +151,7 @@ export default function Breeds({
           <MdAdd className="text-2xl" />
           &nbsp;Add Birds
         </button>
-      </ul>
+      </motion.ul>
       {showModal ? (
         <BreedModal
           flockId={flockId}

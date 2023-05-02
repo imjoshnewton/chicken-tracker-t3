@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import toast from "react-hot-toast";
 import Card from "../../../components/shared/Card";
 import AppLayout from "../../../layouts/AppLayout";
@@ -25,36 +26,57 @@ const Logs = () => {
     <main>
       <div className="shadow-xl">
         <Card title="All Logs">
-          <ul className="mt-4 flex flex-col">
-            {logs?.map((log) => {
-              return (
-                <li
-                  className="mb-3 flex min-h-[50px] items-center rounded border border-solid px-3 py-2 shadow"
-                  key={log.id}
-                >
-                  <div className="basis-1/3 md:basis-1/4">
-                    {log.date.toDateString()}
-                  </div>
-                  <span className="basis-1/3 md:basis-1/6">
-                    Count: {log.count}
-                  </span>
-                  <span className="hidden basis-1/3 md:block">
-                    Notes: {log.notes}
-                  </span>
-                  <div className="ml-auto">
-                    <button
-                      className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
-                      onClick={async () => {
-                        await deleteLog(log.id);
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <AnimatePresence initial={true}>
+            <motion.ul className="mt-4 flex flex-col">
+              {logs?.map((log, index) => {
+                return (
+                  <motion.li
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      transition: {
+                        duration: 0.15,
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 500,
+                        delay: index * 0.05,
+                      },
+                    }}
+                    exit={{
+                      x: "-100vw",
+                      opacity: 0,
+                      transition: {
+                        duration: 0.15,
+                      },
+                    }}
+                    className="mb-3 flex min-h-[50px] items-center rounded border border-solid px-3 py-2 shadow"
+                    key={log.id}
+                  >
+                    <div className="basis-1/3 md:basis-1/4">
+                      {log.date.toDateString()}
+                    </div>
+                    <span className="basis-1/3 md:basis-1/6">
+                      Count: {log.count}
+                    </span>
+                    <span className="hidden basis-1/3 md:block">
+                      Notes: {log.notes}
+                    </span>
+                    <div className="ml-auto">
+                      <button
+                        className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
+                        onClick={async () => {
+                          await deleteLog(log.id);
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+          </AnimatePresence>
         </Card>
       </div>
     </main>

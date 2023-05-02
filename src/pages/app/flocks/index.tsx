@@ -6,6 +6,7 @@ import FlockForm from "../../../components/flocks/FlockEditForm";
 import { useState } from "react";
 import { MdAdd } from "react-icons/md";
 import AppLayout from "../../../layouts/AppLayout";
+import { motion } from "framer-motion";
 
 const Flocks = () => {
   const { flocks, userId, loading } = useAllFlocks();
@@ -49,9 +50,15 @@ const Flocks = () => {
         </button>
       </div>
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {flocks?.map((flock) => {
+        {flocks?.map((flock, index) => {
           return (
-            <li className="" key={flock.id}>
+            <motion.li
+              initial={{ opacity: 0, translateY: 20 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+              className=""
+              key={flock.id}
+            >
               <Link href={`/app/flocks/${flock.id}`}>
                 <div className="shadow transition-all hover:shadow-2xl">
                   <Card title={"Flock"}>
@@ -81,7 +88,7 @@ const Flocks = () => {
                   </Card>
                 </div>
               </Link>
-            </li>
+            </motion.li>
           );
         })}
         <li className="basis-3/4"></li>

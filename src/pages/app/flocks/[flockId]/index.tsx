@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { MdOutlineEdit } from "react-icons/md";
 import AppLayout from "../../../../layouts/AppLayout";
+import { motion } from "framer-motion";
 
 const Flock = () => {
   const router = useRouter();
@@ -54,7 +55,12 @@ const Flock = () => {
               Edit&nbsp;&nbsp;
               <MdOutlineEdit />
             </Link>
-            <div className="flex flex-wrap items-center">
+            <motion.div
+              initial={{ opacity: 0, translateY: 10 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-wrap items-center"
+            >
               <Image
                 src={flock?.imageUrl}
                 width="150"
@@ -79,7 +85,7 @@ const Flock = () => {
                 <div className="p-1"></div>
                 <ExpenseModal flockId={flockId?.toString()} />
               </div>
-            </div>
+            </motion.div>
             <div className="divider my-6 dark:border-t-gray-500"></div>
             <div className="justify-evently flex flex-wrap">
               <Breeds

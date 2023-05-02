@@ -232,7 +232,7 @@ export const statsRouter = router({
             count: "desc",
           },
         },
-        take: 1,
+        // take: 1,
       });
     }),
 });
