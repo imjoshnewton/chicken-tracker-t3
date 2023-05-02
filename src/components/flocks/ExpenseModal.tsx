@@ -4,6 +4,7 @@ import { trpc } from "../../utils/trpc";
 import { AiOutlineDollar } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
+import { RiLoader4Fill } from "react-icons/ri";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -220,7 +221,11 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                         }
                       }}
                     >
-                      Submit
+                      {isLoading ? (
+                        <RiLoader4Fill className="animate-spin text-2xl" />
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </div>

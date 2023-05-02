@@ -9,15 +9,15 @@ import { storage } from "../../lib/firebase";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 import Image from "next/image";
+import { motion } from "framer-motion";
+import { RiLoader4Fill } from "react-icons/ri";
 
 const BreedModal = ({
   flockId,
-  show,
   closeModal,
   breed,
 }: {
   flockId: string | undefined;
-  show: boolean;
   closeModal: any;
   breed: Breed | null;
 }) => {
@@ -28,26 +28,56 @@ const BreedModal = ({
   });
   const utils = trpc.useContext();
 
-  const createNewBreed = trpc.breeds.createBreed.useMutation({
-    onSuccess: () => {
-      toast.success("New breed created!");
-      invalidateAllFlockPageQueries();
-    },
-  });
+  const { mutateAsync: createNewBreed, isLoading: creatingBreed } =
+    trpc.breeds.createBreed.useMutation({
+      onSuccess: () => {
+        toast.success("New breed created!");
+        invalidateAllFlockPageQueries();
+      },
+    });
 
-  const updateBreed = trpc.breeds.updateBreed.useMutation({
-    onSuccess: () => {
-      toast.success("Breed updated!");
-      invalidateAllFlockPageQueries();
-    },
-  });
+  const { mutateAsync: updateBreed, isLoading: updatingBreed } =
+    trpc.breeds.updateBreed.useMutation({
+      onSuccess: () => {
+        toast.success("Breed updated!");
+        invalidateAllFlockPageQueries();
+      },
+    });
 
-  const deleteBreed = trpc.breeds.deleteBreed.useMutation({
-    onSuccess: () => {
-      toast.success("Breed deleted!");
-      invalidateAllFlockPageQueries();
+  const { mutateAsync: deleteBreed, isLoading: deletingBreed } =
+    trpc.breeds.deleteBreed.useMutation({
+      onSuccess: () => {
+        toast.success("Breed deleted!");
+        invalidateAllFlockPageQueries();
+      },
+    });
+
+  const dropIn = {
+    hidden: {
+      y: "-100vh",
+      opacity: 0,
     },
-  });
+    visible: {
+      y: "0",
+      opacity: 1,
+      transition: {
+        duration: 0.15,
+        type: "spring",
+        damping: 25,
+        stiffness: 500,
+      },
+    },
+    exit: {
+      y: "-100vh",
+      opacity: 0,
+      transition: {
+        duration: 0.3,
+        type: "spring",
+        damping: 25,
+        stiffness: 500,
+      },
+    },
+  };
 
   function invalidateAllFlockPageQueries() {
     utils.flocks.getFlock.invalidate();
@@ -116,7 +146,7 @@ const BreedModal = ({
     console.log("Data: ", breedData);
 
     if (breedData.flockId && !breedData.id) {
-      createNewBreed.mutate({
+      await createNewBreed({
         flockId: breedData.flockId,
         name: breedData.name!,
         breed: breedData.breed!,
@@ -131,7 +161,7 @@ const BreedModal = ({
       });
       closeModal();
     } else if (breedData.flockId && breedData.id) {
-      updateBreed.mutate({
+      await updateBreed({
         id: breedData.id,
         flockId: breedData.flockId,
         name: breedData.name!,
@@ -156,140 +186,154 @@ const BreedModal = ({
 
   async function deleteBreedClick(id: string) {
     if (confirm(`Are you sure you want to delete this breed?`)) {
-      deleteBreed.mutate({ id });
+      await deleteBreed({ id });
       closeModal();
     }
   }
 
   return (
     <>
-      {show ? (
-        <>
-          <div className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none">
-            <div className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl">
-              <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
-                  <h3 className="font=semibold text-xl">
-                    {breed?.id ? "Edit Breed" : "Add Birds"}
-                  </h3>
-                  {breed?.id ? (
-                    <button
-                      onClick={() => deleteBreedClick(breed?.id)}
-                      className=" rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
-                    >
-                      <MdOutlineDelete />
-                    </button>
-                  ) : null}
-                </div>
-                <div className="relative flex-auto">
-                  <form
-                    className="w-full px-8 pt-6 pb-8"
-                    onSubmit={handleSubmit(createOrUpdateBreed)}
-                  >
-                    <fieldset className="mb-3">
-                      {uploading ? (
-                        <Loader show={true} />
-                      ) : (!uploading && downloadURL) || breed?.imageUrl ? (
-                        <Image
-                          src={downloadURL ? downloadURL : breed!.imageUrl!}
-                          alt="Breed Image"
-                          width="100"
-                          height="100"
-                          className="flock-image aspect-square object-cover"
-                        />
-                      ) : (
-                        <></>
-                      )}
-                      <label
-                        className="mt-3 inline-flex items-center rounded bg-gray-400 px-3 py-2 text-white hover:cursor-pointer hover:bg-gray-500"
-                        htmlFor="image"
-                      >
-                        <MdImage />
-                        &nbsp;Upload image
-                        <input
-                          className="hidden"
-                          aria-describedby="file_input_help"
-                          id="image"
-                          type="file"
-                          accept="image/x-png,image/gif,image/jpeg"
-                          {...register("image")}
-                        />
-                      </label>
-                      <p
-                        className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-                        id="file_input_help"
-                      >
-                        SVG, PNG, JPG or GIF (MAX. 850kb).
-                      </p>
-                    </fieldset>
-                    <label className="mb-1 block text-sm font-bold text-black">
-                      Name
-                    </label>
-                    <input
-                      className="w-full appearance-none rounded border py-2 px-1 text-black"
-                      required
-                      {...register("name")}
-                      type="text"
+      <motion.div
+        onClick={() => closeModal()}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
+      >
+        <motion.div
+          onClick={(e) => e.stopPropagation()}
+          variants={dropIn}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl"
+        >
+          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
+            <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+              <h3 className="font=semibold text-xl">
+                {breed?.id ? "Edit Breed" : "Add Birds"}
+              </h3>
+              {breed?.id ? (
+                <button
+                  onClick={() => deleteBreedClick(breed?.id)}
+                  className=" rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
+                >
+                  <MdOutlineDelete />
+                </button>
+              ) : null}
+            </div>
+            <div className="relative flex-auto">
+              <form
+                className="w-full px-8 pt-6 pb-8"
+                onSubmit={handleSubmit(createOrUpdateBreed)}
+              >
+                <fieldset className="mb-3">
+                  {uploading ? (
+                    <Loader show={true} />
+                  ) : (!uploading && downloadURL) || breed?.imageUrl ? (
+                    <Image
+                      src={downloadURL ? downloadURL : breed!.imageUrl!}
+                      alt="Breed Image"
+                      width="100"
+                      height="100"
+                      className="flock-image aspect-square object-cover"
                     />
+                  ) : (
+                    <></>
+                  )}
+                  <label
+                    className="mt-3 inline-flex items-center rounded bg-gray-400 px-3 py-2 text-white hover:cursor-pointer hover:bg-gray-500"
+                    htmlFor="image"
+                  >
+                    <MdImage />
+                    &nbsp;Upload image
+                    <input
+                      className="hidden"
+                      aria-describedby="file_input_help"
+                      id="image"
+                      type="file"
+                      accept="image/x-png,image/gif,image/jpeg"
+                      {...register("image")}
+                    />
+                  </label>
+                  <p
+                    className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                    id="file_input_help"
+                  >
+                    SVG, PNG, JPG or GIF (MAX. 850kb).
+                  </p>
+                </fieldset>
+                <label className="mb-1 block text-sm font-bold text-black">
+                  Name
+                </label>
+                <input
+                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  required
+                  {...register("name")}
+                  type="text"
+                />
 
-                    <label className="mb-1 block text-sm font-bold text-black">
-                      Breed
-                    </label>
-                    <input
-                      className="w-full appearance-none rounded border py-2 px-1 text-black"
-                      required
-                      {...register("breed")}
-                      type="text"
-                    />
-                    <label className="mb-1 block text-sm font-bold text-black">
-                      Description
-                    </label>
-                    <input
-                      className="w-full appearance-none rounded border py-2 px-1 text-black"
-                      {...register("description")}
-                      type="text"
-                    />
-                    <label className="mb-1 mt-2 block text-sm font-bold text-black">
-                      Count
-                    </label>
-                    <input
-                      className="w-full appearance-none rounded border py-2 px-1 text-black"
-                      required
-                      {...register("count")}
-                      type="text"
-                    />
-                    <label className="mb-1 mt-2 block text-sm font-bold text-black">
-                      Average Weekly Production
-                    </label>
-                    <input
-                      className="w-full appearance-none rounded border py-2 px-1 text-black"
-                      required
-                      {...register("averageProduction")}
-                      type="text"
-                    />
-                  </form>
-                </div>
-                <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
-                  <button
-                    className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
-                    type="button"
-                    onClick={closeModal}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
-                    type="submit"
-                    onClick={handleSubmit(createOrUpdateBreed)}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </div>
+                <label className="mb-1 block text-sm font-bold text-black">
+                  Breed
+                </label>
+                <input
+                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  required
+                  {...register("breed")}
+                  type="text"
+                />
+                <label className="mb-1 block text-sm font-bold text-black">
+                  Description
+                </label>
+                <input
+                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  {...register("description")}
+                  type="text"
+                />
+                <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                  Count
+                </label>
+                <input
+                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  required
+                  {...register("count")}
+                  type="text"
+                />
+                <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                  Average Weekly Production
+                </label>
+                <input
+                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  required
+                  {...register("averageProduction")}
+                  type="text"
+                />
+              </form>
+            </div>
+            <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
+              <button
+                className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                type="button"
+                onClick={closeModal}
+              >
+                Close
+              </button>
+              <button
+                className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                type="submit"
+                disabled={updatingBreed || deletingBreed || creatingBreed}
+                onClick={handleSubmit(createOrUpdateBreed)}
+              >
+                {updatingBreed || deletingBreed || creatingBreed ? (
+                  <RiLoader4Fill className="animate-spin text-2xl" />
+                ) : (
+                  "Submit"
+                )}
+              </button>
             </div>
           </div>
-        </>
-      ) : null}
+        </motion.div>
+      </motion.div>
     </>
   );
 };

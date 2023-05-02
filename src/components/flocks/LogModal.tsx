@@ -4,6 +4,7 @@ import { MdOutlineEditNote } from "react-icons/md";
 import toast from "react-hot-toast";
 import { type Breed } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
+import { RiLoader4Fill } from "react-icons/ri";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -214,7 +215,11 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         }
                       }}
                     >
-                      Submit
+                      {isLoading ? (
+                        <RiLoader4Fill className="animate-spin text-2xl" />
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </div>
