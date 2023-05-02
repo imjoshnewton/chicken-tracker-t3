@@ -81,7 +81,7 @@ export default function ProductionChart({
 
   function createChartArray(logs: any[], limit: number) {
     const dates = getDatesInRange(Number(limit));
-    const logsArray = logs.map((log) => {
+    const logsArray = logs?.map((log) => {
       return {
         ...log,
         date: log.date.toLocaleString("us-EN", {
@@ -99,7 +99,7 @@ export default function ProductionChart({
         day: "numeric",
       });
 
-      const index = logsArray.map((l) => l.date).indexOf(stringValue);
+      const index = logsArray?.map((l) => l.date).indexOf(stringValue);
 
       if (index >= 0) {
         return {
@@ -137,7 +137,7 @@ export default function ProductionChart({
   }
 
   function calcActualDailyAverage(logs: any[]) {
-    const average = logs.length
+    const average = logs?.length
       ? logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length
       : 0;
 
@@ -234,7 +234,7 @@ export default function ProductionChart({
             Last Weeks Avg
             <br />
             {stats.lastWeekAvg?._avg.count
-              ? stats.lastWeekAvg._avg.count.toFixed(2)
+              ? stats.lastWeekAvg?._avg.count.toFixed(2)
               : "n/a"}
           </div>
           <div className="flex flex-col items-center dark:text-gray-300">
@@ -243,14 +243,15 @@ export default function ProductionChart({
             <div className="flex items-center">
               <span className="ml-1">
                 {stats.thisWeekAvg?._avg.count
-                  ? stats.thisWeekAvg._avg.count.toFixed(2)
+                  ? stats.thisWeekAvg?._avg.count.toFixed(2)
                   : "n/a"}
               </span>
               <span className="ml-1">
-                {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
+                {stats.thisWeekAvg?._avg.count <
+                stats.lastWeekAvg?._avg.count ? (
                   <MdOutlineTrendingDown className="text-red-600" />
-                ) : stats.thisWeekAvg._avg.count >
-                  stats.lastWeekAvg._avg.count ? (
+                ) : stats.thisWeekAvg?._avg.count >
+                  stats.lastWeekAvg?._avg.count ? (
                   <MdOutlineTrendingUp className=" text-green-600" />
                 ) : null}
               </span>
