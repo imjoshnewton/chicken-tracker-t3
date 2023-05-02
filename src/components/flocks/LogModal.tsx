@@ -46,7 +46,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       y: "-100vh",
       opacity: 0,
       transition: {
-        duration: 0.15,
+        duration: 0.3,
         type: "spring",
         damping: 25,
         stiffness: 500,
