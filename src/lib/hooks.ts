@@ -34,13 +34,21 @@ export function useFlockData() {
   now.setHours(0, 0, 0, 0);
   const today = now;
 
-  const flockData = trpc.flocks.getFlock.useQuery(
+  const {
+    data: flockData,
+    error: flockError,
+    isLoading: flockLoading,
+  } = trpc.flocks.getFlock.useQuery(
     { flockId: flockId as string },
     {
       enabled: !!flockId && !!data?.user,
     }
   );
-  const logsData = trpc.stats.getStats.useQuery(
+  const {
+    data: logsData,
+    error: logsError,
+    isLoading: logsLoading,
+  } = trpc.stats.getStats.useQuery(
     {
       flockId: flockId as string,
       limit: range,
@@ -51,32 +59,43 @@ export function useFlockData() {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
-  const expenseData = trpc.stats.getExpenseStats.useQuery(
+  const {
+    data: expenseData,
+    isLoading: expensesLoading,
+    isError: expensesError,
+  } = trpc.stats.getExpenseStats.useQuery(
     { today: today, flockId: flockId as string },
     {
       enabled: !!flockId && !!range && !!today && !!data?.user,
     }
   );
-  const breedStats = trpc.stats.getBreedStats.useQuery({
+  const {
+    data: breedStats,
+    isLoading: breedStatsLoading,
+    isError: breedStatsError,
+  } = trpc.stats.getBreedStats.useQuery({
     today: today,
     flockId: flockId as string,
   });
 
   return {
     flockId,
-    flock: flockData.data,
+    flock: flockData,
     stats: {
-      expenses: expenseData.data,
-      logs: logsData.data?.getLogs,
-      lastWeekAvg: logsData.data?.lastWeeksAvg,
-      thisWeekAvg: logsData.data?.thisWeeksAvg,
+      expenses: expenseData,
+      logs: logsData?.getLogs,
+      lastWeekAvg: logsData?.lastWeeksAvg,
+      thisWeekAvg: logsData?.thisWeeksAvg,
     },
     range,
-    breedStats: breedStats.data,
-    loading: flockData.isLoading && logsData.isLoading,
+    breedStats: breedStats,
+    loading:
+      flockLoading && logsLoading && expensesLoading && breedStatsLoading,
     error: {
-      flock: flockData.error,
-      stats: logsData.error,
+      flock: flockError,
+      stats: logsError,
+      expenses: expensesError,
+      breedStats: breedStatsError,
     },
   };
 }
