@@ -5,6 +5,7 @@ import { AiOutlineDollar } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
+import { MdClose } from "react-icons/md";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -115,8 +116,14 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                 className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl"
               >
                 <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                  <div className="flex items-start justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
                     <h3 className="font=semibold text-xl">New Expense</h3>
+                    <button
+                      onClick={() => closeModal()}
+                      className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
+                    >
+                      <MdClose />
+                    </button>
                   </div>
                   <div className="relative flex-auto">
                     <form
