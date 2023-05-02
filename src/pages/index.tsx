@@ -8,6 +8,7 @@ import logo from "../../public/FlockNerd-logo-square.png";
 import { useRef, useState } from "react";
 import { FaEgg } from "react-icons/fa";
 import { MdArrowDownward } from "react-icons/md";
+import { motion } from "framer-motion";
 
 const Home: NextPageWithLayout = () => {
   const [showAndroid, setShowAndroid] = useState(false);
@@ -25,21 +26,44 @@ const Home: NextPageWithLayout = () => {
               fill={true}
             />
             <div className="absolute top-0 bottom-0 right-0 left-0 bg-gray-900/50"></div>
-            <Image
-              src={logo}
-              alt="FlockNerd Logo - chicken with rimmed glasses"
-              height="75"
+            <motion.div
+              initial={{ opacity: 0, translateY: 40 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.5 }}
               className="z-0"
-            />
-            <h1 className="z-0 mb-6 text-3xl lg:text-6xl">
+            >
+              <Image
+                src={logo}
+                alt="FlockNerd Logo - chicken with rimmed glasses"
+                height="75"
+                // className="z-0"
+              />
+            </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, translateY: 40 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="z-0 mb-6 text-3xl lg:text-6xl"
+            >
               Welcome to FlockNerd!
-            </h1>
-            <p className="z-0 mb-4 max-w-3xl px-3 text-center lg:px-0">
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, translateY: 40 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="z-0 mb-4 max-w-3xl px-3 text-center lg:px-0"
+            >
               Are you a backyard chicken, duck, or quail farmer looking to track
               egg production and expenses for your flock? Look no further.
               FlockNerd is the perfect app for you.
-            </p>
-            <button
+            </motion.p>
+            <motion.button
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                opacity: { duration: 0.5, delay: 0.5 },
+                y: { duration: 0.4, delay: 0.3 },
+              }}
               className="z-0 flex flex-col items-center gap-2 capitalize transition-all"
               onClick={() => {
                 ref.current?.scrollIntoView({
@@ -48,8 +72,8 @@ const Home: NextPageWithLayout = () => {
               }}
             >
               learn more
-              <MdArrowDownward className=" animate-bounce" />
-            </button>
+              <MdArrowDownward className="animate-bounce" />
+            </motion.button>
           </div>
         </div>
         <div
@@ -58,12 +82,27 @@ const Home: NextPageWithLayout = () => {
           ref={ref}
         >
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
-            <video autoPlay loop muted playsInline>
+            <motion.video
+              initial={{ opacity: 0, x: -200 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0 }}
+              viewport={{ once: true, amount: 0.8 }}
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
               <source src="/FlockNerd-Demo.webm" type="video/webm" />
               <source src="/FlockNerd-Demo.mp4" type="video/mp4" />
-            </video>
+            </motion.video>
 
-            <div className="flex flex-col text-black">
+            <motion.div
+              // initial={{ opacity: 0, x: 200 }}
+              // whileInView={{ opacity: 1, x: 0 }}
+              // transition={{ duration: 0.5, delay: 0.15 }}
+              // viewport={{ once: true }}
+              className="flex flex-col text-black"
+            >
               <h2 className="mb-4 text-3xl">Track Your Flock 🐓🦆🦃</h2>
               <p className="pb-4">
                 With FlockNerd, you can easily track the number of eggs laid by
@@ -87,12 +126,18 @@ const Home: NextPageWithLayout = () => {
               >
                 Start Tracking Now
               </Link>
-            </div>
+            </motion.div>
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-50 py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
-            <div className="order-1 flex flex-col text-black lg:order-none">
+            <motion.div
+              // initial={{ opacity: 0, x: -200 }}
+              // whileInView={{ opacity: 1, x: 0 }}
+              // transition={{ duration: 0.5, delay: 0 }}
+              // viewport={{ once: true }}
+              className="order-1 flex flex-col text-black lg:order-none"
+            >
               <h2 className="mb-4 text-3xl">Egg-ceptional Insights</h2>
               <p className="pb-4">
                 FlockNerd provides valuable insights that can help you improve
@@ -141,13 +186,26 @@ const Home: NextPageWithLayout = () => {
               >
                 Sign me up!
               </Link>
-            </div>
-            <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, x: 200 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.8 }}
+            >
+              <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
+            </motion.div>
           </div>
         </div>
         <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
-            <div className="flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0 }}
+              viewport={{ once: true, amount: 0.8 }}
+              className="flex flex-col items-center"
+            >
               <div className="flex items-center">
                 <span className="mr-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                   iOS
@@ -223,7 +281,7 @@ const Home: NextPageWithLayout = () => {
                 </div>
                 {/* )} */}
               </div>
-            </div>
+            </motion.div>
 
             <div className="flex max-w-2xl flex-col justify-center">
               <h2 className="mb-4 text-3xl">Installing the App</h2>
