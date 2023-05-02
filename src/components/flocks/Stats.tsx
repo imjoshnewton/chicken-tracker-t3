@@ -24,13 +24,13 @@ export default function Stats({
   filterId?: string;
   clearFilter?: () => void;
 }) {
-  if (!flock || !stats.logs) {
-    return (
-      <div className="flex basis-[48%] items-center justify-center">
-        <Loader show={true}></Loader>
-      </div>
-    );
-  }
+  // if (!flock || !stats.logs) {
+  //   return (
+  //     <div className="flex basis-[48%] items-center justify-center">
+  //       <Loader show={true}></Loader>
+  //     </div>
+  //   );
+  // }
 
   console.log("Filter: ", filter);
 
@@ -38,14 +38,21 @@ export default function Stats({
     <div className={className}>
       <div className="mb-4 flex justify-between">
         <h2 className="dark:text-gray-300">Stats</h2>
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           {filter && (
             <div className="flex items-center gap-2">
               <motion.div
                 layout
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0, transition: { duration: 0.15 } }}
-                exit={{ opacity: 0, x: -100, transition: { duration: 0.25 } }}
+                exit={{
+                  opacity: 0,
+                  x: -100,
+                  transition: {
+                    opacity: { duration: 0.25 },
+                    x: { duration: 0.3 },
+                  },
+                }}
                 transition={{ layout: { duration: 0.15 } }}
               >
                 <MdFilterAlt className="text-lg" />
