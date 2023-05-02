@@ -9,6 +9,7 @@ export const logsRouter = router({
       },
       include: {
         logs: {
+          take: 25,
           orderBy: {
             date: "desc",
           },

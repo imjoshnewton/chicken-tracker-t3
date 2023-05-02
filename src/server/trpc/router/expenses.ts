@@ -9,6 +9,7 @@ export const expensesRouter = router({
       },
       include: {
         expenses: {
+          take: 25,
           orderBy: {
             date: "desc",
           },
