@@ -9,10 +9,10 @@ import { MdClose } from "react-icons/md";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(new Date());
   const [amount, setAmount] = useState(0);
   const [memo, setMemo] = useState<string>();
-  const [category, setCategory] = useState<string>("other");
+  const [category, setCategory] = useState<string>();
 
   const utils = trpc.useContext();
 
@@ -26,7 +26,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const dropIn = {
     hidden: {
-      y: "100vh",
+      y: "100%",
       opacity: 0,
     },
     visible: {
@@ -40,7 +40,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
       },
     },
     exit: {
-      y: "100vh",
+      y: "100%",
       opacity: 0,
       transition: {
         duration: 0.3,
@@ -56,7 +56,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   }
 
   function resetFormValues(): void {
-    setDate(undefined);
+    setDate(new Date());
     setMemo(undefined);
     setAmount(0);
   }
@@ -117,7 +117,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
               >
                 <div className="pb-safe relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
-                    <h3 className="text-xl">New Expense</h3>
+                    <h3 className="text-xl">Log an Expense</h3>
                     <button
                       onClick={() => closeModal()}
                       className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
@@ -127,7 +127,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                   </div>
                   <div className="relative flex-auto">
                     <form
-                      className="w-full p-4 lg:px-8 lg:pt-6 lg:pb-8"
+                      className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8"
                       onSubmit={async (e) => {
                         e.preventDefault();
                         // await createNewLog(flockId, date, count, notes);
@@ -136,39 +136,43 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date,
                             amount,
-                            category,
+                            category ? category : "other",
                             memo
                           );
                         }
                       }}
                     >
-                      <label className="mb-1 block text-sm font-bold text-black">
+                      {/* <label className="mb-1 block text-sm font-bold text-black">
                         Date
-                      </label>
+                      </label> */}
                       <input
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
-                        onChange={(e) => {
-                          if (e.target.valueAsDate) {
-                            var date = e.target.valueAsDate;
-                            var userTimezoneOffset =
-                              date.getTimezoneOffset() * 60000;
+                        value={date.toISOString().substring(0, 10)}
+                        onChange={(event) =>
+                          setDate(new Date(event.target.value))
+                        }
+                        // onChange={(e) => {
+                        //   if (e.target.valueAsDate) {
+                        //     var date = e.target.valueAsDate;
+                        //     var userTimezoneOffset =
+                        //       date.getTimezoneOffset() * 60000;
 
-                            setDate(
-                              new Date(date.getTime() + userTimezoneOffset)
-                            );
-                          }
-                        }}
+                        //     setDate(
+                        //       new Date(date.getTime() + userTimezoneOffset)
+                        //     );
+                        //   }
+                        // }}
                         type="date"
                       />
-                      <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                      {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                         Amount
-                      </label>
+                      </label> */}
                       <CurrencyInput
                         id="amount-input"
                         name="amount-input"
                         prefix="$"
-                        placeholder="0.00"
+                        placeholder="Amount"
                         decimalsLimit={2}
                         decimalScale={2}
                         onValueChange={(value, name) =>
@@ -176,15 +180,18 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                         }
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                       />
-                      <fieldset className="my-3">
-                        <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                      <fieldset className="my-0">
+                        {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                           Category:&nbsp;&nbsp;
-                        </label>
+                        </label> */}
                         <select
                           onChange={(e) => setCategory(e.target.value)}
                           value={category}
-                          className="w-full rounded border py-2 px-1 text-black"
+                          className="h-12 w-full rounded border py-2 px-1 text-black"
                         >
+                          <option value="" disabled>
+                            Category
+                          </option>
                           <option value="feed">Feed</option>
                           <option value="suplements">Suplements</option>
                           <option value="medication">Medication</option>
@@ -192,9 +199,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                         </select>
                       </fieldset>
 
-                      <label className="mb-1 block text-sm font-bold text-black">
+                      {/* <label className="mb-1 block text-sm font-bold text-black">
                         Memo
-                      </label>
+                      </label> */}
                       <textarea
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         value={memo}
@@ -222,7 +229,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date,
                             amount,
-                            category,
+                            category ? category : "other",
                             memo
                           );
                         }

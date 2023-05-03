@@ -8,7 +8,7 @@ import { RiLoader4Fill } from "react-icons/ri";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date>(new Date());
   const [count, setCount] = useState<number>();
   const [notes, setNotes] = useState<string>();
   const [breedId, setBreedId] = useState<string>();
@@ -30,7 +30,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const dropIn = {
     hidden: {
-      y: "100vh",
+      y: "100%",
       opacity: 0,
     },
     visible: {
@@ -44,7 +44,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       },
     },
     exit: {
-      y: "100vh",
+      y: "100%",
       opacity: 0,
       transition: {
         duration: 0.3,
@@ -60,9 +60,10 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   }
 
   function resetFormValues(): void {
-    setDate(undefined);
+    setDate(new Date());
     setNotes(undefined);
     setCount(undefined);
+    setBreedId(undefined);
   }
 
   async function createNewLog(
@@ -122,7 +123,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               >
                 <div className="pb-safe relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
-                    <h3 className="text-xl">New Log Entry</h3>
+                    <h3 className="text-xl">Log Eggs</h3>
                     <button
                       onClick={() => closeModal()}
                       className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
@@ -132,7 +133,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                   </div>
                   <div className="relative flex-auto">
                     <form
-                      className="w-full p-4 lg:px-8 lg:pt-6 lg:pb-8"
+                      className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8"
                       onSubmit={async (e) => {
                         e.preventDefault();
                         // await createNewLog(flockId, date, count, notes);
@@ -141,46 +142,52 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         }
                       }}
                     >
-                      <label className="mb-1 block text-sm font-bold text-black">
+                      {/* <fieldset className="flex gap-3"> */}
+                      {/* <label className="mb-1 block text-sm font-bold text-black">
                         Date
-                      </label>
+                      </label> */}
                       <input
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
-                        onChange={(e) => {
-                          if (e.target.valueAsDate) {
-                            var date = e.target.valueAsDate;
-                            var userTimezoneOffset =
-                              date.getTimezoneOffset() * 60000;
+                        value={date.toISOString().substring(0, 10)}
+                        onChange={(event) =>
+                          setDate(new Date(event.target.value))
+                        }
+                        // onChange={(e) => {
+                        //   if (e.target.valueAsDate) {
+                        //     var date = e.target.valueAsDate;
+                        //     var userTimezoneOffset =
+                        //       date.getTimezoneOffset() * 60000;
 
-                            setDate(
-                              new Date(date.getTime() + userTimezoneOffset)
-                            );
-                          }
-                        }}
+                        //     setDate(
+                        //       new Date(date.getTime() + userTimezoneOffset)
+                        //     );
+                        //   }
+                        // }}
                         type="date"
                       />
-                      <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                      {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                         Count
-                      </label>
+                      </label> */}
                       <input
                         type="tel"
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
                         value={count}
                         onChange={(e) => setCount(Number(e.target.value))}
-                        placeholder="0"
+                        placeholder="Count"
                       />
-                      <fieldset className="my-3">
-                        <label className="mb-1 mt-2 block text-sm font-bold text-black">
+                      {/* </fieldset> */}
+                      <fieldset className="my-0">
+                        {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                           Bird(s) (optional)
-                        </label>
+                        </label> */}
                         <select
                           onChange={(e) => setBreedId(e.target.value)}
                           value={breedId}
-                          className="w-full rounded border py-2 px-1 text-black"
+                          className="h-12 w-full rounded border py-2 px-1 text-black"
                         >
-                          <option value="">Select Bird(s)</option>
+                          <option value="">Select bird(s) (Optional)</option>
                           {flockQuery.data?.breeds
                             .filter((breed) => breed.averageProduction > 0)
                             .map((breed) => {
@@ -193,9 +200,9 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                             })}
                         </select>
                       </fieldset>
-                      <label className="mb-1 block text-sm font-bold text-black">
+                      {/* <label className="mb-1 block text-sm font-bold text-black">
                         Notes
-                      </label>
+                      </label> */}
                       <textarea
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         value={notes}
