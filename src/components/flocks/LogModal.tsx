@@ -110,7 +110,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="modal-overlay pb-safe fixed inset-0 z-50 flex items-end justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
+              className="modal-overlay fixed inset-0 z-50 flex items-end justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
             >
               <motion.div
                 onClick={(e) => e.stopPropagation()}
@@ -118,9 +118,9 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="pb-safe relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
+                className="relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
-                <div className="relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none">
+                <div className="pb-safe relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
                     <h3 className="text-xl">New Log Entry</h3>
                     <button
