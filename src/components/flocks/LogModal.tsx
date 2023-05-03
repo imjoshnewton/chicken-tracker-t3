@@ -204,7 +204,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       />
                     </form>
                   </div>
-                  <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
+                  <div className="border-blueGray-200 pb-safe flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
                     <button
                       className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                       type="button"
