@@ -193,8 +193,8 @@ export default function AppLayout({ children }: { children: any }) {
         }
       >
         <ul className="side-nav pt-7">
-          {links.map((link) => {
-            return <SidebarNavLink {...link} />;
+          {links.map((link, index) => {
+            return <SidebarNavLink {...link} key={index} />;
           })}
           {/* <li
             className={`mb-0 px-2 ${
