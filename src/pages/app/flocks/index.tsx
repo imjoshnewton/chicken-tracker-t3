@@ -37,7 +37,7 @@ const Flocks = () => {
   }
 
   return (
-    <main className="flex flex-col">
+    <main className="flex flex-col gap-4">
       <div className="flex items-center justify-end">
         <button
           className="btn mr-1 mt-4 mb-1 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none md:basis-1/3 lg:basis-1/5 xl:w-auto"

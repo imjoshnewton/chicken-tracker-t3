@@ -16,8 +16,11 @@ const Settings = () => {
   }
 
   return (
-    <main>
-      <Card title="User Settings">
+    <main className="h-full p-0 lg:h-auto lg:p-8 lg:px-[3.5vw]">
+      <Card
+        title="User Settings"
+        className="pb-safe h-full py-0 lg:h-auto lg:pt-4 lg:pb-4"
+      >
         <NewUserForm user={data.user} />
       </Card>
     </main>

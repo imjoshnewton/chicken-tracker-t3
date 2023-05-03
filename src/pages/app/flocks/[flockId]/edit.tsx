@@ -9,8 +9,11 @@ const Edit = () => {
   const { flockId, flock } = useFlockData();
 
   return (
-    <main>
-      <Card title="Edit Flock">
+    <main className="h-full p-0 lg:h-auto lg:p-8 lg:px-[3.5vw]">
+      <Card
+        title="Edit Flock"
+        className="pb-safe h-full py-0 lg:h-auto lg:pt-4 lg:pb-4"
+      >
         {flock && user ? (
           <FlockForm flock={flock} userId={user.id}></FlockForm>
         ) : (

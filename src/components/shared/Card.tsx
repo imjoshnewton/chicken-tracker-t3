@@ -1,14 +1,20 @@
 export default function Card({
   title,
   children,
+  className,
 }: {
   title: string;
   children: any;
+  className?: string;
 }) {
   return (
-    <div className='p-8 my-4 mx-0 bg-white rounded-lg relative dark:bg-gray-900'>
-      <h5 className='text-stone-400 -translate-y-3 mt-0 mb-2'>{title}</h5>
-      <div className=''>{children}</div>
+    <div
+      className={`${
+        className ? className : ""
+      } relative rounded-lg bg-white p-8 pt-6 dark:bg-gray-900`}
+    >
+      <h5 className="mt-0 mb-4 text-stone-400">{title}</h5>
+      <div className="">{children}</div>
     </div>
   );
 }

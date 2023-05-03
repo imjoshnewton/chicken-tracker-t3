@@ -44,10 +44,14 @@ const Flock = () => {
   const filterText = filterBreed?.name || filterBreed?.breed || undefined;
 
   return (
-    <main>
+    <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       {flock ? (
         <div className="shadow-xl">
-          <Card title="Flock Details" key={flockId?.toString()}>
+          <Card
+            title="Flock Details"
+            className="pb-safe py-0 lg:pt-4 lg:pb-4"
+            key={flockId?.toString()}
+          >
             <Link
               href={`/app/flocks/${flockId}/edit`}
               className="absolute top-0 right-0 mt-3 mr-5 flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
