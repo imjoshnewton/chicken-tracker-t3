@@ -93,7 +93,7 @@ export default function AppLayout({ children }: { children: any }) {
               />
             </button>
           </li>
-          <li className="translate-x-2 cursor-pointer sm:translate-x-0">
+          <li className="hidden translate-x-2 cursor-pointer sm:translate-x-0 md:block">
             <Link href="/">
               <span className="flex items-center">
                 <Image
@@ -168,7 +168,7 @@ export default function AppLayout({ children }: { children: any }) {
         {children}
       </section>
       <aside
-        className={`fadeIn fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] ${
+        className={`fadeIn pb-safe fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
