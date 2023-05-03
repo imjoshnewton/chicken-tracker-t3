@@ -236,7 +236,7 @@ const BreedModal = ({
                       alt="Breed Image"
                       width="100"
                       height="100"
-                      className="flock-image aspect-square object-cover"
+                      className="aspect-square rounded object-cover"
                     />
                   ) : (
                     <></>
