@@ -2,9 +2,13 @@ import { useState } from "react";
 import { trpc } from "../../utils/trpc";
 import { MdClose, MdOutlineEditNote } from "react-icons/md";
 import toast from "react-hot-toast";
-import { type Breed } from "@prisma/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
+// import Datepicker from "react-tailwindcss-datepicker";
+// import {
+//   PopoverDirectionType,
+//   type DateValueType,
+// } from "react-tailwindcss-datepicker/dist/types";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -60,7 +64,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   }
 
   function resetFormValues(): void {
-    setDate(new Date());
+    setDate(new Date()); //({ startDate: new Date(), endDate: null });
     setNotes(undefined);
     setCount(undefined);
     setBreedId(undefined);
@@ -119,9 +123,9 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
+                className="relative bottom-0 mx-auto w-full min-w-[350px] rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
-                <div className="pb-safe relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none lg:pb-0">
+                <div className="pb-safe relative flex w-full flex-col rounded-t-lg border-0 bg-white shadow-lg outline-none focus:outline-none lg:rounded-lg lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
                     <h3 className="text-xl">Log Eggs</h3>
                     <button
@@ -138,7 +142,12 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         e.preventDefault();
                         // await createNewLog(flockId, date, count, notes);
                         if (date && count) {
-                          await createNewLog(flockId, date, count, notes);
+                          await createNewLog(
+                            flockId,
+                            date, //new Date(date.startDate.toLocaleString()),
+                            count,
+                            notes
+                          );
                         }
                       }}
                     >
@@ -146,24 +155,27 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       {/* <label className="mb-1 block text-sm font-bold text-black">
                         Date
                       </label> */}
+                      {/* <Datepicker
+                        useRange={false}
+                        asSingle={true}
+                        value={date}
+                        onChange={(newValue) => {
+                          setDate(newValue);
+                        }}
+                        containerClassName="relative rounded border"
+                        inputClassName={`px-2 py-2 w-full rounded`}
+                        // popoverDirection={"up" as PopoverDirectionType}
+                        displayFormat={"MM/DD/YYYY"}
+                        toggleClassName="absolute top-0 rounded-r-lg text-white right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
+                      /> */}
                       <input
+                        id="date"
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
                         value={date.toISOString().substring(0, 10)}
                         onChange={(event) =>
                           setDate(new Date(event.target.value))
                         }
-                        // onChange={(e) => {
-                        //   if (e.target.valueAsDate) {
-                        //     var date = e.target.valueAsDate;
-                        //     var userTimezoneOffset =
-                        //       date.getTimezoneOffset() * 60000;
-
-                        //     setDate(
-                        //       new Date(date.getTime() + userTimezoneOffset)
-                        //     );
-                        //   }
-                        // }}
                         type="date"
                       />
                       {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
@@ -171,7 +183,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       </label> */}
                       <input
                         type="tel"
-                        className="w-full appearance-none rounded border py-2 px-1 text-black"
+                        className="w-full appearance-none rounded border py-2 px-2 text-black"
                         required
                         value={count}
                         onChange={(e) => setCount(Number(e.target.value))}
@@ -226,7 +238,12 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       onClick={async () => {
                         // await createNewLog(flockId, date, count, notes);
                         if (date && count) {
-                          await createNewLog(flockId, date, count, notes);
+                          await createNewLog(
+                            flockId,
+                            date, //new Date(date.startDate.toLocaleString()),
+                            count,
+                            notes
+                          );
                         }
                       }}
                     >

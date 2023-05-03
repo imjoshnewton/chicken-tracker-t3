@@ -20,6 +20,7 @@
     "@upstash/qstash": "^0.3.2",
     "chart.js": "^4.1.0",
     "date-fns": "^2.29.3",
+    "dayjs": "^1.11.7",
     "file-saver": "^2.0.5",
     "firebase": "^9.15.0",
     "framer-motion": "^10.12.5",
@@ -37,6 +38,7 @@
     "react-hook-form": "^7.40.0",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.7.1",
+    "react-tailwindcss-datepicker": "^1.6.0",
     "sass": "^1.57.0",
     "superjson": "1.9.1",
     "zod": "^3.18.0"
