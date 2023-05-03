@@ -309,11 +309,13 @@ function SidebarNavLink({
       <li
         key={title}
         className={`mb-0 px-2 ${
-          router.pathname == path ? "text-white" : "hover:text-gray-500"
+          router.pathname.startsWith(path)
+            ? "text-white"
+            : "hover:text-gray-500"
         } relative`}
         style={{
           transition: `color 0.2s ease-in-out ${
-            router.pathname == path ? "0.15s" : "0s"
+            router.pathname.startsWith(path) ? "0.15s" : "0s"
           }`,
         }}
       >
@@ -328,7 +330,7 @@ function SidebarNavLink({
           </>
         </Link>
         {/* <AnimatePresence mode="wait" initial={false}> */}
-        {router.pathname == path && (
+        {router.pathname.startsWith(path) && (
           <motion.div
             layoutId="highlight"
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
