@@ -105,7 +105,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="modal-overlay fixed inset-0 z-50 flex items-end justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
+              className="pb-safe modal-overlay fixed inset-0 z-50 flex items-end justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
             >
               <motion.div
                 onClick={(e) => e.stopPropagation()}
@@ -113,7 +113,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
+                className="pb-safe relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
                 <div className="relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
@@ -203,7 +203,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       />
                     </form>
                   </div>
-                  <div className="border-blueGray-200 pb-safe flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
+                  <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
                     <button
                       className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                       type="button"
