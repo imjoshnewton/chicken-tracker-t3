@@ -13,6 +13,9 @@ module.exports = {
       margin: {
         3.5: "-3.5vw",
       },
+      screens: {
+        pwa: { raw: "(display-mode: standalone)" },
+      },
     },
   },
   plugins: [],

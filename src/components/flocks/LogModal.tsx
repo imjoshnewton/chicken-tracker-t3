@@ -30,7 +30,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const dropIn = {
     hidden: {
-      y: "-100vh",
+      y: "100vh",
       opacity: 0,
     },
     visible: {
@@ -44,7 +44,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       },
     },
     exit: {
-      y: "-100vh",
+      y: "100vh",
       opacity: 0,
       transition: {
         duration: 0.3,
@@ -88,14 +88,16 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   return (
     <>
-      <button
-        className="btn mr-1 mb-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+      <motion.button
+        // whileHover={{ scale: 1.05 }}
+        // whileTap={{ scale: 0.95 }}
+        className="btn mr-1 mb-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
         type="button"
         onClick={() => setShowModal(true)}
       >
         <MdOutlineEditNote className="text-2xl" />
         &nbsp;Log Eggs
-      </button>
+      </motion.button>
       <AnimatePresence
         // Disable any initial animations on children that
         // are present when the component is first rendered
@@ -108,7 +110,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
+              className="modal-overlay fixed inset-0 z-50 flex items-end justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
             >
               <motion.div
                 onClick={(e) => e.stopPropagation()}
@@ -116,11 +118,11 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl"
+                className="relative bottom-0 mx-auto w-full min-w-[350px] overflow-hidden rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
-                <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
-                    <h3 className="font=semibold text-xl">New Log Entry</h3>
+                <div className="relative flex w-full flex-col border-0 bg-white shadow-lg outline-none focus:outline-none">
+                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
+                    <h3 className="text-xl">New Log Entry</h3>
                     <button
                       onClick={() => closeModal()}
                       className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
@@ -130,7 +132,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                   </div>
                   <div className="relative flex-auto">
                     <form
-                      className="w-full px-8 pt-6 pb-8"
+                      className="w-full p-4 lg:px-8 lg:pt-6 lg:pb-8"
                       onSubmit={async (e) => {
                         e.preventDefault();
                         // await createNewLog(flockId, date, count, notes);
@@ -202,7 +204,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       />
                     </form>
                   </div>
-                  <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
+                  <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
                     <button
                       className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                       type="button"
