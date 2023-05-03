@@ -12,12 +12,13 @@ import {
 import { AiOutlineDollar } from "react-icons/ai";
 
 import logo from "../../public/FlockNerd-logo-v2.png";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Loader from "../components/shared/Loader";
 import NotificationsList from "../components/NotificationsList";
+import { AnimatePresence, motion } from "framer-motion";
 
 // Top navbar
 export default function AppLayout({ children }: { children: any }) {
@@ -33,6 +34,32 @@ export default function AppLayout({ children }: { children: any }) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
+  const links = [
+    {
+      icon: <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />,
+      title: "My Flocks",
+      path: "/app/flocks",
+      onClick: () => setSideBarOpen(false),
+    },
+    {
+      icon: <MdOutlineEditNote className="mr-5 mt-[-3px] inline text-2xl" />,
+      title: "Logs",
+      path: "/app/logs",
+      onClick: () => setSideBarOpen(false),
+    },
+    {
+      icon: <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />,
+      title: "Expenses",
+      path: "/app/expenses",
+      onClick: () => setSideBarOpen(false),
+    },
+    {
+      icon: <MdSettings className="mr-5 mt-[-3px] inline text-2xl" />,
+      title: "Settings",
+      path: "/app/settings",
+      onClick: () => setSideBarOpen(false),
+    },
+  ];
 
   return (
     <>
@@ -161,12 +188,15 @@ export default function AppLayout({ children }: { children: any }) {
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
-            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-white shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
+            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-white shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
         }
       >
         <ul className="side-nav pt-7">
-          <li
+          {links.map((link) => {
+            return <SidebarNavLink {...link} />;
+          })}
+          {/* <li
             className={`mb-0 px-2 ${
               router.pathname.startsWith("/app/flocks")
                 ? "bg-gray-400 text-white"
@@ -215,11 +245,11 @@ export default function AppLayout({ children }: { children: any }) {
               <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />
               All Expenses
             </Link>
-          </li>
-          <li className="mt-auto px-3">
+          </li> */}
+          {/* <li className="mt-auto px-3">
             <div className="divider my-3 dark:border-t-gray-500"></div>
-          </li>
-          <li
+          </li> */}
+          {/* <li
             className={`mb-0 px-2 ${
               router.pathname == "/app/settings" ? "bg-gray-400 text-white" : ""
             } hover:bg-gray-300`}
@@ -234,11 +264,11 @@ export default function AppLayout({ children }: { children: any }) {
               <MdSettings className="mr-5 inline text-2xl" />
               Settings
             </Link>
-          </li>
+          </li> */}
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/logout" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
+            } hover:text-gray-500`}
           >
             <button
               className="flex items-center px-2 py-3"
@@ -253,6 +283,60 @@ export default function AppLayout({ children }: { children: any }) {
           </li>
         </ul>
       </aside>
+    </>
+  );
+}
+
+function SidebarNavLink({
+  icon,
+  title,
+  path,
+  onClick,
+}: {
+  icon: ReactElement;
+  title: string;
+  path: string;
+  onClick: () => void;
+}) {
+  const router = useRouter();
+  return (
+    <>
+      {title == "Settings" && (
+        <li className="mt-auto px-3">
+          <div className="divider my-3 dark:border-t-gray-500"></div>
+        </li>
+      )}
+      <li
+        key={title}
+        className={`mb-0 px-2 ${
+          router.pathname == path ? "text-white" : "hover:text-gray-500"
+        } relative`}
+        style={{
+          transition: `color 0.2s ease-in-out ${
+            router.pathname == path ? "0.15s" : "0s"
+          }`,
+        }}
+      >
+        <Link
+          href={path}
+          className="relative z-10 flex items-center px-2 py-3"
+          onClick={onClick}
+        >
+          <>
+            {icon}
+            {title}
+          </>
+        </Link>
+        {/* <AnimatePresence mode="wait" initial={false}> */}
+        {router.pathname == path && (
+          <motion.div
+            layoutId="highlight"
+            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-gray-400"
+          ></motion.div>
+        )}
+        {/* </AnimatePresence> */}
+      </li>
     </>
   );
 }
