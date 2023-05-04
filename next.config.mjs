@@ -27,6 +27,9 @@ const config = {
     domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
     formats: ["image/avif", "image/webp"],
   },
+  experimental: {
+    appDir: true,
+  },
 };
 
 export default pwa(config);
