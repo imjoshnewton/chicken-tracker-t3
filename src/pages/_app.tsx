@@ -8,6 +8,7 @@ import "../styles/globals.scss";
 import { Toaster } from "react-hot-toast";
 import type { ReactElement, ReactNode } from "react";
 import { type NextPage } from "next";
+import { Head } from "next/document";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -25,10 +26,15 @@ function MyApp({
   const layout = getLayout(<Component {...pageProps} />);
 
   return (
-    <SessionProvider session={session}>
-      {layout}
-      <Toaster position="top-right" />
-    </SessionProvider>
+    <>
+      <Head>
+        <title>FlockNerd - Egg-ceptional Insights</title>
+      </Head>
+      <SessionProvider session={session}>
+        {layout}
+        <Toaster position="top-right" />
+      </SessionProvider>
+    </>
   );
 }
 
