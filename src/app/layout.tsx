@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
 import "../styles/globals.scss";
-import { unstable_getServerSession } from "next-auth";
+import { getServerSession } from "next-auth";
 import { MdLogin } from "react-icons/md";
 import logo from "../../public/FlockNerd-logo-v2.png";
+import { authOptions } from "../pages/api/auth/[...nextauth]";
 // import { useRouter } from "next/router";
 
 export default async function RootLayout({
@@ -11,7 +12,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await unstable_getServerSession();
+  const data = await getServerSession(authOptions);
+
+  console.log("RootLayout data: ", data);
 
   return (
     <html>
