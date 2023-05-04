@@ -16,7 +16,7 @@ export default async function RootLayout({
   return (
     <html>
       <head>
-        {/* <title>FlockNerd - Egg-ceptional Insights</title> */}
+        <title>FlockNerd - Egg-ceptional Insights</title>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#264653" />
         <link rel="apple-touch-icon" href="/apple-icon-180.png" />
