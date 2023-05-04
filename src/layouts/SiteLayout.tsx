@@ -27,18 +27,17 @@ export default function SiteLayout({ children }: { children: any }) {
     <>
       <nav
         className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 ${
-          data?.user ? "pr-3" : "pr-6"
+          data?.user ? "pr-3" : "pr-4 md:pr-6"
         }`}
       >
         <ul>
-          <li className="inline lg:hidden">
+          {/* <li className="inline lg:hidden">
             <button
               className="group flex h-12 w-12 flex-col items-center justify-center rounded"
               onClick={() => {
                 setSideBarOpen(!sideBarOpen);
               }}
             >
-              {/* <MdMenu className=' text-2xl' /> */}
               <div
                 className={`${genericHamburgerLine} ${
                   sideBarOpen
@@ -59,7 +58,7 @@ export default function SiteLayout({ children }: { children: any }) {
                 }`}
               />
             </button>
-          </li>
+          </li> */}
           <li className="translate-x-2 cursor-pointer sm:translate-x-0">
             <Link href="/">
               <span className="flex items-center">
