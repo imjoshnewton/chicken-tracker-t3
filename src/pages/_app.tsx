@@ -8,7 +8,7 @@ import "../styles/globals.scss";
 import { Toaster } from "react-hot-toast";
 import type { ReactElement, ReactNode } from "react";
 import { type NextPage } from "next";
-import { Head } from "next/document";
+import Head from "next/head";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
