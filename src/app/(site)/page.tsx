@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import header from "../../public/site-header.jpg";
-import stats from "../../public/FlockNerd-Stats-mobile.png";
-import logo from "../../public/FlockNerd-logo-square.png";
+import header from "../../../public/site-header.jpg";
+import stats from "../../../public/FlockNerd-Stats-mobile.png";
+import logo from "../../../public/FlockNerd-logo-square.png";
 // import { useRef } from "react";
 // import { MdArrowDownward } from "react-icons/md";
 // import { motion } from "framer-motion";

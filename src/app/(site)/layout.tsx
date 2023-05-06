@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import "../styles/globals.scss";
+import "../../styles/globals.scss";
 import { getServerSession } from "next-auth";
 import { MdLogin } from "react-icons/md";
-import logo from "../../public/FlockNerd-logo-v2.png";
-import { authOptions } from "../pages/api/auth/[...nextauth]";
+import logo from "../../../public/FlockNerd-logo-v2.png";
+import { authOptions } from "../../pages/api/auth/[...nextauth]";
 // import { useRouter } from "next/router";
 
 export default async function RootLayout({
@@ -12,9 +12,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const data = await getServerSession(authOptions);
-
-  console.log("RootLayout data: ", data);
+  const session = await getServerSession(authOptions);
 
   return (
     <html>
@@ -161,7 +159,7 @@ export default async function RootLayout({
       <body>
         <nav
           className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 ${
-            data?.user ? "pr-3" : "pr-6"
+            session?.user ? "pr-3" : "pr-6"
           }`}
         >
           <ul>
@@ -180,7 +178,7 @@ export default async function RootLayout({
             </li>
 
             {/* user is signed-in */}
-            {data?.user && (
+            {session?.user && (
               <Link href={"/app/flocks"}>
                 <li
                   className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
@@ -192,9 +190,9 @@ export default async function RootLayout({
                   {/* <div className="user-name mr-3 hidden lg:block">
                   {user.name}
                 </div> */}
-                  {data.user.image && (
+                  {session.user.image && (
                     <Image
-                      src={data.user.image as string}
+                      src={session.user.image as string}
                       width="35"
                       height="35"
                       className="user-img h-9 w-9 lg:h-11 lg:w-11"
@@ -221,7 +219,7 @@ export default async function RootLayout({
             )}
 
             {/* user is not signed-in */}
-            {!data?.user && (
+            {!session?.user && (
               <li>
                 <Link href="/api/auth/signin">
                   <button className="rounded border-2 bg-transparent py-2 px-2 pr-3 transition-all hover:bg-white hover:text-primary">
