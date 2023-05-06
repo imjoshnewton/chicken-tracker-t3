@@ -14,12 +14,12 @@ import { AiOutlineDollar } from "react-icons/ai";
 
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import { ReactElement, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 // import { trpc } from "../../utils/trpc";
 // import Loader from "../../components/shared/Loader";
 // import NotificationsList from "../../components/NotificationsList";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Session } from "next-auth";
 
 // Top navbar
@@ -38,7 +38,6 @@ export default function AppLayout({
   // } = trpc.auth.getUserNotifications.useQuery(undefined, {
   //   refetchInterval: 5 * 60 * 1000,
   // });
-  // const router = useRouter();
   const pathName = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);

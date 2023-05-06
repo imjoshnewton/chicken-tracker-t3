@@ -1,9 +1,10 @@
-import { AnimatePresence, motion } from "framer-motion";
+// import { AnimatePresence, motion } from "framer-motion";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Card from "../../../components/shared/Card";
 import { authOptions } from "../../../pages/api/auth/[...nextauth]";
 import { prisma } from "../../../server/db/client";
+import DeleteButton from "./DeleteButton";
 // import AppLayout from "../../../layouts/AppLayout";
 // import { trpc } from "../../../utils/trpc";
 
@@ -82,14 +83,7 @@ async function Logs() {
                     Notes: {log.notes}
                   </span>
                   <div className="ml-auto">
-                    <span
-                      className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
-                      // onClick={async () => {
-                      //   await deleteLog(log.id);
-                      // }}
-                    >
-                      Delete
-                    </span>
+                    <DeleteButton id={log.id} />
                   </div>
                 </li>
               );
