@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../pages/api/auth/[...nextauth]";
 import AppLayout from "./AppLayout";
 import "../../styles/globals.scss";
+import "animate.css";
 
 export const metadata = {
   title: "Next.js",
