@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import "animate.css";
 import "../../styles/globals.scss";
 import { getServerSession } from "next-auth";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import { authOptions } from "../../pages/api/auth/[...nextauth]";
-// import { useRouter } from "next/router";
 
 export default async function RootLayout({
   children,

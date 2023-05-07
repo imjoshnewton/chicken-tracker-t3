@@ -15,7 +15,7 @@ const LearnMoreButton = () => {
       onClick={() => scroll()}
     >
       learn more
-      <MdArrowDownward className="animate-bounce" />
+      <MdArrowDownward className="animate__animated animate__fadeInDown animate__infinite animate__slow" />
     </button>
   );
 };

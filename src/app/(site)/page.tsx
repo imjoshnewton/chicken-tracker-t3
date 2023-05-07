@@ -25,40 +25,47 @@ const Home = () => {
               fill={true}
             />
             <div className="absolute top-0 bottom-0 right-0 left-0 bg-gray-900/50"></div>
-            <MotionDiv delay={0}>
-              <Image
-                src={logo}
-                alt="FlockNerd Logo - chicken with rimmed glasses"
-                height="75"
-                // className="z-0"
-              />
-            </MotionDiv>
+            {/* <MotionDiv delay={0}> */}
+            <Image
+              src={logo}
+              alt="FlockNerd Logo - chicken with rimmed glasses"
+              height="75"
+              className="animate__animated animate__fadeInUp z-0"
+            />
+            {/* </MotionDiv> */}
 
-            <MotionDiv delay={0.15}>
-              <h1
-                //   initial={{ opacity: 0, translateY: 40 }}
-                //   animate={{ opacity: 1, translateY: 0 }}
-                //   transition={{ duration: 0.5, delay: 0.15 }}
-                className="z-0 mb-6 text-3xl lg:text-6xl"
-              >
-                Welcome to FlockNerd!
-              </h1>
-            </MotionDiv>
-            <MotionDiv delay={0.3}>
-              <p
-                //   initial={{ opacity: 0, translateY: 40 }}
-                //   animate={{ opacity: 1, translateY: 0 }}
-                //   transition={{ duration: 0.5, delay: 0.3 }}
-                className="z-0 mb-4 max-w-3xl px-3 text-center lg:px-0"
-              >
-                Are you a backyard chicken, duck, or quail farmer looking to
-                track egg production and expenses for your flock? Look no
-                further. FlockNerd is the perfect app for you.
-              </p>
-            </MotionDiv>
-            <MotionDiv delay={0.45}>
+            {/* <MotionDiv delay={0.15}> */}
+            <h1
+              //   initial={{ opacity: 0, translateY: 40 }}
+              //   animate={{ opacity: 1, translateY: 0 }}
+              //   transition={{ duration: 0.5, delay: 0.15 }}
+              className="animate__animated animate__fadeInUp z-0 mb-6  text-3xl lg:text-6xl"
+              style={{ animationDelay: "0.15s" }}
+            >
+              Welcome to FlockNerd!
+            </h1>
+            {/* </MotionDiv> */}
+            {/* <MotionDiv delay={0.3}> */}
+            <p
+              //   initial={{ opacity: 0, translateY: 40 }}
+              //   animate={{ opacity: 1, translateY: 0 }}
+              //   transition={{ duration: 0.5, delay: 0.3 }}
+              className="animate__animated animate__fadeInUp z-0 mb-4 max-w-3xl px-3  text-center lg:px-0"
+              style={{ animationDelay: "0.3s" }}
+            >
+              Are you a backyard chicken, duck, or quail farmer looking to track
+              egg production and expenses for your flock? Look no further.
+              FlockNerd is the perfect app for you.
+            </p>
+            {/* </MotionDiv> */}
+            {/* <MotionDiv delay={0.45}> */}
+            <div
+              className=" animate__animated animate__fadeInUp"
+              style={{ animationDelay: "0.45s" }}
+            >
               <LearnMoreButton />
-            </MotionDiv>
+            </div>
+            {/* </MotionDiv> */}
           </div>
         </div>
         <div
