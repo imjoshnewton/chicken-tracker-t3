@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
+import { formatDate, handleTimezone } from "./date-utils";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -77,16 +78,6 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     });
     closeModal();
     resetFormValues();
-  }
-
-  function formatDate(date: Date) {
-    return date.toISOString().split("T")[0];
-  }
-
-  function handleTimezone(date: Date) {
-    const offset = date.getTimezoneOffset() * 60 * 1000;
-    const adjustedDate = new Date(date.getTime() + offset);
-    return adjustedDate;
   }
 
   if (!flockId) {
