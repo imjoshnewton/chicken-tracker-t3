@@ -1,6 +1,6 @@
 "use server";
+
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { prisma } from "../../server/db/client";
 // import toast from "react-hot-toast";
 
@@ -82,4 +82,24 @@ export async function updateFlock(input: {
   // redirect(`/app/flocks/${flock.id}`);
 
   return flock;
+}
+
+export async function updateUser(input: {
+  userId: string;
+  name: string;
+  image: string;
+}) {
+  const user = await prisma.user.update({
+    where: {
+      id: input.userId,
+    },
+    data: {
+      name: input.name,
+      image: input.image,
+    },
+  });
+
+  revalidatePath(`/app/settings`);
+
+  return user;
 }
