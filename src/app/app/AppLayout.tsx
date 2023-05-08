@@ -124,11 +124,14 @@ export default function AppLayout({
                   setNotificationsOpen(!notificationsOpen);
                 }}
               >
-                <div className="user-name mr-3 hidden lg:block">
+                <div className="user-name animate__animated animate__fadeInLeft mr-3 hidden lg:block">
                   {user.name}
                 </div>
                 {user.image && (
-                  <div>
+                  <div
+                  // className="animate__animated animate__fadeInRight"
+                  // style={{ animationDelay: "0.25s" }}
+                  >
                     <Image
                       src={user.image as string}
                       width="35"
