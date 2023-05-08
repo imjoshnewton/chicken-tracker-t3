@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { storage } from "../../lib/firebase";
+import { storage } from "../../../lib/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Breed, Flock } from "@prisma/client";
-import { trpc } from "../../utils/trpc";
-import Loader from "../shared/Loader";
+import Loader from "../../../components/shared/Loader";
 import { MdImage } from "react-icons/md";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { createFlock, updateFlock } from "../server";
 
 export default function FlockForm({
   flock,
@@ -32,24 +32,6 @@ export default function FlockForm({
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
-
-  const utils = trpc.useContext();
-
-  const updateFlock = trpc.flocks.updateFlock.useMutation({
-    onSuccess: (data) => {
-      utils.flocks.getFlocks.invalidate();
-      router.push(`/app/flocks/${data.id}`);
-      // toast.success("Flock updated!");
-    },
-  });
-  const createFlock = trpc.flocks.createFlock.useMutation({
-    onSuccess: (data) => {
-      utils.flocks.getFlock.invalidate();
-      router.push(`/app/flocks/${data.id}`);
-      // toast.success("Flock created!");
-    },
-  });
-  const setDefaultFlock = trpc.auth.setDefaultFlock.useMutation();
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
@@ -112,35 +94,39 @@ export default function FlockForm({
     );
 
     if (flockData.id) {
-      toast.promise(
-        updateFlock.mutateAsync({
-          id: flockData.id,
-          name: flockData.name,
-          description: flockData.description ? flockData.description : "",
-          type: flockData.type,
-          imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-          default: flockData.default,
-        }),
-        {
-          loading: `Saving flock`,
-          success: (data) => `${data.name} updated successfully!!`,
-          error: (err) => `This just happened: ${err.toString()}`,
-        }
-      );
+      toast
+        .promise(
+          updateFlock({
+            id: flockData.id,
+            name: flockData.name,
+            description: flockData.description ? flockData.description : "",
+            type: flockData.type,
+            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+          }),
+          {
+            loading: `Saving flock`,
+            success: (data) => `${data.name} updated successfully!!`,
+            error: (err) => `This just happened: ${err.toString()}`,
+          }
+        )
+        .then((flock) => router.push(`/app/flocks/${flock.id}`));
     } else {
-      toast.promise(
-        createFlock.mutateAsync({
-          name: flockData.name,
-          description: flockData.description ? flockData.description : "",
-          type: flockData.type,
-          imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-        }),
-        {
-          loading: `Creating flock`,
-          success: (data) => `${data.name} created successfully!`,
-          error: (err) => `This just happened: ${err.toString()}`,
-        }
-      );
+      toast
+        .promise(
+          createFlock({
+            userId: userId,
+            name: flockData.name,
+            description: flockData.description ? flockData.description : "",
+            type: flockData.type,
+            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
+          }),
+          {
+            loading: `Creating flock`,
+            success: (data) => `${data.name} created successfully!`,
+            error: (err) => `This just happened: ${err.toString()}`,
+          }
+        )
+        .then((flock) => router.push(`/app/flocks/${flock.id}`));
     }
   };
 
