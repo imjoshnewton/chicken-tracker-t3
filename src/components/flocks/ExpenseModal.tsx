@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
+import { formatDate } from "./date-utils";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -83,6 +84,10 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     return null;
   }
 
+  function handleTimzone(arg0: Date): import("react").SetStateAction<Date> {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <button
@@ -148,9 +153,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       <input
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
-                        value={date.toISOString().substring(0, 10)}
+                        value={formatDate(date)}
                         onChange={(event) =>
-                          setDate(new Date(event.target.value))
+                          setDate(handleTimzone(new Date(event.target.value)))
                         }
                         // onChange={(e) => {
                         //   if (e.target.valueAsDate) {
