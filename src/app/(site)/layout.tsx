@@ -166,13 +166,11 @@ export default async function RootLayout({
             <li className="translate-x-2 cursor-pointer sm:translate-x-0">
               <Link href="/">
                 <span className="flex items-center">
-                  {/* <span className="hidden sm:inline">Flock&nbsp;</span> */}
                   <Image
                     src={logo}
                     height="55"
                     alt="Flock Nerd logo the white outline of a chicken"
                   />
-                  {/* <span className="hidden sm:inline">&nbsp;Nerd</span> */}
                 </span>
               </Link>
             </li>
@@ -182,14 +180,7 @@ export default async function RootLayout({
               <Link href={"/app/flocks"}>
                 <li
                   className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
-                  // onClick={() => {
-                  // setUserMenuOpen(!userMenuOpen);
-                  // router.push("/app/flocks");
-                  // }}
                 >
-                  {/* <div className="user-name mr-3 hidden lg:block">
-                  {user.name}
-                </div> */}
                   {session.user.image && (
                     <Image
                       src={session.user.image as string}
@@ -199,21 +190,6 @@ export default async function RootLayout({
                       alt="Current user profile image"
                     />
                   )}
-                  {/* <div
-                    className={`multilink-content fadeIn top-16 right-2 bg-white p-2 shadow-xl`}
-                  >
-                    <Link href={`/app/flocks/`} className="flex items-center">
-                      <MdHomeFilled className="mr-3 mt-[-3px] inline text-xl" />
-                      My Flocks
-                    </Link>
-                    <Link
-                      href="/api/auth/signout"
-                      className="flex items-center"
-                    >
-                      <MdLogout className="mr-3 inline text-xl" />
-                      Logout
-                    </Link>
-                  </div> */}
                 </li>
               </Link>
             )}
