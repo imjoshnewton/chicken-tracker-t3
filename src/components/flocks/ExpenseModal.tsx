@@ -79,6 +79,16 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     resetFormValues();
   }
 
+  function formatDate(date: Date) {
+    return date.toISOString().split("T")[0];
+  }
+
+  function handleTimezone(date: Date) {
+    const offset = date.getTimezoneOffset() * 60 * 1000;
+    const adjustedDate = new Date(date.getTime() + offset);
+    return adjustedDate;
+  }
+
   if (!flockId) {
     return null;
   }
@@ -148,9 +158,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       <input
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
-                        value={date.toISOString().substring(0, 10)}
+                        value={formatDate(date)}
                         onChange={(event) =>
-                          setDate(new Date(event.target.value))
+                          setDate(handleTimezone(new Date(event.target.value)))
                         }
                         // onChange={(e) => {
                         //   if (e.target.valueAsDate) {
