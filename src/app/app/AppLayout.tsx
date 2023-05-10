@@ -21,6 +21,7 @@ import { signOut } from "next-auth/react";
 // import NotificationsList from "../../components/NotificationsList";
 import { motion } from "framer-motion";
 import { Session } from "next-auth";
+import { Toaster } from "react-hot-toast";
 
 // Top navbar
 export default function AppLayout({
@@ -71,6 +72,7 @@ export default function AppLayout({
 
   return (
     <>
+      <Toaster position="top-right" />
       <nav className="navbar h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">

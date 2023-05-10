@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { RiLoader4Fill } from "react-icons/ri";
 import { deleteExpense } from "../server";
 
@@ -12,7 +13,11 @@ export default function DeleteButton({ id }: { id: string }) {
       className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
       onClick={async () => {
         setLoading(true);
-        await deleteExpense(id);
+        await toast.promise(deleteExpense(id), {
+          loading: "Deleting log",
+          success: "Log deleted successfully",
+          error: "Something went wrong",
+        });
         setLoading(false);
       }}
     >
