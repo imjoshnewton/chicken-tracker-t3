@@ -77,7 +77,7 @@ async function Logs({
         <Card title="All Logs" className="pb-safe py-0 lg:pt-4 lg:pb-4">
           <ul className="mt-4 flex flex-col">
             {logs?.map((log, index) => (
-              <LogItem log={log} index={index} />
+              <LogItem log={log} index={index} key={index} />
             ))}
           </ul>
           <Pagination totalPages={totalPages} />

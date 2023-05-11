@@ -81,7 +81,7 @@ async function Expenses({
         <Card title="All Expenses" className="pb-safe py-0 lg:pt-4 lg:pb-4">
           <ul className="mt-4 flex flex-col">
             {expenses?.map((expense, index) => (
-              <ExpenseItem expense={expense} index={index} />
+              <ExpenseItem expense={expense} index={index} key={index} />
             ))}
           </ul>
           <Pagination totalPages={totalPages} />
