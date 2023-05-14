@@ -1,6 +1,6 @@
 import { addDays, subMonths, startOfWeek, endOfWeek, lastDayOfWeek, addWeeks } from "date-fns";
 import { z } from "zod";
-import { protectedProcedure } from "../path/to/your/protectedProcedure";
+import { router, protectedProcedure } from "../trpc";
 
 // Helper function for getting the average count for a given week
 async function getAverage(ctx: any, flockId: string, start: Date, end: Date) {
