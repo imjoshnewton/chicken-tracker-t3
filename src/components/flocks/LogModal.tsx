@@ -4,8 +4,8 @@ import { MdClose, MdOutlineEditNote } from "react-icons/md";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
-import { log } from "console";
 import { formatDate, handleTimezone } from "./date-utils";
+import { format } from "date-fns";
 // import Datepicker from "react-tailwindcss-datepicker";
 // import {
 //   PopoverDirectionType,
@@ -174,7 +174,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         id="date"
                         className="w-full appearance-none rounded border py-2 px-1 text-black"
                         required
-                        value={formatDate(date)}
+                        value={format(date, "yyyy-MM-dd")}
                         onChange={(event) =>
                           setDate(handleTimezone(new Date(event.target.value)))
                         }
