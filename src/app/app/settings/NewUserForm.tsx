@@ -90,7 +90,7 @@ export default function NewUserForm({
     updateUser({
       userId: user.id,
       name: data.name,
-      image: downloadURL ? downloadURL : "",
+      image: downloadURL ? downloadURL : user.image ? user.image : "",
     });
   };
 
