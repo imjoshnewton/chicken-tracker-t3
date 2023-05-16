@@ -1,3 +1,4 @@
+import { useCallback, memo } from 'react';
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -18,7 +19,7 @@ const Flock = () => {
   const { breedFilter } = router.query;
   const { flockId, flock, stats, range, breedStats } = useFlockData();
 
-  const onRangeChange = React.useCallback((event: any) => {
+  const onRangeChange = useCallback((event: any) => {
     const newRange = event.target.value;
 
     router.replace({
@@ -26,7 +27,7 @@ const Flock = () => {
     });
   }, [router]);
 
-  const clearFilter = React.useCallback(() => {
+  const clearFilter = useCallback(() => {
     const newQuery = { ...router.query };
     delete newQuery["breedFilter"];
 
@@ -125,5 +126,5 @@ Flock.getLayout = function getLayout(page: React.ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
 
-export default React.memo(Flock);
+export default memo(Flock);
 
