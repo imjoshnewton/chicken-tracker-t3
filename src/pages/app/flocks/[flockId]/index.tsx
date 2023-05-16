@@ -1,4 +1,4 @@
-import { useCallback, memo } from "react";
+import { useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
