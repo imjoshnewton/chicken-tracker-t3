@@ -174,14 +174,14 @@ export default function AppLayout({
       <section
         className={
           sideBarOpen
-            ? "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
-            : "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
+            ? "h-full overflow-y-auto transition-all lg:ml-52 lg:h-full"
+            : "h-full overflow-y-auto transition-all lg:ml-52 lg:h-full"
         }
       >
         {children}
       </section>
       <aside
-        className={`fadeIn pb-safe fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:pb-3 ${
+        className={`fadeIn pb-safe fixed right-0 top-[60px] h-full w-80 overflow-y-auto bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-full lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
@@ -197,8 +197,8 @@ export default function AppLayout({
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-white shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
-            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-white shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+            ? "fixed top-[60px] h-full w-52 overflow-y-auto bg-white shadow-2xl transition-transform lg:top-[65px] lg:h-full"
+            : "fixed top-[60px] h-full w-52 -translate-x-52 overflow-y-auto bg-white shadow-lg transition-transform lg:top-[65px] lg:h-full lg:translate-x-0"
         }
       >
         <ul className="side-nav pt-7">

@@ -130,8 +130,8 @@ export default function SiteLayout({ children }: { children: any }) {
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-gray-50 shadow-2xl transition-transform lg:top-[65px] lg:hidden lg:h-[calc(100vh_-_65px)]"
-            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:hidden lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+            ? "fixed top-[60px] h-full w-52 overflow-y-auto bg-gray-50 shadow-2xl transition-transform lg:top-[65px] lg:hidden lg:h-full"
+            : "fixed top-[60px] h-full w-52 -translate-x-52 overflow-y-auto bg-gray-50 shadow-lg transition-transform lg:top-[65px] lg:hidden lg:h-full lg:translate-x-0"
         }
       >
         {data?.user ? (

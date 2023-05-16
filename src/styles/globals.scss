@@ -17,12 +17,17 @@ body {
     font-family: -apple-system, 'Noto Sans', BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
         Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     height: calc(var(--vh, 1vh) * 100);
-  overflow: auto;
+    overflow: auto;
 }
 
-html {
-    height: 100vh;
+#__next {
+    height: 100%;
+    overflow-y: auto;
 }
+
+// html {
+//     height: 100vh;
+// }
 
 body {
     padding-top: 65px;
