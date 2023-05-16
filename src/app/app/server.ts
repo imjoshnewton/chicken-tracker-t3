@@ -103,3 +103,20 @@ export async function updateUser(input: {
 
   return user;
 }
+
+export async function markNotificationAsRead(input: {
+  notificationId: string;
+}) {
+  const notification = await prisma.notification.update({
+    where: {
+      id: input.notificationId,
+    },
+    data: {
+      read: true,
+    },
+  });
+
+  revalidatePath(`/app`);
+
+  return notification;
+}

@@ -1,6 +1,6 @@
 import { type Notification } from "@prisma/client";
-import Link from "next/link";
 import { MdClose } from "react-icons/md";
+import NotificationActionButtons from "./NotifcationActionButtons";
 
 export default function NotificationsList({
   notifications,
@@ -33,32 +33,10 @@ export default function NotificationsList({
             >
               <h4 className="mb-1 text-sm font-semibold">{not.title}</h4>
               <p className="text-sm">{not.message}</p>
-              <div className="mt-3 flex gap-2">
-                <button
-                  className={`${
-                    not.read
-                      ? "rounded border border-gray-700 px-3 py-1 font-normal text-gray-700 opacity-70"
-                      : "rounded border border-gray-700 px-3 py-1 font-normal text-gray-700 transition-all hover:border-slate-200 hover:bg-slate-200"
-                  }`}
-                  onClick={() => {
-                    // markAsRead.mutate({ id: not.id });
-                    closeMenu();
-                  }}
-                  disabled={not.read}
-                >
-                  Mark as read
-                </button>
-                <Link
-                  href={not.link}
-                  className="rounded bg-secondary px-3 py-1 text-white transition-all hover:bg-secondary/80"
-                  onClick={() => {
-                    // markAsRead.mutate({ id: not.id });
-                    closeMenu();
-                  }}
-                >
-                  {not.action}
-                </Link>
-              </div>
+              <NotificationActionButtons
+                notification={not}
+                closeMenu={closeMenu}
+              />
             </li>
           );
         })}
