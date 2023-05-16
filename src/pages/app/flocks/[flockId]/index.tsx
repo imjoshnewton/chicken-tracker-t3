@@ -1,31 +1,34 @@
-import { useCallback, memo } from 'react';
+import { useCallback, memo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { MdOutlineEdit } from "react-icons/md";
 import { motion } from "framer-motion";
 
-import { useFlockData } from "../../../../lib/hooks";
-import Card from "../../../../components/shared/Card";
-import Loader from "../../../../components/shared/Loader";
-import Breeds from "../../../../components/breeds/Breeds";
-import Stats from "../../../../components/flocks/Stats";
-import LogModal from "../../../../components/flocks/LogModal";
-import ExpenseModal from "../../../../components/flocks/ExpenseModal";
-import AppLayout from "../../../../layouts/AppLayout";
+import { useFlockData } from "@lib/hooks";
+import Card from "@components/shared/Card";
+import Loader from "@components/shared/Loader";
+import Breeds from "@components/breeds/Breeds";
+import Stats from "@components/flocks/Stats";
+import LogModal from "@components/flocks/LogModal";
+import ExpenseModal from "@components/flocks/ExpenseModal";
+import AppLayout from "@layouts/AppLayout";
 
 const Flock = () => {
   const router = useRouter();
   const { breedFilter } = router.query;
   const { flockId, flock, stats, range, breedStats } = useFlockData();
 
-  const onRangeChange = useCallback((event: any) => {
-    const newRange = event.target.value;
+  const onRangeChange = useCallback(
+    (event: any) => {
+      const newRange = event.target.value;
 
-    router.replace({
-      query: { ...router.query, statsRange: newRange },
-    });
-  }, [router]);
+      router.replace({
+        query: { ...router.query, statsRange: newRange },
+      });
+    },
+    [router]
+  );
 
   const clearFilter = useCallback(() => {
     const newQuery = { ...router.query };
@@ -87,7 +90,7 @@ const Flock = () => {
                 {flock?.description}
               </p>
               <p className="mt-2 text-gray-400 dark:text-gray-400">
-                                {flock?.type}
+                {flock?.type}
               </p>
             </div>
             <div className="ml-0 mt-4 flex w-full flex-wrap self-start lg:ml-auto lg:mt-0 lg:w-auto">
@@ -126,5 +129,4 @@ Flock.getLayout = function getLayout(page: React.ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
 
-export default memo(Flock);
-
+export default Flock;
