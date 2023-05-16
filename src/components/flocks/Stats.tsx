@@ -1,5 +1,4 @@
 import { Breed, Flock } from "@prisma/client";
-import Loader from "../shared/Loader";
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
 import { MdClose, MdFilterAlt } from "react-icons/md";
@@ -24,16 +23,6 @@ export default function Stats({
   filterId?: string;
   clearFilter?: () => void;
 }) {
-  // if (!flock || !stats.logs) {
-  //   return (
-  //     <div className="flex basis-[48%] items-center justify-center">
-  //       <Loader show={true}></Loader>
-  //     </div>
-  //   );
-  // }
-
-  console.log("Filter: ", filter);
-
   return (
     <div className={className}>
       <div className="mb-4 flex justify-between">
