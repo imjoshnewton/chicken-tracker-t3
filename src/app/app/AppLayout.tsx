@@ -18,18 +18,21 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 // import { trpc } from "../../utils/trpc";
 // import Loader from "../../components/shared/Loader";
-// import NotificationsList from "../../components/NotificationsList";
 import { motion } from "framer-motion";
 import { Session } from "next-auth";
 import { Toaster } from "react-hot-toast";
+import type { Notification } from "@prisma/client";
+import NotificationsList from "./NotificationsList";
 
 // Top navbar
 export default function AppLayout({
   children,
   session,
+  notifications,
 }: {
   children: React.ReactNode;
   session: Session | null;
+  notifications: Notification[] | undefined;
 }) {
   const user = session?.user;
   // const {
@@ -130,10 +133,7 @@ export default function AppLayout({
                   {user.name}
                 </div>
                 {user.image && (
-                  <div
-                  // className="animate__animated animate__fadeInRight"
-                  // style={{ animationDelay: "0.25s" }}
-                  >
+                  <div>
                     <Image
                       src={user.image as string}
                       width="35"
@@ -141,7 +141,7 @@ export default function AppLayout({
                       className="user-img h-9 w-9 lg:h-11 lg:w-11"
                       alt="Current user profile image"
                     />
-                    {/* <div
+                    <div
                       className={`${
                         notifications?.length
                           ? notifications.filter((not) => !not.read).length > 0
@@ -151,7 +151,7 @@ export default function AppLayout({
                       } absolute top-1 right-3 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                     >
                       {notifications?.filter((not) => !not.read).length}
-                    </div> */}
+                    </div>
                   </div>
                 )}
               </li>
@@ -180,16 +180,12 @@ export default function AppLayout({
       >
         {children}
       </section>
-      {/* <aside
+      <aside
         className={`fadeIn pb-safe fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
-        {isLoading ? (
-          <Loader show={true} />
-        ) : isError ? (
-          <p>Error loading notifications.</p>
-        ) : notifications.length ? (
+        {notifications?.length ? (
           <NotificationsList
             notifications={notifications}
             closeMenu={() => setNotificationsOpen(false)}
@@ -197,7 +193,7 @@ export default function AppLayout({
         ) : (
           <p>Error loading notifications.</p>
         )}
-      </aside> */}
+      </aside>
       <aside
         className={
           sideBarOpen
@@ -209,75 +205,6 @@ export default function AppLayout({
           {links.map((link, index) => {
             return <SidebarNavLink {...link} key={index} />;
           })}
-          {/* <li
-            className={`mb-0 px-2 ${
-              router.pathname.startsWith("/app/flocks")
-                ? "bg-gray-400 text-white"
-                : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/flocks/`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />
-              My Flocks
-            </Link>
-          </li>
-          <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/logs" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/logs`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdOutlineEditNote className="mr-[14px] inline text-3xl" /> All
-              Logs
-            </Link>
-          </li>
-          <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/expenses" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/expenses`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />
-              All Expenses
-            </Link>
-          </li> */}
-          {/* <li className="mt-auto px-3">
-            <div className="divider my-3 dark:border-t-gray-500"></div>
-          </li> */}
-          {/* <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/settings" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href="/app/settings"
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdSettings className="mr-5 inline text-2xl" />
-              Settings
-            </Link>
-          </li> */}
           <li
             className={`mb-0 px-2 ${
               pathName == "/logout" ? "bg-gray-400 text-white" : ""
