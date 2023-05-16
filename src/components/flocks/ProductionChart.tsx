@@ -35,6 +35,7 @@ ChartJS.register(
 //
 function createChartArray(logs: any[], limit: number) {
   const dates = getDatesInRange(Number(limit));
+
   const logsArray = logs?.map((log) => {
     return {
       ...log,
@@ -53,20 +54,19 @@ function createChartArray(logs: any[], limit: number) {
       day: "numeric",
     });
 
-    const index = logsArray?.map((l) => l.date).indexOf(stringValue);
+    const total = logsArray.reduce((sum, log) => {
+      if (log.date === stringValue) {
+        return sum + log._sum.count;
+      }
+      return sum;
+    }, 0);
 
-    if (index >= 0) {
-      return {
-        ...logsArray[index],
-      };
-    } else {
-      return {
-        date: stringValue,
-        _sum: {
-          count: 0,
-        },
-      };
-    }
+    return {
+      date: stringValue,
+      _sum: {
+        count: total,
+      },
+    };
   });
 
   return retArray;
@@ -105,12 +105,13 @@ function calcActualDailyAverage(logs: any[]) {
 //
 // Helper function to create array of dates withint a range from today
 //
-function getDatesInRange(limit: number) {
+function getDatesInRange(limit: number): Date[] {
   const retArray: Date[] = [];
+  const today = new Date(Date.now());
 
   for (let i: number = limit - 1; i >= 0; i--) {
-    const today = new Date(Date.now());
-    retArray.push(new Date(today.setDate(today.getDate() - i)));
+    const newDate = new Date(today);
+    retArray.push(new Date(newDate.setDate(today.getDate() - i)));
   }
 
   return retArray;
