@@ -1,51 +1,56 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { MdOutlineEdit } from "react-icons/md";
+import { motion } from "framer-motion";
 
 import { useFlockData } from "../../../../lib/hooks";
-
 import Card from "../../../../components/shared/Card";
 import Loader from "../../../../components/shared/Loader";
 import Breeds from "../../../../components/breeds/Breeds";
 import Stats from "../../../../components/flocks/Stats";
 import LogModal from "../../../../components/flocks/LogModal";
 import ExpenseModal from "../../../../components/flocks/ExpenseModal";
-import { useRouter } from "next/router";
-import Link from "next/link";
-import { MdOutlineEdit } from "react-icons/md";
 import AppLayout from "../../../../layouts/AppLayout";
-import { motion } from "framer-motion";
 
 const Flock = () => {
   const router = useRouter();
   const { breedFilter } = router.query;
   const { flockId, flock, stats, range, breedStats } = useFlockData();
 
-  // console.log("Logs: ", stats.logs);
-  console.log("Breed Stats: ", breedStats);
-
-  const onRangeChange = (event: any) => {
+  const onRangeChange = React.useCallback((event: any) => {
     const newRange = event.target.value;
 
     router.replace({
       query: { ...router.query, statsRange: newRange },
     });
-  };
+  }, [router]);
 
-  const clearFilter = () => {
-    delete router.query["breedFilter"];
+  const clearFilter = React.useCallback(() => {
+    const newQuery = { ...router.query };
+    delete newQuery["breedFilter"];
 
     router.replace({
-      query: { ...router.query },
+      query: newQuery,
     });
-  };
+  }, [router]);
 
   const filterBreed = flock?.breeds.find(
     (breed) => breed.id == (breedFilter as string)
   );
   const filterText = filterBreed?.name || filterBreed?.breed || undefined;
 
-  flock == undefined;
+  if (!flock) {
+    return (
+      <main className="flex h-full flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
+        <div className="flex h-full items-center justify-center">
+          <Loader show={true}></Loader>
+        </div>
+      </main>
+    );
+  }
 
-  return flock ? (
+  return (
     <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
         <Card
@@ -73,7 +78,6 @@ const Flock = () => {
               className="flock-image aspect-square object-cover"
               alt="A user uploaded image that represents this flock"
             />
-            {/* <pre>{limit}</pre> */}
             <div className="ml-0 md:ml-6">
               <div className="flex items-center">
                 <h1 className="mr-3 dark:text-gray-300">{flock?.name}</h1>
@@ -82,7 +86,7 @@ const Flock = () => {
                 {flock?.description}
               </p>
               <p className="mt-2 text-gray-400 dark:text-gray-400">
-                {flock?.type}
+                                {flock?.type}
               </p>
             </div>
             <div className="ml-0 mt-4 flex w-full flex-wrap self-start lg:ml-auto lg:mt-0 lg:w-auto">
@@ -114,12 +118,6 @@ const Flock = () => {
         </Card>
       </div>
     </main>
-  ) : (
-    <main className="flex h-full flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
-      <div className="flex h-full items-center justify-center">
-        <Loader show={true}></Loader>
-      </div>
-    </main>
   );
 };
 
@@ -127,4 +125,5 @@ Flock.getLayout = function getLayout(page: React.ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
 
-export default Flock;
+export default React.memo(Flock);
+
