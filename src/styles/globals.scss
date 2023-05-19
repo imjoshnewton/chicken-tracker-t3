@@ -75,13 +75,13 @@ a {
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-    --color-bg: #eef0f1;
-    --color-text: #08090a;
+    --color-bg: #F5E1D5; // #eef0f1;
+    --color-text: #385968; //#08090a;
     --color-dard-text: #08090a;
     --color-light-text: #fefefe;
-    --color-primary: #264653;
-    --color-secondary: #2a9d8f;
-    --color-tirtiary: #f4a261;
+    --color-primary: #385968;
+    --color-secondary: #84A8A3;
+    --color-tirtiary: #CD7660;
     --color-accent1: #e76f51;
     --color-accent2: #e9c46a;
 }
@@ -153,7 +153,7 @@ code {
 .navbar {
     // height: 65px;
     width: 100%;
-    background: #264653;
+    background: var(--color-primary);
     color: var(--color-light-text);
     position: fixed;
     top: 0;

@@ -29,7 +29,7 @@ export default function Pagination({ totalPages }: { totalPages?: number }) {
   const isPageDisabled = !(page > 0);
 
   return (
-    <div className="flex items-center justify-end gap-2">
+    <div className="flex items-center justify-center gap-2 md:justify-end">
       <div className="flex">
         <IconButton
           action={firstPage}

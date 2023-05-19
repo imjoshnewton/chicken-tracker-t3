@@ -54,7 +54,7 @@ function createChartArray(logs: any[], limit: number) {
       day: "numeric",
     });
 
-    const total = logsArray.reduce((sum, log) => {
+    const total = logsArray?.reduce((sum, log) => {
       if (log.date === stringValue) {
         return sum + log._sum.count;
       }

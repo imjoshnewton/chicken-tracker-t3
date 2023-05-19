@@ -45,7 +45,7 @@ export default function AppLayout({
   const pathName = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-white transition ease transform duration-300`;
+  const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-[#FEF9F6] transition ease transform duration-300`;
   const links = [
     {
       icon: <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />,
@@ -181,7 +181,7 @@ export default function AppLayout({
         {children}
       </section>
       <aside
-        className={`fadeIn pb-safe fixed right-0 top-[60px] h-full w-80 overflow-y-auto bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-full lg:pb-3 ${
+        className={`fadeIn pb-safe fixed right-0 top-[60px] h-full w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:h-full lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
@@ -197,8 +197,8 @@ export default function AppLayout({
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-full w-52 overflow-y-auto bg-white shadow-2xl transition-transform lg:top-[65px] lg:h-full"
-            : "fixed top-[60px] h-full w-52 -translate-x-52 overflow-y-auto bg-white shadow-lg transition-transform lg:top-[65px] lg:h-full lg:translate-x-0"
+            ? "fixed top-[60px] h-full w-52 overflow-y-auto bg-[#FEF9F6] shadow-2xl transition-transform lg:top-[65px] lg:h-full"
+            : "fixed top-[60px] h-full w-52 -translate-x-52 overflow-y-auto bg-[#FEF9F6] shadow-lg transition-transform lg:top-[65px] lg:h-full lg:translate-x-0"
         }
       >
         <ul className="side-nav pt-7">
@@ -272,7 +272,7 @@ function SidebarNavLink({
           <motion.div
             layoutId="highlight"
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-gray-400"
+            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]"
           ></motion.div>
         )}
         {/* </AnimatePresence> */}

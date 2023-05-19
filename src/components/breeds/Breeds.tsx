@@ -60,8 +60,8 @@ export default function Breeds({
       <motion.ul
         className={
           isActive
-            ? "flex flex-wrap justify-between dark:text-gray-300"
-            : "hidden flex-wrap justify-between dark:text-gray-300 lg:flex"
+            ? "flex flex-wrap justify-between gap-y-4 dark:text-gray-300 lg:gap-x-2"
+            : "hidden flex-wrap justify-between gap-y-4 dark:text-gray-300 lg:flex lg:gap-x-2"
         }
       >
         {breeds.length < 1 && (
@@ -80,9 +80,9 @@ export default function Breeds({
                 duration: 0.3,
                 delay: index * 0.1,
               }}
-              className={`group relative mb-4 flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg ${
+              className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/6 lg:pr-2 ${
                 router.query.breedFilter == breed.id
-                  ? "active bg-secondary/95 text-white"
+                  ? "active bg-[#84A8A3]/95 text-white"
                   : null
               }`}
               key={breed.id}
@@ -98,9 +98,6 @@ export default function Breeds({
                     query: { ...router.query, breedFilter: breed.id },
                   });
                 }
-
-                // setSellectedBreed(breed);
-                // setShowModal(true);
               }}
             >
               <div className="relative h-full basis-1/5">
@@ -111,19 +108,21 @@ export default function Breeds({
                   alt={breed.name ?? ""}
                 />
               </div>
-              <div className="flex flex-col justify-center p-3 dark:text-gray-300">
-                {/* <p> */}
-                <span>{breed.name}</span>
-                <strong>{breed.breed}</strong>
-                {/* <br /> */}
-                <div>
-                  <strong>Count: </strong>
-                  {breed.count}
-                </div>
-                {/* </p> */}
+              <div className="flex flex-col items-center justify-center p-3 dark:text-gray-300 lg:flex-1 lg:flex-row lg:justify-between lg:gap-2">
+                {breed.name ? (
+                  <strong>{breed.name}</strong>
+                ) : (
+                  <strong>{breed.breed}</strong>
+                )}
+                {breed.count > 1 && (
+                  <div className="block">
+                    <strong className="inline lg:hidden">Count: </strong>
+                    {breed.count}
+                  </div>
+                )}
               </div>
               <button
-                className="ml-auto h-8 w-8 rounded-lg border-gray-400 p-0 text-gray-700 opacity-100 transition-all hover:border-2 hover:text-gray-700 hover:shadow group-hover:opacity-100 group-[.active]:text-gray-300 group-[.active]:hover:border-white group-[.active]:hover:text-white lg:text-gray-400 lg:opacity-0"
+                className="ml-auto h-8 w-8 rounded-lg border-gray-400 p-0 text-gray-700 opacity-100 transition-all hover:border-2 hover:text-gray-700 hover:shadow group-hover:opacity-100 group-[.active]:text-gray-300 group-[.active]:hover:border-white group-[.active]:hover:text-white lg:hidden lg:text-gray-400 lg:opacity-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   setSellectedBreed(breed);
@@ -152,11 +151,7 @@ export default function Breeds({
           &nbsp;Add Birds
         </button>
       </motion.ul>
-      <AnimatePresence
-        // Disable any initial animations on children that
-        // are present when the component is first rendered
-        initial={false}
-      >
+      <AnimatePresence initial={false}>
         {showModal && (
           <BreedModal
             flockId={flockId}

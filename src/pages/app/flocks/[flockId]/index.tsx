@@ -100,25 +100,25 @@ const Flock = () => {
             </div>
           </motion.div>
           <div className="divider my-6 dark:border-t-gray-500"></div>
-          <div className="justify-evently flex flex-wrap">
-            <Breeds
-              flockId={flockId?.toString()}
-              breeds={flock?.breeds}
-              top={breedStats?.at(0)?.breedId}
-              className="basis-full xl:basis-[23%]"
-            ></Breeds>
-            <div className="basis-[2%] p-3"></div>
-            <Stats
-              stats={stats}
-              flock={flock}
-              className="basis-full xl:basis-[75%]"
-              limit={range.toString()}
-              onRangeChange={onRangeChange}
-              filter={filterText}
-              filterId={breedFilter as string}
-              clearFilter={clearFilter}
-            ></Stats>
-          </div>
+          <Stats
+            stats={stats}
+            flock={flock}
+            className="basis-full xl:basis-[75%]"
+            limit={range.toString()}
+            onRangeChange={onRangeChange}
+            filter={filterText}
+            filterId={breedFilter as string}
+            clearFilter={clearFilter}
+          ></Stats>
+          <Breeds
+            flockId={flockId?.toString()}
+            breeds={flock?.breeds}
+            top={breedStats?.at(0)?.breedId}
+            className="basis-full xl:basis-[23%]"
+          ></Breeds>
+          {/* <div className="justify-evently flex flex-wrap"> */}
+          {/* <div className="basis-[2%] p-3"></div> */}
+          {/* </div> */}
         </Card>
       </div>
     </main>
