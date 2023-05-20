@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import header from "../../../public/site-header.jpg";
+import header from "../../../public/site-header-v2.png";
 import stats from "../../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../../public/FlockNerd-logo-square.png";
 // import { useRef } from "react";
@@ -8,7 +8,6 @@ import logo from "../../../public/FlockNerd-logo-square.png";
 // import { motion } from "framer-motion";
 import PWAExample from "./PWAExample";
 import LearnMoreButton from "./LearnMoreButton";
-import MotionDiv from "./MotionDiv";
 
 const Home = () => {
   //   const ref = useRef<HTMLDivElement>(null);
