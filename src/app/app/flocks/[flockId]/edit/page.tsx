@@ -1,5 +1,5 @@
 import Card from "../../../../../components/shared/Card";
-import FlockForm from "../../../../../components/flocks/FlockEditForm";
+import FlockForm from "../../FlockEditForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
