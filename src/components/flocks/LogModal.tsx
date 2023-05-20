@@ -127,7 +127,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 exit="exit"
                 className="relative bottom-0 mx-auto w-full min-w-[350px] rounded-t-lg lg:my-6 lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
-                <div className="pb-safe relative flex w-full flex-col rounded-t-lg border-0 bg-white shadow-lg outline-none focus:outline-none lg:rounded-lg lg:pb-0">
+                <div className="pb-safe relative flex w-full flex-col rounded-t-lg border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:rounded-lg lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
                     <h3 className="text-xl">Log Eggs</h3>
                     <button
@@ -234,7 +234,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       Close
                     </button>
                     <button
-                      className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                      className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                       type="button"
                       disabled={isLoading}
                       onClick={async () => {
