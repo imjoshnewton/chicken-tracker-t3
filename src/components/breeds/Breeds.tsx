@@ -10,7 +10,7 @@ import {
 } from "react-icons/md";
 import BreedModal from "./BreedModal";
 import Loader from "../shared/Loader";
-import { useRouter } from "next/router";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function Breeds({
@@ -25,6 +25,9 @@ export default function Breeds({
   top?: string | null;
 }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const curParams = new URLSearchParams(searchParams ? searchParams : "");
+  const path = usePathname();
   const [isActive, setIsActive] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedBreed, setSellectedBreed] = useState<Breed | null>(null);
@@ -81,22 +84,20 @@ export default function Breeds({
                 delay: index * 0.1,
               }}
               className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/6 lg:pr-2 ${
-                router.query.breedFilter == breed.id
+                curParams.get("breedFilter") == breed.id
                   ? "active bg-[#84A8A3]/95 text-white"
                   : null
               }`}
               key={breed.id}
               onClick={() => {
-                if (router.query["breedFilter"] == breed.id) {
-                  delete router.query["breedFilter"];
+                if (curParams.get("breedFilter") == breed.id) {
+                  curParams.delete("breedFilter");
 
-                  router.replace({
-                    query: { ...router.query },
-                  });
+                  router.replace(`${path}?${curParams.toString()}`);
                 } else {
-                  router.replace({
-                    query: { ...router.query, breedFilter: breed.id },
-                  });
+                  curParams.set("breedFilter", breed.id);
+
+                  router.replace(`${path}?${curParams.toString()}`);
                 }
               }}
             >
