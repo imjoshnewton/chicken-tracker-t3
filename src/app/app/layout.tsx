@@ -20,6 +20,7 @@ export default async function RootLayout({
   if (!session) {
     redirect("/api/auth/signin");
   }
+
   const notifications = await prisma.notification.findMany({
     where: {
       userId: session.user?.id,

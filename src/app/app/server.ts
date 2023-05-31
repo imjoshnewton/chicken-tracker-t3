@@ -7,7 +7,7 @@ import { prisma } from "../../server/db/client";
 export async function deleteLog(id: string) {
   console.log("deleteLog: ", id);
 
-  const log = await prisma.eggLog.delete({
+  await prisma.eggLog.delete({
     where: {
       id: id,
     },
@@ -15,7 +15,7 @@ export async function deleteLog(id: string) {
 
   revalidatePath(`/app/logs`);
 
-  return log;
+  // return log;
 }
 
 export async function deleteExpense(id: string) {

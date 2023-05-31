@@ -11,6 +11,7 @@ export default function DeleteButton({ id }: { id: string }) {
   return (
     <button
       className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
+      disabled={loading}
       onClick={async () => {
         setLoading(true);
         await toast.promise(deleteExpense(id), {

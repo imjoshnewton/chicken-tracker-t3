@@ -29,6 +29,7 @@ const config = {
   },
   experimental: {
     appDir: true,
+    serverActions: true,
     // serverComponentsExternalPackages: ["prisma"],
   },
 };

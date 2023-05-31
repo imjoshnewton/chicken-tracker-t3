@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
 import { formatDate, handleTimezone } from "./date-utils";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 // import Datepicker from "react-tailwindcss-datepicker";
 // import {
 //   PopoverDirectionType,
@@ -19,6 +20,8 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [notes, setNotes] = useState<string>();
   const [breedId, setBreedId] = useState<string>();
 
+  const router = useRouter();
+
   const utils = trpc.useContext();
 
   const { mutateAsync: createLogMutation, isLoading } =
@@ -26,6 +29,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       onSuccess: () => {
         utils.stats.getStats.invalidate();
         utils.stats.getExpenseStats.invalidate();
+        router.refresh();
         toast.success("New log created!");
       },
     });
