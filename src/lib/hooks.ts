@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { trpc } from "../utils/trpc";
-import { useRouter } from "next/router";
 import { Session } from "next-auth";
+import { useRouter } from "next/router";
 
 //s
 // Custom hook to get user's session data
