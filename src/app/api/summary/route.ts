@@ -18,7 +18,7 @@ const firebaseConfig = {
   projectId: "chicken-tracker-83ef8",
   //   clientEmail: "CLIENT_EMAIL",
   clientEmail: process.env.GCP_CLIENT_EMAIL,
-  privateKey: process.env.GCP_PRIVATE_KEY,
+  privateKey: JSON.parse(process.env.GCP_PRIVATE_KEY!),
   //   privateKey: "PRIVATE_KEY",
 };
 
