@@ -6,6 +6,8 @@ import saveAs from "file-saver";
 import { toPng } from "html-to-image";
 import { useCallback, useRef, useState } from "react";
 import { MdSave } from "react-icons/md";
+import { storage } from "../../../../../lib/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function FlockSummary({
   summary,
@@ -35,7 +37,7 @@ export default function FlockSummary({
   };
 }) {
   const [showExpenses, setShowExpenses] = useState(true);
-  const ref = useRef<HTMLDivElement>(null);
+  // const ref = useRef<HTMLDivElement>(null);
 
   const getFileName = (fileType: string, prefix: string) =>
     `${prefix}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
@@ -53,21 +55,37 @@ export default function FlockSummary({
     //   });
 
     const res = await (
-      await fetch("/api/summary", {
-        // Changed endpoint here
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: summary.flock.id,
-          month: "05",
-          year: summary.year,
-        }),
-      })
+      await fetch(
+        "https://us-central1-chicken-tracker-83ef8.cloudfunctions.net/summary",
+        {
+          // Changed endpoint here
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: summary.flock.id,
+            month: "03",
+            year: summary.year,
+          }),
+        }
+      )
     ).json();
 
     console.log("res", res);
+
+    const imageRef = ref(storage, res.ref);
+
+    getDownloadURL(imageRef)
+      .then((url) => {
+        // `url` is the download URL
+        console.log(url);
+        saveAs(url, getFileName("png", `${summary.flock.name}`));
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.log(error);
+      });
   }, [ref, summary.flock.name]);
 
   // const downloadImage2 = async () => {
@@ -149,7 +167,7 @@ export default function FlockSummary({
           </fieldset> */}
       </div>
       {/* <div className="w-full max-w-xl"></div> */}
-      <div className="w-full max-w-xl shadow-xl" ref={ref}>
+      <div className="w-full max-w-xl shadow-xl">
         <Card title="FlockNerd Summary">
           {summary ? (
             <>

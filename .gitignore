@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+/gcloud/node_modules
+/gcloud/.gcloudignore
 
 # testing
 /coverage
