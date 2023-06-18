@@ -42,7 +42,7 @@ export default function FlockSummary({
   const getFileName = (fileType: string, prefix: string) =>
     `${prefix}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
-  const downloadImage = useCallback(async () => {
+  const downloadImage = async () => {
     // if (ref.current === null) {
     //   return;
     // }
@@ -86,7 +86,7 @@ export default function FlockSummary({
         // Handle any errors
         console.log(error);
       });
-  }, [ref, summary.flock.name]);
+  };
 
   // const downloadImage2 = async () => {
   //   if (ref.current == null) {

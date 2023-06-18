@@ -132,9 +132,9 @@ exports.summary = async (req, res) => {
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
       await page.setViewport({
-        width: 1080,
-        height: 1920,
-        deviceScaleFactor: 1.5,
+        width: 430,
+        height: 840,
+        deviceScaleFactor: 2,
       });
       await page.goto(
         `https://summary.FlockNerd.com/${flockId}?month=${month}&year=${year}`
