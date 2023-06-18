@@ -19,6 +19,7 @@ const firebaseConfig = {
   //   clientEmail: "CLIENT_EMAIL",
   clientEmail: process.env.GCP_CLIENT_EMAIL,
   privateKey: JSON.parse(process.env.GCP_PRIVATE_KEY!),
+  // privateKey: process.env.GCP_PRIVATE_KEY,
   //   privateKey: "PRIVATE_KEY",
 };
 
