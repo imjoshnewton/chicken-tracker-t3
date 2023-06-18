@@ -1,6 +1,6 @@
-import chromium from "chrome-aws-lambda";
-import puppeteer from "puppeteer-core";
-// import puppeteer from "puppeteer";
+// import chromium from "chrome-aws-lambda";
+// import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import * as admin from "firebase-admin";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -48,11 +48,12 @@ export async function POST(req: NextRequest) {
 
   const url = `https://summary.FlockNerd.com/${flockId}?month=${month}&year=${year}`;
 
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    executablePath: await chromium.executablePath,
-    headless: chromium.headless,
-  });
+  const browser = await puppeteer.launch();
+  // {
+  // args: chromium.args,
+  // executablePath: await chromium.executablePath,
+  // headless: chromium.headless,
+  // });
 
   const page = await browser.newPage();
 
