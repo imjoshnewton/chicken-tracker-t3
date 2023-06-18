@@ -40,17 +40,34 @@ export default function FlockSummary({
   const getFileName = (fileType: string, prefix: string) =>
     `${prefix}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
-  const downloadImage = useCallback(() => {
-    if (ref.current === null) {
-      return;
-    }
-    toPng(ref.current, { cacheBust: true })
-      .then((dataUrl) => {
-        saveAs(dataUrl, getFileName("png", `${summary.flock.name}`));
+  const downloadImage = useCallback(async () => {
+    // if (ref.current === null) {
+    //   return;
+    // }
+    // toPng(ref.current, { cacheBust: true })
+    //   .then((dataUrl) => {
+    //     saveAs(dataUrl, getFileName("png", `${summary.flock.name}`));
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+
+    const res = await (
+      await fetch("/api/summary", {
+        // Changed endpoint here
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: summary.flock.id,
+          month: "05",
+          year: summary.year,
+        }),
       })
-      .catch((err) => {
-        console.log(err);
-      });
+    ).json();
+
+    console.log("res", res);
   }, [ref, summary.flock.name]);
 
   // const downloadImage2 = async () => {
