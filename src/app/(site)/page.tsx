@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <>
       <main className="justify-cente flex min-h-screen flex-col items-center p-0">
-        <div className="relative flex h-auto w-full flex-col items-center justify-center py-36 lg:h-[75vh]">
+        <section className="relative flex h-auto w-full flex-col items-center justify-center py-36 lg:h-[75vh]">
           <div className="flex max-w-5xl flex-col items-center justify-center gap-0 text-white">
             <Image
               src={header}
@@ -66,9 +66,9 @@ const Home = () => {
             </div>
             {/* </MotionDiv> */}
           </div>
-        </div>
-        <div
-          className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14"
+        </section>
+        <section
+          className="flex w-full flex-col items-center justify-center gap-12 bg-[#fcf2ec] py-14"
           id="track"
           //   ref={ref}
         >
@@ -92,7 +92,7 @@ const Home = () => {
               // whileInView={{ opacity: 1, x: 0 }}
               // transition={{ duration: 0.5, delay: 0.15 }}
               // viewport={{ once: true }}
-              className="flex flex-col text-black"
+              className="flex flex-col"
             >
               <h2 className="mb-4 text-3xl">Track Your Flock 🐓🦆🦃</h2>
               <p className="pb-4">
@@ -119,15 +119,15 @@ const Home = () => {
               </Link>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-50 py-14">
+        </section>
+        <section className="flex w-full flex-col items-center justify-center gap-12 bg-[#FEF9F6] py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <div
               // initial={{ opacity: 0, x: -200 }}
               // whileInView={{ opacity: 1, x: 0 }}
               // transition={{ duration: 0.5, delay: 0 }}
               // viewport={{ once: true }}
-              className="order-1 flex flex-col text-black lg:order-none"
+              className="order-1 flex flex-col lg:order-none"
             >
               <h2 className="mb-4 text-3xl">Egg-ceptional Insights</h2>
               <p className="pb-4">
@@ -187,8 +187,8 @@ const Home = () => {
               <Image src={stats} alt="FlockNerd - stats for your flock"></Image>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
+        </section>
+        <section className="flex w-full flex-col items-center justify-center gap-12 bg-[#fcf2ec] py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <PWAExample />
 
@@ -217,10 +217,10 @@ const Home = () => {
               </ol>
             </div>
           </div>
-        </div>
-        <div className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-6 text-white/80">
+        </section>
+        <section className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-6 text-[#FEF9F6]">
           <span>&copy;&nbsp;FlockNerd 2022</span>
-        </div>
+        </section>
       </main>
     </>
   );
