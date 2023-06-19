@@ -27,6 +27,7 @@ export default function Pagination({ totalPages }: { totalPages?: number }) {
   const lastPage = () => totalPages && navigateToPage(totalPages - 1);
 
   const isPageDisabled = !(page > 0);
+  const isLastPage = !!totalPages && page + 1 == totalPages;
 
   return (
     <div className="flex items-center justify-center gap-2 md:justify-end">
@@ -50,10 +51,12 @@ export default function Pagination({ totalPages }: { totalPages?: number }) {
       <div className="flex">
         <IconButton
           action={nextPage}
+          disabled={isLastPage}
           icon={<MdChevronRight className="text-2xl" />}
         />
         <IconButton
           action={lastPage}
+          disabled={isLastPage}
           icon={<MdLastPage className="text-2xl" />}
         />
       </div>
