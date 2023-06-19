@@ -114,9 +114,9 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="relative mx-auto h-full w-full min-w-[350px] overflow-hidden rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg"
+                className="relative mx-auto h-full w-full min-w-[350px] rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg"
               >
-                <div className="pb-safe relative flex h-full w-full flex-col rounded-t-sm border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:pb-0">
+                <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
                     <h3 className="text-xl">Log an Expense</h3>
                     <button
