@@ -1,19 +1,19 @@
 "use client";
 
-import { useCallback } from "react";
-import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { MdOutlineEdit } from "react-icons/md";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
+import { MdOutlineEdit } from "react-icons/md";
 
-import { useFlockDataAppDir } from "@lib/hooks";
+import Breeds from "@components/breeds/Breeds";
+import ExpenseModal from "@components/flocks/ExpenseModal";
+import LogModal from "@components/flocks/LogModal";
+import Stats from "@components/flocks/Stats";
 import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
-import Breeds from "@components/breeds/Breeds";
-import Stats from "@components/flocks/Stats";
-import LogModal from "@components/flocks/LogModal";
-import ExpenseModal from "@components/flocks/ExpenseModal";
+import { useFlockDataAppDir } from "@lib/hooks";
 import { Session } from "next-auth";
 
 const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
@@ -126,9 +126,6 @@ const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
             className="mt-4 basis-full xl:basis-[23%]"
             user={session?.user}
           ></Breeds>
-          {/* <div className="justify-evently flex flex-wrap"> */}
-          {/* <div className="basis-[2%] p-3"></div> */}
-          {/* </div> */}
         </Card>
       </div>
     </main>
