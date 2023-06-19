@@ -6,6 +6,7 @@ import saveAs from "file-saver";
 import { getDownloadURL, ref } from "firebase/storage";
 import { useState } from "react";
 import { MdSave } from "react-icons/md";
+import { BiImageAdd } from "react-icons/bi";
 import { storage } from "../../../../../lib/firebase";
 
 export default function FlockSummary({
@@ -38,12 +39,14 @@ export default function FlockSummary({
   twoDigitMonth: string;
 }) {
   const [showExpenses, setShowExpenses] = useState(true);
+  const [generatingImage, setGeneratingImage] = useState(false);
   const [downloadURL, setDownloadURL] = useState<string | null>(null);
 
   const getFileName = (fileType: string, prefix: string) =>
     `${prefix}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
   const generateImage = async () => {
+    setGeneratingImage(true);
     const res = await (
       await fetch(
         "https://us-central1-chicken-tracker-83ef8.cloudfunctions.net/summary",
@@ -73,6 +76,9 @@ export default function FlockSummary({
       .catch((error) => {
         // Handle any errors
         console.log(error);
+      })
+      .finally(() => {
+        setGeneratingImage(false);
       });
   };
 
@@ -102,20 +108,29 @@ export default function FlockSummary({
         <button
           type="button"
           onClick={downloadImage}
-          className="w-full rounded bg-[#84A8A3] px-4 py-2 text-white transition-all hover:brightness-90"
+          disabled={generatingImage || !!downloadURL}
+          className={
+            "w-full rounded bg-[#84A8A3] px-4 py-2 text-white transition-all " +
+            (generatingImage || !!downloadURL
+              ? "cursor-not-allowed opacity-60"
+              : "hover:brightness-110")
+          }
         >
-          {downloadURL ? (
-            <>
-              <MdSave />
-              &nbsp;Save as PNG
-            </>
-          ) : (
-            <>
-              <MdSave />
-              &nbsp;Generate Image
-            </>
-          )}
+          <>
+            <BiImageAdd />
+            &nbsp;Generate Image
+          </>
         </button>
+        {downloadURL && (
+          <a
+            href={downloadURL}
+            download
+            className="flex w-full items-center justify-center rounded bg-[#84A8A3] px-4 py-2 text-center text-white transition-all hover:brightness-110"
+          >
+            <MdSave />
+            &nbsp;Save as PNG
+          </a>
+        )}
         {/* <button
             type="button"
             onClick={downloadImage}
