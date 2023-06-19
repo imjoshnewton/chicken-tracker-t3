@@ -113,7 +113,7 @@ const Summary = async ({
   return (
     <>
       <main className="flex flex-col items-center justify-center">
-        <FlockSummary summary={summary} />
+        <FlockSummary summary={summary} twoDigitMonth={month} />
       </main>
     </>
   );

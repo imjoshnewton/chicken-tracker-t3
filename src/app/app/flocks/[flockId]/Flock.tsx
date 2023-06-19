@@ -124,6 +124,7 @@ const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
             breeds={flock?.breeds}
             top={breedStats?.at(0)?.breedId}
             className="basis-full xl:basis-[23%]"
+            user={session?.user}
           ></Breeds>
           {/* <div className="justify-evently flex flex-wrap"> */}
           {/* <div className="basis-[2%] p-3"></div> */}

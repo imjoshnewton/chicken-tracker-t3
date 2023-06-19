@@ -1,27 +1,37 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { trpc } from "../../utils/trpc";
+"use client";
+
 import { Breed } from "@prisma/client";
-import Loader from "../shared/Loader";
-import { useUserData } from "../../lib/hooks";
-import { storage } from "../../lib/firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
-import Image from "next/image";
-import { motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
+import { storage } from "../../lib/firebase";
+import { trpc } from "../../utils/trpc";
+import Loader from "../shared/Loader";
 
 const BreedModal = ({
   flockId,
   closeModal,
   breed,
+  user,
 }: {
   flockId: string | undefined;
   closeModal: any;
   breed: Breed | null;
+  user:
+    | ({
+        id: string;
+      } & {
+        name?: string | null | undefined;
+        email?: string | null | undefined;
+        image?: string | null | undefined;
+      })
+    | undefined;
 }) => {
-  const { user } = useUserData();
   const { register, handleSubmit, formState, reset, watch } = useForm({
     defaultValues: { ...breed, image: null as any, flockId: flockId },
     mode: "onChange",

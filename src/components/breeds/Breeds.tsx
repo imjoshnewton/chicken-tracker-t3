@@ -18,11 +18,21 @@ export default function Breeds({
   breeds,
   className,
   top,
+  user,
 }: {
   flockId: string | undefined;
   breeds: Breed[];
   className: string;
   top?: string | null;
+  user:
+    | ({
+        id: string;
+      } & {
+        name?: string | null | undefined;
+        email?: string | null | undefined;
+        image?: string | null | undefined;
+      })
+    | undefined;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -161,6 +171,7 @@ export default function Breeds({
               setShowModal(false);
               setSellectedBreed(null);
             }}
+            user={user}
           />
         )}
       </AnimatePresence>

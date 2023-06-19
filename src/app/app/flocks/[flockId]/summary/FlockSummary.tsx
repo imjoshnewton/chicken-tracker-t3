@@ -3,14 +3,14 @@
 import Card from "@components/shared/Card";
 import { format } from "date-fns";
 import saveAs from "file-saver";
-import { toPng } from "html-to-image";
-import { useCallback, useRef, useState } from "react";
+import { getDownloadURL, ref } from "firebase/storage";
+import { useState } from "react";
 import { MdSave } from "react-icons/md";
 import { storage } from "../../../../../lib/firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function FlockSummary({
   summary,
+  twoDigitMonth,
 }: {
   summary: {
     flock: {
@@ -35,25 +35,15 @@ export default function FlockSummary({
     year: string;
     month: string;
   };
+  twoDigitMonth: string;
 }) {
   const [showExpenses, setShowExpenses] = useState(true);
-  // const ref = useRef<HTMLDivElement>(null);
+  const [downloadURL, setDownloadURL] = useState<string | null>(null);
 
   const getFileName = (fileType: string, prefix: string) =>
     `${prefix}-${format(new Date(), "HH-mm-ss")}.${fileType}`;
 
-  const downloadImage = async () => {
-    // if (ref.current === null) {
-    //   return;
-    // }
-    // toPng(ref.current, { cacheBust: true })
-    //   .then((dataUrl) => {
-    //     saveAs(dataUrl, getFileName("png", `${summary.flock.name}`));
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
+  const generateImage = async () => {
     const res = await (
       await fetch(
         "https://us-central1-chicken-tracker-83ef8.cloudfunctions.net/summary",
@@ -65,22 +55,20 @@ export default function FlockSummary({
           },
           body: JSON.stringify({
             id: summary.flock.id,
-            month: "03",
+            month: twoDigitMonth,
             year: summary.year,
           }),
         }
       )
     ).json();
 
-    console.log("res", res);
-
     const imageRef = ref(storage, res.ref);
 
     getDownloadURL(imageRef)
       .then((url) => {
         // `url` is the download URL
-        console.log(url);
-        saveAs(url, getFileName("png", `${summary.flock.name}`));
+        // saveAs(url, getFileName("png", `${summary.flock.name}`));
+        setDownloadURL(url);
       })
       .catch((error) => {
         // Handle any errors
@@ -88,19 +76,14 @@ export default function FlockSummary({
       });
   };
 
-  // const downloadImage2 = async () => {
-  //   if (ref.current == null) {
-  //     return;
-  //   }
-
-  //   const dataUrl = await toPng(ref.current, { cacheBust: true });
-
-  //   // download image
-  //   const link = document.createElement("a");
-  //   link.download = getFileName("png", `${summary.data?.flock.name}`);
-  //   link.href = dataUrl;
-  //   link.click();
-  // };
+  const downloadImage = () => {
+    if (!downloadURL) {
+      generateImage();
+      return;
+    } else {
+      saveAs(downloadURL, getFileName("png", `${summary.flock.name}`));
+    }
+  };
 
   const handleChange = () => {
     setShowExpenses(!showExpenses);
@@ -121,8 +104,17 @@ export default function FlockSummary({
           onClick={downloadImage}
           className="w-full rounded bg-[#84A8A3] px-4 py-2 text-white transition-all hover:brightness-90"
         >
-          <MdSave />
-          &nbsp;Save as PNG
+          {downloadURL ? (
+            <>
+              <MdSave />
+              &nbsp;Save as PNG
+            </>
+          ) : (
+            <>
+              <MdSave />
+              &nbsp;Generate Image
+            </>
+          )}
         </button>
         {/* <button
             type="button"
@@ -152,21 +144,7 @@ export default function FlockSummary({
           />
           &nbsp;Show Expenses
         </label>
-        {/* <fieldset className="flex items-center justify-center">
-            <h3 className="mr-4">Dimensions:</h3>
-            <label htmlFor="width" className="flex items-center justify-center">
-              <input type="text" id="width" className="w-20" />
-            </label>
-            <MdClose className="mx-4" />
-            <label
-              htmlFor="height"
-              className="flex items-center justify-center"
-            >
-              <input type="text" id="height" className="w-20" />
-            </label>
-          </fieldset> */}
       </div>
-      {/* <div className="w-full max-w-xl"></div> */}
       <div className="w-full max-w-xl shadow-xl">
         <Card title="FlockNerd Summary">
           {summary ? (
