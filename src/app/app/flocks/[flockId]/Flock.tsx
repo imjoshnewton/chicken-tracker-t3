@@ -123,7 +123,7 @@ const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
             flockId={flockId?.toString()}
             breeds={flock?.breeds}
             top={breedStats?.at(0)?.breedId}
-            className="basis-full xl:basis-[23%]"
+            className="mt-4 basis-full xl:basis-[23%]"
             user={session?.user}
           ></Breeds>
           {/* <div className="justify-evently flex flex-wrap"> */}
