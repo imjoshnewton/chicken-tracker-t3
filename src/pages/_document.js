@@ -12,7 +12,7 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" href="/apple-icon-180.png" />
 
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
 
           <link
             rel="apple-touch-startup-image"
