@@ -33,7 +33,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const [files] = await bucket.getFiles({ prefix: folderName });
     files.forEach(async (file) => {
       if (file.name.startsWith(folderName)) {
-        await file.delete();
+        const result = await file.delete();
+
+        console.log("result: ", result);
       }
     });
 
