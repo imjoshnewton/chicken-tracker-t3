@@ -4,14 +4,6 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 const serviceAccount = require("./chicken-tracker-83ef8-firebase-adminsdk-dwql3-a73864962e.json");
 
-// const firebaseConfig = {
-//   projectId: process.env.FIREBASE_PROJECT_ID,
-//   privateKey: process.env.FIREBASE_PRIVATE_KEY
-//     ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-//     : undefined,
-//   clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-// };
-
 // Firebase initialization
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -27,23 +19,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const [files] = await bucket.getFiles({ prefix: folderName });
-    // console.log("files: ", files);
 
-    console.log("Number of files: ", files.length);
+    console.log("Number of files to delete: ", files.length);
 
     await Promise.all(
       files.map(async (file) => {
-        console.log("file: ", file.name);
-
         if (file.name.startsWith(folderName)) {
+          console.log("Deleting file: ", file.name);
           const result = await file.delete();
-
-          console.log("result: ", result);
 
           return result;
         }
       })
     );
+
+    console.log("Files deleted successfully");
 
     return res.status(200).json({ message: "Files deleted successfully" });
   } catch (error) {
