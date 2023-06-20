@@ -26,18 +26,24 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const folderName = "summary-images";
 
   try {
-    const files = await bucket.getFiles({ prefix: folderName });
-    console.log("files: ", files);
+    const [files] = await bucket.getFiles({ prefix: folderName });
+    // console.log("files: ", files);
 
-    files.forEach(async (file) => {
-      console.log("file: ", file);
+    console.log("Number of files: ", files.length);
 
-      if (file.name.startsWith(folderName)) {
-        const result = await file.delete();
+    await Promise.all(
+      files.map(async (file) => {
+        console.log("file: ", file.name);
 
-        console.log("result: ", result);
-      }
-    });
+        if (file.name.startsWith(folderName)) {
+          const result = await file.delete();
+
+          console.log("result: ", result);
+
+          return result;
+        }
+      })
+    );
 
     return res.status(200).json({ message: "Files deleted successfully" });
   } catch (error) {
