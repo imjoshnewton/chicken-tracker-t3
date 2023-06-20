@@ -158,7 +158,7 @@ export default async function RootLayout({
       </head>
       <body>
         <nav
-          className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 ${
+          className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 z-50 ${
             session?.user ? "pr-3" : "pr-6"
           }`}
         >
