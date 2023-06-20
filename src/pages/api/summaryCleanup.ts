@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const folderName = "summary-images";
 
   try {
-    const [files] = await bucket.getFiles({ prefix: folderName });
+    const files = await bucket.getFiles({ prefix: folderName });
     console.log("files: ", files);
 
     files.forEach(async (file) => {
