@@ -4,8 +4,6 @@ import { type NextApiRequest, type NextApiResponse } from "next";
 
 const serviceAccount = require("./chicken-tracker-83ef8-firebase-adminsdk-dwql3-a73864962e.json");
 
-export const runtime = "edge";
-
 // Firebase initialization
 if (!admin.apps.length) {
   admin.initializeApp({
