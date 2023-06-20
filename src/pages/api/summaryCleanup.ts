@@ -2,18 +2,20 @@ import * as admin from "firebase-admin";
 import { verifySignature } from "@upstash/qstash/nextjs";
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-const firebaseConfig = {
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY
-    ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-    : undefined,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-};
+const serviceAccount = require("./chicken-tracker-83ef8-firebase-adminsdk-dwql3-a73864962e.json");
+
+// const firebaseConfig = {
+//   projectId: process.env.FIREBASE_PROJECT_ID,
+//   privateKey: process.env.FIREBASE_PRIVATE_KEY
+//     ? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+//     : undefined,
+//   clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+// };
 
 // Firebase initialization
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(firebaseConfig),
+    credential: admin.credential.cert(serviceAccount),
     storageBucket: "chicken-tracker-83ef8.appspot.com",
   });
 }
@@ -25,7 +27,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   //     return res.status(400).json({ error: "Only POST requests are allowed" });
   //   }
 
-  const folderName = "summary-image";
+  const folderName = "summary-images";
 
   try {
     const [files] = await bucket.getFiles({ prefix: folderName });
