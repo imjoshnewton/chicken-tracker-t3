@@ -210,19 +210,19 @@ export default function FlockForm({
             <button
               type="button"
               onClick={() => router.push(`/app/flocks/${flock.id}`)}
-              className="mb-1 mr-3 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+              className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
             >
-              Cancel
+              CANCEL
             </button>
           ) : (
             <></>
           )}
           <button
             type="submit"
-            className="btn mb-1 mr-3 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all hover:shadow-lg focus:outline-none md:w-auto"
+            className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
             disabled={!isDirty || !isValid}
           >
-            {flock.id ? "Save Changes" : "Create Flock"}
+            {flock.id ? "SAVE" : "CREATE"}
           </button>
         </div>
       </div>
