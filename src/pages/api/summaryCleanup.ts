@@ -19,9 +19,9 @@ if (!admin.apps.length) {
 const bucket = admin.storage().bucket();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method !== "POST") {
-    return res.status(400).json({ error: "Only POST requests are allowed" });
-  }
+  //   if (req.method !== "POST") {
+  //     return res.status(400).json({ error: "Only POST requests are allowed" });
+  //   }
 
   const folderName = "summary-image";
 
@@ -41,4 +41,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default verifySignature(handler);
+export default handler; //verifySignature(handler);
