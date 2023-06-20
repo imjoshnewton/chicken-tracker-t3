@@ -22,6 +22,7 @@ const Home = () => {
               alt="FlockNerd Track your flock - get insights"
               className="absolute top-0 bottom-0 right-0 left-0 object-cover"
               fill={true}
+              placeholder="blur"
             />
             <div className="absolute top-0 bottom-0 right-0 left-0 bg-gray-900/50"></div>
             {/* <MotionDiv delay={0}> */}
