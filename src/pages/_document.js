@@ -6,7 +6,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
-          <title>FlockNerd - Egg-ceptional Insights</title>
+          {/* <title>FlockNerd - Egg-ceptional Insights</title> */}
           <link rel="manifest" href="/manifest.json" />
           <meta name="theme-color" content="#385968" />
           <link rel="apple-touch-icon" href="/apple-icon-180.png" />

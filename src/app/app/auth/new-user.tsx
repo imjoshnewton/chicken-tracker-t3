@@ -1,10 +1,9 @@
 import Card from "../../../components/shared/Card";
-import FlockForm from "../../../components/flocks/FlockEditForm";
-import Loader from "../../../components/shared/Loader";
-import NewUserForm from "../../../components/NewUserForm";
 import { getServerSession } from "next-auth";
 import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
+import NewUserForm from "../settings/NewUserForm";
+import FlockForm from "../flocks/FlockEditForm";
 
 export default async function NewUser() {
   const session = await getServerSession(authOptions);
