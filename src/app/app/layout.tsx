@@ -32,7 +32,7 @@ export default async function RootLayout({
   });
 
   return (
-    <html>
+    <html className="lg:h-full lg:flex lg:flex-col">
       <head>
         <title>FlockNerd - Egg-ceptional Insights</title>
         <link rel="manifest" href="/manifest.json" />
@@ -173,7 +173,7 @@ export default async function RootLayout({
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </head>
-      <body>
+      <body className="lg:h-full lg:flex lg:flex-col lg:flex-1">
         <AppLayout session={session} notifications={notifications}>
           {children}
         </AppLayout>
