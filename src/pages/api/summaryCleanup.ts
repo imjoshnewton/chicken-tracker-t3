@@ -23,15 +23,15 @@ if (!admin.apps.length) {
 const bucket = admin.storage().bucket();
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  //   if (req.method !== "POST") {
-  //     return res.status(400).json({ error: "Only POST requests are allowed" });
-  //   }
-
   const folderName = "summary-images";
 
   try {
     const [files] = await bucket.getFiles({ prefix: folderName });
+    console.log("files: ", files);
+
     files.forEach(async (file) => {
+      console.log("file: ", file);
+
       if (file.name.startsWith(folderName)) {
         const result = await file.delete();
 
