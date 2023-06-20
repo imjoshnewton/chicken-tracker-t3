@@ -4,7 +4,7 @@ import { Breed } from "@prisma/client";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
@@ -99,6 +99,47 @@ const BreedModal = ({
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
+  const uploadFile = useCallback(
+    async (e: any) => {
+      // Get the file
+      const file: any = Array.from(e)[0];
+      const extension = file.type.split("/")[1];
+
+      // Makes reference to the storage bucket location
+      const uploadRef = ref(
+        storage,
+        `uploads/${user?.id}/${
+          breed ? breed.id : file.name.split(".")[0]
+        }.${extension}`
+      );
+      setUploading(true);
+
+      // Starts the upload
+      const task = uploadBytesResumable(uploadRef, file);
+
+      // Listen to updates to upload task
+      task.on("state_changed", (snapshot) => {
+        const pct = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+        setProgress(Number(pct));
+      });
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then((d) => getDownloadURL(uploadRef))
+        .then((url) => {
+          if (typeof url == "string") {
+            setDownloadURL(url);
+            setUploading(false);
+          }
+          // handler(downloadURL);
+        });
+    },
+    [user?.id, breed]
+  );
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       console.log("Watch: ", value, name, type);
@@ -112,45 +153,7 @@ const BreedModal = ({
       }
     });
     return () => subscription.unsubscribe();
-  }, [watch]);
-
-  const uploadFile = async (e: any) => {
-    // Get the file
-    const file: any = Array.from(e)[0];
-    const extension = file.type.split("/")[1];
-
-    // Makes reference to the storage bucket location
-    const uploadRef = ref(
-      storage,
-      `uploads/${user?.id}/${
-        breed ? breed.id : file.name.split(".")[0]
-      }.${extension}`
-    );
-    setUploading(true);
-
-    // Starts the upload
-    const task = uploadBytesResumable(uploadRef, file);
-
-    // Listen to updates to upload task
-    task.on("state_changed", (snapshot) => {
-      const pct = (
-        (snapshot.bytesTransferred / snapshot.totalBytes) *
-        100
-      ).toFixed(0);
-      setProgress(Number(pct));
-    });
-
-    // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
-    task
-      .then((d) => getDownloadURL(uploadRef))
-      .then((url) => {
-        if (typeof url == "string") {
-          setDownloadURL(url);
-          setUploading(false);
-        }
-        // handler(downloadURL);
-      });
-  };
+  }, [watch, uploadFile]);
 
   async function createOrUpdateBreed(breedData: Partial<Breed>) {
     console.log("Data: ", breedData);

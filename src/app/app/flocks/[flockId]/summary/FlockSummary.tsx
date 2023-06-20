@@ -10,6 +10,7 @@ import { BiImageAdd } from "react-icons/bi";
 import { storage } from "../../../../../lib/firebase";
 import { RiLoader4Fill } from "react-icons/ri";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function FlockSummary({
   summary,
@@ -176,7 +177,7 @@ export default function FlockSummary({
           {summary ? (
             <>
               <div className="flex flex-wrap items-center">
-                <img
+                <Image
                   src={summary.flock.image}
                   width="150"
                   height="150"
