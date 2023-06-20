@@ -8,6 +8,8 @@ import { useState } from "react";
 import { MdSave } from "react-icons/md";
 import { BiImageAdd } from "react-icons/bi";
 import { storage } from "../../../../../lib/firebase";
+import { RiLoader4Fill } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 export default function FlockSummary({
   summary,
@@ -38,6 +40,7 @@ export default function FlockSummary({
   };
   twoDigitMonth: string;
 }) {
+  const router = useRouter();
   const [showExpenses, setShowExpenses] = useState(true);
   const [generatingImage, setGeneratingImage] = useState(false);
   const [downloadURL, setDownloadURL] = useState<string | null>(null);
@@ -72,6 +75,7 @@ export default function FlockSummary({
         // `url` is the download URL
         // saveAs(url, getFileName("png", `${summary.flock.name}`));
         setDownloadURL(url);
+        router.push(url);
       })
       .catch((error) => {
         // Handle any errors
@@ -87,7 +91,8 @@ export default function FlockSummary({
       generateImage();
       return;
     } else {
-      saveAs(downloadURL, getFileName("png", `${summary.flock.name}`));
+      // saveAs(downloadURL, getFileName("png", `${summary.flock.name}`));
+      router.push(downloadURL);
     }
   };
 
@@ -108,20 +113,26 @@ export default function FlockSummary({
         <button
           type="button"
           onClick={downloadImage}
-          disabled={generatingImage || !!downloadURL}
+          disabled={generatingImage}
           className={
             "w-full rounded bg-[#84A8A3] px-4 py-2 text-white transition-all " +
-            (generatingImage || !!downloadURL
+            (generatingImage
               ? "cursor-not-allowed opacity-60"
               : "hover:brightness-110")
           }
         >
-          <>
-            <BiImageAdd />
-            &nbsp;Generate Image
-          </>
+          {/* <BiImageAdd />
+            &nbsp;Generate Image */}
+          {generatingImage ? (
+            <RiLoader4Fill className="animate-spin text-2xl" />
+          ) : (
+            <>
+              <MdSave />
+              &nbsp;Save as PNG
+            </>
+          )}
         </button>
-        {downloadURL && (
+        {/* {downloadURL && (
           <a
             href={downloadURL}
             download
@@ -130,7 +141,7 @@ export default function FlockSummary({
             <MdSave />
             &nbsp;Save as PNG
           </a>
-        )}
+        )} */}
         {/* <button
             type="button"
             onClick={downloadImage}
