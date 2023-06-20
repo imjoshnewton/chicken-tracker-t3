@@ -27,6 +27,9 @@ export const serverSchema = z.object({
   GCP_PRIVATE_KEY: z.string(),
   QSTASH_NEXT_SIGNING_KEY: z.string(),
   QSTASH_CURRENT_SIGNING_KEY: z.string(),
+  FIREBASE_PROJECT_ID: z.string(),
+  FIREBASE_PRIVATE_KEY: z.string(),
+  FIREBASE_CLIENT_EMAIL: z.string(),
 });
 
 /**
