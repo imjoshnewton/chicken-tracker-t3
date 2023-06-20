@@ -176,16 +176,16 @@ export default function FlockSummary({
         <Card title="FlockNerd Summary">
           {summary ? (
             <>
-              <div className="flex flex-wrap items-center">
+              <div className="flex flex-col items-center lg:flex-row">
                 <Image
                   src={summary.flock.image}
                   width="150"
                   height="150"
-                  className="flock-image aspect-square object-cover"
+                  className="flock-image mr-0 aspect-square object-cover md:mr-6"
                   alt="A user uploaded image that represents this flock"
                 />
-                <div className="ml-0 md:ml-6">
-                  <div className="flex items-center">
+                <div className="">
+                  <div className="flex items-center justify-center lg:justify-start">
                     <h1 className="mr-3 dark:text-gray-300">
                       {summary.flock.name}
                     </h1>
