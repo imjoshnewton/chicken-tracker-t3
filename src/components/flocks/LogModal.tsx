@@ -141,7 +141,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       <MdClose />
                     </button>
                   </div>
-                  <div className="relative">
+                  <div className="relative flex-auto">
                     <form
                       className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8"
                       onSubmit={async (e) => {
