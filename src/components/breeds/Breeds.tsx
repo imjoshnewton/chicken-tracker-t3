@@ -93,7 +93,7 @@ export default function Breeds({
                 duration: 0.3,
                 delay: index * 0.1,
               }}
-              className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/6 lg:pr-2 ${
+              className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/4 lg:pr-2 xl:basis-1/6 ${
                 curParams.get("breedFilter") == breed.id
                   ? "active bg-[#84A8A3]/95 text-white"
                   : null
@@ -151,7 +151,8 @@ export default function Breeds({
           );
         })}
         <button
-          className="mr-1 mt-4 mb-1 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none xl:w-auto"
+          // className="mr-1 mt-4 mb-1 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none xl:w-auto"
+          className="btn min-h-10 w-full basis-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none lg:basis-1/4 xl:w-auto xl:basis-1/6"
           type="button"
           onClick={() => {
             setShowModal(true);

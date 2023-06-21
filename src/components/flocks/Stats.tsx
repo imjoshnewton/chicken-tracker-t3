@@ -76,7 +76,7 @@ export default function Stats({
           )}
         </AnimatePresence>
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap lg:justify-between">
         <ProductionChart
           stats={stats}
           flock={flock}
