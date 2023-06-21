@@ -119,7 +119,7 @@ export default function Breeds({
                   alt={breed.name ?? ""}
                 />
               </div>
-              <div className="flex flex-col items-center justify-center p-3 dark:text-gray-300 lg:flex-1 lg:flex-row lg:justify-between lg:gap-2">
+              <div className="flex flex-col justify-center p-3 dark:text-gray-300 lg:flex-1 lg:flex-row lg:items-center lg:justify-between lg:gap-2">
                 {breed.name ? (
                   <strong>{breed.name}</strong>
                 ) : (
