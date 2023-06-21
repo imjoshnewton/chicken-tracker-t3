@@ -207,22 +207,22 @@ const BreedModal = ({
   return (
     <>
       <motion.div
-        onClick={() => closeModal()}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
-      >
-        <motion.div
-          onClick={(e) => e.stopPropagation()}
-          variants={dropIn}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl"
-        >
-          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-            <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+              onClick={() => closeModal()}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="modal-overlay fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
+            >
+              <motion.div
+                onClick={(e) => e.stopPropagation()}
+                variants={dropIn}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="relative mx-auto h-full w-full min-w-[350px] rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg"
+              >
+                <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
+                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
               <h3 className="font=semibold text-xl">
                 {breed?.id ? "Edit Breed" : "Add Birds"}
               </h3>
