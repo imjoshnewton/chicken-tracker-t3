@@ -18,6 +18,7 @@ import Loader from "@components/shared/Loader";
 
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
+import EditModal from "@components/flocks/EditModal";
 
 const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
   const router = useRouter();
@@ -94,12 +95,9 @@ const FlockLayout = ({
 }: any) => (
   <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="shadow-xl">
-      <Card
-        title="Flock Details"
-        className="pb-safe py-0 lg:pt-5 lg:pb-4"
-        key={flockId?.toString()}
-      >
-        <EditLink flockId={flockId} />
+      <Card title="Flock Details" className="" key={flockId?.toString()}>
+        {/* <EditLink flockId={flockId} /> */}
+        <EditModal session={session} flockId={flockId} />
         <FlockInfo flock={flock} flockId={flockId} />
         <Stats
           stats={stats}
