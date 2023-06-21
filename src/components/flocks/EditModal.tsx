@@ -111,7 +111,7 @@ const EditModal = ({
                       <MdClose />
                     </button>
                   </div>
-                  <div className="relative">
+                  <div className="relative flex flex-auto flex-col">
                     <FlockForm
                       flock={flock}
                       userId={session.user.id}

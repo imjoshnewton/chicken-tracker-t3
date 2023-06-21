@@ -144,7 +144,10 @@ export default function FlockForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(createOrUpdateFlock)}>
+    <form
+      onSubmit={handleSubmit(createOrUpdateFlock)}
+      className="flex flex-auto flex-col"
+    >
       <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8">
         {/* <ImageUploader /> */}
 
@@ -214,8 +217,8 @@ export default function FlockForm({
         </fieldset> */}
         <fieldset className="mb-0">
           {/* <label>Type:&nbsp;</label> */}
-          <select {...register("type")}>
-            <option value="" disabled selected>
+          <select {...register("type")} defaultValue="">
+            <option value="" disabled>
               Type
             </option>
             <option value="egg-layers">Egg Layers</option>
@@ -223,7 +226,7 @@ export default function FlockForm({
           </select>
         </fieldset>
       </div>
-      <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
+      <div className="border-blueGray-200 mt-auto flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
         {flock.id && (
           <button
             type="button"
