@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import { MdImage, MdOutlineDelete } from "react-icons/md";
+import { MdClose, MdImage, MdOutlineDelete } from "react-icons/md";
 import { RiLoader4Fill } from "react-icons/ri";
 import { storage } from "../../lib/firebase";
 import { trpc } from "../../utils/trpc";
@@ -226,14 +226,12 @@ const BreedModal = ({
               <h3 className="font=semibold text-xl">
                 {breed?.id ? "Edit Breed" : "Add Birds"}
               </h3>
-              {breed?.id ? (
-                <button
-                  onClick={() => deleteBreedClick(breed?.id)}
-                  className=" rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
-                >
-                  <MdOutlineDelete />
-                </button>
-              ) : null}
+              <button
+                onClick={() => closeModal()}
+                className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
+              >
+                <MdClose />
+              </button>
             </div>
             <div className="relative flex-auto">
               <form
@@ -324,6 +322,14 @@ const BreedModal = ({
               </form>
             </div>
             <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
+              {breed?.id && (
+                <button
+                  onClick={() => deleteBreedClick(breed?.id)}
+                  className="mr-auto rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
+                >
+                  <MdOutlineDelete />
+                </button>
+              )}
               <button
                 className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                 type="button"
