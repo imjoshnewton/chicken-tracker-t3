@@ -44,7 +44,7 @@ export default async function NewUser() {
           titleStyle="pl-8 !mb-0"
         >
           <div className="flex flex-col">
-            <section className="p-8">
+            <section className="p-8 pb-4">
               <h2 className="mb-3">Welcome!</h2>
               <p className="mb-3">
                 Let&apos;s make a new flock&nbsp;🐓🦆🦃
