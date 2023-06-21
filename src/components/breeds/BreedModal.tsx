@@ -235,7 +235,7 @@ const BreedModal = ({
             </div>
             <div className="relative flex-auto">
               <form
-                className="w-full px-8 pt-6 pb-8"
+                className="w-full p-4 lg:px-8 lg:pt-6 lg:pb-8"
                 onSubmit={handleSubmit(createOrUpdateBreed)}
               >
                 <fieldset className="mb-3">
