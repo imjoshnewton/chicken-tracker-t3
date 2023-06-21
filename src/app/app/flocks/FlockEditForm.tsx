@@ -208,13 +208,16 @@ export default function FlockForm({
             {...register("description")}
           />
         </fieldset>
-        <fieldset className="mb-0">
+        {/* <fieldset className="mb-0">
           <label>Make default:&nbsp;</label>
           <input type="checkbox" {...register("default")}></input>
-        </fieldset>
+        </fieldset> */}
         <fieldset className="mb-0">
           {/* <label>Type:&nbsp;</label> */}
           <select {...register("type")}>
+            <option value="" disabled selected>
+              Type
+            </option>
             <option value="egg-layers">Egg Layers</option>
             <option value="meat-birds">Meat Birds</option>
           </select>
