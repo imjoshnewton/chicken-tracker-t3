@@ -37,7 +37,8 @@ const Edit = async ({
     <main className="h-full p-0 lg:h-auto lg:p-8 lg:px-[3.5vw]">
       <Card
         title="Edit Flock"
-        className="pb-safe h-full py-0 lg:h-auto lg:pt-4 lg:pb-4"
+        className="pb-safe h-full !pl-0 !pr-0 lg:h-auto lg:pt-4 lg:pb-0"
+        titleStyle="pl-8 !mb-0"
       >
         <FlockForm flock={flock} userId={session.user.id}></FlockForm>
       </Card>
