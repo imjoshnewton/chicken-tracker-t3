@@ -217,7 +217,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       type="button"
                       onClick={closeModal}
                     >
-                      Close
+                      CANCEL
                     </button>
                     <button
                       className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
