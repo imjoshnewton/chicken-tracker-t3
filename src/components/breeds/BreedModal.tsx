@@ -64,7 +64,7 @@ const BreedModal = ({
 
   const dropIn = {
     hidden: {
-      y: "-100vh",
+      y: "100%",
       opacity: 0,
     },
     visible: {
@@ -78,7 +78,7 @@ const BreedModal = ({
       },
     },
     exit: {
-      y: "-100vh",
+      y: "100%",
       opacity: 0,
       transition: {
         duration: 0.3,
