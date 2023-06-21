@@ -55,9 +55,12 @@ export const breedsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.breed.delete({
+      return await ctx.prisma.breed.update({
         where: {
           id: input.id,
+        },
+        data: {
+          deleted: true,
         },
       });
     }),

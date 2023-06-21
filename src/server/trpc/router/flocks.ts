@@ -17,6 +17,9 @@ export const flocksRouter = router({
         },
         include: {
           breeds: {
+            where: {
+              deleted: false,
+            },
             orderBy: {
               // name: "asc",
               breed: "asc",

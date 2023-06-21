@@ -86,6 +86,7 @@ model Breed {
   count             Int
   imageUrl          String?  @db.Text
   averageProduction Float
+  deleted           Boolean  @default(false)
   flockId           String
   flock             Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
   EggLog            EggLog[]
