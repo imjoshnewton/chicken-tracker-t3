@@ -15,11 +15,15 @@ import { createFlock, updateFlock } from "../server";
 export default function FlockForm({
   flock,
   userId,
+  onComplete,
+  onCancel,
 }: {
   flock: Flock & {
     breeds: Breed[];
   };
   userId: string;
+  onComplete?: () => void;
+  onCancel?: () => void;
 }) {
   const router = useRouter();
   const { register, handleSubmit, formState, reset, watch } = useForm({
@@ -112,7 +116,10 @@ export default function FlockForm({
             error: (err) => `This just happened: ${err.toString()}`,
           }
         )
-        .then((flock) => router.push(`/app/flocks/${flock.id}`));
+        .then((flock) => {
+          if (onComplete) onComplete();
+          else router.push(`/app/flocks/${flock.id}`);
+        });
     } else {
       toast
         .promise(
@@ -129,16 +136,19 @@ export default function FlockForm({
             error: (err) => `This just happened: ${err.toString()}`,
           }
         )
-        .then((flock) => router.push(`/app/flocks/${flock.id}`));
+        .then((flock) => {
+          if (onComplete) onComplete();
+          else router.push(`/app/flocks/${flock.id}`);
+        });
     }
   };
 
   return (
     <form onSubmit={handleSubmit(createOrUpdateFlock)}>
-      <div>
+      <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8">
         {/* <ImageUploader /> */}
 
-        <fieldset className="mb-3">
+        <fieldset className="mb-0">
           {uploading ? (
             <>
               <Loader show={true} />
@@ -178,56 +188,58 @@ export default function FlockForm({
           </p>
         </fieldset>
 
-        <fieldset className="mb-3">
-          <label>Name</label>
+        <fieldset className="mb-0">
+          {/* <label>Name</label> */}
           <input
             className="w-full appearance-none rounded border py-2 px-1 text-black"
+            placeholder="Name"
             // name='name'
             type="text"
             {...register("name")}
           />
         </fieldset>
-        <fieldset className="mb-3">
-          <label>Description</label>
+        <fieldset className="mb-0">
+          {/* <label>Description</label> */}
           <input
             className="w-full appearance-none rounded border py-2 px-1 text-black"
             // name='description'
+            placeholder="Description"
             type="text"
             {...register("description")}
           />
         </fieldset>
-        <fieldset className="mb-6">
+        <fieldset className="mb-0">
           <label>Make default:&nbsp;</label>
           <input type="checkbox" {...register("default")}></input>
         </fieldset>
-        <fieldset className="mb-6">
-          <label>Type:&nbsp;</label>
+        <fieldset className="mb-0">
+          {/* <label>Type:&nbsp;</label> */}
           <select {...register("type")}>
             <option value="egg-layers">Egg Layers</option>
             <option value="meat-birds">Meat Birds</option>
           </select>
         </fieldset>
-
-        <div className="mt-4 flex items-center">
-          {flock.id ? (
-            <button
-              type="button"
-              onClick={() => router.push(`/app/flocks/${flock.id}`)}
-              className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
-            >
-              CANCEL
-            </button>
-          ) : (
-            <></>
-          )}
+      </div>
+      <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
+        {flock.id && (
           <button
-            type="submit"
-            className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
-            disabled={!isDirty || !isValid}
+            type="button"
+            onClick={() => {
+              if (onCancel) onCancel();
+              else router.push(`/app/flocks/${flock.id}`);
+            }}
+            className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
           >
-            {flock.id ? "SAVE" : "CREATE"}
+            CANCEL
           </button>
-        </div>
+        )}
+        <button
+          type="submit"
+          className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+          disabled={!isDirty || !isValid}
+        >
+          {flock.id ? "SAVE" : "CREATE"}
+        </button>
       </div>
     </form>
   );
