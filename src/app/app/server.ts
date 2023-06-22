@@ -77,7 +77,12 @@ export async function updateFlock(input: {
     },
   });
 
+  console.log("Revalidating paths...");
+
   revalidatePath(`/app/flocks/`);
+  revalidatePath(`/app/flocks/[flockId]`);
+
+  console.log("Revalidated paths.");
 
   return flock;
 }
