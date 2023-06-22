@@ -1,12 +1,8 @@
 import { useState } from "react";
 import { trpc } from "../../utils/trpc";
-import { MdClose, MdOutlineEdit, MdOutlineEditNote } from "react-icons/md";
-import toast from "react-hot-toast";
+import { MdClose, MdOutlineEdit } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
-import { RiLoader4Fill } from "react-icons/ri";
-import { formatDate, handleTimezone } from "./date-utils";
-import { format } from "date-fns";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import FlockForm from "src/app/app/flocks/FlockEditForm";
 import { Session } from "next-auth";
 // import Datepicker from "react-tailwindcss-datepicker";
@@ -22,6 +18,7 @@ const EditModal = ({
   session: Session;
   flockId: string;
 }) => {
+  const router = useRouter();
   const [showModal, setShowModal] = useState(false);
 
   const utils = trpc.useContext();

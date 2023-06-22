@@ -11,6 +11,7 @@ import { MdImage } from "react-icons/md";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { createFlock, updateFlock } from "../server";
+import { trpc } from "@utils/trpc";
 
 export default function FlockForm({
   flock,
@@ -36,6 +37,8 @@ export default function FlockForm({
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
+
+  const utils = trpc.useContext();
 
   // TO-DO: move this to the libs folder
   const uploadFile = useCallback(
@@ -116,7 +119,8 @@ export default function FlockForm({
             error: (err) => `This just happened: ${err.toString()}`,
           }
         )
-        .then((flock) => {
+        .then(async (flock) => {
+          await utils.flocks.invalidate();
           if (onComplete) onComplete();
           else router.push(`/app/flocks/${flock.id}`);
         });
