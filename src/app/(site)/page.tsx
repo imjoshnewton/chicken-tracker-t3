@@ -3,6 +3,8 @@ import Link from "next/link";
 import header from "../../../public/site-header-v2.png";
 import stats from "../../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../../public/FlockNerd-logo-square.png";
+import eggs from "../../../public/track-eggs.png";
+import expenses from "../../../public/track-expenses.png";
 // import { useRef } from "react";
 // import { MdArrowDownward } from "react-icons/md";
 // import { motion } from "framer-motion";
@@ -74,7 +76,7 @@ const Home = () => {
           //   ref={ref}
         >
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
-            <video
+            {/* <video
               //   initial={{ opacity: 0, y: 40 }}
               //   whileInView={{ opacity: 1, y: 0 }}
               //   transition={{ duration: 0.5, delay: 0 }}
@@ -86,14 +88,26 @@ const Home = () => {
             >
               <source src="/FlockNerd-Demo.webm" type="video/webm" />
               <source src="/FlockNerd-Demo.mp4" type="video/mp4" />
-            </video>
+            </video> */}
+            <div className="flex flex-auto flex-wrap gap-1 md:basis-2/5 md:flex-nowrap">
+              <Image
+                src={eggs}
+                alt="Track egg production with FlockNerd"
+                className="flex-1"
+              />
+              <Image
+                src={expenses}
+                alt="Track expenses with FlockNerd"
+                className="flex-1"
+              />
+            </div>
 
             <div
               // initial={{ opacity: 0, x: 200 }}
               // whileInView={{ opacity: 1, x: 0 }}
               // transition={{ duration: 0.5, delay: 0.15 }}
               // viewport={{ once: true }}
-              className="flex flex-col"
+              className="flex flex-1 flex-col md:basis-3/5"
             >
               <h2 className="mb-4 text-3xl">Track Your Flock 🐓🦆🦃</h2>
               <p className="pb-4">
@@ -189,7 +203,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <section className="flex w-full flex-col items-center justify-center gap-12 bg-[#fcf2ec] py-14">
+        <section className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <PWAExample />
 
