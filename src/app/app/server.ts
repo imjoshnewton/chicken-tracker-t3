@@ -78,7 +78,7 @@ export async function updateFlock(input: {
     },
   });
 
-  revalidatePath(`/app/flocks`);
+  revalidatePath(`/app/flocks/`);
   // redirect(`/app/flocks/${flock.id}`);
 
   return flock;
