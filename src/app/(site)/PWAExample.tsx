@@ -43,8 +43,8 @@ const PWAExample = () => {
         >
           {/* <strong className="text-xl">iOS</strong> */}
           <video autoPlay loop muted playsInline className="flex-1" key="iOS">
-            <source src="/FlockNerd-Installation.webm" type="video/webm" />
-            <source src="/FlockNerd-Installation.mp4" type="video/mp4" />
+            <source src="/FlockNerd-Installation-v2.webm" type="video/webm" />
+            <source src="/FlockNerd-Installation-v2.mp4" type="video/mp4" />
           </video>
         </div>
         {/*) : (*/}
@@ -65,10 +65,13 @@ const PWAExample = () => {
             key="Android"
           >
             <source
-              src="/FlockNerd-AndroidInstallation.webm"
+              src="/FlockNerd-AndroidInstallation-v2.webm"
               type="video/webm"
             />
-            <source src="/FlockNerd-AndroidInstallation.mp4" type="video/mp4" />
+            <source
+              src="/FlockNerd-AndroidInstallation-v2.mp4"
+              type="video/mp4"
+            />
           </video>
         </div>
         {/* )} */}

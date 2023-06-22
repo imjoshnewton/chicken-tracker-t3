@@ -5,9 +5,6 @@ import stats from "../../../public/FlockNerd-Stats-mobile.png";
 import logo from "../../../public/FlockNerd-logo-square.png";
 import eggs from "../../../public/track-eggs.png";
 import expenses from "../../../public/track-expenses.png";
-// import { useRef } from "react";
-// import { MdArrowDownward } from "react-icons/md";
-// import { motion } from "framer-motion";
 import PWAExample from "./PWAExample";
 import LearnMoreButton from "./LearnMoreButton";
 
@@ -203,7 +200,7 @@ const Home = () => {
             </div>
           </div>
         </section>
-        <section className="flex w-full flex-col items-center justify-center gap-12 bg-gray-300 py-14">
+        <section className="flex w-full flex-col items-center justify-center gap-12 bg-[#fcf2ec] py-14">
           <div className="flex max-w-5xl flex-wrap items-center justify-center gap-8 px-8 lg:flex-nowrap lg:gap-14">
             <PWAExample />
 
