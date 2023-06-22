@@ -51,8 +51,7 @@ export async function createFlock(input: {
     },
   });
 
-  revalidatePath(`/app/flocks`);
-  // redirect(`/app/flocks/${flock.id}`);
+  revalidatePath(`/app/flocks/`);
 
   return flock;
 }
@@ -79,7 +78,6 @@ export async function updateFlock(input: {
   });
 
   revalidatePath(`/app/flocks/`);
-  // redirect(`/app/flocks/${flock.id}`);
 
   return flock;
 }
