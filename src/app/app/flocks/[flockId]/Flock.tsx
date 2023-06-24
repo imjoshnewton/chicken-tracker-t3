@@ -99,7 +99,7 @@ const FlockLayout = ({
         {/* <EditLink flockId={flockId} /> */}
         <FlockActions flockId={flockId?.toString()} session={session} />
         <FlockInfo flock={flock} flockId={flockId} />
-        <TaskList tasks={flock?.tasks} />
+        <TaskList tasks={flock?.tasks} flockId={flockId} userId={session.user.id!}/>
         <Stats
           stats={stats}
           flock={flock}
