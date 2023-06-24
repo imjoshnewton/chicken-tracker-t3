@@ -169,7 +169,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
       </motion.ul>
       {/* Show completed tasks button */}
 
-      {tasks.length > 0 && completedTasks.length > 0 && (
+      {tasks.length > 0 && completedTasks.length > 0 && isActive && (
         <button
           className="background-transparent mx-auto rounded px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
           onClick={() => setShowCompleted(!showCompleted)}
