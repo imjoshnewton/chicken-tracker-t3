@@ -1,5 +1,7 @@
 "use server";
 
+import { Task } from "@prisma/client";
+import { addDays, addMonths, addWeeks } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../server/db/client";
 // import toast from "react-hot-toast";
@@ -103,6 +105,7 @@ export async function updateUser(input: {
   });
 
   revalidatePath(`/app/settings`);
+  revalidatePath(`/app/`);
 
   return user;
 }
@@ -122,4 +125,168 @@ export async function markNotificationAsRead(input: {
   revalidatePath(`/app`);
 
   return notification;
+}
+
+// Create new task
+export async function createNewTask(input: {
+  title: string;
+  description: string;
+  dueDate: Date;
+  recurrence: string;
+  flockId: string;
+  userId: string;
+}) {
+  const task = await prisma.task.create({
+    data: {
+      title: input.title,
+      description: input.description,
+      dueDate: input.dueDate,
+      flockId: input.flockId,
+      userId: input.userId,
+      recurrence: input.recurrence,
+    },
+  });
+
+  // revalidatePath(`/app/flocks/[flockId]`);
+  revalidatePath(`/app/tasks`);
+
+  return task;
+}
+
+// Delete task
+export async function deleteTask(input: { taskId: string }) {
+  const task = await prisma.task.delete({
+    where: {
+      id: input.taskId,
+    },
+  });
+
+  revalidatePath(`/app/tasks`);
+
+  return task;
+}
+
+// Update task
+export async function updateTask(input: {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: Date;
+  recurrence: string;
+  status: string;
+  completed: boolean;
+}) {
+  const task = await prisma.task.update({
+    where: {
+      id: input.id,
+    },
+    data: {
+      title: input.title,
+      description: input.description,
+      dueDate: input.dueDate,
+      recurrence: input.recurrence,
+      status: input.status,
+      completed: input.completed,
+    },
+  });
+
+  revalidatePath(`/app/tasks`);
+
+  return task;
+}
+
+// Mark task as complete
+export async function markTaskAsComplete(input: {
+  taskId: string;
+  recurrence: string;
+}) {
+  let task: Task;
+
+  switch (input.recurrence) {
+    case "daily":
+      task = await prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          completed: true,
+        },
+      });
+
+      await prisma.task.create({
+        data: {
+          title: task.title,
+          description: task.description,
+          dueDate: addDays(task.dueDate, 1),
+          recurrence: task.recurrence,
+          status: "active",
+          completed: false,
+          flockId: task.flockId,
+          userId: task.userId,
+        },
+      });
+
+      break;
+    case "weekly":
+      task = await prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          completed: true,
+        },
+      });
+
+      await prisma.task.create({
+        data: {
+          title: task.title,
+          description: task.description,
+          dueDate: addWeeks(task.dueDate, 1),
+          recurrence: task.recurrence,
+          status: "active",
+          completed: false,
+          flockId: task.flockId,
+          userId: task.userId,
+        },
+      });
+
+      break;
+    case "monthly":
+      task = await prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          completed: true,
+        },
+      });
+
+      await prisma.task.create({
+        data: {
+          title: task.title,
+          description: task.description,
+          dueDate: addMonths(task.dueDate, 1),
+          recurrence: task.recurrence,
+          status: "active",
+          completed: false,
+          flockId: task.flockId,
+          userId: task.userId,
+        },
+      });
+
+      break;
+    default:
+      task = await prisma.task.update({
+        where: {
+          id: input.taskId,
+        },
+        data: {
+          completed: true,
+        },
+      });
+  }
+
+  revalidatePath(`/app/tasks`);
+
+  return task;
 }

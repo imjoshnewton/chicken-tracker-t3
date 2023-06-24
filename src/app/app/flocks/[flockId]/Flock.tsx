@@ -2,10 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { MdOutlineEdit } from "react-icons/md";
 
 import type { Session } from "next-auth";
 
@@ -19,6 +17,8 @@ import Loader from "@components/shared/Loader";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
 import EditModal from "@components/flocks/EditModal";
+import TaskList from "@components/tasks/Tasks";
+import AddTaskModal from "@components/tasks/AddTaskModal";
 
 const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
   const router = useRouter();
@@ -97,8 +97,9 @@ const FlockLayout = ({
     <div className="shadow-xl">
       <Card title="Flock Details" className="" key={flockId?.toString()}>
         {/* <EditLink flockId={flockId} /> */}
-        <EditModal session={session} flockId={flockId} />
+        <FlockActions flockId={flockId?.toString()} session={session} />
         <FlockInfo flock={flock} flockId={flockId} />
+        <TaskList tasks={flock?.tasks} />
         <Stats
           stats={stats}
           flock={flock}
@@ -121,14 +122,17 @@ const FlockLayout = ({
   </main>
 );
 
-const EditLink = ({ flockId }: any) => (
-  <Link
-    href={`/app/flocks/${flockId}/edit`}
-    className="absolute top-0 right-0 mt-3 mr-5 flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200 md:mt-2"
-  >
-    Edit&nbsp;&nbsp;
-    <MdOutlineEdit />
-  </Link>
+const FlockActions = ({
+  flockId,
+  session,
+}: {
+  flockId: string;
+  session: Session;
+}) => (
+  <div className="absolute top-0 right-0 mt-3 mr-5 flex self-start md:mt-2">
+    <AddTaskModal session={session} flockId={flockId} />
+    <EditModal session={session} flockId={flockId} />
+  </div>
 );
 
 const FlockInfo = ({ flock, flockId }: any) => (

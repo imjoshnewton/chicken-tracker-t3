@@ -52,6 +52,7 @@ model User {
   sessions      Session[]
   flocks        Flock[]
   notification  Notification[]
+  tasks         Task[]
 }
 
 model VerificationToken {
@@ -74,6 +75,7 @@ model Flock {
   breeds      Breed[]
   logs        EggLog[]
   expenses    Expense[]
+  tasks       Task[]
 
   @@index([userId])
 }
@@ -106,6 +108,24 @@ model EggLog {
 
   @@index([flockId])
   @@index([breedId])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  dueDate     DateTime
+  recurrence  String
+  status      String    @default("Incomplete")
+  completed   Boolean   @default(false)
+  completedAt DateTime? @updatedAt
+  userId      String
+  User        User      @relation(fields: [userId], references: [id])
+  flockId     String
+  Flock       Flock     @relation(fields: [flockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([flockId])
 }
 
 model Expense {

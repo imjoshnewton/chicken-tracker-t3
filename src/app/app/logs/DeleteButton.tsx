@@ -23,13 +23,15 @@ export default function DeleteButton({ id }: { id: string }) {
       // }
       onClick={async () => {
         setLoading(true);
-        await toast.promise(deleteLog(id), {
-          loading: "Deleting log",
-          success: "Log deleted successfully",
-          error: "Something went wrong",
-        });
+        await toast
+          .promise(deleteLog(id), {
+            loading: "Deleting log",
+            success: "Log deleted successfully",
+            error: "Something went wrong",
+          })
+          .finally(() => setLoading(false));
         // await deleteLog(id);
-        setLoading(false);
+        // setLoading(false);
       }}
       disabled={loading}
     >

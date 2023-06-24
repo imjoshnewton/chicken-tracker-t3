@@ -25,6 +25,11 @@ export const flocksRouter = router({
               breed: "asc",
             },
           },
+          tasks: {
+            orderBy: {
+              completed: "asc",
+            },
+          },
         },
       });
     }),

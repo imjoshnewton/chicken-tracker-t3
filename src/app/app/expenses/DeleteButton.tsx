@@ -14,12 +14,14 @@ export default function DeleteButton({ id }: { id: string }) {
       disabled={loading}
       onClick={async () => {
         setLoading(true);
-        await toast.promise(deleteExpense(id), {
-          loading: "Deleting log",
-          success: "Log deleted successfully",
-          error: "Something went wrong",
-        });
-        setLoading(false);
+        await toast
+          .promise(deleteExpense(id), {
+            loading: "Deleting log",
+            success: "Log deleted successfully",
+            error: "Something went wrong",
+          })
+          .finally(() => setLoading(false));
+        // setLoading(false);
       }}
     >
       {loading ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}

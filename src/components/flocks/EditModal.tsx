@@ -69,7 +69,7 @@ const EditModal = ({
       <motion.button
         // whileHover={{ scale: 1.05 }}
         // whileTap={{ scale: 0.95 }}
-        className="absolute top-0 right-0 mt-3 mr-5 flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200 md:mt-2"
+        className="flex items-center p-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
         type="button"
         onClick={() => setShowModal(true)}
       >

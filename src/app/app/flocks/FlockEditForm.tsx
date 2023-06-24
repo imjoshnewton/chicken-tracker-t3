@@ -1,8 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { storage } from "../../../lib/firebase";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Breed, Flock } from "@prisma/client";
@@ -39,57 +37,6 @@ export default function FlockForm({
   const [downloadURL, setDownloadURL] = useState("");
 
   const utils = trpc.useContext();
-
-  // TO-DO: move this to the libs folder
-  const uploadFile = useCallback(
-    async (e: any) => {
-      // Get the file
-      const file: any = Array.from(e)[0];
-      const extension = file.type.split("/")[1];
-
-      // Makes reference to the storage bucket location
-      const uploadRef = ref(
-        storage,
-        `uploads/${userId}/${flock.id}.${extension}`
-      );
-      setUploading(true);
-
-      // Starts the upload
-      const task = uploadBytesResumable(uploadRef, file);
-
-      // Listen to updates to upload task
-      task.on("state_changed", (snapshot) => {
-        const pct = (
-          (snapshot.bytesTransferred / snapshot.totalBytes) *
-          100
-        ).toFixed(0);
-        setProgress(Number(pct));
-      });
-
-      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
-      task
-        .then((d) => getDownloadURL(uploadRef))
-        .then((url) => {
-          if (typeof url == "string") {
-            setDownloadURL(url);
-            setUploading(false);
-          }
-          // handler(downloadURL);
-        });
-    },
-    [flock.id, userId]
-  );
-
-  useEffect(() => {
-    const subscription = watch((value, { name, type }) => {
-      console.log("Watch: ", value, name, type);
-
-      if (name == "image" && type == "change") {
-        uploadFile(value.image);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [watch, uploadFile]);
 
   const createOrUpdateFlock = (
     flockData: Flock & { breeds: Breed[] } & { default: boolean }
