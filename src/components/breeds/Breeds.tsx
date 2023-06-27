@@ -48,7 +48,7 @@ export default function Breeds({
 
   if (!breeds) {
     return (
-      <div className="flex basis-[48%] items-center justify-center">
+      <div className="flex h-full min-h-[75vh] items-center justify-center">
         <Loader show={true}></Loader>
       </div>
     );

@@ -74,7 +74,7 @@ const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
 };
 
 const LoaderLayout = () => (
-  <main className="flex h-full flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
+  <main className="flex h-full min-h-[75vh] flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="flex h-full items-center justify-center">
       <Loader show={true} />
     </div>
@@ -99,7 +99,11 @@ const FlockLayout = ({
         {/* <EditLink flockId={flockId} /> */}
         <FlockActions flockId={flockId?.toString()} session={session} />
         <FlockInfo flock={flock} flockId={flockId} />
-        <TaskList tasks={flock?.tasks} flockId={flockId} userId={session.user.id!}/>
+        <TaskList
+          tasks={flock?.tasks}
+          flockId={flockId}
+          userId={session.user.id!}
+        />
         <Stats
           stats={stats}
           flock={flock}
