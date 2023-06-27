@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { Task } from "@prisma/client";
-import { MdOutlineExpandLess, MdOutlineExpandMore } from "react-icons/md";
+import {
+  MdOutlineDeleteOutline,
+  MdOutlineExpandLess,
+  MdOutlineExpandMore,
+} from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";
@@ -98,7 +102,12 @@ const TaskItem: React.FC<{
         {deleting ? (
           <RiLoader4Fill className="animate-spin text-2xl" />
         ) : (
-          "Delete"
+          <>
+            <span className="hidden lg:block">Delete</span>
+            <span className="lg:hidden">
+              <MdOutlineDeleteOutline className="text-xl" />
+            </span>
+          </>
         )}
       </button>
     </motion.li>
