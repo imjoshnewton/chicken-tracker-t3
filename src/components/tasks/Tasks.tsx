@@ -121,62 +121,65 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
         onClick={() => setIsActive(!isActive)}
       >
         Tasks
-        {isActive ? (
-          <MdOutlineExpandLess className="inline lg:hidden" />
-        ) : (
-          <MdOutlineExpandMore className="inline lg:hidden" />
-        )}
+        <MdOutlineExpandMore
+          className={
+            "inline transition-all lg:hidden " +
+            (isActive ? "rotate-180" : "rotate-0")
+          }
+        />
       </h2>
-      <motion.ul
-        className={
-          isActive
-            ? "flex flex-col gap-y-2 divide-y divide-gray-200 dark:text-gray-300 lg:gap-x-2"
-            : "hidden flex-col gap-y-2 divide-y divide-gray-200 dark:text-gray-300 lg:flex lg:gap-x-2"
-        }
-      >
-        {tasks.length > 0 ? (
-          incompleteTasks.length > 0 ? (
-            incompleteTasks.map((task, index) => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                index={index}
-                onClick={() => {
-                  setSellectedTask(task);
-                  setShowModal(true);
-                }}
-              />
-            ))
-          ) : (
-            !showCompleted && (
-              <p className="py-2 text-center">
-                You&apos;ve completed all of your tasks! 👍
-              </p>
-            )
-          )
-        ) : (
-          <p className="py-2 text-center">No tasks available.</p>
+      <AnimatePresence>
+        {isActive && (
+          <motion.ul
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-wrap justify-between gap-y-4 overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
+          >
+            {tasks.length > 0 ? (
+              incompleteTasks.length > 0 ? (
+                incompleteTasks.map((task, index) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    index={index}
+                    onClick={() => {
+                      setSellectedTask(task);
+                      setShowModal(true);
+                    }}
+                  />
+                ))
+              ) : (
+                !showCompleted && (
+                  <p className="w-full py-2 text-center">
+                    You&apos;ve completed all of your tasks! 👍
+                  </p>
+                )
+              )
+            ) : (
+              <p className="py-2 text-center">No tasks available.</p>
+            )}
+            {showCompleted &&
+              completedTasks.map((task, index) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  index={index}
+                  onClick={() => void 0}
+                />
+              ))}
+            {tasks.length > 0 && completedTasks.length > 0 && isActive && (
+              <button
+                className="background-transparent mx-auto rounded px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
+                onClick={() => setShowCompleted(!showCompleted)}
+              >
+                {showCompleted ? "Hide" : "Show"} completed tasks
+              </button>
+            )}
+          </motion.ul>
         )}
-        {showCompleted &&
-          completedTasks.map((task, index) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              index={index}
-              onClick={() => void 0}
-            />
-          ))}
-      </motion.ul>
-      {/* Show completed tasks button */}
-
-      {tasks.length > 0 && completedTasks.length > 0 && isActive && (
-        <button
-          className="background-transparent mx-auto rounded px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
-          onClick={() => setShowCompleted(!showCompleted)}
-        >
-          {showCompleted ? "Hide" : "Show"} completed tasks
-        </button>
-      )}
+      </AnimatePresence>
       <AnimatePresence initial={false}>
         {showModal && (
           <TaskModal

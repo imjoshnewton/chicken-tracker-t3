@@ -64,37 +64,109 @@ export default function Breeds({
         <span className="hidden sm:hidden md:hidden lg:block">
           {totalBirds}
         </span>
-        {isActive ? (
-          <MdOutlineExpandLess className="inline lg:hidden" />
-        ) : (
-          <MdOutlineExpandMore className="inline lg:hidden" />
-        )}
+        <MdOutlineExpandMore
+          className={
+            "inline transition-all lg:hidden " +
+            (isActive ? "rotate-180" : "rotate-0")
+          }
+        />
       </h2>
-      <motion.ul
-  initial={{ height: 0, opacity: 0 }}
-  animate={{ height: "auto", opacity: 1 }}
-  exit={{ height: 0, opacity: 0 }}
-  className="flex flex-wrap justify-between gap-y-4 dark:text-gray-300 lg:gap-x-2"
->
-  <AnimatePresence>
-    {isActive && (
-      <>
-        {breeds.length < 1 && (
-          <div className="basis-full text-center">
-            <p className="mb-3">Your flock doesn&apos;t have any birds...</p>
-            <p className="mb-4">Click here to add some 👇</p>
-          </div>
+      <AnimatePresence>
+        {isActive && (
+          <motion.ul
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="flex flex-wrap justify-between gap-y-4 dark:text-gray-300 lg:gap-x-2"
+          >
+            {breeds.length < 1 && (
+              <div className="basis-full text-center">
+                <p className="mb-3">
+                  Your flock doesn&apos;t have any birds...
+                </p>
+                <p className="mb-4">Click here to add some 👇</p>
+              </div>
+            )}
+            {breeds?.map((breed: Breed, index: number) => {
+              return (
+                <motion.li
+                  // initial={{ opacity: 0 }}
+                  // animate={{ opacity: 1 }}
+                  // transition={{
+                  //   ease: "easeInOut",
+                  //   duration: 0.3,
+                  //   delay: index * 0.1,
+                  // }}
+                  className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/4 lg:pr-2 xl:basis-1/6 ${
+                    curParams.get("breedFilter") == breed.id
+                      ? "active bg-[#84A8A3]/95 text-white"
+                      : null
+                  }`}
+                  key={breed.id}
+                  onClick={() => {
+                    if (curParams.get("breedFilter") == breed.id) {
+                      curParams.delete("breedFilter");
+                      router.replace(`${path}?${curParams.toString()}`);
+                    } else {
+                      curParams.set("breedFilter", breed.id);
+                      router.replace(`${path}?${curParams.toString()}`);
+                    }
+                  }}
+                >
+                  <div className="relative h-full basis-1/5">
+                    <Image
+                      src={breed.imageUrl!}
+                      fill={true}
+                      className="rounded-l-lg object-cover"
+                      alt={breed.name ?? ""}
+                    />
+                  </div>
+                  <div className="flex flex-col justify-center p-3 dark:text-gray-300 lg:flex-1 lg:flex-row lg:items-center lg:justify-between lg:gap-2">
+                    {breed.name ? (
+                      <strong>{breed.name}</strong>
+                    ) : (
+                      <strong>{breed.breed}</strong>
+                    )}
+                    {breed.count > 1 && (
+                      <div className="block">
+                        <strong className="inline lg:hidden">Count: </strong>
+                        {breed.count}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    className="ml-auto h-8 w-8 rounded-lg p-0 text-gray-700 opacity-100 transition-all hover:!bg-gray-900/40 hover:text-gray-700 hover:shadow group-hover:bg-gray-900/10 group-hover:opacity-100 group-[.active]:text-gray-300 group-[.active]:hover:border-white group-[.active]:hover:text-white md:absolute md:h-full md:w-1/5 md:rounded-l-lg md:rounded-r-none md:text-gray-300 md:hover:text-white lg:opacity-0"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSellectedBreed(breed);
+                      setShowModal(true);
+                    }}
+                  >
+                    <MdOutlineEdit />
+                  </button>
+                  <MdStar
+                    className={`absolute -top-3 -right-3 text-2xl text-accent2 ${
+                      breed.id == top ? "" : "hidden"
+                    }`}
+                  />
+                </motion.li>
+              );
+            })}
+            <button
+              className="btn min-h-10 w-full basis-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none lg:basis-1/4 xl:w-auto xl:basis-1/6"
+              type="button"
+              onClick={() => {
+                setShowModal(true);
+                setSellectedBreed(null);
+              }}
+            >
+              <MdAdd className="text-2xl" />
+              &nbsp;Add Birds
+            </button>
+          </motion.ul>
         )}
-        {breeds?.map((breed: Breed, index: number) => {
-          //...existing code
-        })}
-        <button
-          //...existing code
-        </button>
-      </>
-    )}
-  </AnimatePresence>
-</motion.ul>
+      </AnimatePresence>
       <AnimatePresence initial={false}>
         {showModal && (
           <BreedModal
