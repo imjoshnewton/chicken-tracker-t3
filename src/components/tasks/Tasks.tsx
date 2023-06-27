@@ -79,14 +79,16 @@ const TaskItem: React.FC<{
           handleMarkComplete();
         }}
       />
-      <h3 className="flex-grow text-lg font-bold">{task.title}</h3>
+      <div className="flex-grow ">
+        <h3 className="text-lg font-bold">{task.title}</h3>
+        <p className="text-sm">{task.dueDate.toLocaleDateString()}</p>
+      </div>
       {task.recurrence && task.recurrence !== "" && (
         <p className="text-sm">{task.recurrence}</p>
       )}
-      <p className="mx-10 text-sm">{task.dueDate.toLocaleDateString()}</p>
 
       <button
-        className="rounded bg-red-500 py-1 px-2 text-white opacity-0 transition duration-200 ease-in-out hover:cursor-pointer hover:shadow-lg group-hover:opacity-100"
+        className="opacity-1 rounded bg-red-500 py-1 px-2 text-white transition duration-200 ease-in-out hover:cursor-pointer hover:shadow-lg group-hover:opacity-100 lg:opacity-0"
         disabled={deleting}
         onClick={(e) => {
           e.stopPropagation();
@@ -135,7 +137,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="flex flex-wrap justify-between gap-y-4 overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
+            className="flex flex-wrap justify-between gap-y-4 divide-y overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
           >
             {tasks.length > 0 ? (
               incompleteTasks.length > 0 ? (
@@ -171,7 +173,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
               ))}
             {tasks.length > 0 && completedTasks.length > 0 && isActive && (
               <button
-                className="background-transparent mx-auto rounded px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
+                className="background-transparent mx-auto rounded !border-t-0 px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
                 onClick={() => setShowCompleted(!showCompleted)}
               >
                 {showCompleted ? "Hide" : "Show"} completed tasks
