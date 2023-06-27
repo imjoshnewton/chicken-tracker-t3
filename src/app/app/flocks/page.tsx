@@ -31,7 +31,11 @@ const Flocks = async ({
     return (
       <main>
         <div className="shadow">
-          <Card title="New FLock">
+          <Card
+            title="New FLock"
+            className="pb-safe h-full !pl-0 !pr-0 lg:h-auto lg:pt-4 lg:pb-0"
+            titleStyle="pl-8 !mb-0"
+          >
             <FlockForm
               flock={{
                 id: "",
@@ -54,7 +58,7 @@ const Flocks = async ({
   return (
     <main className="flex flex-col gap-4">
       <div className="flex items-center justify-end">
-        <AddFlockButton />
+        <AddFlockButton session={session} />
       </div>
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {flocks?.map((flock, index) => {
