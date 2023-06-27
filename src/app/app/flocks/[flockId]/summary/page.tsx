@@ -2,6 +2,11 @@ import { addMonths, getDaysInMonth } from "date-fns";
 import { prisma } from "../../../../../server/db/client";
 import FlockSummary from "./FlockSummary";
 
+export const metadata = {
+  title: "FlockNerd - Flock Summary",
+  description: "Flock Stats for Nerds",
+};
+
 const Summary = async ({
   params,
   searchParams,

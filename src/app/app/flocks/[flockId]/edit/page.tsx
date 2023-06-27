@@ -5,6 +5,11 @@ import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
 import { prisma } from "../../../../../server/db/client";
 
+export const metadata = {
+  title: "FlockNerd - Edit Flock",
+  description: "Flock Stats for Nerds",
+};
+
 const Edit = async ({
   params,
   searchParams,

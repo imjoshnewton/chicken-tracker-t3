@@ -3,6 +3,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
 
+export const metadata = {
+  title: "FlockNerd - App Index",
+  description: "Flock Stats for Nerds",
+};
+
 const AppHome = async () => {
   const session = await getServerSession(authOptions);
 

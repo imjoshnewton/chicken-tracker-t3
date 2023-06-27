@@ -4,6 +4,11 @@ import { authOptions } from "../../../pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
 import NewUserForm from "./NewUserForm";
 
+export const metadata = {
+  title: "FlockNerd - Account Settings",
+  description: "Flock Stats for Nerds",
+};
+
 const Settings = async () => {
   const session = await getServerSession(authOptions);
 
