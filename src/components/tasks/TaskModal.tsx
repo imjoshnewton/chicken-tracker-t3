@@ -1,6 +1,6 @@
 import { Task } from "@prisma/client";
+import { format } from "date-fns";
 import { motion } from "framer-motion";
-import { Session } from "next-auth";
 import { MdClose } from "react-icons/md";
 import { TaskForm } from "src/app/app/flocks/TaskForm";
 
@@ -75,7 +75,11 @@ const TaskModal = ({
                 userId={userId}
                 onCancel={closeModal}
                 onComplete={closeModal}
-                task={task}
+                task={
+                  task
+                    ? { ...task, dueDate: format(task.dueDate, "yyyy-MM-dd") }
+                    : undefined
+                }
               />
             </div>
           </div>

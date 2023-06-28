@@ -1,6 +1,5 @@
 "use client";
 
-// import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +20,7 @@ interface TaskFormValues {
   id?: string;
   title: string;
   description: string;
-  dueDate: Date;
+  dueDate: string;
   recurrence: string;
   status?: string;
   userId: string;
@@ -49,6 +48,8 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     defaultValues: task ? task : {},
     mode: "onChange",
   });
+
+  console.log("Task: ", task);
 
   const { isValid, isDirty, errors } = formState;
 
@@ -155,18 +156,6 @@ export const TaskForm: React.FC<TaskFormProps> = ({
           <option value="monthly">Monthly</option>
         </select>
         {errors.recurrence && <p>{errors.recurrence.message}</p>}
-
-        {task && (
-          <select
-            {...register("status")}
-            className="h-12 w-full rounded border py-2 px-1 text-black"
-          >
-            <option value="">Select status</option>
-            <option value="Incomplete">Incomplete</option>
-            <option value="Completed">Completed</option>
-          </select>
-        )}
-        {task && errors.status && <p>{errors.status.message}</p>}
       </div>
       <div className="border-blueGray-200 mt-auto flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
         <button

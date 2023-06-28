@@ -52,7 +52,15 @@ export const flocksRouter = router({
         ...flock,
         tasks: [...nonRecurring, ...recurring].sort((a, b) => {
           if (a.completed === b.completed) {
-            return b.dueDate.getTime() - a.dueDate.getTime();
+            if (a.dueDate === null && b.dueDate === null) {
+              return 0;
+            } else if (a.dueDate === null) {
+              return 1;
+            } else if (b.dueDate === null) {
+              return -1;
+            } else {
+              return a.dueDate?.getTime() - b.dueDate?.getTime();
+            }
           } else {
             if (a.completed) {
               return 1;

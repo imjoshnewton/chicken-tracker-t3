@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { Task } from "@prisma/client";
-import { MdOutlineDeleteOutline, MdOutlineExpandMore } from "react-icons/md";
+import {
+  MdCheckCircle,
+  MdEdit,
+  MdOutlineCircle,
+  MdOutlineDeleteOutline,
+  MdOutlineExpandMore,
+} from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";
@@ -21,6 +27,9 @@ const TaskItem: React.FC<{
 }> = ({ task, index, onClick }) => {
   const utils = trpc.useContext();
   const [deleting, setDeleting] = useState(false);
+  const passedDue =
+    new Date(task.dueDate).toLocaleDateString() <
+    new Date().toLocaleDateString();
 
   const handleMarkComplete = () => {
     console.log(`Completing task with id: ${task.id}`);
@@ -65,21 +74,28 @@ const TaskItem: React.FC<{
       key={task.id}
       layout
       layoutId={task.id}
-      onClick={onClick}
     >
-      <input
-        type="checkbox"
-        className="form-checkbox mr-2 h-5 w-5 text-secondary hover:cursor-pointer"
-        checked={task.completed}
-        readOnly={task.completed}
+      <button
+        type="button"
+        className="flex items-center pt-3 pr-3 pb-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
         onClick={(e) => {
           e.stopPropagation();
           handleMarkComplete();
         }}
-      />
+      >
+        {task.completed ? (
+          <MdCheckCircle className="text-2xl" />
+        ) : (
+          <MdOutlineCircle className="text-2xl" />
+        )}
+      </button>
       <div className="flex-grow ">
         <h3 className="text-lg font-bold">{task.title}</h3>
-        <p className="text-sm">
+        <p
+          className={
+            "text-sm " + (passedDue && !task.completed ? "text-red-500" : "")
+          }
+        >
           {task.dueDate.toLocaleDateString()}{" "}
           {task.recurrence && task.recurrence !== "" && (
             <RiLoopRightFill className="-mt-1 inline text-sm font-bold" />
@@ -87,25 +103,17 @@ const TaskItem: React.FC<{
         </p>
       </div>
 
-      <button
-        className="opacity-1 rounded bg-transparent py-1 px-2 text-red-500 transition duration-200 ease-in-out hover:cursor-pointer hover:shadow-lg group-hover:opacity-100 lg:bg-red-500 lg:text-white lg:opacity-0"
-        disabled={deleting}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleDeleteTask();
-        }}
-      >
-        {deleting ? (
-          <RiLoader4Fill className="animate-spin text-2xl" />
-        ) : (
-          <>
-            <span className="hidden lg:block">Delete</span>
-            <span className="lg:hidden">
-              <MdOutlineDeleteOutline className="text-xl" />
-            </span>
-          </>
-        )}
-      </button>
+      {!task.completed && (
+        <button
+          className="opacity-1 rounded bg-transparent py-1 px-2 transition duration-200 ease-in-out hover:cursor-pointer hover:!opacity-100 group-hover:opacity-50 lg:opacity-0"
+          disabled={deleting}
+          onClick={onClick}
+        >
+          <span>
+            <MdEdit className="text-xl" />
+          </span>
+        </button>
+      )}
     </motion.li>
   );
 };
@@ -123,19 +131,12 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
   const incompleteTasks = tasks.filter(
     (task) =>
       !task.completed &&
-      (task.recurrence === "" ||
-        new Date(task.dueDate).toLocaleDateString() ==
-          new Date().toLocaleDateString())
+      new Date(task.dueDate).toLocaleDateString() <=
+        new Date().toLocaleDateString()
   );
 
   // all incomplete and guture tasks
-  const upComingTasks = tasks.filter(
-    (task) =>
-      !task.completed &&
-      (task.recurrence === "" ||
-        new Date(task.dueDate).toLocaleDateString() >=
-          new Date().toLocaleDateString())
-  );
+  const upComingTasks = tasks.filter((task) => !task.completed);
 
   const completedTasks = tasks.filter((task) => task.completed);
 
@@ -163,7 +164,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
             className="flex flex-col gap-y-4"
           >
             <div className="mb-4 flex gap-4 !border-b-0 text-sm text-stone-500">
-              <button onClick={() => setShowToday(true)} disabled={showToday}>
+              <button
+                onClick={() => setShowToday(true)}
+                // disabled={showToday}
+                className="relative p-1 "
+              >
                 Today
                 {showToday ? (
                   <motion.div
@@ -172,7 +177,11 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
                   />
                 ) : null}
               </button>
-              <button onClick={() => setShowToday(false)} disabled={!showToday}>
+              <button
+                onClick={() => setShowToday(false)}
+                // disabled={!showToday}
+                className="relative p-1 "
+              >
                 Upcoming
                 {!showToday ? (
                   <motion.div
