@@ -3,6 +3,11 @@ import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
 import Flock from "./Flock";
 
+export const metadata = {
+  title: "FlockNerd - Flock Details",
+  description: "Flock Stats for Nerds",
+};
+
 const Page = async ({
   params,
   searchParams,

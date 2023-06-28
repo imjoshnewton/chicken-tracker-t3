@@ -8,6 +8,11 @@ import { redirect } from "next/navigation";
 import FlockForm from "./FlockEditForm";
 import AddFlockButton from "./AddFlockButton";
 
+export const metadata = {
+  title: "FlockNerd - All Flocks",
+  description: "Flock Stats for Nerds",
+};
+
 const Flocks = async ({
   searchParams,
 }: {

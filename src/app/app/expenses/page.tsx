@@ -9,6 +9,11 @@ import { type Expense } from "@prisma/client";
 
 const PAGE_SIZE = 25;
 
+export const metadata = {
+  title: "FlockNerd - All Expenses",
+  description: "Flock Stats for Nerds",
+};
+
 // Fetch expenses function
 async function fetchExpenses(session: Session, page: number) {
   const flocks = await prisma.flock.findMany({

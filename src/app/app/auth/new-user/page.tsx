@@ -5,6 +5,11 @@ import { redirect } from "next/navigation";
 import NewUserForm from "../../settings/NewUserForm";
 import FlockForm from "../../flocks/FlockEditForm";
 
+export const metadata = {
+  title: "FlockNerd - New User Setup",
+  description: "Flock Stats for Nerds",
+};
+
 export default async function NewUser() {
   const session = await getServerSession(authOptions);
 

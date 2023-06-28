@@ -9,6 +9,11 @@ import Pagination from "../../../components/flocks/Pagination";
 
 const PAGE_SIZE = 25;
 
+export const metadata = {
+  title: "FlockNerd - All Logs",
+  description: "Flock Stats for Nerds",
+};
+
 // Fetch logs function
 async function fetchLogs(session: Session, page: number) {
   const flocks = await prisma.flock.findMany({
