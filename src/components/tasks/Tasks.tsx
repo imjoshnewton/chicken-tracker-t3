@@ -77,7 +77,7 @@ const TaskItem: React.FC<{
     >
       <button
         type="button"
-        className="flex items-center pt-3 pr-3 pb-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
+        className="flex items-center pl-1 pt-3 pr-3 pb-3 text-stone-400 transition-colors hover:cursor-pointer hover:text-stone-700 dark:hover:text-stone-200"
         onClick={(e) => {
           e.stopPropagation();
           handleMarkComplete();
