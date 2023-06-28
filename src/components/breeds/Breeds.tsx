@@ -4,7 +4,6 @@ import { useState } from "react";
 import {
   MdAdd,
   MdOutlineEdit,
-  MdOutlineExpandLess,
   MdOutlineExpandMore,
   MdStar,
 } from "react-icons/md";
@@ -91,13 +90,6 @@ export default function Breeds({
             {breeds?.map((breed: Breed, index: number) => {
               return (
                 <motion.li
-                  // initial={{ opacity: 0 }}
-                  // animate={{ opacity: 1 }}
-                  // transition={{
-                  //   ease: "easeInOut",
-                  //   duration: 0.3,
-                  //   delay: index * 0.1,
-                  // }}
                   className={`group relative flex basis-[100%] items-center rounded-lg border pr-4 shadow transition-all hover:cursor-pointer hover:shadow-lg lg:basis-1/4 lg:pr-2 xl:basis-1/6 ${
                     curParams.get("breedFilter") == breed.id
                       ? "active bg-[#84A8A3]/95 text-white"
