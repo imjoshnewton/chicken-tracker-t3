@@ -1,10 +1,6 @@
 import { useState } from "react";
 import { Task } from "@prisma/client";
-import {
-  MdOutlineDeleteOutline,
-  MdOutlineExpandLess,
-  MdOutlineExpandMore,
-} from "react-icons/md";
+import { MdOutlineDeleteOutline, MdOutlineExpandMore } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";

@@ -7,6 +7,11 @@ import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import { authOptions } from "../../pages/api/auth/[...nextauth]";
 
+export const metadata = {
+  title: "FlockNerd - Egg-ceptional Insights",
+  description: "Flock Stats for Nerds",
+};
+
 export default async function RootLayout({
   children,
 }: {
@@ -17,7 +22,6 @@ export default async function RootLayout({
   return (
     <html>
       <head>
-        <title>FlockNerd - Egg-ceptional Insights</title>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#385968" />
         <link rel="apple-touch-icon" href="/apple-icon-180.png" />
@@ -158,7 +162,7 @@ export default async function RootLayout({
       </head>
       <body>
         <nav
-          className={`navbar h-[60px] pl-2 lg:h-[65px] lg:pl-6 z-50 ${
+          className={`navbar z-50 h-[60px] pl-2 lg:h-[65px] lg:pl-6 ${
             session?.user ? "pr-3" : "pr-6"
           }`}
         >
