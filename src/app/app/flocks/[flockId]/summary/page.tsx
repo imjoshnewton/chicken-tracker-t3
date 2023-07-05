@@ -80,7 +80,7 @@ const Summary = async ({
 
     const totalExpenses = expenseData
       .map((exp) => exp._sum.amount ?? 0)
-      .reduce((acc, cur) => acc + cur);
+      .reduce((acc, cur) => acc + cur, 0);
 
     return {
       flock: {
