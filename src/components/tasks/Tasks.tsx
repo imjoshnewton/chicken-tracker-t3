@@ -4,14 +4,13 @@ import {
   MdCheckCircle,
   MdEdit,
   MdOutlineCircle,
-  MdOutlineDeleteOutline,
   MdOutlineExpandMore,
 } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";
-import { deleteTask, markTaskAsComplete } from "src/app/app/server";
-import { RiLoader4Fill, RiLoopRightFill } from "react-icons/ri";
+import { markTaskAsComplete } from "src/app/app/server";
+import { RiLoopRightFill } from "react-icons/ri";
 import TaskModal from "./TaskModal";
 
 type TaskListProps = {
@@ -26,10 +25,7 @@ const TaskItem: React.FC<{
   onClick: () => void;
 }> = ({ task, index, onClick }) => {
   const utils = trpc.useContext();
-  const [deleting, setDeleting] = useState(false);
-  const passedDue =
-    new Date(task.dueDate).toLocaleDateString() <
-    new Date().toLocaleDateString();
+  const passedDue = new Date(task.dueDate).getTime() < new Date().getTime();
 
   const handleMarkComplete = () => {
     console.log(`Completing task with id: ${task.id}`);
@@ -44,21 +40,6 @@ const TaskItem: React.FC<{
         }
       )
       .then(() => utils.flocks.invalidate());
-  };
-
-  const handleDeleteTask = () => {
-    setDeleting(true);
-
-    console.log(`Deleting task with id: ${task.id}`);
-
-    toast
-      .promise(deleteTask({ taskId: task.id }), {
-        loading: "Deleting task...",
-        success: "Task deleted!",
-        error: "Error deleting task",
-      })
-      .then(() => utils.flocks.invalidate())
-      .finally(() => setDeleting(false));
   };
 
   return (
@@ -106,7 +87,6 @@ const TaskItem: React.FC<{
       {!task.completed && (
         <button
           className="opacity-1 rounded bg-transparent py-1 px-2 transition duration-200 ease-in-out hover:cursor-pointer hover:!opacity-100 group-hover:opacity-50 lg:opacity-0"
-          disabled={deleting}
           onClick={onClick}
         >
           <span>
@@ -127,17 +107,17 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
     undefined
   );
 
-  // all incomplete tasks hwere recurrance is empty and recuring tasks where the due date is today or in the past
-  const incompleteTasks = tasks.filter(
+  // all incomplete tasks that are due today or overdue
+  const todaysTasks = tasks.filter(
     (task) =>
       !task.completed &&
-      new Date(task.dueDate).toLocaleDateString() <=
-        new Date().toLocaleDateString()
+      new Date(task.dueDate).getTime() <= new Date().getTime()
   );
 
-  // all incomplete and guture tasks
+  // All upcoming tasks that aren't completed
   const upComingTasks = tasks.filter((task) => !task.completed);
 
+  // All completed tasks
   const completedTasks = tasks.filter((task) => task.completed);
 
   return (
@@ -199,8 +179,8 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
               className="flex flex-wrap justify-between gap-y-4 divide-y overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
             >
               {tasks.length > 0 ? (
-                incompleteTasks.length > 0 && showToday ? (
-                  incompleteTasks.map((task, index) => (
+                todaysTasks.length > 0 && showToday ? (
+                  todaysTasks.map((task, index) => (
                     <TaskItem
                       key={task.id}
                       task={task}

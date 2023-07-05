@@ -61,7 +61,7 @@ const TaskModal = ({
         >
           <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
             <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
-              <h3 className="text-xl">Add Task</h3>
+              <h3 className="text-xl">{task ? "Edit Task" : "Add Task"}</h3>
               <button
                 onClick={() => closeModal()}
                 className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
