@@ -34,8 +34,8 @@ export default function ExpenseChart({
   className: string;
 }) {
   function chartData(stats: { expenses: any[]; production: any[] }) {
-    const chartArray = createChartArray(stats.expenses);
-    const prodArray = createProdOverlayArray(stats.production);
+    const chartArray = createChartArray(stats?.expenses);
+    const prodArray = createProdOverlayArray(stats?.production);
 
     console.log("Chart Bar Data: ", chartArray);
     console.log("Production Line Data: ", prodArray);
