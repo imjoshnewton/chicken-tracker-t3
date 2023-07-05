@@ -200,19 +200,19 @@ export default function FlockSummary({
                 <h2 className="mb-4">Egg Production</h2>
                 <div className="flex justify-between">
                   <strong>🥚&nbsp;Total:&nbsp;</strong>
-                  <span>{summary.logs.total}</span>
+                  <span>{summary.logs.total || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <strong>📝&nbsp;#&nbsp;of&nbsp;Entries:&nbsp;</strong>
-                  <span>{summary.logs.numLogs}</span>
+                  <span>{summary.logs.numLogs || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <strong>📆&nbsp;Daily&nbsp;Average:&nbsp;</strong>
-                  <span>{summary.logs.calcAvg.toFixed(2)}</span>
+                  <span>{summary.logs.calcAvg.toFixed(2) || 0}</span>
                 </div>
                 <div className="flex justify-between">
                   <strong>💪&nbsp;Largest&nbsp;Haul:&nbsp;</strong>
-                  <span>{summary.logs.largest}</span>
+                  <span>{summary.logs.largest || 0}</span>
                 </div>
               </div>
               {showExpenses && (
