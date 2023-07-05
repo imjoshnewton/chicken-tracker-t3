@@ -76,7 +76,7 @@ export default function AppLayout({
   return (
     <>
       <Toaster position="top-right" />
-      <nav className="navbar h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6 z-30">
+      <nav className="navbar z-30 h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button
@@ -181,7 +181,7 @@ export default function AppLayout({
         {children}
       </section>
       <aside
-        className={`fadeIn pb-safe fixed right-0 top-[60px] h-full w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:h-full lg:pb-3 ${
+        className={`fadeIn pb-safe fixed right-0 top-[60px] bottom-0 w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
