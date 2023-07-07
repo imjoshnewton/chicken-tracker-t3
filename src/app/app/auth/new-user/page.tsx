@@ -69,6 +69,7 @@ export default async function NewUser() {
                 zip: "",
                 userId: "",
                 breeds: [],
+                deleted: false,
               }}
               userId={session.user.id}
             />
