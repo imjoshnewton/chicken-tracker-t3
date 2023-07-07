@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Breed, Flock } from "@prisma/client";
 import Loader from "../../../components/shared/Loader";
-import { MdImage } from "react-icons/md";
+import { MdImage, MdOutlineDelete } from "react-icons/md";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { createFlock, updateFlock } from "../server";
+import { createFlock, deleteFlock, updateFlock } from "../server";
 import { trpc } from "@utils/trpc";
 
 export default function FlockForm({
@@ -16,6 +16,7 @@ export default function FlockForm({
   userId,
   onComplete,
   onCancel,
+  onDelete,
 }: {
   flock: Flock & {
     breeds: Breed[];
@@ -23,6 +24,7 @@ export default function FlockForm({
   userId: string;
   onComplete?: () => void;
   onCancel?: () => void;
+  onDelete?: () => void;
 }) {
   const router = useRouter();
   const { register, handleSubmit, formState, reset, watch } = useForm({
@@ -92,6 +94,19 @@ export default function FlockForm({
           else router.push(`/app/flocks/${flock.id}`);
         });
     }
+  };
+
+  const deleteCurrentFlock = async (flockId: string) => {
+    toast
+      .promise(deleteFlock({ flockId }), {
+        loading: `Deleting flock`,
+        success: (data) => `${data.name} deleted successfully!`,
+        error: (err) => `This just happened: ${err.toString()}`,
+      })
+      .then(() => {
+        if (onDelete) onDelete();
+        else router.push(`/app/flocks`);
+      });
   };
 
   return (
@@ -179,16 +194,27 @@ export default function FlockForm({
       </div>
       <div className="border-blueGray-200 mt-auto flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
         {flock.id && (
-          <button
-            type="button"
-            onClick={() => {
-              if (onCancel) onCancel();
-              else router.push(`/app/flocks/${flock.id}`);
-            }}
-            className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
-          >
-            CANCEL
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={() => {
+                deleteCurrentFlock(flock.id);
+              }}
+              className="mr-auto rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
+            >
+              <MdOutlineDelete />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (onCancel) onCancel();
+                else router.push(`/app/flocks/${flock.id}`);
+              }}
+              className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+            >
+              CANCEL
+            </button>
+          </>
         )}
         <button
           type="submit"

@@ -112,6 +112,7 @@ const AddFlockButton = ({ session }: { session: Session }) => {
                         zip: "",
                         userId: "",
                         breeds: [],
+                        deleted: false,
                       }}
                       userId={session.user.id}
                       onCancel={closeModal}

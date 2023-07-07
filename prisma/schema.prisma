@@ -74,6 +74,7 @@ model Flock {
   type        String
   zip         String?   @default("")
   userId      String
+  deleted     Boolean   @default(false)
   owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   breeds      Breed[]
   logs        EggLog[]

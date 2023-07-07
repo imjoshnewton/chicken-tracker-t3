@@ -89,6 +89,24 @@ export async function updateFlock(input: {
   return flock;
 }
 
+export async function deleteFlock(input: { flockId: string }) {
+  console.log("deleteFlock: ", input);
+
+  const flock = await prisma.flock.update({
+    where: {
+      id: input.flockId,
+    },
+    data: {
+      deleted: true,
+    },
+  });
+
+  revalidatePath(`/app/flocks/`);
+  revalidatePath(`/app/flocks/[flockId]`);
+
+  return flock;
+}
+
 export async function updateUser(input: {
   userId: string;
   name: string;
