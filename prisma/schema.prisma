@@ -43,6 +43,7 @@ model Session {
 
 model User {
   id            String         @id @default(cuid())
+  clerkId       String?        @unique
   name          String?
   email         String?        @unique
   emailVerified DateTime?
@@ -53,6 +54,8 @@ model User {
   flocks        Flock[]
   notification  Notification[]
   tasks         Task[]
+
+  @@index([clerkId])
 }
 
 model VerificationToken {
