@@ -1,6 +1,6 @@
 import Card from "../../../components/shared/Card";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import NewUserForm from "./NewUserForm";
 

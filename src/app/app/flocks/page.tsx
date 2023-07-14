@@ -2,11 +2,12 @@ import Card from "../../../components/shared/Card";
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+// import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import { prisma } from "../../../server/db/client";
 import { redirect } from "next/navigation";
 import FlockForm from "./FlockEditForm";
 import AddFlockButton from "./AddFlockButton";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 
 export const metadata = {
   title: "FlockNerd - All Flocks",

@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import Flock from "./Flock";
 
 export const metadata = {

@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../../../pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import { TrpcProvider } from "./Provider";
 
 export const metadata = {

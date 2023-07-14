@@ -5,7 +5,7 @@ import "../../styles/globals.scss";
 import { getServerSession } from "next-auth";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
-import { authOptions } from "../../pages/api/auth/[...nextauth]";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",

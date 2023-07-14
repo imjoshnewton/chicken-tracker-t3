@@ -1,11 +1,14 @@
 import { getServerSession, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import Card from "../../../components/shared/Card";
-import { authOptions } from "../../../pages/api/auth/[...nextauth]";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import { prisma } from "../../../server/db/client";
 import DeleteButton from "./DeleteButton";
 import Pagination from "../../../components/flocks/Pagination";
 import { type Expense } from "@prisma/client";
+import { db } from "@lib/db";
+import { expense, flock } from "@lib/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 
 const PAGE_SIZE = 25;
 
@@ -16,35 +19,45 @@ export const metadata = {
 
 // Fetch expenses function
 async function fetchExpenses(session: Session, page: number) {
-  const flocks = await prisma.flock.findMany({
-    where: {
-      userId: session.user?.id,
-    },
-    include: {
-      expenses: {
-        skip: page * PAGE_SIZE,
-        take: PAGE_SIZE,
-        orderBy: {
-          date: "desc",
-        },
-      },
-    },
-  });
+  if (!session?.user) redirect("/api/auth/signin");
 
-  return flocks.flatMap((f) => f.expenses);
+  const flockJoin = await db
+    .select({
+      id: expense.id,
+      date: expense.date,
+      amount: expense.amount,
+      category: expense.category,
+      memo: expense.memo,
+      flockId: expense.flockId,
+    })
+    .from(flock)
+    .where(eq(flock.userId, session.user.id))
+    .innerJoin(expense, eq(expense.flockId, flock.id))
+    .orderBy(desc(expense.date))
+    .offset(page * PAGE_SIZE)
+    .limit(PAGE_SIZE);
+
+  return flockJoin.map((f) => {
+    return {
+      ...f,
+      date: new Date(f.date),
+    };
+  });
 }
 
 // Fetch expense count function
 async function fetchExpenseCount(session: Session) {
-  const count = await prisma.expense.count({
-    where: {
-      flock: {
-        userId: session.user?.id,
-      },
-    },
-  });
+  if (!session?.user) redirect("/api/auth/signin");
 
-  return count;
+  const [result] = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(flock)
+    .where(eq(flock.userId, session.user.id))
+    .innerJoin(expense, eq(expense.flockId, flock.id));
+
+  return result ? result.count : 0;
 }
 
 // Expense item component

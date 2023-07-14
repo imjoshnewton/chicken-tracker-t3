@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../pages/api/auth/[...nextauth]";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import AppLayout from "./AppLayout";
 import "../../styles/globals.scss";
 import "animate.css";
@@ -32,7 +32,7 @@ export default async function RootLayout({
   });
 
   return (
-    <html className="lg:h-full lg:flex lg:flex-col">
+    <html className="lg:flex lg:h-full lg:flex-col">
       <head>
         <title>FlockNerd - Egg-ceptional Insights</title>
         <link rel="manifest" href="/manifest.json" />
@@ -173,7 +173,7 @@ export default async function RootLayout({
           media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
         />
       </head>
-      <body className="lg:h-full lg:flex lg:flex-col lg:flex-1">
+      <body className="lg:flex lg:h-full lg:flex-1 lg:flex-col">
         <AppLayout session={session} notifications={notifications}>
           {children}
         </AppLayout>
