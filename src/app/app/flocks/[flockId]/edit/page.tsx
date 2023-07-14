@@ -1,9 +1,9 @@
-import Card from "../../../../../components/shared/Card";
-import FlockForm from "../../FlockEditForm";
 import { getServerSession } from "next-auth";
-import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
+import Card from "../../../../../components/shared/Card";
 import { prisma } from "../../../../../server/db/client";
+import FlockForm from "../../FlockEditForm";
 
 export const metadata = {
   title: "FlockNerd - Edit Flock",

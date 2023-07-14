@@ -1,7 +1,7 @@
 import Loader from "@components/shared/Loader";
 import { getServerSession } from "next-auth";
-import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
+import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const metadata = {
   title: "FlockNerd - App Index",

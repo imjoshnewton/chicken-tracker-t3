@@ -1,9 +1,9 @@
-import Card from "../../../../components/shared/Card";
 import { getServerSession } from "next-auth";
-import { authOptions } from "src/pages/api/auth/[...nextauth]";
 import { redirect } from "next/navigation";
-import NewUserForm from "../../settings/NewUserForm";
+import { authOptions } from "src/app/api/auth/[...nextauth]/route";
+import Card from "../../../../components/shared/Card";
 import FlockForm from "../../flocks/FlockEditForm";
+import NewUserForm from "../../settings/NewUserForm";
 
 export const metadata = {
   title: "FlockNerd - New User Setup",
