@@ -4,10 +4,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { MdAdd, MdClose } from "react-icons/md";
 import { useState } from "react";
-import { Session } from "next-auth";
 import FlockForm from "./FlockEditForm";
 
-const AddFlockButton = ({ session }: { session: Session }) => {
+const AddFlockButton = ({ userId }: { userId: string }) => {
   // const router = useRouter();
   // const searchParams = useSearchParams();
   // const path = usePathname();
@@ -44,14 +43,10 @@ const AddFlockButton = ({ session }: { session: Session }) => {
     setShowModal(false);
   }
 
-  if (!session.user?.id) {
-    return null;
-  }
-
   return (
     <>
       <button
-        className="btn mr-1 mt-4 mb-1 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none md:basis-1/3 lg:basis-1/4 xl:w-auto xl:basis-1/5"
+        className="btn mb-1 mr-1 mt-4 h-10 w-full basis-full rounded bg-white px-4 py-2 outline-none transition-all hover:shadow-lg focus:outline-none md:basis-1/3 lg:basis-1/4 xl:w-auto xl:basis-1/5"
         type="button"
         onClick={() => setShowModal(true)}
         // onClick={() => {
@@ -114,7 +109,7 @@ const AddFlockButton = ({ session }: { session: Session }) => {
                         breeds: [],
                         deleted: false,
                       }}
-                      userId={session.user.id}
+                      userId={userId}
                       onCancel={closeModal}
                       onComplete={closeModal}
                     ></FlockForm>

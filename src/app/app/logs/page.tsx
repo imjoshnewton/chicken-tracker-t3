@@ -1,15 +1,12 @@
 import { type EggLog } from "@prisma/client";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import Card from "../../../components/shared/Card";
-// import { authOptions } from "src/app/api/auth/[...nextauth]/route";
-import DeleteButton from "./DeleteButton";
-import Pagination from "../../../components/flocks/Pagination";
+import { currentUsr } from "@lib/auth";
 import { db } from "@lib/db";
+import { eggLog, flock } from "@lib/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
-import { flock, eggLog } from "@lib/db/schema";
-import { type Session } from "next-auth";
-import { authOptions } from "src/app/api/auth/[...nextauth]/route";
+import Pagination from "../../../components/flocks/Pagination";
+import DeleteButton from "./DeleteButton";
 
 const PAGE_SIZE = 25;
 
@@ -19,9 +16,7 @@ export const metadata = {
 };
 
 // Fetch logs function
-async function fetchLogs(session: Session, page: number) {
-  if (!session?.user) redirect("/api/auth/signin");
-
+async function fetchLogs(userId: string, page: number) {
   const flockJoin = await db
     .select({
       id: eggLog.id,
@@ -32,7 +27,7 @@ async function fetchLogs(session: Session, page: number) {
       breedId: eggLog.breedId,
     })
     .from(flock)
-    .where(eq(flock.userId, session.user.id))
+    .where(eq(flock.userId, userId))
     .innerJoin(eggLog, eq(eggLog.flockId, flock.id))
     .orderBy(desc(eggLog.date))
     .offset(page * PAGE_SIZE)
@@ -46,15 +41,13 @@ async function fetchLogs(session: Session, page: number) {
   });
 }
 
-async function fetchLogCount(session: Session) {
-  if (!session?.user) redirect("/api/auth/signin");
-
+async function fetchLogCount(userId: string) {
   const [result] = await db
     .select({
       count: sql<number>`count(*)`,
     })
     .from(flock)
-    .where(eq(flock.userId, session.user.id))
+    .where(eq(flock.userId, userId))
     .innerJoin(eggLog, eq(eggLog.flockId, flock.id));
 
   return result ? result.count : 0;
@@ -82,18 +75,18 @@ async function Logs({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await getServerSession(authOptions);
+  const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
 
-  if (!session) redirect("/api/auth/signin");
+  if (!user) redirect("/auth/sign-in");
 
-  const totalPages = Math.ceil((await fetchLogCount(session)) / PAGE_SIZE);
-  const logs = await fetchLogs(session, page);
+  const totalPages = Math.ceil((await fetchLogCount(user.id)) / PAGE_SIZE);
+  const logs = await fetchLogs(user.id, page);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
-        <Card title="All Logs" className="pb-safe py-0 lg:pt-4 lg:pb-4">
+        <Card title="All Logs" className="pb-safe py-0 lg:pb-4 lg:pt-4">
           <ul className="mt-4 flex flex-col">
             {logs?.map((log, index) => (
               <LogItem log={log} index={index} key={index} />

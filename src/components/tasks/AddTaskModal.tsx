@@ -5,10 +5,10 @@ import { MdAddTask } from "react-icons/md";
 import TaskModal from "./TaskModal";
 
 const AddTaskModal = ({
-  session,
+  userId,
   flockId,
 }: {
-  session: Session;
+  userId: string;
   flockId: string;
 }) => {
   // const router = useRouter();
@@ -45,7 +45,7 @@ const AddTaskModal = ({
     setShowModal(false);
   }
 
-  if (!session.user?.id || !flockId) {
+  if (!userId || !flockId) {
     return null;
   }
 
@@ -69,7 +69,7 @@ const AddTaskModal = ({
         {showModal && (
           <TaskModal
             flockId={flockId}
-            userId={session.user.id}
+            userId={userId}
             closeModal={closeModal}
           />
         )}

@@ -20,12 +20,12 @@ import EditModal from "@components/flocks/EditModal";
 import TaskList from "@components/tasks/Tasks";
 import AddTaskModal from "@components/tasks/AddTaskModal";
 
-const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
+const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
   const { flock, stats, range, breedStats } = useFlockDataAppDir(
-    session,
+    userId,
     flockId,
     searchParams?.get("statsRange") || "7",
     searchParams?.get("breedFilter")
@@ -68,7 +68,7 @@ const Flock = ({ session, flockId }: { session: Session; flockId: string }) => {
       filterId={searchParams?.get("breedFilter") as string}
       stats={stats}
       breedStats={breedStats}
-      session={session}
+      userId={userId}
     />
   );
 };
@@ -91,19 +91,15 @@ const FlockLayout = ({
   filterId,
   stats,
   breedStats,
-  session,
+  userId,
 }: any) => (
   <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="shadow-xl">
       <Card title="Flock Details" className="" key={flockId?.toString()}>
         {/* <EditLink flockId={flockId} /> */}
-        <FlockActions flockId={flockId?.toString()} session={session} />
+        <FlockActions flockId={flockId?.toString()} userId={userId} />
         <FlockInfo flock={flock} flockId={flockId} />
-        <TaskList
-          tasks={flock?.tasks}
-          flockId={flockId}
-          userId={session.user.id!}
-        />
+        <TaskList tasks={flock?.tasks} flockId={flockId} userId={userId} />
         <Stats
           stats={stats}
           flock={flock}
@@ -119,7 +115,7 @@ const FlockLayout = ({
           breeds={flock?.breeds}
           top={breedStats?.at(0)?.breedId}
           className="mt-4 basis-full xl:basis-[23%]"
-          user={session?.user}
+          userId={userId}
         />
       </Card>
     </div>
@@ -128,14 +124,14 @@ const FlockLayout = ({
 
 const FlockActions = ({
   flockId,
-  session,
+  userId,
 }: {
   flockId: string;
-  session: Session;
+  userId: string;
 }) => (
-  <div className="absolute top-0 right-0 mt-3 mr-5 flex self-start md:mt-2">
-    <AddTaskModal session={session} flockId={flockId} />
-    <EditModal session={session} flockId={flockId} />
+  <div className="absolute right-0 top-0 mr-5 mt-3 flex self-start md:mt-2">
+    <AddTaskModal userId={userId} flockId={flockId} />
+    <EditModal userId={userId} flockId={flockId} />
   </div>
 );
 

@@ -17,21 +17,13 @@ export default function Breeds({
   breeds,
   className,
   top,
-  user,
+  userId,
 }: {
   flockId: string | undefined;
   breeds: Breed[];
   className: string;
   top?: string | null;
-  user:
-    | ({
-        id: string;
-      } & {
-        name?: string | null | undefined;
-        email?: string | null | undefined;
-        image?: string | null | undefined;
-      })
-    | undefined;
+  userId: string;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -168,7 +160,7 @@ export default function Breeds({
                       <MdOutlineEdit />
                     </button>
                     <MdStar
-                      className={`absolute -top-3 -right-3 text-2xl text-accent2 ${
+                      className={`absolute -right-3 -top-3 text-2xl text-accent2 ${
                         breed.id == top ? "" : "hidden"
                       }`}
                     />
@@ -199,7 +191,7 @@ export default function Breeds({
               setShowModal(false);
               setSellectedBreed(null);
             }}
-            user={user}
+            userId={userId}
           />
         )}
       </AnimatePresence>

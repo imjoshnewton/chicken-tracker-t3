@@ -24,7 +24,11 @@ const config = {
   //   defaultLocale: "en",
   // },
   images: {
-    domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
+    domains: [
+      "firebasestorage.googleapis.com",
+      "lh3.googleusercontent.com",
+      "img.clerk.com",
+    ],
     formats: ["image/avif", "image/webp"],
   },
   experimental: {

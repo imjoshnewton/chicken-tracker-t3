@@ -12,10 +12,10 @@ import { Session } from "next-auth";
 // } from "react-tailwindcss-datepicker/dist/types";
 
 const EditModal = ({
-  session,
+  userId,
   flockId,
 }: {
-  session: Session;
+  userId: string;
   flockId: string;
 }) => {
   const router = useRouter();
@@ -60,7 +60,7 @@ const EditModal = ({
     setShowModal(false);
   }
 
-  if (!session.user?.id || !flockId || !flock) {
+  if (!userId || !flockId || !flock) {
     return null;
   }
 
@@ -111,7 +111,7 @@ const EditModal = ({
                   <div className="relative flex flex-auto flex-col">
                     <FlockForm
                       flock={flock}
-                      userId={session.user.id}
+                      userId={userId}
                       onCancel={closeModal}
                       onComplete={closeModal}
                     ></FlockForm>

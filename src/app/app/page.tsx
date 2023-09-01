@@ -1,7 +1,6 @@
+import { currentUser } from "@clerk/nextjs";
 import Loader from "@components/shared/Loader";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 
 export const metadata = {
   title: "FlockNerd - App Index",
@@ -9,10 +8,10 @@ export const metadata = {
 };
 
 const AppHome = async () => {
-  const session = await getServerSession(authOptions);
+  const user = await currentUser();
 
-  if (!session?.user) {
-    redirect("/api/auth/signin");
+  if (!user) {
+    redirect("/auth/sign-in");
   } else {
     redirect("/app/flocks");
   }

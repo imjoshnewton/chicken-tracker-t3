@@ -1,3 +1,4 @@
+import { currentUsr } from "@lib/auth";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "src/app/api/auth/[...nextauth]/route";
@@ -15,11 +16,11 @@ const Page = async ({
   params: { flockId: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
-  const session = await getServerSession(authOptions);
+  const user = await currentUsr();
 
-  if (!session?.user) redirect("/api/auth/signin");
+  if (!user) redirect("/api/auth/signin");
 
-  return <Flock session={session} flockId={params.flockId} />;
+  return <Flock userId={user.id} flockId={params.flockId} />;
 };
 
 export default Page;

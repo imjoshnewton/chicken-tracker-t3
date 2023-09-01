@@ -17,20 +17,12 @@ const BreedModal = ({
   flockId,
   closeModal,
   breed,
-  user,
+  userId,
 }: {
   flockId: string | undefined;
   closeModal: any;
   breed: Breed | null;
-  user:
-    | ({
-        id: string;
-      } & {
-        name?: string | null | undefined;
-        email?: string | null | undefined;
-        image?: string | null | undefined;
-      })
-    | undefined;
+  userId: string;
 }) => {
   const { register, handleSubmit, formState, reset, watch } = useForm({
     defaultValues: { ...breed, image: null as any, flockId: flockId },
@@ -108,7 +100,7 @@ const BreedModal = ({
       // Makes reference to the storage bucket location
       const uploadRef = ref(
         storage,
-        `uploads/${user?.id}/${
+        `uploads/${userId}/${
           breed ? breed.id : file.name.split(".")[0]
         }.${extension}`
       );
@@ -137,7 +129,7 @@ const BreedModal = ({
           // handler(downloadURL);
         });
     },
-    [user?.id, breed]
+    [userId, breed]
   );
 
   useEffect(() => {
@@ -235,7 +227,7 @@ const BreedModal = ({
             </div>
             <div className="relative flex-auto">
               <form
-                className="w-full p-4 lg:px-8 lg:pt-6 lg:pb-8"
+                className="w-full p-4 lg:px-8 lg:pb-8 lg:pt-6"
                 onSubmit={handleSubmit(createOrUpdateBreed)}
               >
                 <fieldset className="mb-3">
@@ -278,7 +270,7 @@ const BreedModal = ({
                   Name
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("name")}
                   type="text"
@@ -288,7 +280,7 @@ const BreedModal = ({
                   Breed
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("breed")}
                   type="text"
@@ -297,7 +289,7 @@ const BreedModal = ({
                   Description
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   {...register("description")}
                   type="text"
                 />
@@ -305,7 +297,7 @@ const BreedModal = ({
                   Count
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("count")}
                   type="text"
@@ -314,7 +306,7 @@ const BreedModal = ({
                   Average Weekly Production
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("averageProduction")}
                   type="text"
@@ -331,14 +323,14 @@ const BreedModal = ({
                 </button>
               )}
               <button
-                className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                 type="button"
                 onClick={closeModal}
               >
                 CANCEL
               </button>
               <button
-                className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                className="mb-1 mr-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                 type="submit"
                 disabled={updatingBreed || deletingBreed || creatingBreed}
                 onClick={handleSubmit(createOrUpdateBreed)}

@@ -1,13 +1,13 @@
 import Card from "../../../components/shared/Card";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-// import { authOptions } from "src/app/api/auth/[...nextauth]/route";
-import { prisma } from "../../../server/db/client";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import FlockForm from "./FlockEditForm";
 import AddFlockButton from "./AddFlockButton";
-import { authOptions } from "src/app/api/auth/[...nextauth]/route";
+import { currentUser } from "@clerk/nextjs";
+import { flock, user } from "@lib/db/schema";
+import { db } from "@lib/db";
 
 export const metadata = {
   title: "FlockNerd - All Flocks",
@@ -19,15 +19,34 @@ const Flocks = async ({
 }: {
   searchParams?: { [key: string]: string | string[] | undefined };
 }) => {
-  const session = await getServerSession(authOptions);
+  const clerkUser = await currentUser();
 
-  if (!session?.user) redirect("/api/auth/signin");
+  if (!clerkUser) redirect("/auth/sign-in");
 
-  const flocks = await prisma.flock.findMany({
-    where: {
-      userId: session.user.id,
-    },
-  });
+  const flocks = await db
+    .select({
+      id: flock.id,
+      name: flock.name,
+      description: flock.description,
+      imageUrl: flock.imageUrl,
+      type: flock.type,
+      userId: flock.userId,
+    })
+    .from(user)
+    .where(eq(user.clerkId, clerkUser.id))
+    .innerJoin(flock, eq(flock.userId, user.id));
+
+  let userId: string = "";
+
+  if (flocks.length) {
+    userId = flocks[0]?.userId ?? "";
+  } else {
+    const [usr] = await db
+      .select({ id: user.id })
+      .from(user)
+      .where(eq(user.clerkId, clerkUser.id));
+    userId = usr?.id ?? "";
+  }
 
   if (flocks.length == 1) {
     redirect(`/app/flocks/${flocks[0]?.id}`);
@@ -39,7 +58,7 @@ const Flocks = async ({
         <div className="shadow">
           <Card
             title="New FLock"
-            className="pb-safe h-full !pl-0 !pr-0 lg:h-auto lg:pt-4 lg:pb-0"
+            className="pb-safe h-full !pl-0 !pr-0 lg:h-auto lg:pb-0 lg:pt-4"
             titleStyle="pl-8 !mb-0"
           >
             <FlockForm
@@ -54,7 +73,7 @@ const Flocks = async ({
                 breeds: [],
                 deleted: false,
               }}
-              userId={session.user.id}
+              userId={userId}
             />
           </Card>
         </div>
@@ -65,7 +84,7 @@ const Flocks = async ({
   return (
     <main className="flex flex-col gap-4">
       <div className="flex items-center justify-end">
-        <AddFlockButton session={session} />
+        <AddFlockButton userId={userId} />
       </div>
       <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {flocks?.map((flock, index) => {

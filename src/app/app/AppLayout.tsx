@@ -2,46 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
-// import { useUserData } from "../../lib/hooks";
-import {
-  MdOutlineEditNote,
-  MdLogout,
-  MdHomeFilled,
-  MdSettings,
-  MdLogin,
-} from "react-icons/md";
 import { AiOutlineDollar } from "react-icons/ai";
+import {
+  MdHomeFilled,
+  MdLogin,
+  MdLogout,
+  MdOutlineEditNote,
+  MdSettings,
+} from "react-icons/md";
 
-import logo from "../../../public/FlockNerd-logo-v2.png";
-import { ReactElement, useState } from "react";
-import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
-// import { trpc } from "../../utils/trpc";
-// import Loader from "../../components/shared/Loader";
-import { motion } from "framer-motion";
-import { Session } from "next-auth";
-import { Toaster } from "react-hot-toast";
+import { SignOutButton, useUser } from "@clerk/nextjs";
 import type { Notification } from "@prisma/client";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import { ReactElement, useState } from "react";
+import { Toaster } from "react-hot-toast";
+import logo from "../../../public/FlockNerd-logo-v2.png";
 import NotificationsList from "./NotificationsList";
 
 // Top navbar
 export default function AppLayout({
   children,
-  session,
   notifications,
 }: {
   children: React.ReactNode;
-  session: Session | null;
   notifications: Notification[] | undefined;
 }) {
-  const user = session?.user;
-  // const {
-  //   data: notifications,
-  //   isLoading,
-  //   isError,
-  // } = trpc.auth.getUserNotifications.useQuery(undefined, {
-  //   refetchInterval: 5 * 60 * 1000,
-  // });
+  const { user } = useUser();
+
   const pathName = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -76,7 +64,7 @@ export default function AppLayout({
   return (
     <>
       <Toaster position="top-right" />
-      <nav className="navbar z-30 h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
+      <nav className="navbar z-30 h-[60px] pl-2 pr-3 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button
@@ -130,12 +118,12 @@ export default function AppLayout({
                 }}
               >
                 <div className="user-name animate__animated animate__fadeInLeft mr-3 hidden lg:block">
-                  {user.name}
+                  {user.fullName}
                 </div>
-                {user.image && (
+                {user.hasImage && (
                   <div>
                     <Image
-                      src={user.image as string}
+                      src={user.imageUrl as string}
                       width="35"
                       height="35"
                       className="user-img h-9 w-9 lg:h-11 lg:w-11"
@@ -148,7 +136,7 @@ export default function AppLayout({
                             ? "opacity-100"
                             : "opacity-0"
                           : "opacity-0"
-                      } absolute top-1 right-3 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                      } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                     >
                       {notifications?.filter((not) => !not.read).length}
                     </div>
@@ -162,7 +150,7 @@ export default function AppLayout({
           {!user && (
             <li>
               <Link href="/api/auth/signin">
-                <button className="rounded border-2 bg-transparent py-2 px-2 pr-3 transition-all hover:bg-white hover:text-primary">
+                <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
                 </button>
@@ -181,7 +169,7 @@ export default function AppLayout({
         {children}
       </section>
       <aside
-        className={`fadeIn pb-safe fixed right-0 top-[60px] bottom-0 w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:pb-3 ${
+        className={`fadeIn pb-safe fixed bottom-0 right-0 top-[60px] w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
@@ -210,16 +198,12 @@ export default function AppLayout({
               pathName == "/logout" ? "bg-gray-400 text-white" : ""
             } hover:text-gray-500`}
           >
-            <button
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                signOut();
-                setSideBarOpen(false);
-              }}
-            >
-              <MdLogout className="ml-[2px] mr-[18.5px] inline text-2xl" />
-              Logout
-            </button>
+            <SignOutButton>
+              <button className="flex items-center px-2 py-3">
+                <MdLogout className="ml-[2px] mr-[18.5px] inline text-2xl" />
+                Logout
+              </button>
+            </SignOutButton>
           </li>
         </ul>
       </aside>

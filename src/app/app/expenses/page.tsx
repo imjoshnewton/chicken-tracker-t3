@@ -1,14 +1,12 @@
-import { getServerSession, Session } from "next-auth";
-import { redirect } from "next/navigation";
-import Card from "../../../components/shared/Card";
-import { authOptions } from "src/app/api/auth/[...nextauth]/route";
-import { prisma } from "../../../server/db/client";
-import DeleteButton from "./DeleteButton";
-import Pagination from "../../../components/flocks/Pagination";
-import { type Expense } from "@prisma/client";
+import { currentUsr } from "@lib/auth";
 import { db } from "@lib/db";
 import { expense, flock } from "@lib/db/schema";
+import { type Expense } from "@prisma/client";
 import { desc, eq, sql } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import Pagination from "../../../components/flocks/Pagination";
+import Card from "../../../components/shared/Card";
+import DeleteButton from "./DeleteButton";
 
 const PAGE_SIZE = 25;
 
@@ -18,9 +16,7 @@ export const metadata = {
 };
 
 // Fetch expenses function
-async function fetchExpenses(session: Session, page: number) {
-  if (!session?.user) redirect("/api/auth/signin");
-
+async function fetchExpenses(userId: string, page: number) {
   const flockJoin = await db
     .select({
       id: expense.id,
@@ -31,7 +27,7 @@ async function fetchExpenses(session: Session, page: number) {
       flockId: expense.flockId,
     })
     .from(flock)
-    .where(eq(flock.userId, session.user.id))
+    .where(eq(flock.userId, userId))
     .innerJoin(expense, eq(expense.flockId, flock.id))
     .orderBy(desc(expense.date))
     .offset(page * PAGE_SIZE)
@@ -46,15 +42,15 @@ async function fetchExpenses(session: Session, page: number) {
 }
 
 // Fetch expense count function
-async function fetchExpenseCount(session: Session) {
-  if (!session?.user) redirect("/api/auth/signin");
+async function fetchExpenseCount(userId: string) {
+  if (!userId) redirect("/api/auth/signin");
 
   const [result] = await db
     .select({
       count: sql<number>`count(*)`,
     })
     .from(flock)
-    .where(eq(flock.userId, session.user.id))
+    .where(eq(flock.userId, userId))
     .innerJoin(expense, eq(expense.flockId, flock.id));
 
   return result ? result.count : 0;
@@ -85,18 +81,18 @@ async function Expenses({
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const session = await getServerSession(authOptions);
+  const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
 
-  if (!session) redirect("/api/auth/signin");
+  if (!user) redirect("/auth/sign-in");
 
-  const totalPages = Math.ceil((await fetchExpenseCount(session)) / PAGE_SIZE);
-  const expenses = await fetchExpenses(session, page);
+  const totalPages = Math.ceil((await fetchExpenseCount(user.id)) / PAGE_SIZE);
+  const expenses = await fetchExpenses(user.id, page);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
-        <Card title="All Expenses" className="pb-safe py-0 lg:pt-4 lg:pb-4">
+        <Card title="All Expenses" className="pb-safe py-0 lg:pb-4 lg:pt-4">
           <ul className="mt-4 flex flex-col">
             {expenses?.map((expense, index) => (
               <ExpenseItem expense={expense} index={index} key={index} />
