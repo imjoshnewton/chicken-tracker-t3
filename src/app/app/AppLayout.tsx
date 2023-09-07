@@ -7,8 +7,8 @@ import {
   MdHomeFilled,
   MdLogin,
   MdLogout,
+  MdManageAccounts,
   MdOutlineEditNote,
-  MdSettings,
 } from "react-icons/md";
 
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
@@ -54,8 +54,8 @@ export default function AppLayout({
       onClick: () => setSideBarOpen(false),
     },
     {
-      icon: <MdSettings className="mr-5 mt-[-3px] inline text-2xl" />,
-      title: "Settings",
+      icon: <MdManageAccounts className="mr-5 mt-[-3px] inline text-2xl" />,
+      title: "Account Settings",
       path: "/app/settings",
       onClick: () => setSideBarOpen(false),
     },
