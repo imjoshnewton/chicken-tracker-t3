@@ -225,7 +225,7 @@ function SidebarNavLink({
   const pathName = usePathname();
   return (
     <>
-      {title == "Settings" && (
+      {title == "Account Settings" && (
         <li className="mt-auto px-3">
           <div className="divider my-3 dark:border-t-gray-500"></div>
         </li>
