@@ -19,11 +19,11 @@ const Home = () => {
             <Image
               src={header}
               alt="FlockNerd Track your flock - get insights"
-              className="absolute top-0 bottom-0 right-0 left-0 object-cover"
+              className="absolute bottom-0 left-0 right-0 top-0 object-cover"
               fill={true}
               placeholder="blur"
             />
-            <div className="absolute top-0 bottom-0 right-0 left-0 bg-gray-900/50"></div>
+            <div className="absolute bottom-0 left-0 right-0 top-0 bg-gray-900/50"></div>
             {/* <MotionDiv delay={0}> */}
             <Image
               src={logo}
@@ -124,8 +124,8 @@ const Home = () => {
                 towards better managing your poultry farm or backyard flock.
               </p>
               <Link
-                href="/api/auth/signin"
-                className="mt-4 rounded bg-secondary py-2 px-8 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+                href="/app/flocks"
+                className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
               >
                 Start Tracking Now
               </Link>
@@ -184,8 +184,8 @@ const Home = () => {
                 start seeing the benefits for yourself.
               </p>
               <Link
-                href="/api/auth/signin"
-                className="mt-4 rounded bg-secondary py-2 px-8 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+                href="/app/flocks"
+                className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
               >
                 Sign me up!
               </Link>
@@ -215,7 +215,7 @@ const Home = () => {
               </p>
               <h3 className="mb-4 text-xl">Why a PWA?</h3>
               <ol className="list-decimal pb-4">
-                <li className="ml-5 pl-2 pb-4">
+                <li className="ml-5 pb-4 pl-2">
                   I&apos;m a web developer - PWAs are created using the same
                   technologies as most websites: HTML, CSS, JavaScript.
                   That&apos;s my comfortzone and how I can create the best

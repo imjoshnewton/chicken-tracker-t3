@@ -11,8 +11,8 @@ import {
   MdSettings,
 } from "react-icons/md";
 
-import { SignOutButton, useUser } from "@clerk/nextjs";
-import type { Notification } from "@prisma/client";
+import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { type Notification } from "@lib/db/schema";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactElement, useState } from "react";
@@ -149,12 +149,12 @@ export default function AppLayout({
           {/* user is not signed-in */}
           {!user && (
             <li>
-              <Link href="/api/auth/signin">
+              <SignInButton>
                 <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
                 </button>
-              </Link>
+              </SignInButton>
             </li>
           )}
         </ul>

@@ -1,7 +1,8 @@
 import AppLayout from "./AppLayout";
-import { prisma } from "../../server/db/client";
-import type { User } from "@clerk/nextjs/api";
-import { currentUser } from "@clerk/nextjs";
+import { currentUsr } from "@lib/auth";
+import { db } from "@lib/db";
+import { eq, desc } from "drizzle-orm";
+import { notification } from "@lib/db/schema";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -13,22 +14,24 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const clerkUser: User | null = await currentUser();
-  const user = await prisma.user.findUnique({
-    where: {
-      id: clerkUser?.id,
-    },
-  });
+  const user = await currentUsr();
 
-  const notifications = await prisma.notification.findMany({
-    where: {
-      userId: user?.id,
-    },
-    orderBy: {
-      date: "desc",
-    },
-    take: 10,
-  });
+  const notifications = await db
+    .select()
+    .from(notification)
+    .limit(10)
+    .orderBy(desc(notification.date))
+    .where(eq(notification.userId, user?.id));
+
+  // const notifications = await prisma.notification.findMany({
+  //   where: {
+  //     userId: user?.id,
+  //   },
+  //   orderBy: {
+  //     date: "desc",
+  //   },
+  //   take: 10,
+  // });
 
   return <AppLayout notifications={notifications}>{children}</AppLayout>;
 }

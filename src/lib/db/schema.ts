@@ -10,6 +10,7 @@ import {
   tinyint,
 } from "drizzle-orm/mysql-core";
 import { relations, sql } from "drizzle-orm";
+import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 
 export const account = mysqlTable(
   "Account",
@@ -224,3 +225,6 @@ export const verificationToken = mysqlTable(
     };
   }
 );
+
+export type User = typeof user.$inferInsert;
+export type Notification = typeof notification.$inferInsert;

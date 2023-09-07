@@ -1,4 +1,4 @@
-import { type Notification } from "@prisma/client";
+import { type Notification } from "@lib/db/schema";
 import { MdClose } from "react-icons/md";
 import NotificationActionButtons from "./NotifcationActionButtons";
 
@@ -12,7 +12,7 @@ export default function NotificationsList({
   return (
     <div className="flex h-full flex-col">
       <button
-        className="absolute top-3 right-3 flex items-center justify-center rounded p-1 transition-all hover:bg-slate-400/10"
+        className="absolute right-3 top-3 flex items-center justify-center rounded p-1 transition-all hover:bg-slate-400/10"
         onClick={closeMenu}
       >
         <MdClose className="text-xl" />

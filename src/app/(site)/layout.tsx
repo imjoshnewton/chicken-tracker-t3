@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
-import { currentUser, SignInButton } from "@clerk/nextjs";
+import { currentUser, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -37,12 +37,12 @@ export default async function RootLayout({
           </li>
 
           {/* user is signed-in */}
-          {user && (
+          <SignedIn>
             <Link href={"/app/flocks"}>
               <li
                 className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
               >
-                {user.hasImage && (
+                {user?.hasImage && (
                   <Image
                     src={user.imageUrl as string}
                     width="35"
@@ -53,19 +53,19 @@ export default async function RootLayout({
                 )}
               </li>
             </Link>
-          )}
+          </SignedIn>
 
           {/* user is not signed-in */}
-          {!user && (
+          <SignedOut>
             <li>
-              <SignInButton>
+              <SignInButton mode="modal">
                 <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
                 </button>
               </SignInButton>
             </li>
-          )}
+          </SignedOut>
         </ul>
       </nav>
       <section className={"transition-all"}>{children}</section>

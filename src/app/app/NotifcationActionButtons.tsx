@@ -1,6 +1,6 @@
 "use client";
 
-import type { Notification } from "@prisma/client";
+import type { Notification } from "@lib/db/schema";
 import Link from "next/link";
 import { markNotificationAsRead } from "./server";
 
@@ -23,7 +23,7 @@ export default function NotificationActionButtons({
           markNotificationAsRead({ notificationId: notification.id });
           closeMenu();
         }}
-        disabled={notification.read}
+        disabled={!!notification.read}
       >
         Mark as read
       </button>
