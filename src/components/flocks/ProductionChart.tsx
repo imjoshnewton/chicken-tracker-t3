@@ -6,7 +6,7 @@ import {
   MdArrowDownward,
   MdArrowUpward,
 } from "react-icons/md";
-import { Breed, Flock } from "@prisma/client";
+import type { Breed, Flock } from "@prisma/client";
 import {
   Chart as ChartJS,
   BarController,
@@ -30,6 +30,160 @@ ChartJS.register(
   Legend
 );
 
+//
+// Helper function to create array of dates for chart
+//
+function createChartArray(logs: any[], limit: number) {
+  const dates = getDatesInRange(Number(limit));
+
+  const logsArray = logs?.map((log) => {
+    return {
+      ...log,
+      date: log.date.toLocaleString("us-EN", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      }),
+    };
+  });
+
+  const retArray = dates.map((date) => {
+    const stringValue = date.toLocaleString("us-EN", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+
+    const total = logsArray?.reduce((sum, log) => {
+      if (log.date === stringValue) {
+        return sum + log._sum.count;
+      }
+      return sum;
+    }, 0);
+
+    return {
+      date: stringValue,
+      _sum: {
+        count: total,
+      },
+    };
+  });
+
+  return retArray;
+}
+
+//
+// Helper function to calculate the target daily average for a given flock
+//
+function calcDailyAverage(
+  flock: Flock & { breeds: Breed[] },
+  breedFilter?: string
+): number {
+  const breedAverages = flock.breeds.length
+    ? breedFilter
+      ? flock.breeds
+          .filter((breed) => breed.id == breedFilter)
+          .map((breed) => (breed.averageProduction * breed.count) / 7)
+      : flock.breeds.map((breed) => (breed.averageProduction * breed.count) / 7)
+    : [0];
+  const dailyAverage = breedAverages.reduce((a, b) => a + b, 0);
+
+  return dailyAverage;
+}
+
+//
+// Helper function to calculate the actual daily average for a given flock
+//
+function calcActualDailyAverage(logs: any[]) {
+  const average = logs?.length
+    ? logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length
+    : 0;
+
+  return average;
+}
+
+//
+// Helper function to create array of dates withint a range from today
+//
+function getDatesInRange(limit: number): Date[] {
+  const retArray: Date[] = [];
+  const today = new Date(Date.now());
+
+  for (let i: number = limit - 1; i >= 0; i--) {
+    const newDate = new Date(today);
+    retArray.push(new Date(newDate.setDate(today.getDate() - i)));
+  }
+
+  return retArray;
+}
+
+//
+// Component to display the daily averages
+//
+function DailyAverages({
+  targetDailyAvg,
+  actualDailyAvg,
+  thisWeekAvg,
+  lastWeekAvg,
+}: {
+  targetDailyAvg: number;
+  actualDailyAvg: number;
+  thisWeekAvg: number;
+  lastWeekAvg: number;
+}) {
+  return (
+    <>
+      <div className="flex justify-around">
+        <div className="flex flex-col items-center justify-center text-center dark:text-gray-300">
+          Target Daily Avg
+          <br />
+          {targetDailyAvg.toFixed(2)}
+        </div>
+        <div className="flex flex-col items-center dark:text-gray-300">
+          Actual Daily Avg
+          <br />
+          <div className="flex items-center">
+            <span>{actualDailyAvg.toFixed(2)}</span>
+            <span className="ml-1">
+              {actualDailyAvg < targetDailyAvg ? (
+                <MdArrowDownward className="text-red-600" />
+              ) : actualDailyAvg > targetDailyAvg ? (
+                <MdArrowUpward className=" text-green-600" />
+              ) : null}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="mt-2 flex justify-around dark:text-gray-300">
+        <div className="flex flex-col items-center justify-center text-center">
+          Last Weeks Avg
+          <br />
+          {lastWeekAvg ? lastWeekAvg?.toFixed(2) : "n/a"}
+        </div>
+        <div className="flex flex-col items-center dark:text-gray-300">
+          This Weeks Avg
+          <br />
+          <div className="flex items-center">
+            <span className="ml-1">
+              {thisWeekAvg ? thisWeekAvg.toFixed(2) : "n/a"}
+            </span>
+            <span className="ml-1">
+              {thisWeekAvg < lastWeekAvg ? (
+                <MdOutlineTrendingDown className="text-red-600" />
+              ) : thisWeekAvg > lastWeekAvg ? (
+                <MdOutlineTrendingUp className=" text-green-600" />
+              ) : null}
+            </span>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+//
+// Main component
+//
 export default function ProductionChart({
   stats,
   flock,
@@ -77,82 +231,6 @@ export default function ProductionChart({
       ],
       labels: chartArray.map((d) => d.date),
     };
-  }
-
-  function createChartArray(logs: any[], limit: number) {
-    const dates = getDatesInRange(Number(limit));
-    const logsArray = logs?.map((log) => {
-      return {
-        ...log,
-        date: log.date.toLocaleString("us-EN", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-        }),
-      };
-    });
-
-    const retArray = dates.map((date) => {
-      const stringValue = date.toLocaleString("us-EN", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      });
-
-      const index = logsArray?.map((l) => l.date).indexOf(stringValue);
-
-      if (index >= 0) {
-        return {
-          ...logsArray[index],
-        };
-      } else {
-        return {
-          date: stringValue,
-          _sum: {
-            count: 0,
-          },
-        };
-      }
-    });
-
-    return retArray;
-  }
-
-  function calcDailyAverage(
-    flock: Flock & { breeds: Breed[] },
-    breedFilter?: string
-  ): number {
-    const breedAverages = flock.breeds.length
-      ? breedFilter
-        ? flock.breeds
-            .filter((breed) => breed.id == breedFilter)
-            .map((breed) => (breed.averageProduction * breed.count) / 7)
-        : flock.breeds.map(
-            (breed) => (breed.averageProduction * breed.count) / 7
-          )
-      : [0];
-    const dailyAverage = breedAverages.reduce((a, b) => a + b, 0);
-
-    return dailyAverage;
-  }
-
-  function calcActualDailyAverage(logs: any[]) {
-    const average = logs?.length
-      ? logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length
-      : 0;
-
-    return average;
-  }
-
-  function getDatesInRange(limit: number) {
-    const retArray: Date[] = [];
-
-    for (let i: number = limit - 1; i >= 0; i--) {
-      const today = new Date(Date.now());
-      retArray.push(new Date(today.setDate(today.getDate() - i)));
-    }
-
-    return retArray;
   }
 
   const options = {
@@ -208,56 +286,12 @@ export default function ProductionChart({
           See all logs &gt;
         </Link>
         <div className="p-2"></div>
-        <div className="flex justify-around">
-          <div className="flex flex-col items-center justify-center text-center dark:text-gray-300">
-            Target Daily Avg
-            <br />
-            {targetDailyAvg.toFixed(2)}
-          </div>
-          <div className="flex flex-col items-center dark:text-gray-300">
-            Actual Daily Avg
-            <br />
-            <div className="flex items-center">
-              <span>{actualDailyAvg.toFixed(2)}</span>
-              <span className="ml-1">
-                {actualDailyAvg < targetDailyAvg ? (
-                  <MdArrowDownward className="text-red-600" />
-                ) : actualDailyAvg > targetDailyAvg ? (
-                  <MdArrowUpward className=" text-green-600" />
-                ) : null}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="mt-2 flex justify-around dark:text-gray-300">
-          <div className="flex flex-col items-center justify-center text-center">
-            Last Weeks Avg
-            <br />
-            {stats.lastWeekAvg?._avg.count
-              ? stats.lastWeekAvg?._avg.count.toFixed(2)
-              : "n/a"}
-          </div>
-          <div className="flex flex-col items-center dark:text-gray-300">
-            This Weeks Avg
-            <br />
-            <div className="flex items-center">
-              <span className="ml-1">
-                {stats.thisWeekAvg?._avg.count
-                  ? stats.thisWeekAvg?._avg.count.toFixed(2)
-                  : "n/a"}
-              </span>
-              <span className="ml-1">
-                {stats.thisWeekAvg?._avg.count <
-                stats.lastWeekAvg?._avg.count ? (
-                  <MdOutlineTrendingDown className="text-red-600" />
-                ) : stats.thisWeekAvg?._avg.count >
-                  stats.lastWeekAvg?._avg.count ? (
-                  <MdOutlineTrendingUp className=" text-green-600" />
-                ) : null}
-              </span>
-            </div>
-          </div>
-        </div>
+        <DailyAverages
+          targetDailyAvg={targetDailyAvg}
+          actualDailyAvg={actualDailyAvg}
+          thisWeekAvg={stats.thisWeekAvg?._avg.count || 0}
+          lastWeekAvg={stats.lastWeekAvg?._avg.count || 0}
+        />
       </div>
     </div>
   );

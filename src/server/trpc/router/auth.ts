@@ -3,18 +3,14 @@ import { z } from "zod";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
-    return ctx.session;
+    return ctx.auth;
   }),
   getUser: protectedProcedure
-    .input(
-      z.object({
-        userId: z.string(),
-      })
-    )
+    .input(z.object({ clerkId: z.string() }))
     .query(async ({ input, ctx }) => {
-      return await ctx.prisma.user.findUnique({
+      return await ctx.prisma.user.findFirstOrThrow({
         where: {
-          id: input?.userId,
+          clerkId: input.clerkId,
         },
       });
     }),

@@ -43,6 +43,7 @@ model Session {
 
 model User {
   id            String         @id @default(cuid())
+  clerkId       String?        @unique
   name          String?
   email         String?        @unique
   emailVerified DateTime?
@@ -52,6 +53,9 @@ model User {
   sessions      Session[]
   flocks        Flock[]
   notification  Notification[]
+  tasks         Task[]
+
+  @@index([clerkId])
 }
 
 model VerificationToken {
@@ -70,10 +74,12 @@ model Flock {
   type        String
   zip         String?   @default("")
   userId      String
+  deleted     Boolean   @default(false)
   owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   breeds      Breed[]
   logs        EggLog[]
   expenses    Expense[]
+  tasks       Task[]
 
   @@index([userId])
 }
@@ -86,6 +92,7 @@ model Breed {
   count             Int
   imageUrl          String?  @db.Text
   averageProduction Float
+  deleted           Boolean  @default(false)
   flockId           String
   flock             Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
   EggLog            EggLog[]
@@ -105,6 +112,24 @@ model EggLog {
 
   @@index([flockId])
   @@index([breedId])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  dueDate     DateTime
+  recurrence  String
+  status      String    @default("Incomplete")
+  completed   Boolean   @default(false)
+  completedAt DateTime? @updatedAt
+  userId      String
+  User        User      @relation(fields: [userId], references: [id])
+  flockId     String
+  Flock       Flock     @relation(fields: [flockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([flockId])
 }
 
 model Expense {

@@ -19,16 +19,22 @@ const pwa = withPWA({
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+  // i18n: {
+  //   locales: ["en"],
+  //   defaultLocale: "en",
+  // },
   images: {
-    domains: ["firebasestorage.googleapis.com", "lh3.googleusercontent.com"],
+    domains: [
+      "firebasestorage.googleapis.com",
+      "lh3.googleusercontent.com",
+      "img.clerk.com",
+    ],
     formats: ["image/avif", "image/webp"],
   },
   experimental: {
     appDir: true,
+    serverActions: true,
+    // serverComponentsExternalPackages: ["prisma"],
   },
 };
 

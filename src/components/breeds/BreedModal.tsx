@@ -1,27 +1,29 @@
-import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { trpc } from "../../utils/trpc";
+"use client";
+
 import { Breed } from "@prisma/client";
-import Loader from "../shared/Loader";
-import { useUserData } from "../../lib/hooks";
-import { storage } from "../../lib/firebase";
-import { toast } from "react-hot-toast";
-import { MdImage, MdOutlineDelete } from "react-icons/md";
-import Image from "next/image";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { MdClose, MdImage, MdOutlineDelete } from "react-icons/md";
 import { RiLoader4Fill } from "react-icons/ri";
+import { storage } from "../../lib/firebase";
+import { trpc } from "../../utils/trpc";
+import Loader from "../shared/Loader";
 
 const BreedModal = ({
   flockId,
   closeModal,
   breed,
+  userId,
 }: {
   flockId: string | undefined;
   closeModal: any;
   breed: Breed | null;
+  userId: string;
 }) => {
-  const { user } = useUserData();
   const { register, handleSubmit, formState, reset, watch } = useForm({
     defaultValues: { ...breed, image: null as any, flockId: flockId },
     mode: "onChange",
@@ -54,7 +56,7 @@ const BreedModal = ({
 
   const dropIn = {
     hidden: {
-      y: "-100vh",
+      y: "100%",
       opacity: 0,
     },
     visible: {
@@ -68,7 +70,7 @@ const BreedModal = ({
       },
     },
     exit: {
-      y: "-100vh",
+      y: "100%",
       opacity: 0,
       transition: {
         duration: 0.3,
@@ -89,6 +91,47 @@ const BreedModal = ({
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
+  const uploadFile = useCallback(
+    async (e: any) => {
+      // Get the file
+      const file: any = Array.from(e)[0];
+      const extension = file.type.split("/")[1];
+
+      // Makes reference to the storage bucket location
+      const uploadRef = ref(
+        storage,
+        `uploads/${userId}/${
+          breed ? breed.id : file.name.split(".")[0]
+        }.${extension}`
+      );
+      setUploading(true);
+
+      // Starts the upload
+      const task = uploadBytesResumable(uploadRef, file);
+
+      // Listen to updates to upload task
+      task.on("state_changed", (snapshot) => {
+        const pct = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+        setProgress(Number(pct));
+      });
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then((d) => getDownloadURL(uploadRef))
+        .then((url) => {
+          if (typeof url == "string") {
+            setDownloadURL(url);
+            setUploading(false);
+          }
+          // handler(downloadURL);
+        });
+    },
+    [userId, breed]
+  );
+
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
       console.log("Watch: ", value, name, type);
@@ -102,45 +145,7 @@ const BreedModal = ({
       }
     });
     return () => subscription.unsubscribe();
-  }, [watch]);
-
-  const uploadFile = async (e: any) => {
-    // Get the file
-    const file: any = Array.from(e)[0];
-    const extension = file.type.split("/")[1];
-
-    // Makes reference to the storage bucket location
-    const uploadRef = ref(
-      storage,
-      `uploads/${user?.id}/${
-        breed ? breed.id : file.name.split(".")[0]
-      }.${extension}`
-    );
-    setUploading(true);
-
-    // Starts the upload
-    const task = uploadBytesResumable(uploadRef, file);
-
-    // Listen to updates to upload task
-    task.on("state_changed", (snapshot) => {
-      const pct = (
-        (snapshot.bytesTransferred / snapshot.totalBytes) *
-        100
-      ).toFixed(0);
-      setProgress(Number(pct));
-    });
-
-    // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
-    task
-      .then((d) => getDownloadURL(uploadRef))
-      .then((url) => {
-        if (typeof url == "string") {
-          setDownloadURL(url);
-          setUploading(false);
-        }
-        // handler(downloadURL);
-      });
-  };
+  }, [watch, uploadFile]);
 
   async function createOrUpdateBreed(breedData: Partial<Breed>) {
     console.log("Data: ", breedData);
@@ -198,7 +203,7 @@ const BreedModal = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="modal-overlay fixed inset-0 z-50 flex items-center justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none"
+        className="modal-overlay fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
       >
         <motion.div
           onClick={(e) => e.stopPropagation()}
@@ -206,25 +211,23 @@ const BreedModal = ({
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="relative my-6 mx-auto w-auto min-w-[350px] max-w-3xl"
+          className="relative mx-auto h-full w-full min-w-[350px] rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg"
         >
-          <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-            <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 p-5 ">
+          <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
+            <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
               <h3 className="font=semibold text-xl">
                 {breed?.id ? "Edit Breed" : "Add Birds"}
               </h3>
-              {breed?.id ? (
-                <button
-                  onClick={() => deleteBreedClick(breed?.id)}
-                  className=" rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
-                >
-                  <MdOutlineDelete />
-                </button>
-              ) : null}
+              <button
+                onClick={() => closeModal()}
+                className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
+              >
+                <MdClose />
+              </button>
             </div>
             <div className="relative flex-auto">
               <form
-                className="w-full px-8 pt-6 pb-8"
+                className="w-full p-4 lg:px-8 lg:pb-8 lg:pt-6"
                 onSubmit={handleSubmit(createOrUpdateBreed)}
               >
                 <fieldset className="mb-3">
@@ -267,7 +270,7 @@ const BreedModal = ({
                   Name
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("name")}
                   type="text"
@@ -277,7 +280,7 @@ const BreedModal = ({
                   Breed
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("breed")}
                   type="text"
@@ -286,7 +289,7 @@ const BreedModal = ({
                   Description
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   {...register("description")}
                   type="text"
                 />
@@ -294,7 +297,7 @@ const BreedModal = ({
                   Count
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("count")}
                   type="text"
@@ -303,7 +306,7 @@ const BreedModal = ({
                   Average Weekly Production
                 </label>
                 <input
-                  className="w-full appearance-none rounded border py-2 px-1 text-black"
+                  className="w-full appearance-none rounded border px-1 py-2 text-black"
                   required
                   {...register("averageProduction")}
                   type="text"
@@ -311,15 +314,23 @@ const BreedModal = ({
               </form>
             </div>
             <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
+              {breed?.id && (
+                <button
+                  onClick={() => deleteBreedClick(breed?.id)}
+                  className="mr-auto rounded p-3 text-xl text-red-600 hover:bg-slate-50 hover:shadow"
+                >
+                  <MdOutlineDelete />
+                </button>
+              )}
               <button
-                className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                 type="button"
                 onClick={closeModal}
               >
-                Close
+                CANCEL
               </button>
               <button
-                className="mr-1 mb-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                className="mb-1 mr-1 rounded bg-secondary px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                 type="submit"
                 disabled={updatingBreed || deletingBreed || creatingBreed}
                 onClick={handleSubmit(createOrUpdateBreed)}

@@ -1,21 +1,32 @@
-import { useSession } from "next-auth/react";
-import { trpc } from "../utils/trpc";
+import { useUser } from "@clerk/nextjs";
+import type { Session } from "next-auth";
 import { useRouter } from "next/router";
-import { number } from "zod";
-import type { Flock, Breed } from "@prisma/client";
+import { trpc } from "../utils/trpc";
 
-//s
+//
 // Custom hook to get user's session data
 //
 export function useUserData() {
-  const { data, status } = useSession({
-    required: true,
-  });
+  const { isLoaded, isSignedIn, user: clerkUser } = useUser();
+  const { data: user, isLoading } = trpc.auth.getUser.useQuery(
+    {
+      clerkId: clerkUser?.id ? clerkUser.id : "",
+    },
+    {
+      enabled: isSignedIn,
+    }
+  );
+
+  console.log("User: ", user);
 
   return {
-    user: data?.user,
-    defaultFlock: (data as any)?.defaultFlock,
-    status,
+    user: user,
+    status:
+      !isLoaded && isLoading
+        ? "loading"
+        : isSignedIn && isLoaded && !isLoading
+        ? "authenticated"
+        : null,
   };
 }
 
@@ -23,9 +34,7 @@ export function useUserData() {
 // Custom hook to get the data for the flock page: flockId, flock data (including breeds), logs and stats
 //
 export function useFlockData() {
-  const { data } = useSession({
-    required: true,
-  });
+  const { user } = useUserData();
   const router = useRouter();
   const { flockId, statsRange, breedFilter } = router.query;
   const range = statsRange ? Number(statsRange) : 7;
@@ -41,7 +50,7 @@ export function useFlockData() {
   } = trpc.flocks.getFlock.useQuery(
     { flockId: flockId as string },
     {
-      enabled: !!flockId && !!data?.user,
+      enabled: !!flockId && !!user,
     }
   );
   const {
@@ -56,7 +65,7 @@ export function useFlockData() {
       breedFilter: typeof breedFilter == "string" ? [breedFilter] : breedFilter,
     },
     {
-      enabled: !!flockId && !!range && !!today && !!data?.user,
+      enabled: !!flockId && !!range && !!today && !!user,
     }
   );
   const {
@@ -66,7 +75,7 @@ export function useFlockData() {
   } = trpc.stats.getExpenseStats.useQuery(
     { today: today, flockId: flockId as string },
     {
-      enabled: !!flockId && !!range && !!today && !!data?.user,
+      enabled: !!flockId && !!range && !!today && !!user,
     }
   );
   const {
@@ -100,13 +109,103 @@ export function useFlockData() {
   };
 }
 
+//
+// Custom hook to get the data for the flock page: flockId, flock data (including breeds), logs and stats
+//
+export function useFlockDataAppDir(
+  userId: string,
+  flockId: string,
+  statsRange: string,
+  breedFilter: string | null | undefined
+) {
+  const range = statsRange ? Number(statsRange) : 7;
+
+  const today = setStartOfDay(new Date());
+
+  const flockData = useFlockQuery(flockId, userId);
+  const logsData = useStatsQuery(flockId, range, today, breedFilter, userId);
+  const expenseData = useExpenseStatsQuery(flockId, today, userId);
+  const breedStats = useBreedStatsQuery(flockId, today);
+
+  return {
+    flockId,
+    flock: flockData.data,
+    stats: {
+      expenses: expenseData.data,
+      logs: logsData.data?.getLogs,
+      lastWeekAvg: logsData.data?.lastWeeksAvg,
+      thisWeekAvg: logsData.data?.thisWeeksAvg,
+    },
+    range,
+    breedStats: breedStats.data,
+    loading:
+      flockData.isLoading &&
+      logsData.isLoading &&
+      expenseData.isLoading &&
+      breedStats.isLoading,
+    error: {
+      flock: flockData.error,
+      stats: logsData.error,
+      expenses: expenseData.error,
+      breedStats: breedStats.error,
+    },
+  };
+}
+
+function setStartOfDay(date: Date) {
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
+function useFlockQuery(flockId: string, userId: string) {
+  return trpc.flocks.getFlock.useQuery(
+    { flockId },
+    {
+      enabled: !!flockId && !!userId,
+    }
+  );
+}
+
+function useStatsQuery(
+  flockId: string,
+  range: number,
+  today: Date,
+  breedFilter: string | null | undefined,
+  userId: string
+) {
+  return trpc.stats.getStats.useQuery(
+    {
+      flockId,
+      limit: range,
+      today,
+      breedFilter: typeof breedFilter == "string" ? [breedFilter] : undefined,
+    },
+    {
+      enabled: !!flockId && !!range && !!today && !!userId,
+    }
+  );
+}
+
+function useExpenseStatsQuery(flockId: string, today: Date, userId: string) {
+  return trpc.stats.getExpenseStats.useQuery(
+    { today, flockId },
+    {
+      enabled: !!flockId && !!today && !!userId,
+    }
+  );
+}
+
+function useBreedStatsQuery(flockId: string, today: Date) {
+  return trpc.stats.getBreedStats.useQuery({ today, flockId });
+}
+
 export function useAllFlocks() {
-  const { data } = useSession({ required: true });
+  const { user } = useUserData();
   const flocks = trpc.flocks.getFlocks.useQuery();
 
   return {
     flocks: flocks.data,
-    userId: data?.user?.id,
+    userId: user?.id,
     loading: flocks.isLoading,
   };
 }

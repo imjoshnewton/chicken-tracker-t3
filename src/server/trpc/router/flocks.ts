@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { JWT } from "google-auth-library";
+import { Breed, Flock, Task } from "@prisma/client";
 
 export const flocksRouter = router({
   getFlock: protectedProcedure
@@ -10,13 +11,16 @@ export const flocksRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      return await ctx.prisma.flock.findFirst({
+      const flock = await ctx.prisma.flock.findFirstOrThrow({
         where: {
           id: input.flockId,
           userId: ctx.session.user.id,
         },
         include: {
           breeds: {
+            where: {
+              deleted: false,
+            },
             orderBy: {
               // name: "asc",
               breed: "asc",
@@ -24,6 +28,50 @@ export const flocksRouter = router({
           },
         },
       });
+
+      const nonRecurring = await ctx.prisma.task.findMany({
+        where: {
+          flockId: input.flockId,
+          recurrence: "",
+        },
+      });
+
+      const recurring = await ctx.prisma.task.findMany({
+        where: {
+          flockId: input.flockId,
+          recurrence: {
+            not: "",
+          },
+        },
+      });
+
+      const flockWithTasks: Flock & {
+        breeds: Breed[];
+        tasks: Task[];
+      } = {
+        ...flock,
+        tasks: [...nonRecurring, ...recurring].sort((a, b) => {
+          if (a.completed === b.completed) {
+            if (a.dueDate === null && b.dueDate === null) {
+              return 0;
+            } else if (a.dueDate === null) {
+              return 1;
+            } else if (b.dueDate === null) {
+              return -1;
+            } else {
+              return a.dueDate?.getTime() - b.dueDate?.getTime();
+            }
+          } else {
+            if (a.completed) {
+              return 1;
+            } else {
+              return -1;
+            }
+          }
+        }),
+      };
+
+      return flockWithTasks;
     }),
   getFlocks: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.flock.findMany({

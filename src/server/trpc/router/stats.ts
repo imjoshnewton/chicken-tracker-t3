@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { addMonths, getDaysInMonth, getMonth, subMonths } from "date-fns";
+import {
+  addMonths,
+  endOfDay,
+  getDaysInMonth,
+  getMonth,
+  startOfDay,
+  subDays,
+  subMonths,
+} from "date-fns";
 
 export const statsRouter = router({
   getStats: protectedProcedure
@@ -13,12 +21,12 @@ export const statsRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      var today = input.today;
-      today.setHours(23, 59, 59, 999);
+      var today = endOfDay(input.today);
 
-      var pastDate = new Date(today);
-      pastDate.setDate(pastDate.getDate() - input.limit);
-      pastDate.setHours(0, 0, 0, 0);
+      var pastDate = startOfDay(subDays(today, input.limit));
+
+      console.log("Today: ", today);
+      console.log("Past date: ", pastDate);
 
       const getLogs = await ctx.prisma.eggLog.groupBy({
         where: {

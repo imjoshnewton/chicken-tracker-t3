@@ -160,15 +160,16 @@ export default function AppLayout({ children }: { children: any }) {
       </nav>
       <section
         className={
-          sideBarOpen
-            ? "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
-            : "h-[calc(100vh_-_60px)] transition-all lg:ml-52 lg:h-[calc(100vh_-_65px)]"
+          `h-full overflow-y-auto transition-all lg:ml-52`
+          // sideBarOpen
+          //   ? "h-full overflow-y-auto transition-all lg:ml-52 lg:h-full"
+          //   : "h-full overflow-y-auto transition-all lg:ml-52 lg:h-full"
         }
       >
         {children}
       </section>
       <aside
-        className={`fadeIn pb-safe fixed right-0 top-[60px] h-[calc(100vh_-_60px)] w-80 bg-white p-3 shadow-2xl transition-all lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:pb-3 ${
+        className={`fadeIn pb-safe fixed right-0 top-[60px] h-full w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:h-full lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
@@ -188,83 +189,14 @@ export default function AppLayout({ children }: { children: any }) {
       <aside
         className={
           sideBarOpen
-            ? "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 bg-white shadow-2xl transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)]"
-            : "fixed top-[60px] h-[calc(100vh_-_60px)] w-52 -translate-x-52 bg-white shadow-lg transition-transform lg:top-[65px] lg:h-[calc(100vh_-_65px)] lg:translate-x-0"
+            ? "fixed top-[60px] h-full w-52 overflow-y-auto bg-[#FEF9F6] shadow-2xl transition-transform lg:top-[65px] lg:h-full"
+            : "fixed top-[60px] h-full w-52 -translate-x-52 overflow-y-auto bg-[#FEF9F6] shadow-lg transition-transform lg:top-[65px] lg:h-full lg:translate-x-0"
         }
       >
         <ul className="side-nav pt-7">
           {links.map((link, index) => {
             return <SidebarNavLink {...link} key={index} />;
           })}
-          {/* <li
-            className={`mb-0 px-2 ${
-              router.pathname.startsWith("/app/flocks")
-                ? "bg-gray-400 text-white"
-                : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/flocks/`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />
-              My Flocks
-            </Link>
-          </li>
-          <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/logs" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/logs`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdOutlineEditNote className="mr-[14px] inline text-3xl" /> All
-              Logs
-            </Link>
-          </li>
-          <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/expenses" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href={`/app/expenses`}
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />
-              All Expenses
-            </Link>
-          </li> */}
-          {/* <li className="mt-auto px-3">
-            <div className="divider my-3 dark:border-t-gray-500"></div>
-          </li> */}
-          {/* <li
-            className={`mb-0 px-2 ${
-              router.pathname == "/app/settings" ? "bg-gray-400 text-white" : ""
-            } hover:bg-gray-300`}
-          >
-            <Link
-              href="/app/settings"
-              className="flex items-center px-2 py-3"
-              onClick={() => {
-                setSideBarOpen(false);
-              }}
-            >
-              <MdSettings className="mr-5 inline text-2xl" />
-              Settings
-            </Link>
-          </li> */}
           <li
             className={`mb-0 px-2 ${
               router.pathname == "/logout" ? "bg-gray-400 text-white" : ""
@@ -334,7 +266,7 @@ function SidebarNavLink({
           <motion.div
             layoutId="highlight"
             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-gray-400"
+            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]"
           ></motion.div>
         )}
         {/* </AnimatePresence> */}

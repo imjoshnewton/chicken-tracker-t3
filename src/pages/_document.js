@@ -1,17 +1,18 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
+import Script from "next/script";
 
 class MyDocument extends Document {
   render() {
     return (
       <Html>
         <Head>
-          <title>FlockNerd - Egg-ceptional Insights</title>
+          {/* <title>FlockNerd - Egg-ceptional Insights</title> */}
           <link rel="manifest" href="/manifest.json" />
-          <meta name="theme-color" content="#264653" />
+          <meta name="theme-color" content="#385968" />
           <link rel="apple-touch-icon" href="/apple-icon-180.png" />
 
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          {/* <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
 
           <link
             rel="apple-touch-startup-image"
@@ -147,6 +148,7 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <Script src="/setVH.js" />
         </body>
       </Html>
     );
