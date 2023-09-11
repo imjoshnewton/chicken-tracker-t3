@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
 import { formatDate, handleTimezone } from "./date-utils";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
 // import Datepicker from "react-tailwindcss-datepicker";
 // import {
@@ -84,7 +84,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   ): Promise<void> {
     await createLogMutation({
       flockId,
-      date,
+      date: startOfDay(date),
       count,
       notes,
       breedId,
@@ -102,7 +102,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       <motion.button
         // whileHover={{ scale: 1.05 }}
         // whileTap={{ scale: 0.95 }}
-        className="btn mr-1 mb-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+        className="btn mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
         type="button"
         onClick={() => setShowModal(true)}
       >
@@ -143,9 +143,10 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                   </div>
                   <div className="relative flex-auto">
                     <form
-                      className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8"
+                      className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pb-8 lg:pt-6"
                       onSubmit={async (e) => {
                         e.preventDefault();
+
                         // await createNewLog(flockId, date, count, notes);
                         if (date && count) {
                           await createNewLog(
@@ -176,9 +177,9 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       /> */}
                       <input
                         id="date"
-                        className="w-full appearance-none rounded border py-2 px-1 text-black"
+                        className="w-full appearance-none rounded border px-1 py-2 text-black"
                         required
-                        value={format(date, "yyyy-MM-dd")}
+                        value={format(handleTimezone(date), "yyyy-MM-dd")}
                         onChange={(event) =>
                           setDate(handleTimezone(new Date(event.target.value)))
                         }
@@ -189,7 +190,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       </label> */}
                       <input
                         type="tel"
-                        className="w-full appearance-none rounded border py-2 px-2 text-black"
+                        className="w-full appearance-none rounded border px-2 py-2 text-black"
                         required
                         value={count}
                         onChange={(e) => setCount(Number(e.target.value))}
@@ -203,7 +204,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         <select
                           onChange={(e) => setBreedId(e.target.value)}
                           value={breedId}
-                          className="h-12 w-full rounded border py-2 px-1 text-black"
+                          className="h-12 w-full rounded border px-1 py-2 text-black"
                         >
                           <option value="">Select bird(s) (Optional)</option>
                           {flockQuery.data?.breeds
@@ -222,7 +223,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         Notes
                       </label> */}
                       <textarea
-                        className="w-full appearance-none rounded border py-2 px-1 text-black"
+                        className="w-full appearance-none rounded border px-1 py-2 text-black"
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Notes..."
@@ -231,14 +232,14 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                   </div>
                   <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
                     <button
-                      className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
                       type="button"
                       onClick={closeModal}
                     >
                       CANCEL
                     </button>
                     <button
-                      className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                      className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                       type="button"
                       disabled={isLoading}
                       onClick={async () => {

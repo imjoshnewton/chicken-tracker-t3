@@ -7,6 +7,8 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
+export const runtime = "edge";
+
 const AppHome = async () => {
   const user = await currentUser();
 
