@@ -7,11 +7,6 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { formatDate, handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
-// import Datepicker from "react-tailwindcss-datepicker";
-// import {
-//   PopoverDirectionType,
-//   type DateValueType,
-// } from "react-tailwindcss-datepicker/dist/types";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);

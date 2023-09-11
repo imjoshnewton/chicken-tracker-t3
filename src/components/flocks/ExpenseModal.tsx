@@ -85,6 +85,10 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     return null;
   }
 
+  function handleTimzone(arg0: Date): import("react").SetStateAction<Date> {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <>
       <button
