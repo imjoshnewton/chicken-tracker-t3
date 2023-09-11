@@ -3,14 +3,14 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { RiLoader4Fill } from "react-icons/ri";
-import { deleteExpense } from "../server";
+import { deleteExpense } from "../server-edge";
 
 export default function DeleteButton({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
 
   return (
     <button
-      className="rounded bg-red-500 py-1 px-2 text-white hover:cursor-pointer hover:shadow-lg"
+      className="rounded bg-red-500 px-2 py-1 text-white hover:cursor-pointer hover:shadow-lg"
       disabled={loading}
       onClick={async () => {
         setLoading(true);
