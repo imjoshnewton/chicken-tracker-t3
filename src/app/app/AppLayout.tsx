@@ -150,6 +150,8 @@ export default function AppLayout({
                     elements: {
                       userButtonOuterIdentifier:
                         "text-white font-bold text-base ml-2",
+                      userButtonPopoverCard:
+                        "bg-[#FEF9F6] rounded-lg text-primary",
                       // userButtonTrigger: "ml-2 md:ml-1",
                       avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
                       avatarImage: "border-2 border-white rounded-full",
