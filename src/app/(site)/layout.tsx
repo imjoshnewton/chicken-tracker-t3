@@ -65,7 +65,7 @@ export default async function RootLayout({
             <li className="mr-2 flex items-center gap-2">
               <Link
                 href={"/app/flocks"}
-                className="px-3 py-2 hover:bg-slate-400/10"
+                className="animate__animated animate__fadeInRight px-3 py-2 hover:bg-slate-400/10"
               >
                 <span className="flex items-center font-semibold">
                   My Flocks

@@ -119,7 +119,7 @@ export default function AppLayout({
                 className={`mr-2 flex items-center gap-2 rounded transition-all`}
               >
                 <button
-                  className={`relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
+                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
                     notificationsOpen ? "open" : ""
                   }`}
                   onClick={() => {
