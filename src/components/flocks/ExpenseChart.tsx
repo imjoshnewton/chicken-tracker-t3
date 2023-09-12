@@ -115,6 +115,8 @@ export default function ExpenseChart({
           type: "line" as const,
           yAxisID: "y1",
           order: 1,
+          pointRadius: 4,
+          hoverRadius: 6,
         },
       ],
       labels: Array.from(new Set(chartArray.map((i: any) => i.MonthYear))),
@@ -148,7 +150,7 @@ export default function ExpenseChart({
 
     const retArray = datesAndCats.map((item) => {
       const index = expenseArray
-        .map((e) => {
+        ?.map((e) => {
           return {
             MonthYear: e.MonthYear,
             Cat: e.Cat,
