@@ -2,7 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
-import { currentUser, SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
+import {
+  currentUser,
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/nextjs";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -38,9 +44,11 @@ export default async function RootLayout({
 
           {/* user is signed-in */}
           <SignedIn>
-            <Link href={"/app/flocks"}>
-              <li
-                className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
+            {/* <li> */}
+            {/* <Link href={"/app/flocks"}> */}
+            {/* My Flocks */}
+            {/* <li
+                className={`ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
               >
                 {user?.hasImage && (
                   <Image
@@ -51,14 +59,39 @@ export default async function RootLayout({
                     alt="Current user profile image"
                   />
                 )}
-              </li>
-            </Link>
+              </li> */}
+            {/* </Link> */}
+            {/* </li> */}
+            <li className="mr-2 flex items-center gap-2">
+              <Link
+                href={"/app/flocks"}
+                className="px-3 py-2 hover:bg-slate-400/10"
+              >
+                <span className="flex items-center font-semibold">
+                  My Flocks
+                </span>
+              </Link>
+              <UserButton
+                afterSignOutUrl="/"
+                userProfileMode="navigation"
+                userProfileUrl="/app/settings/"
+                appearance={{
+                  elements: {
+                    userButtonOuterIdentifier:
+                      "text-white font-bold text-base ml-2",
+                    userButtonTrigger: "ml-2 md:ml-1",
+                    avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
+                    avatarImage: "border-2 border-white rounded-full",
+                  },
+                }}
+              />
+            </li>
           </SignedIn>
 
           {/* user is not signed-in */}
           <SignedOut>
             <li>
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" afterSignInUrl="/app/flocks/">
                 <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
