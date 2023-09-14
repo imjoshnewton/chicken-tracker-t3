@@ -215,6 +215,8 @@ export default function ProductionChart({
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
+          pointRadius: 4,
+          hoverRadius: 6,
         },
         {
           data: chartArray.map(() => flockDailyAverage),

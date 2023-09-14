@@ -8,10 +8,16 @@ import {
   MdLogin,
   MdLogout,
   MdManageAccounts,
+  MdNotifications,
   MdOutlineEditNote,
 } from "react-icons/md";
 
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignOutButton,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { type Notification } from "@lib/db/schema";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -110,38 +116,48 @@ export default function AppLayout({
           {user && (
             <>
               <li
-                className={`multilink ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10 ${
-                  notificationsOpen ? "open" : ""
-                }`}
-                onClick={() => {
-                  setNotificationsOpen(!notificationsOpen);
-                }}
+                className={`mr-2 flex items-center gap-2 rounded transition-all`}
               >
-                <div className="user-name animate__animated animate__fadeInLeft mr-3 hidden lg:block">
-                  {user.fullName}
-                </div>
-                {user.hasImage && (
-                  <div>
-                    <Image
-                      src={user.imageUrl as string}
-                      width="35"
-                      height="35"
-                      className="user-img h-9 w-9 lg:h-11 lg:w-11"
-                      alt="Current user profile image"
-                    />
-                    <div
-                      className={`${
-                        notifications?.length
-                          ? notifications.filter((not) => !not.read).length > 0
-                            ? "opacity-100"
-                            : "opacity-0"
+                <button
+                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
+                    notificationsOpen ? "open" : ""
+                  }`}
+                  onClick={() => {
+                    setNotificationsOpen(!notificationsOpen);
+                  }}
+                >
+                  <MdNotifications className=" text-2xl" />
+                  <div
+                    className={`${
+                      notifications?.length
+                        ? notifications.filter((not) => !not.read).length > 0
+                          ? "opacity-100"
                           : "opacity-0"
-                      } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
-                    >
-                      {notifications?.filter((not) => !not.read).length}
-                    </div>
+                        : "opacity-0"
+                    } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                  >
+                    {notifications?.filter((not) => !not.read).length}
                   </div>
-                )}
+                </button>
+                {/* <div className="user-name animate__animated animate__fadeInLeft hidden lg:block">
+                  {user.fullName}
+                </div> */}
+                <UserButton
+                  afterSignOutUrl="/"
+                  userProfileMode="navigation"
+                  userProfileUrl="/app/settings/"
+                  appearance={{
+                    elements: {
+                      userButtonOuterIdentifier:
+                        "text-white font-bold text-base ml-2",
+                      userButtonPopoverCard:
+                        "bg-[#FEF9F6] rounded-lg text-primary",
+                      // userButtonTrigger: "ml-2 md:ml-1",
+                      avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
+                      avatarImage: "border-2 border-white rounded-full",
+                    },
+                  }}
+                />
               </li>
             </>
           )}
