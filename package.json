@@ -24,7 +24,7 @@
     "@trpc/next": "^10.27.1",
     "@trpc/react-query": "^10.27.1",
     "@trpc/server": "^10.27.1",
-    "@upstash/qstash": "^0.3.2",
+    "@upstash/qstash": "^2.1.8",
     "animate.css": "^4.1.1",
     "chart.js": "^4.1.0",
     "chrome-aws-lambda": "^10.1.0",
