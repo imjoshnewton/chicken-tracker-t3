@@ -1,4 +1,4 @@
-import { verifySignature } from "@upstash/qstash/nextjs";
+import { verifySignature } from "@upstash/qstash/dist/nextjs";
 import { subMonths } from "date-fns";
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { prisma } from "../../server/db/client";
