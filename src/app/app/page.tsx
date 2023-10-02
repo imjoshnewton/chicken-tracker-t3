@@ -1,4 +1,3 @@
-import { currentUser } from "@clerk/nextjs";
 import Loader from "@components/shared/Loader";
 import { redirect } from "next/navigation";
 
@@ -10,13 +9,7 @@ export const metadata = {
 export const runtime = "edge";
 
 const AppHome = async () => {
-  const user = await currentUser();
-
-  if (!user) {
-    redirect("/auth/sign-in");
-  } else {
-    redirect("/app/flocks");
-  }
+  redirect("/app/flocks");
 
   return (
     <>
