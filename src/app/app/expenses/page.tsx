@@ -15,7 +15,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+// export const runtime = "edge";
 
 // Fetch expenses function
 async function fetchExpenses(userId: string, page: number) {
