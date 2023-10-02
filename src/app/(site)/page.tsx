@@ -9,8 +9,6 @@ import PWAExample from "./PWAExample";
 import LearnMoreButton from "./LearnMoreButton";
 
 const Home = () => {
-  //   const ref = useRef<HTMLDivElement>(null);
-
   return (
     <>
       <main className="justify-cente flex min-h-screen flex-col items-center p-0">
