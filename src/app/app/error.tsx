@@ -15,7 +15,7 @@ export default function Error({
         <div className="flex flex-col items-center justify-center gap-2 text-center">
           <h2 className="text-2xl">Something went wrong!</h2>
           <p className="max-w-md">
-            An error occured while trying to load this page. It's probably
+            An error occured while trying to load this page. It&apos;s probably
             nothng serious... You can click the button below to reload and try
             again.
           </p>
