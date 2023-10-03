@@ -14,6 +14,8 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
+export const runtime = "edge";
+
 const Flocks = async ({
   searchParams,
 }: {

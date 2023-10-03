@@ -5,7 +5,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 const Settings = async () => {
   return (
