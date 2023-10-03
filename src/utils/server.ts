@@ -32,4 +32,9 @@ export const api = experimental_createTRPCNextAppDirServer<AppRouter>({
   },
 });
 
+// export const serverClient = appRouter.createCaller({
+//   auth: () => {
+
+// });
+
 // export const createAction =
