@@ -51,6 +51,7 @@ export const breed = mysqlTable(
     breed: text("breed")
       .default(sql`('')`)
       .notNull(),
+    deleted: tinyint("deleted").default(0).notNull(),
   },
   (table) => {
     return {
@@ -125,6 +126,7 @@ export const flock = mysqlTable(
     type: varchar("type", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     zip: varchar("zip", { length: 191 }).default(""),
+    deleted: tinyint("deleted").default(0).notNull(),
   },
   (table) => {
     return {

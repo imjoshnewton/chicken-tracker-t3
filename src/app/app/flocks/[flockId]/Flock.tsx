@@ -5,8 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-import type { Session } from "next-auth";
-
 import Breeds from "@components/breeds/Breeds";
 import ExpenseModal from "@components/flocks/ExpenseModal";
 import LogModal from "@components/flocks/LogModal";
@@ -14,11 +12,11 @@ import Stats from "@components/flocks/Stats";
 import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
 
+import EditModal from "@components/flocks/EditModal";
+import AddTaskModal from "@components/tasks/AddTaskModal";
+import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
-import EditModal from "@components/flocks/EditModal";
-import TaskList from "@components/tasks/Tasks";
-import AddTaskModal from "@components/tasks/AddTaskModal";
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();

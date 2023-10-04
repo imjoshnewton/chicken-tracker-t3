@@ -1,7 +1,7 @@
-import { User } from "@prisma/client";
+import { user } from "@lib/db/schema";
 import { initTRPC, TRPCError } from "@trpc/server";
+import { eq } from "drizzle-orm";
 import superjson from "superjson";
-import { prisma } from "../db/client";
 
 import { type Context } from "./context";
 
@@ -28,42 +28,33 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  const user: User = await ctx.prisma.user.findUniqueOrThrow({
-    where: {
-      clerkId: ctx.auth.userId,
-    },
-  });
+  // const prismaUser: User = await ctx.prisma.user.findUniqueOrThrow({
+  //   where: {
+  //     clerkId: ctx.auth.userId,
+  //   },
+  // });
+
+  const [dbUser] = await ctx.db
+    .select()
+    .from(user)
+    .where(eq(user.clerkId, ctx.auth.userId))
+    .limit(1);
+
+  if (!dbUser) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
+  }
 
   return next({
     ctx: {
       // infers the `session` as non-nullable
       session: {
         ...ctx.auth,
-        user: user,
+        user: dbUser,
       },
     },
   });
-  // console.log("UserId: ", ctx.auth.userId);
-
-  // const user = await prisma.user.findUnique({
-  //   where: {
-  //     id: ctx.auth.userId ?? undefined,
-  //   },
-  // });
-
-  // console.log("User: ", user);
-  // console.log("Auth: ", ctx.auth);
-
-  // if (!ctx.auth || !user) {
-  //   throw new TRPCError({ code: "UNAUTHORIZED" });
-  // }
-
-  // return next({
-  //   ctx: {
-  //     // infers the `session` as non-nullable
-  //     session: { ...ctx.auth, user: user },
-  //   },
-  // });
 });
 
 /**

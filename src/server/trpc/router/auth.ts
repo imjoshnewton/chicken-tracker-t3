@@ -1,5 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
+import { user } from "@lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -8,6 +10,17 @@ export const authRouter = router({
   getUser: protectedProcedure
     .input(z.object({ clerkId: z.string() }))
     .query(async ({ input, ctx }) => {
+      const [dbUser] = await ctx.db
+        .select()
+        .from(user)
+        .where(eq(user.clerkId, input.clerkId))
+        .limit(1);
+
+      if (!dbUser) {
+        throw new Error("User not found");
+      }
+
+      return dbUser;
       return await ctx.prisma.user.findFirstOrThrow({
         where: {
           clerkId: input.clerkId,

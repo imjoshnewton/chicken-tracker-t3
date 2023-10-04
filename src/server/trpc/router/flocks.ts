@@ -2,6 +2,8 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { JWT } from "google-auth-library";
 import { Breed, Flock, Task } from "@prisma/client";
+import { flock as Flocks, breed as Breeds, user } from "@lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export const flocksRouter = router({
   getFlock: protectedProcedure
@@ -11,23 +13,37 @@ export const flocksRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      const flock = await ctx.prisma.flock.findFirstOrThrow({
-        where: {
-          id: input.flockId,
-          userId: ctx.session.user.id,
-        },
-        include: {
+      const flock = await ctx.db.query.flock.findFirst({
+        where: eq(Flocks.id, input.flockId),
+        with: {
           breeds: {
-            where: {
-              deleted: false,
-            },
-            orderBy: {
-              // name: "asc",
-              breed: "asc",
-            },
+            where: eq(Breeds.deleted, 0),
+            orderBy: (breeds, { asc }) => [asc(breeds.id)],
           },
         },
       });
+
+      if (!flock) {
+        throw new Error("Flock not found");
+      }
+
+      // const flock = await ctx.prisma.flock.findFirstOrThrow({
+      //   where: {
+      //     id: input.flockId,
+      //     userId: ctx.session.user.id,
+      //   },
+      //   include: {
+      //     breeds: {
+      //       where: {
+      //         deleted: false,
+      //       },
+      //       orderBy: {
+      //         // name: "asc",
+      //         breed: "asc",
+      //       },
+      //     },
+      //   },
+      // });
 
       const nonRecurring = await ctx.prisma.task.findMany({
         where: {
@@ -45,10 +61,7 @@ export const flocksRouter = router({
         },
       });
 
-      const flockWithTasks: Flock & {
-        breeds: Breed[];
-        tasks: Task[];
-      } = {
+      const flockWithTasks = {
         ...flock,
         tasks: [...nonRecurring, ...recurring].sort((a, b) => {
           if (a.completed === b.completed) {
@@ -74,6 +87,18 @@ export const flocksRouter = router({
       return flockWithTasks;
     }),
   getFlocks: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db
+      .select({
+        id: Flocks.id,
+        name: Flocks.name,
+        description: Flocks.description,
+        imageUrl: Flocks.imageUrl,
+        type: Flocks.type,
+        userId: Flocks.userId,
+      })
+      .from(user)
+      .where(eq(user.id, ctx.session.user.id))
+      .innerJoin(Flocks, eq(Flocks.userId, user.id));
     return await ctx.prisma.flock.findMany({
       where: {
         userId: ctx.session.user.id,
