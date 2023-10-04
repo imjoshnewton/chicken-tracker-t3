@@ -1,22 +1,19 @@
+import { expense } from "@lib/db/schema";
+import cuid from "cuid";
+import { eq } from "drizzle-orm";
+import { fetchExpenses } from "src/app/app/expenses/page";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+import { formatDateForMySQL } from "./logs";
 
 export const expensesRouter = router({
-  getExpenses: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.flock.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-      include: {
-        expenses: {
-          take: 25,
-          orderBy: {
-            date: "desc",
-          },
-        },
-      },
-    });
-  }),
+  getExpenses: protectedProcedure
+    .input(z.object({ page: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const expenses = await fetchExpenses(ctx.session.user.id, input.page);
+
+      return expenses;
+    }),
   createExpense: protectedProcedure
     .input(
       z.object({
@@ -28,9 +25,14 @@ export const expensesRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.expense.create({
-        data: input,
-      });
+      const id: string = cuid();
+      return await ctx.db.insert(expense).values([
+        {
+          id,
+          ...input,
+          date: formatDateForMySQL(input.date),
+        },
+      ]);
     }),
   deleteExpense: protectedProcedure
     .input(
@@ -39,10 +41,6 @@ export const expensesRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.expense.delete({
-        where: {
-          id: input.id,
-        },
-      });
+      return await ctx.db.delete(expense).where(eq(expense.id, input.id));
     }),
 });

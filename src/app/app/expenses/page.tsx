@@ -2,7 +2,6 @@ import { currentUsr } from "@lib/auth";
 import { db } from "@lib/db";
 import { expense, flock } from "@lib/db/schema";
 import { type Expense } from "@prisma/client";
-import { api } from "@utils/server";
 import { desc, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
@@ -19,7 +18,7 @@ export const metadata = {
 export const runtime = "edge";
 
 // Fetch expenses function
-async function fetchExpenses(userId: string, page: number) {
+export async function fetchExpenses(userId: string, page: number) {
   const flockJoin = await db
     .select({
       id: expense.id,

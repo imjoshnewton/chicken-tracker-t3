@@ -18,7 +18,7 @@ export const metadata = {
 export const runtime = "edge";
 
 // Fetch logs function
-async function fetchLogs(userId: string, page: number) {
+export async function fetchLogs(userId: string, page: number) {
   const flockJoin = await db
     .select({
       id: eggLog.id,
