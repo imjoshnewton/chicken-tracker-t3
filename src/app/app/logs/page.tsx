@@ -2,13 +2,9 @@ import { type EggLog } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Card from "../../../components/shared/Card";
 import { currentUsr } from "@lib/auth";
-import { db } from "@lib/db";
-import { eggLog, flock } from "@lib/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
 import Pagination from "../../../components/flocks/Pagination";
 import DeleteButton from "./DeleteButton";
-
-const PAGE_SIZE = 25;
+import { fetchLogCount, fetchLogs, PAGE_SIZE } from "@lib/fetch";
 
 export const metadata = {
   title: "FlockNerd - All Logs",
@@ -17,43 +13,6 @@ export const metadata = {
 
 export const runtime = "edge";
 
-// Fetch logs function
-export async function fetchLogs(userId: string, page: number) {
-  const flockJoin = await db
-    .select({
-      id: eggLog.id,
-      date: eggLog.date,
-      count: eggLog.count,
-      flockId: flock.id,
-      notes: eggLog.notes,
-      breedId: eggLog.breedId,
-    })
-    .from(flock)
-    .where(eq(flock.userId, userId))
-    .innerJoin(eggLog, eq(eggLog.flockId, flock.id))
-    .orderBy(desc(eggLog.date))
-    .offset(page * PAGE_SIZE)
-    .limit(PAGE_SIZE);
-
-  return flockJoin.map((f) => {
-    return {
-      ...f,
-      date: new Date(f.date),
-    };
-  });
-}
-
-async function fetchLogCount(userId: string) {
-  const [result] = await db
-    .select({
-      count: sql<number>`count(*)`,
-    })
-    .from(flock)
-    .where(eq(flock.userId, userId))
-    .innerJoin(eggLog, eq(eggLog.flockId, flock.id));
-
-  return result ? result.count : 0;
-}
 // Log item component
 function LogItem({ log, index }: { log: EggLog; index: number }) {
   return (

@@ -4,7 +4,7 @@ import { router, protectedProcedure } from "../trpc";
 import cuid from "cuid";
 import { format } from "date-fns";
 import { eq } from "drizzle-orm";
-import { fetchLogs } from "src/app/app/logs/page";
+import { fetchLogs } from "@lib/fetch";
 
 export const logsRouter = router({
   getLogs: protectedProcedure

@@ -1,7 +1,7 @@
 import { expense } from "@lib/db/schema";
+import { fetchExpenses } from "@lib/fetch";
 import cuid from "cuid";
 import { eq } from "drizzle-orm";
-import { fetchExpenses } from "src/app/app/expenses/page";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 import { formatDateForMySQL } from "./logs";

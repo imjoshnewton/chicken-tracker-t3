@@ -1,14 +1,10 @@
 import { currentUsr } from "@lib/auth";
-import { db } from "@lib/db";
-import { expense, flock } from "@lib/db/schema";
+import { fetchExpenseCount, fetchExpenses, PAGE_SIZE } from "@lib/fetch";
 import { type Expense } from "@prisma/client";
-import { desc, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
 import Card from "../../../components/shared/Card";
 import DeleteButton from "./DeleteButton";
-
-const PAGE_SIZE = 25;
 
 export const metadata = {
   title: "FlockNerd - All Expenses",
@@ -16,47 +12,6 @@ export const metadata = {
 };
 
 export const runtime = "edge";
-
-// Fetch expenses function
-export async function fetchExpenses(userId: string, page: number) {
-  const flockJoin = await db
-    .select({
-      id: expense.id,
-      date: expense.date,
-      amount: expense.amount,
-      category: expense.category,
-      memo: expense.memo,
-      flockId: expense.flockId,
-    })
-    .from(flock)
-    .where(eq(flock.userId, userId))
-    .innerJoin(expense, eq(expense.flockId, flock.id))
-    .orderBy(desc(expense.date))
-    .offset(page * PAGE_SIZE)
-    .limit(PAGE_SIZE);
-
-  return flockJoin.map((f) => {
-    return {
-      ...f,
-      date: new Date(f.date),
-    };
-  });
-}
-
-// Fetch expense count function
-async function fetchExpenseCount(userId: string) {
-  if (!userId) redirect("/api/auth/signin");
-
-  const [result] = await db
-    .select({
-      count: sql<number>`count(*)`,
-    })
-    .from(flock)
-    .where(eq(flock.userId, userId))
-    .innerJoin(expense, eq(expense.flockId, flock.id));
-
-  return result ? result.count : 0;
-}
 
 // Expense item component
 function ExpenseItem({ expense, index }: { expense: Expense; index: number }) {
