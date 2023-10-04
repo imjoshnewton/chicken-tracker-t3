@@ -13,37 +13,37 @@ export const flocksRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      const flock = await ctx.db.query.flock.findFirst({
-        where: eq(Flocks.id, input.flockId),
-        with: {
-          breeds: {
-            where: eq(Breeds.deleted, 0),
-            orderBy: (breeds, { asc }) => [asc(breeds.id)],
-          },
-        },
-      });
-
-      if (!flock) {
-        throw new Error("Flock not found");
-      }
-
-      // const flock = await ctx.prisma.flock.findFirstOrThrow({
-      //   where: {
-      //     id: input.flockId,
-      //     userId: ctx.session.user.id,
-      //   },
-      //   include: {
+      // const flock = await ctx.db.query.flock.findFirst({
+      //   where: eq(Flocks.id, input.flockId),
+      //   with: {
       //     breeds: {
-      //       where: {
-      //         deleted: false,
-      //       },
-      //       orderBy: {
-      //         // name: "asc",
-      //         breed: "asc",
-      //       },
+      //       where: eq(Breeds.deleted, 0),
+      //       orderBy: (breeds, { asc }) => [asc(breeds.id)],
       //     },
       //   },
       // });
+
+      // if (!flock) {
+      //   throw new Error("Flock not found");
+      // }
+
+      const flock = await ctx.prisma.flock.findFirstOrThrow({
+        where: {
+          id: input.flockId,
+          userId: ctx.session.user.id,
+        },
+        include: {
+          breeds: {
+            where: {
+              deleted: false,
+            },
+            orderBy: {
+              // name: "asc",
+              breed: "asc",
+            },
+          },
+        },
+      });
 
       const nonRecurring = await ctx.prisma.task.findMany({
         where: {
@@ -63,6 +63,13 @@ export const flocksRouter = router({
 
       const flockWithTasks = {
         ...flock,
+        // deleted: flock.deleted === 1,
+        // breeds: flock.breeds.map((breed) => {
+        //   return {
+        //     ...breed,
+        //     deleted: breed.deleted === 1,
+        //   };
+        // }, []),
         tasks: [...nonRecurring, ...recurring].sort((a, b) => {
           if (a.completed === b.completed) {
             if (a.dueDate === null && b.dueDate === null) {
