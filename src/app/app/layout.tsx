@@ -3,6 +3,7 @@ import { currentUsr } from "@lib/auth";
 import { db } from "@lib/db";
 import { eq, desc } from "drizzle-orm";
 import { notification } from "@lib/db/schema";
+import { api } from "@utils/server";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -22,6 +23,8 @@ export default async function RootLayout({
     .limit(10)
     .orderBy(desc(notification.date))
     .where(eq(notification.userId, user?.id));
+
+  // const notifications = await api.auth.getUserNotifications.query();
 
   // const notifications = await prisma.notification.findMany({
   //   where: {

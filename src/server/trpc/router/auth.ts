@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { user } from "@lib/db/schema";
-import { eq } from "drizzle-orm";
+import { notification, user } from "@lib/db/schema";
+import { eq, desc } from "drizzle-orm";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -62,16 +62,12 @@ export const authRouter = router({
       });
     }),
   getUserNotifications: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.notification.findMany({
-      where: {
-        userId: ctx.session.user.id,
-        // read: false,
-      },
-      orderBy: {
-        date: "desc",
-      },
-      take: 10,
-    });
+    return await ctx.db
+      .select()
+      .from(notification)
+      .limit(10)
+      .orderBy(desc(notification.date))
+      .where(eq(notification.userId, user?.id));
   }),
   getUserUnreadNotifications: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.prisma.notification.findMany({
