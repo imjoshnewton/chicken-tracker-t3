@@ -18,6 +18,8 @@ import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
 
+export const runtime = "edge";
+
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();

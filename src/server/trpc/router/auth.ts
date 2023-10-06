@@ -21,11 +21,6 @@ export const authRouter = router({
       }
 
       return dbUser;
-      return await ctx.prisma.user.findFirstOrThrow({
-        where: {
-          clerkId: input.clerkId,
-        },
-      });
     }),
   updateUser: protectedProcedure
     .input(
@@ -35,15 +30,10 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          name: input.name,
-          image: input.image,
-        },
-      });
+      return await ctx.db
+        .update(user)
+        .set({ name: input.name, image: input.image })
+        .where(eq(user.id, ctx.session.user.id));
     }),
   setDefaultFlock: protectedProcedure
     .input(
@@ -52,14 +42,10 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.user.update({
-        where: {
-          id: ctx.session.user.id,
-        },
-        data: {
-          defaultFlock: input.flockId,
-        },
-      });
+      return await ctx.db
+        .update(user)
+        .set({ defaultFlock: input.flockId })
+        .where(eq(user.id, ctx.session.user.id));
     }),
   getUserNotifications: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db
@@ -70,27 +56,19 @@ export const authRouter = router({
       .where(eq(notification.userId, user?.id));
   }),
   getUserUnreadNotifications: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.notification.findMany({
-      where: {
-        userId: ctx.session.user.id,
-        read: false,
-      },
-      orderBy: {
-        date: "desc",
-      },
-      take: 10,
-    });
+    return await ctx.db
+      .select()
+      .from(notification)
+      .where(eq(notification.userId, user?.id))
+      .where(eq(notification.read, 0))
+      .limit(10);
   }),
   markNotificationasRead: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.notification.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          read: true,
-        },
-      });
+      return await ctx.db
+        .update(notification)
+        .set({ read: 1 })
+        .where(eq(notification.id, input.id));
     }),
 });

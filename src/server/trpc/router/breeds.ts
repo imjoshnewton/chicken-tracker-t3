@@ -1,3 +1,6 @@
+import { breed } from "@lib/db/schema";
+import cuid from "cuid";
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 
@@ -15,9 +18,14 @@ export const breedsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.breed.create({
-        data: input,
-      });
+      const id = cuid();
+
+      return await ctx.db.insert(breed).values([
+        {
+          id,
+          ...input,
+        },
+      ]);
     }),
   updateBreed: protectedProcedure
     .input(
@@ -33,20 +41,10 @@ export const breedsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.breed.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          name: input.name ? input.name : "",
-          breed: input.breed,
-          description: input.description ? input.description : "",
-          count: input.count,
-          imageUrl: input.imageUrl ? input.imageUrl : "",
-          averageProduction: input.averageProduction,
-          flockId: input.flockId,
-        },
-      });
+      return await ctx.db
+        .update(breed)
+        .set(input)
+        .where(eq(breed.id, input.id));
     }),
   deleteBreed: protectedProcedure
     .input(
@@ -55,13 +53,9 @@ export const breedsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.breed.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          deleted: true,
-        },
-      });
+      return await ctx.db
+        .update(breed)
+        .set({ deleted: 1 })
+        .where(eq(breed.id, input.id));
     }),
 });
