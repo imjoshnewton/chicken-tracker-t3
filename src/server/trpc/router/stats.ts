@@ -26,7 +26,6 @@ export const statsRouter = router({
       const getLogs = await ctx.db
         .select({
           date: eggLog.date,
-          // breedId: eggLog.breedId,
           count: eggLog.count,
         })
         .from(eggLog)
@@ -41,37 +40,12 @@ export const statsRouter = router({
             input.breedFilter
               ? inArray(eggLog.breedId, input.breedFilter)
               : undefined
-            // input.breedFilter
-            //   ? inArray(eggLog.breedId, input.breedFilter)
-            //   : notInArray(eggLog.breedId, [""])
-            // input.breedFilter ? in_(eggLog.breedId, input.breedFilter) : undefined
           )
         )
         .orderBy(({ date }) => desc(date))
         .limit(input.limit || 7);
 
       console.log("Get logs: ", getLogs);
-
-      // const getLogs = await ctx.prisma.eggLog.groupBy({
-      //   where: {
-      //     flockId: input.flockId,
-      //     date: {
-      //       lte: today,
-      //       gte: pastDate,
-      //     },
-      //     breedId: {
-      //       in: input.breedFilter,
-      //     },
-      //   },
-      //   by: ["date"],
-      //   orderBy: {
-      //     date: "desc",
-      //   },
-      //   take: input.limit || 7,
-      //   _sum: {
-      //     count: true,
-      //   },
-      // });
 
       const [beginThisWeek, endThisWeek] = getThisWeek(today);
 
@@ -161,37 +135,6 @@ export const statsRouter = router({
         expenses: getExp.rows,
         production: getProd.rows,
       };
-
-      // const getExpenses = await ctx.prisma
-      //   .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
-      //               FROM Expense AS expen
-      //               WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
-      //               AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
-      //   dates[1]?.getMonth()! + 1
-      // }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
-      //   dates[4]?.getMonth()! + 1
-      // }, ${dates[5]?.getMonth()! + 1})
-      //               AND expen.flockId = ${input.flockId}
-      //               GROUP BY flockId, MonthYear, Cat
-      //               ORDER BY MonthYear ASC`;
-
-      // const getProduction = await ctx.prisma
-      //   .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
-      //               FROM EggLog AS logs
-      //               WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
-      //               AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
-      //   dates[1]?.getMonth()! + 1
-      // }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
-      //   dates[4]?.getMonth()! + 1
-      // }, ${dates[5]?.getMonth()! + 1})
-      //               AND logs.flockId = ${input.flockId}
-      //               GROUP BY flockId, MonthYear
-      //               ORDER BY MonthYear ASC`;
-
-      // return {
-      //   expenses: getExpenses,
-      //   production: getProduction,
-      // };
     }),
   getFlockSummary: protectedProcedure
     .input(
@@ -234,31 +177,10 @@ export const statsRouter = router({
         .orderBy(({ avgCount }) => desc(avgCount));
 
       return avg;
-
-      // return await ctx.prisma.eggLog.groupBy({
-      //   where: {
-      //     flockId: input.flockId,
-      //     date: {
-      //       lte: endThisWeek,
-      //       gte: beginThisWeek,
-      //     },
-      //   },
-      //   _avg: {
-      //     count: true,
-      //   },
-      //   by: ["breedId"],
-      //   orderBy: {
-      //     _avg: {
-      //       count: "desc",
-      //     },
-      //   },
-      //   // take: 1,
-      // });
     }),
 });
 
 function getThisWeek(today: Date): [beginningofWeek: Date, endofWeek: Date] {
-  //   const today = admin.firestore.Timestamp.now().toDate();
   today.setHours(0, 0, 0, 0);
   let tempDate = new Date(today);
   const dayOfWeek = today.getDay();

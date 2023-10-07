@@ -28,12 +28,6 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
-  // const prismaUser: User = await ctx.prisma.user.findUniqueOrThrow({
-  //   where: {
-  //     clerkId: ctx.auth.userId,
-  //   },
-  // });
-
   const [dbUser] = await ctx.db
     .select()
     .from(user)
