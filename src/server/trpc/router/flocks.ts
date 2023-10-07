@@ -1,9 +1,10 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import { JWT } from "google-auth-library";
-import { Breed, Flock, Task } from "@prisma/client";
-import { flock as Flocks, breed as Breeds, user } from "@lib/db/schema";
-import { eq } from "drizzle-orm";
+// import { JWT } from "google-auth-library";
+// import { Breed, Flock, Task } from "@prisma/client";
+import { flock as Flocks, breed as Breeds, user, task } from "@lib/db/schema";
+import { eq, and, not } from "drizzle-orm";
+import cuid from "cuid";
 
 export const flocksRouter = router({
   getFlock: protectedProcedure
@@ -27,38 +28,32 @@ export const flocksRouter = router({
         throw new Error("Flock not found");
       }
 
-      // const flock = await ctx.prisma.flock.findFirstOrThrow({
-      //   where: {
-      //     id: input.flockId,
-      //     userId: ctx.session.user.id,
-      //   },
-      //   include: {
-      //     breeds: {
-      //       where: {
-      //         deleted: false,
-      //       },
-      //       orderBy: {
-      //         // name: "asc",
-      //         breed: "asc",
-      //       },
-      //     },
-      //   },
-      // });
-
-      const nonRecurring = await ctx.prisma.task.findMany({
-        where: {
-          flockId: input.flockId,
-          recurrence: "",
-        },
+      const nonRecurring = (
+        await ctx.db
+          .select()
+          .from(task)
+          .where(and(eq(task.flockId, input.flockId), eq(task.recurrence, "")))
+      ).map((task) => {
+        return {
+          ...task,
+          completed: task.completed === 1,
+          dueDate: task.dueDate === null ? null : new Date(task.dueDate),
+        };
       });
 
-      const recurring = await ctx.prisma.task.findMany({
-        where: {
-          flockId: input.flockId,
-          recurrence: {
-            not: "",
-          },
-        },
+      const recurring = (
+        await ctx.db
+          .select()
+          .from(task)
+          .where(
+            and(eq(task.flockId, input.flockId), not(eq(task.recurrence, "")))
+          )
+      ).map((task) => {
+        return {
+          ...task,
+          completed: task.completed === 1,
+          dueDate: task.dueDate === null ? null : new Date(task.dueDate),
+        };
       });
 
       const flockWithTasks = {
@@ -79,7 +74,7 @@ export const flocksRouter = router({
             } else if (b.dueDate === null) {
               return -1;
             } else {
-              return a.dueDate?.getTime() - b.dueDate?.getTime();
+              return a.dueDate.getTime() - b.dueDate.getTime();
             }
           } else {
             if (a.completed) {
@@ -117,15 +112,16 @@ export const flocksRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.prisma.flock.create({
-        data: {
-          userId: ctx.session.user.id,
-          name: input.name,
-          description: input.description,
-          type: input.type,
+      const id = cuid();
+
+      return await ctx.db.insert(Flocks).values([
+        {
+          ...input,
+          id: id,
           imageUrl: input.imageUrl ? input.imageUrl : "",
+          userId: ctx.session.user.id,
         },
-      });
+      ]);
     }),
   updateFlock: protectedProcedure
     .input(
@@ -139,86 +135,13 @@ export const flocksRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const flockRes = await ctx.prisma.flock.update({
-        where: {
-          id: input.id,
-        },
-        data: {
-          name: input.name,
-          description: input.description,
-          type: input.type,
+      const flockRes = await ctx.db
+        .update(Flocks)
+        .set({
+          ...input,
           imageUrl: input.imageUrl ? input.imageUrl : "",
-        },
-      });
-
-      if (input.default) {
-        // Send a message to cloud pubsub
-        const msgData = {
-          flockId: flockRes.id,
-          ownerId: flockRes.userId,
-        };
-
-        console.log("Private Key: ", JSON.parse(process.env.GCP_PRIVATE_KEY!));
-
-        const client = new JWT({
-          email: process.env.GCP_CLIENT_EMAIL,
-          key: JSON.parse(process.env.GCP_PRIVATE_KEY!),
-
-          scopes: ["https://www.googleapis.com/auth/cloud-platform"],
-        });
-
-        const dataBuffer = Buffer.from(JSON.stringify(msgData)).toString(
-          "base64"
-        );
-
-        const url =
-          "https://pubsub.googleapis.com/v1/projects/chicken-tracker-83ef8/topics/defaultFlock:publish";
-
-        // console.log("Client: ", client);
-        console.log("Data: ", dataBuffer);
-
-        // const options = {
-        //   url: url,
-        //   method: "POST",
-        //   data: {
-        //     messages: [
-        //       {
-        //         data: dataBuffer,
-        //       },
-        //     ],
-        //   },
-        // };
-
-        const response = await client.request({
-          url: url,
-          method: "POST",
-          data: {
-            messages: [
-              {
-                data: dataBuffer,
-              },
-            ],
-          },
-        });
-
-        console.log(response);
-
-        // const response = await fetch(url, {
-        //   method: "POST",
-        //   headers: {
-        //     "Content-Type": "application/json",
-        //   },
-        //   body: JSON.stringify({
-        //     messages: [
-        //       {
-        //         data: Buffer.from(JSON.stringify(msgData)).toString("base64"),
-        //       },
-        //     ],
-        //   }),
-        // });
-
-        // console.log("Test MSG Data: ", response);
-      }
+        })
+        .where(eq(Flocks.id, input.id));
 
       return flockRes;
     }),

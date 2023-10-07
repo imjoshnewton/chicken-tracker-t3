@@ -8,6 +8,7 @@ import {
   double,
   datetime,
   tinyint,
+  primaryKey,
 } from "drizzle-orm/mysql-core";
 import { relations, sql } from "drizzle-orm";
 import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
@@ -181,6 +182,29 @@ export const session = mysqlTable(
         table.sessionToken
       ),
       userIdIdx: index("Session_userId_idx").on(table.userId),
+    };
+  }
+);
+
+export const task = mysqlTable(
+  "Task",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    title: varchar("title", { length: 191 }).notNull(),
+    description: varchar("description", { length: 191 }).notNull(),
+    dueDate: datetime("dueDate", { mode: "string", fsp: 3 }).notNull(),
+    recurrence: varchar("recurrence", { length: 191 }).notNull(),
+    status: varchar("status", { length: 191 }).default("Incomplete").notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    flockId: varchar("flockId", { length: 191 }).notNull(),
+    completed: tinyint("completed").default(0).notNull(),
+    completedAt: datetime("completedAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      flockIdIdx: index("Task_flockId_idx").on(table.flockId),
+      userIdIdx: index("Task_userId_idx").on(table.userId),
+      taskId: primaryKey(table.id),
     };
   }
 );
