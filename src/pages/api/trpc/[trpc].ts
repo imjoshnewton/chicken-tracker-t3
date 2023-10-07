@@ -4,10 +4,10 @@ import { env } from "../../../env/server.mjs";
 import { createContext } from "../../../server/trpc/context";
 import { appRouter } from "../../../server/trpc/router/_app";
 
-// We're using the edge-runtime
-export const config = {
-  runtime: "edge",
-};
+// // We're using the edge-runtime
+// export const config = {
+//   runtime: "edge",
+// };
 
 // export API handler
 export default createNextApiHandler({

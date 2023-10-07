@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
-  NODE_ENV: z.enum(["development", "test", "production"]).optional(),
+  NODE_ENV: z.enum(["development", "test", "production"]),
   GOOGLE_ID: z.string(),
   GOOGLE_SECRET: z.string(),
   FACEBOOK_CLIENT_ID: z.string(),
