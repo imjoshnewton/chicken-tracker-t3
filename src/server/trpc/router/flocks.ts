@@ -59,12 +59,12 @@ export const flocksRouter = router({
       const flockWithTasks = {
         ...flock,
         deleted: flock.deleted === 1,
-        // breeds: flock.breeds.map((breed) => {
-        //   return {
-        //     ...breed,
-        //     deleted: breed.deleted === 1,
-        //   };
-        // }, []),
+        breeds: flock.breeds.map((breed) => {
+          return {
+            ...breed,
+            deleted: breed.deleted === 1,
+          };
+        }, []),
         tasks: [...nonRecurring, ...recurring].sort((a, b) => {
           if (a.completed === b.completed) {
             if (a.dueDate === null && b.dueDate === null) {
