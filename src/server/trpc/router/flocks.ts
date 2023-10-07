@@ -13,37 +13,37 @@ export const flocksRouter = router({
       })
     )
     .query(async ({ input, ctx }) => {
-      // const flock = await ctx.db.query.flock.findFirst({
-      //   where: eq(Flocks.id, input.flockId),
-      //   with: {
-      //     breeds: {
-      //       where: eq(Breeds.deleted, 0),
-      //       orderBy: (breeds, { asc }) => [asc(breeds.id)],
-      //     },
-      //   },
-      // });
-
-      // if (!flock) {
-      //   throw new Error("Flock not found");
-      // }
-
-      const flock = await ctx.prisma.flock.findFirstOrThrow({
-        where: {
-          id: input.flockId,
-          userId: ctx.session.user.id,
-        },
-        include: {
+      const flock = await ctx.db.query.flock.findFirst({
+        where: eq(Flocks.id, input.flockId),
+        with: {
           breeds: {
-            where: {
-              deleted: false,
-            },
-            orderBy: {
-              // name: "asc",
-              breed: "asc",
-            },
+            where: eq(Breeds.deleted, 0),
+            orderBy: (breeds, { asc }) => [asc(breeds.id)],
           },
         },
       });
+
+      if (!flock) {
+        throw new Error("Flock not found");
+      }
+
+      // const flock = await ctx.prisma.flock.findFirstOrThrow({
+      //   where: {
+      //     id: input.flockId,
+      //     userId: ctx.session.user.id,
+      //   },
+      //   include: {
+      //     breeds: {
+      //       where: {
+      //         deleted: false,
+      //       },
+      //       orderBy: {
+      //         // name: "asc",
+      //         breed: "asc",
+      //       },
+      //     },
+      //   },
+      // });
 
       const nonRecurring = await ctx.prisma.task.findMany({
         where: {
@@ -63,7 +63,7 @@ export const flocksRouter = router({
 
       const flockWithTasks = {
         ...flock,
-        // deleted: flock.deleted === 1,
+        deleted: flock.deleted === 1,
         // breeds: flock.breeds.map((breed) => {
         //   return {
         //     ...breed,
@@ -106,11 +106,6 @@ export const flocksRouter = router({
       .from(user)
       .where(eq(user.id, ctx.session.user.id))
       .innerJoin(Flocks, eq(Flocks.userId, user.id));
-    return await ctx.prisma.flock.findMany({
-      where: {
-        userId: ctx.session.user.id,
-      },
-    });
   }),
   createFlock: protectedProcedure
     .input(

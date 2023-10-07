@@ -1,14 +1,9 @@
+import { eggLog } from "@lib/db/schema";
+import { getSummaryData } from "@lib/fetch";
+import { endOfDay, format, startOfDay, subDays, subMonths } from "date-fns";
+import { and, between, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
-import {
-  addMonths,
-  endOfDay,
-  getDaysInMonth,
-  getMonth,
-  startOfDay,
-  subDays,
-  subMonths,
-} from "date-fns";
+import { protectedProcedure, router } from "../trpc";
 
 export const statsRouter = router({
   getStats: protectedProcedure
@@ -28,26 +23,55 @@ export const statsRouter = router({
       console.log("Today: ", today);
       console.log("Past date: ", pastDate);
 
-      const getLogs = await ctx.prisma.eggLog.groupBy({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: today,
-            gte: pastDate,
-          },
-          breedId: {
-            in: input.breedFilter,
-          },
-        },
-        by: ["date"],
-        orderBy: {
-          date: "desc",
-        },
-        take: input.limit || 7,
-        _sum: {
-          count: true,
-        },
-      });
+      const getLogs = await ctx.db
+        .select({
+          date: eggLog.date,
+          // breedId: eggLog.breedId,
+          count: eggLog.count,
+        })
+        .from(eggLog)
+        .where(
+          and(
+            eq(eggLog.flockId, input.flockId),
+            between(
+              eggLog.date,
+              format(pastDate, "yyyy-MM-dd"),
+              format(today, "yyyy-MM-dd")
+            ),
+            input.breedFilter
+              ? inArray(eggLog.breedId, input.breedFilter)
+              : undefined
+            // input.breedFilter
+            //   ? inArray(eggLog.breedId, input.breedFilter)
+            //   : notInArray(eggLog.breedId, [""])
+            // input.breedFilter ? in_(eggLog.breedId, input.breedFilter) : undefined
+          )
+        )
+        .orderBy(({ date }) => desc(date))
+        .limit(input.limit || 7);
+
+      console.log("Get logs: ", getLogs);
+
+      // const getLogs = await ctx.prisma.eggLog.groupBy({
+      //   where: {
+      //     flockId: input.flockId,
+      //     date: {
+      //       lte: today,
+      //       gte: pastDate,
+      //     },
+      //     breedId: {
+      //       in: input.breedFilter,
+      //     },
+      //   },
+      //   by: ["date"],
+      //   orderBy: {
+      //     date: "desc",
+      //   },
+      //   take: input.limit || 7,
+      //   _sum: {
+      //     count: true,
+      //   },
+      // });
 
       const [beginThisWeek, endThisWeek] = getThisWeek(today);
 
@@ -103,8 +127,8 @@ export const statsRouter = router({
         dates.push(subMonths(dates[i - 1]!, 1));
       }
 
-      const getExpenses = await ctx.prisma
-        .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
+      const getExp = await ctx.db
+        .execute(sql`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
                     FROM Expense AS expen
                     WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
@@ -114,10 +138,12 @@ export const statsRouter = router({
       }, ${dates[5]?.getMonth()! + 1})
                     AND expen.flockId = ${input.flockId}
                     GROUP BY flockId, MonthYear, Cat
-                    ORDER BY MonthYear ASC`;
+                    ORDER BY MonthYear ASC`);
 
-      const getProduction = await ctx.prisma
-        .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
+      // console.log("Get exp: ", getExp);
+
+      const getProd = await ctx.db
+        .execute(sql`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
                     FROM EggLog AS logs
                     WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
@@ -127,93 +153,58 @@ export const statsRouter = router({
       }, ${dates[5]?.getMonth()! + 1})
                     AND logs.flockId = ${input.flockId}
                     GROUP BY flockId, MonthYear
-                    ORDER BY MonthYear ASC`;
+                    ORDER BY MonthYear ASC`);
+
+      // console.log("Get prod: ", getProd);
 
       return {
-        expenses: getExpenses,
-        production: getProduction,
+        expenses: getExp.rows,
+        production: getProd.rows,
       };
+
+      // const getExpenses = await ctx.prisma
+      //   .$queryRaw`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
+      //               FROM Expense AS expen
+      //               WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
+      //               AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
+      //   dates[1]?.getMonth()! + 1
+      // }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
+      //   dates[4]?.getMonth()! + 1
+      // }, ${dates[5]?.getMonth()! + 1})
+      //               AND expen.flockId = ${input.flockId}
+      //               GROUP BY flockId, MonthYear, Cat
+      //               ORDER BY MonthYear ASC`;
+
+      // const getProduction = await ctx.prisma
+      //   .$queryRaw`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
+      //               FROM EggLog AS logs
+      //               WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
+      //               AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
+      //   dates[1]?.getMonth()! + 1
+      // }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
+      //   dates[4]?.getMonth()! + 1
+      // }, ${dates[5]?.getMonth()! + 1})
+      //               AND logs.flockId = ${input.flockId}
+      //               GROUP BY flockId, MonthYear
+      //               ORDER BY MonthYear ASC`;
+
+      // return {
+      //   expenses: getExpenses,
+      //   production: getProduction,
+      // };
     }),
   getFlockSummary: protectedProcedure
     .input(
       z.object({ flockId: z.string(), month: z.string(), year: z.string() })
     )
     .query(async ({ input, ctx }) => {
-      const startOfMonth = new Date(`${input.month}/01/${input.year}`);
-      const startOfNextMonth = addMonths(startOfMonth, 1);
-
-      console.log("Start of this month: ", startOfMonth);
-      console.log("Start of next month: ", startOfNextMonth);
-
-      const flockData = await ctx.prisma.flock.findUniqueOrThrow({
-        where: {
-          id: input.flockId,
-        },
-        include: {
-          breeds: true,
-        },
+      const summary = await getSummaryData({
+        flockId: input.flockId,
+        month: input.month,
+        year: input.year,
       });
 
-      const expenseData = await ctx.prisma.expense.groupBy({
-        where: {
-          flockId: input.flockId,
-          date: {
-            gte: startOfMonth,
-            lt: startOfNextMonth,
-          },
-        },
-        by: ["category"],
-        _sum: {
-          amount: true,
-        },
-      });
-
-      const logData = await ctx.prisma.eggLog.aggregate({
-        where: {
-          flockId: input.flockId,
-          date: {
-            gte: startOfMonth,
-            lt: startOfNextMonth,
-          },
-        },
-        _avg: {
-          count: true,
-        },
-        _sum: {
-          count: true,
-        },
-        _max: {
-          count: true,
-        },
-        _count: {
-          id: true,
-        },
-      });
-
-      const totalExpenses = expenseData
-        .map((exp) => exp._sum.amount ?? 0)
-        .reduce((acc, cur) => acc + cur);
-
-      return {
-        flock: {
-          id: flockData.id,
-          name: flockData.name,
-          image: flockData.imageUrl,
-        },
-        expenses: {
-          total: totalExpenses,
-          categories: expenseData,
-        },
-        logs: {
-          total: logData._sum.count,
-          numLogs: logData._count.id,
-          average: logData._avg.count,
-          calcAvg: (logData._sum.count ?? 0) / getDaysInMonth(startOfMonth),
-          largest: logData._max.count,
-        },
-        year: startOfMonth.toLocaleString("default", { year: "numeric" }),
-        month: startOfMonth.toLocaleString("default", { month: "long" }),
-      };
+      return summary;
     }),
   getBreedStats: protectedProcedure
     .input(z.object({ today: z.date(), flockId: z.string() }))
@@ -223,25 +214,46 @@ export const statsRouter = router({
 
       const [beginThisWeek, endThisWeek] = getThisWeek(today);
 
-      return await ctx.prisma.eggLog.groupBy({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: endThisWeek,
-            gte: beginThisWeek,
-          },
-        },
-        _avg: {
-          count: true,
-        },
-        by: ["breedId"],
-        orderBy: {
-          _avg: {
-            count: "desc",
-          },
-        },
-        // take: 1,
-      });
+      const avg = await ctx.db
+        .select({
+          breedId: eggLog.breedId,
+          avgCount: sql<number>`avg(${eggLog.count})`,
+        })
+        .from(eggLog)
+        .where(
+          and(
+            eq(eggLog.flockId, input.flockId),
+            between(
+              eggLog.date,
+              format(beginThisWeek, "yyyy-MM-dd"),
+              format(endThisWeek, "yyyy-MM-dd")
+            )
+          )
+        )
+        .groupBy(eggLog.breedId)
+        .orderBy(({ avgCount }) => desc(avgCount));
+
+      return avg;
+
+      // return await ctx.prisma.eggLog.groupBy({
+      //   where: {
+      //     flockId: input.flockId,
+      //     date: {
+      //       lte: endThisWeek,
+      //       gte: beginThisWeek,
+      //     },
+      //   },
+      //   _avg: {
+      //     count: true,
+      //   },
+      //   by: ["breedId"],
+      //   orderBy: {
+      //     _avg: {
+      //       count: "desc",
+      //     },
+      //   },
+      //   // take: 1,
+      // });
     }),
 });
 

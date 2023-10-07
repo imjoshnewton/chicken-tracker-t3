@@ -1,7 +1,7 @@
-import { db } from "./db";
-import { eggLog, expense, flock } from "./db/schema";
 import { desc, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import { db } from "./db";
+import { eggLog, expense, flock } from "./db/schema";
 
 export const PAGE_SIZE = 25;
 
@@ -82,4 +82,109 @@ export async function fetchLogCount(userId: string) {
     .innerJoin(eggLog, eq(eggLog.flockId, flock.id));
 
   return result ? result.count : 0;
+}
+
+import { addMonths, format, getDaysInMonth } from "date-fns";
+import { and, between } from "drizzle-orm";
+
+export async function getSummaryData({
+  month,
+  year,
+  flockId,
+}: {
+  month: string;
+  year: string;
+  flockId: string;
+}) {
+  const startOfMonth = new Date(`${month}/01/${year}`);
+  const startOfNextMonth = addMonths(startOfMonth, 1);
+
+  console.log("Start of this month: ", startOfMonth);
+  console.log("Start of next month: ", startOfNextMonth);
+
+  const flockData = await db.query.flock.findFirst({
+    where: eq(flock.id, flockId),
+    with: {
+      breeds: true,
+    },
+  });
+
+  if (!flockData) {
+    return null;
+  }
+
+  const expenseData = await db
+    .select({
+      category: expense.category,
+      amountByCategory: sql<number>`sum(${expense.amount})`,
+    })
+    .from(expense)
+    .where(
+      and(
+        eq(expense.flockId, flockId),
+        between(
+          expense.date,
+          format(startOfMonth, "yyyy-MM-dd"),
+          format(startOfNextMonth, "yyyy-MM-dd")
+        )
+      )
+    )
+    .groupBy(expense.category);
+
+  const totalExpenses =
+    expenseData.length == 0
+      ? 0
+      : expenseData
+          .map((exp) => exp.amountByCategory ?? 0)
+          .reduce((acc, cur) => acc + cur, 0);
+
+  const logs = await db
+    .select()
+    .from(eggLog)
+    .where(
+      and(
+        eq(eggLog.flockId, flockId),
+        between(
+          eggLog.date,
+          format(startOfMonth, "yyyy-MM-dd"),
+          format(startOfNextMonth, "yyyy-MM-dd")
+        )
+      )
+    )
+    .as("logs");
+
+  const [logStats] = await db
+    .select({
+      count: sql<number>`count(${eggLog.id})`,
+      avg: sql<number>`avg(${eggLog.count})`,
+      sum: sql<number>`sum(${eggLog.count})`,
+      max: sql<number>`max(${eggLog.count})`,
+    })
+    .from(logs);
+
+  return {
+    flock: {
+      id: flockData?.id,
+      name: flockData?.name,
+      image: flockData?.imageUrl,
+    },
+    expenses: {
+      total: totalExpenses,
+      categories: expenseData.map((exp) => {
+        return {
+          category: exp.category,
+          amount: exp.amountByCategory ?? 0,
+        };
+      }),
+    },
+    logs: {
+      total: logStats?.sum ?? 0,
+      numLogs: logStats?.count ?? 0,
+      average: logStats?.avg ?? 0,
+      calcAvg: (logStats?.sum ?? 0) / getDaysInMonth(startOfMonth),
+      largest: logStats?.max ?? 0,
+    },
+    year: startOfMonth.toLocaleString("default", { year: "numeric" }),
+    month: startOfMonth.toLocaleString("default", { month: "long" }),
+  };
 }
