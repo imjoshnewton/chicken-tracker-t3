@@ -93,8 +93,8 @@ export function useFlockData() {
     stats: {
       expenses: expenseData,
       logs: logsData?.getLogs,
-      lastWeekAvg: logsData?.lastWeeksAvg,
-      thisWeekAvg: logsData?.thisWeeksAvg,
+      lastWeekAvg: logsData?.lastWeeksAvg?.avg,
+      thisWeekAvg: logsData?.thisWeeksAvg?.avg,
     },
     range,
     breedStats: breedStats,

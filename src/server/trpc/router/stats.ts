@@ -51,35 +51,70 @@ export const statsRouter = router({
 
       console.log("This week: ", [beginThisWeek, endThisWeek]);
 
-      const thisWeeksAvg = await ctx.prisma.eggLog.aggregate({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: endThisWeek,
-            gte: beginThisWeek,
-          },
-        },
-        _avg: {
-          count: true,
-        },
-      });
+      const [thisWeeksAvg] = await ctx.db
+        .select({
+          avg: sql<number>`avg(${eggLog.count})`,
+        })
+        .from(eggLog)
+        .where(
+          and(
+            eq(eggLog.flockId, input.flockId),
+            between(
+              eggLog.date,
+              format(beginThisWeek, "yyyy-MM-dd"),
+              format(endThisWeek, "yyyy-MM-dd")
+            )
+          )
+        );
+
+      // const thisWeeksAvg = await ctx.prisma.eggLog.aggregate({
+      //   where: {
+      //     flockId: input.flockId,
+      //     date: {
+      //       lte: endThisWeek,
+      //       gte: beginThisWeek,
+      //     },
+      //   },
+      //   _avg: {
+      //     count: true,
+      //   },
+      // });
 
       const [beginLastWeek, endLastWeek] = getLastWeek(today);
 
       console.log("Last week: ", [beginLastWeek, endLastWeek]);
 
-      const lastWeeksAvg = await ctx.prisma.eggLog.aggregate({
-        where: {
-          flockId: input.flockId,
-          date: {
-            lte: endLastWeek,
-            gte: beginLastWeek,
-          },
-        },
-        _avg: {
-          count: true,
-        },
-      });
+      const [lastWeeksAvg] = await ctx.db
+        .select({
+          avg: sql<number>`avg(${eggLog.count})`,
+        })
+        .from(eggLog)
+        .where(
+          and(
+            eq(eggLog.flockId, input.flockId),
+            between(
+              eggLog.date,
+              format(beginLastWeek, "yyyy-MM-dd"),
+              format(endLastWeek, "yyyy-MM-dd")
+            )
+          )
+        );
+
+      // const lastWeeksAvg = await ctx.prisma.eggLog.aggregate({
+      //   where: {
+      //     flockId: input.flockId,
+      //     date: {
+      //       lte: endLastWeek,
+      //       gte: beginLastWeek,
+      //     },
+      //   },
+      //   _avg: {
+      //     count: true,
+      //   },
+      // });
+
+      console.log("This week's avg: ", thisWeeksAvg);
+      console.log("Last week's avg: ", lastWeeksAvg);
 
       return {
         getLogs,

@@ -132,6 +132,11 @@ function DailyAverages({
   thisWeekAvg: number;
   lastWeekAvg: number;
 }) {
+  console.log("thisWeekAvg", thisWeekAvg);
+  console.log(typeof thisWeekAvg);
+  console.log("lastWeekAvg", lastWeekAvg);
+  console.log(typeof lastWeekAvg);
+
   return (
     <>
       <div className="flex justify-around">
@@ -292,8 +297,16 @@ export default function ProductionChart({
         <DailyAverages
           targetDailyAvg={targetDailyAvg}
           actualDailyAvg={actualDailyAvg}
-          thisWeekAvg={stats.thisWeekAvg?._avg.count || 0}
-          lastWeekAvg={stats.lastWeekAvg?._avg.count || 0}
+          thisWeekAvg={
+            typeof stats.thisWeekAvg.avg == "number"
+              ? stats.thisWeekAvg.avg
+              : parseFloat(stats.thisWeekAvg.avg)
+          }
+          lastWeekAvg={
+            typeof stats.lastWeekAvg.avg == "number"
+              ? stats.lastWeekAvg.avg
+              : parseFloat(stats.lastWeekAvg.avg)
+          }
         />
       </div>
     </div>
