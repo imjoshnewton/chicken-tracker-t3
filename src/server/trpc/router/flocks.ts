@@ -2,7 +2,13 @@ import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
 // import { JWT } from "google-auth-library";
 // import { Breed, Flock, Task } from "@prisma/client";
-import { flock as Flocks, breed as Breeds, user, task } from "@lib/db/schema";
+import {
+  flock as Flocks,
+  breed as Breeds,
+  user,
+  task,
+  flock,
+} from "@lib/db/schema";
 import { eq, and, not } from "drizzle-orm";
 import cuid from "cuid";
 
@@ -114,7 +120,7 @@ export const flocksRouter = router({
     .mutation(async ({ input, ctx }) => {
       const id = cuid();
 
-      return await ctx.db.insert(Flocks).values([
+      const flock = await ctx.db.insert(Flocks).values([
         {
           ...input,
           id: id,
@@ -122,6 +128,8 @@ export const flocksRouter = router({
           userId: ctx.session.user.id,
         },
       ]);
+
+      return flock;
     }),
   updateFlock: protectedProcedure
     .input(

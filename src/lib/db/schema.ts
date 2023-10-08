@@ -1,17 +1,16 @@
-import {
-  mysqlTable,
-  uniqueIndex,
-  index,
-  varchar,
-  text,
-  int,
-  double,
-  datetime,
-  tinyint,
-  primaryKey,
-} from "drizzle-orm/mysql-core";
 import { relations, sql } from "drizzle-orm";
-import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
+import {
+  datetime,
+  double,
+  index,
+  int,
+  mysqlTable,
+  primaryKey,
+  text,
+  tinyint,
+  uniqueIndex,
+  varchar,
+} from "drizzle-orm/mysql-core";
 
 export const account = mysqlTable(
   "Account",
@@ -144,6 +143,7 @@ export const flockRelations = relations(flock, ({ many, one }) => ({
     fields: [flock.userId],
     references: [user.id],
   }),
+  tasks: many(task),
 }));
 
 export const notification = mysqlTable(
@@ -254,3 +254,4 @@ export const verificationToken = mysqlTable(
 
 export type User = typeof user.$inferInsert;
 export type Notification = typeof notification.$inferInsert;
+export type Task = typeof task.$inferInsert;

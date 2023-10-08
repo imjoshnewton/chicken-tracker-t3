@@ -14,7 +14,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [date, setDate] = useState<Date>(new Date());
   const [amount, setAmount] = useState(0);
   const [memo, setMemo] = useState<string>();
-  const [category, setCategory] = useState<string>();
+  const [category, setCategory] = useState<string>("feed");
 
   const utils = trpc.useContext();
 
@@ -83,10 +83,6 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   if (!flockId) {
     return null;
-  }
-
-  function handleTimzone(arg0: Date): import("react").SetStateAction<Date> {
-    throw new Error("Function not implemented.");
   }
 
   return (
