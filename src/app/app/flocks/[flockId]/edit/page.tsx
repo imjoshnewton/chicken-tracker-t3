@@ -1,7 +1,9 @@
 import { currentUsr } from "@lib/auth";
+import { db } from "@lib/db";
+import { breed as Breeds, flock as Flocks } from "@lib/db/schema";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import Card from "../../../../../components/shared/Card";
-import { prisma } from "../../../../../server/db/client";
 import FlockForm from "../../FlockEditForm";
 
 export const metadata = {
@@ -19,21 +21,28 @@ const Edit = async ({
   const user = await currentUsr();
 
   const flockId = params.flockId;
-  const flock = await prisma.flock.findFirst({
-    where: {
-      id: flockId,
-      userId: user.id,
-    },
-    include: {
+  const flockRes = await db.query.flock.findFirst({
+    where: eq(Flocks.id, flockId),
+    with: {
       breeds: {
-        orderBy: {
-          breed: "asc",
-        },
+        where: eq(Breeds.deleted, 0),
+        orderBy: (breeds, { asc }) => [asc(breeds.id)],
       },
     },
   });
 
-  if (!flock) redirect("/app/flocks");
+  if (!flockRes) redirect("/app/flocks");
+
+  const flock = {
+    ...flockRes,
+    deleted: flockRes.deleted === 1,
+    breeds: flockRes.breeds.map((breed) => {
+      return {
+        ...breed,
+        deleted: breed.deleted === 1,
+      };
+    }, []),
+  };
 
   return (
     <main className="h-full p-0 lg:h-auto lg:p-8 lg:px-[3.5vw]">
