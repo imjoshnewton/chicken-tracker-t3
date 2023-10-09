@@ -37,10 +37,15 @@ export default async function handler(req: NextRequest) {
     createContext: async () => {
       const auth = await getAuth(req);
 
+      console.log("auth: ", auth);
+
       return {
         auth,
         db,
       };
+    },
+    onError: ({ path, error }) => {
+      console.error(`❌ tRPC failed on ${path}: ${error}`);
     },
   });
 }

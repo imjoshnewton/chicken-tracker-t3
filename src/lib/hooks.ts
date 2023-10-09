@@ -93,8 +93,8 @@ export function useFlockData() {
     stats: {
       expenses: expenseData,
       logs: logsData?.getLogs,
-      lastWeekAvg: logsData?.lastWeeksAvg?.avg,
-      thisWeekAvg: logsData?.thisWeeksAvg?.avg,
+      lastWeekAvg: logsData?.lastWeeksAvg,
+      thisWeekAvg: logsData?.thisWeeksAvg,
     },
     range,
     breedStats: breedStats,
@@ -121,6 +121,8 @@ export function useFlockDataAppDir(
   const range = statsRange ? Number(statsRange) : 7;
 
   const today = setStartOfDay(new Date());
+
+  console.log(typeof today, today);
 
   const flockData = useFlockQuery(flockId, userId);
   const logsData = useStatsQuery(flockId, range, today, breedFilter, userId);

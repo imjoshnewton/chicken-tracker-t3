@@ -11,12 +11,12 @@ export const statsRouter = router({
       z.object({
         flockId: z.string(),
         limit: z.number(),
-        today: z.date(),
-        breedFilter: z.array(z.string()).optional(),
+        today: z.union([z.date(), z.string()]),
+        breedFilter: z.array(z.string()).nullable().optional(),
       })
     )
     .query(async ({ input, ctx }) => {
-      var today = endOfDay(input.today);
+      var today = endOfDay(new Date(input.today));
 
       var pastDate = startOfDay(subDays(today, input.limit));
 
@@ -125,12 +125,12 @@ export const statsRouter = router({
   getExpenseStats: protectedProcedure
     .input(
       z.object({
-        today: z.date(),
+        today: z.union([z.date(), z.string()]),
         flockId: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
-      const dates = [input.today];
+      const dates = [new Date(input.today)];
 
       for (let i = 1; i < 6; i++) {
         dates.push(subMonths(dates[i - 1]!, 1));
@@ -185,9 +185,11 @@ export const statsRouter = router({
       return summary;
     }),
   getBreedStats: protectedProcedure
-    .input(z.object({ today: z.date(), flockId: z.string() }))
+    .input(
+      z.object({ today: z.union([z.date(), z.string()]), flockId: z.string() })
+    )
     .query(async ({ input, ctx }) => {
-      var today = input.today;
+      var today = new Date(input.today);
       today.setHours(23, 59, 59, 999);
 
       const [beginThisWeek, endThisWeek] = getThisWeek(today);

@@ -268,6 +268,8 @@ export default function ProductionChart({
   const targetDailyAvg = calcDailyAverage(flock, breedFilter);
   const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
+  console.log("stats", stats);
+
   return (
     <div className={className}>
       <div className="flex justify-between">
@@ -298,14 +300,14 @@ export default function ProductionChart({
           targetDailyAvg={targetDailyAvg}
           actualDailyAvg={actualDailyAvg}
           thisWeekAvg={
-            typeof stats.thisWeekAvg.avg == "number"
+            typeof stats.thisWeekAvg?.avg == "number"
               ? stats.thisWeekAvg.avg
-              : parseFloat(stats.thisWeekAvg.avg)
+              : parseFloat(stats.thisWeekAvg?.avg)
           }
           lastWeekAvg={
-            typeof stats.lastWeekAvg.avg == "number"
+            typeof stats.lastWeekAvg?.avg == "number"
               ? stats.lastWeekAvg.avg
-              : parseFloat(stats.lastWeekAvg.avg)
+              : parseFloat(stats.lastWeekAvg?.avg)
           }
         />
       </div>

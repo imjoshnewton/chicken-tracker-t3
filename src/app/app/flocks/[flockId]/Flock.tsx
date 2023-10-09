@@ -155,7 +155,7 @@ const FlockInfo = ({ flock, flockId }: any) => (
 );
 
 const FlockDetails = ({ flock }: any) => (
-  <div className="ml-0 md:ml-6">
+  <div className="ml-0 sm:ml-6">
     <div className="flex items-center">
       <h1 className="mr-3 dark:text-gray-300">{flock?.name}</h1>
     </div>
