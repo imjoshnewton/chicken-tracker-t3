@@ -1,7 +1,5 @@
 import { currentUsr } from "@lib/auth";
-import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import { authOptions } from "src/app/api/auth/[...nextauth]/route";
 import Flock from "./Flock";
 
 export const metadata = {

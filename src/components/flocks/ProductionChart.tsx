@@ -33,13 +33,16 @@ ChartJS.register(
 //
 // Helper function to create array of dates for chart
 //
-function createChartArray(logs: any[], limit: number) {
+function createChartArray(
+  logs: { date: string; count: number }[],
+  limit: number
+) {
   const dates = getDatesInRange(Number(limit));
 
   const logsArray = logs?.map((log) => {
     return {
       ...log,
-      date: log.date.toLocaleString("us-EN", {
+      date: new Date(log.date).toLocaleString("us-EN", {
         year: "numeric",
         month: "numeric",
         day: "numeric",
@@ -56,16 +59,14 @@ function createChartArray(logs: any[], limit: number) {
 
     const total = logsArray?.reduce((sum, log) => {
       if (log.date === stringValue) {
-        return sum + log._sum.count;
+        return sum + log.count;
       }
       return sum;
     }, 0);
 
     return {
       date: stringValue,
-      _sum: {
-        count: total,
-      },
+      count: total,
     };
   });
 
@@ -94,9 +95,9 @@ function calcDailyAverage(
 //
 // Helper function to calculate the actual daily average for a given flock
 //
-function calcActualDailyAverage(logs: any[]) {
+function calcActualDailyAverage(logs: { date: string; count: number }[]) {
   const average = logs?.length
-    ? logs.map((l) => l._sum.count).reduce((a, b) => a + b) / logs.length
+    ? logs.map((l) => l.count).reduce((a, b) => a + b) / logs.length
     : 0;
 
   return average;
@@ -131,6 +132,11 @@ function DailyAverages({
   thisWeekAvg: number;
   lastWeekAvg: number;
 }) {
+  console.log("thisWeekAvg", thisWeekAvg);
+  console.log(typeof thisWeekAvg);
+  console.log("lastWeekAvg", lastWeekAvg);
+  console.log(typeof lastWeekAvg);
+
   return (
     <>
       <div className="flex justify-around">
@@ -206,7 +212,7 @@ export default function ProductionChart({
     return {
       datasets: [
         {
-          data: chartArray.map((i: any) => i._sum.count),
+          data: chartArray.map((i: any) => i.count),
           label: "Egg Production",
           backgroundColor: "rgba(39,166,154,0.2)",
           borderColor: "rgba(39,166,154,1)",
@@ -215,8 +221,10 @@ export default function ProductionChart({
           pointHoverBackgroundColor: "#fff",
           pointHoverBorderColor: "rgba(148,159,177,0.8)",
           fill: "origin",
-          pointRadius: 4,
-          hoverRadius: 6,
+          // borderWidth: 4,
+          tension: 0.3,
+          pointRadius: 5,
+          hoverRadius: 7,
         },
         {
           data: chartArray.map(() => flockDailyAverage),
@@ -262,6 +270,8 @@ export default function ProductionChart({
   const targetDailyAvg = calcDailyAverage(flock, breedFilter);
   const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
+  console.log("stats", stats);
+
   return (
     <div className={className}>
       <div className="flex justify-between">
@@ -291,8 +301,16 @@ export default function ProductionChart({
         <DailyAverages
           targetDailyAvg={targetDailyAvg}
           actualDailyAvg={actualDailyAvg}
-          thisWeekAvg={stats.thisWeekAvg?._avg.count || 0}
-          lastWeekAvg={stats.lastWeekAvg?._avg.count || 0}
+          thisWeekAvg={
+            typeof stats.thisWeekAvg?.avg == "number"
+              ? stats.thisWeekAvg.avg
+              : parseFloat(stats.thisWeekAvg?.avg)
+          }
+          lastWeekAvg={
+            typeof stats.lastWeekAvg?.avg == "number"
+              ? stats.lastWeekAvg.avg
+              : parseFloat(stats.lastWeekAvg?.avg)
+          }
         />
       </div>
     </div>

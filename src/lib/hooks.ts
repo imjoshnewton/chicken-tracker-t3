@@ -122,6 +122,8 @@ export function useFlockDataAppDir(
 
   const today = setStartOfDay(new Date());
 
+  console.log(typeof today, today);
+
   const flockData = useFlockQuery(flockId, userId);
   const logsData = useStatsQuery(flockId, range, today, breedFilter, userId);
   const expenseData = useExpenseStatsQuery(flockId, today, userId);

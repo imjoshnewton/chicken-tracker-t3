@@ -11,7 +11,15 @@ export default authMiddleware({
     "/api/webhooks/user",
   ],
 });
+// {
+// publicRoutes: [
+//   "/",
+//   "/api/summaryCleanup",
+//   "/api/createSummaryNotifications",
+//   "/api/webhooks/user",
+// ],
+// });
 
 export const config = {
-  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

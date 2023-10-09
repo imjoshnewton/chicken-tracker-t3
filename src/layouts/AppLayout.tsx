@@ -63,7 +63,7 @@ export default function AppLayout({ children }: { children: any }) {
 
   return (
     <>
-      <nav className="navbar h-[60px] pr-3 pl-2 lg:h-[65px] lg:pl-6">
+      <nav className="navbar h-[60px] pl-2 pr-3 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button
@@ -135,7 +135,7 @@ export default function AppLayout({ children }: { children: any }) {
                             ? "opacity-100"
                             : "opacity-0"
                           : "opacity-0"
-                      } absolute top-1 right-3 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                      } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                     >
                       {notifications?.filter((not) => !not.read).length}
                     </div>
@@ -149,7 +149,7 @@ export default function AppLayout({ children }: { children: any }) {
           {!user && (
             <li>
               <Link href="/api/auth/signin">
-                <button className="rounded border-2 bg-transparent py-2 px-2 pr-3 transition-all hover:bg-white hover:text-primary">
+                <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
                 </button>

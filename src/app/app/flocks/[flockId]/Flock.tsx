@@ -5,8 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 
-import type { Session } from "next-auth";
-
 import Breeds from "@components/breeds/Breeds";
 import ExpenseModal from "@components/flocks/ExpenseModal";
 import LogModal from "@components/flocks/LogModal";
@@ -14,11 +12,13 @@ import Stats from "@components/flocks/Stats";
 import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
 
+import EditModal from "@components/flocks/EditModal";
+import AddTaskModal from "@components/tasks/AddTaskModal";
+import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
-import EditModal from "@components/flocks/EditModal";
-import TaskList from "@components/tasks/Tasks";
-import AddTaskModal from "@components/tasks/AddTaskModal";
+
+export const runtime = "edge";
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
@@ -155,7 +155,7 @@ const FlockInfo = ({ flock, flockId }: any) => (
 );
 
 const FlockDetails = ({ flock }: any) => (
-  <div className="ml-0 md:ml-6">
+  <div className="ml-0 sm:ml-6">
     <div className="flex items-center">
       <h1 className="mr-3 dark:text-gray-300">{flock?.name}</h1>
     </div>

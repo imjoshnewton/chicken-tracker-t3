@@ -1,10 +1,15 @@
-import { prisma } from "../../../../server/db/client";
 import type { IncomingHttpHeaders } from "http";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook, WebhookRequiredHeaders } from "svix";
+import { db } from "@lib/db";
+import { user as Users } from "@lib/db/schema";
+import { createId } from "@paralleldrive/cuid2";
+import { eq } from "drizzle-orm";
 
 const webhookSecret = "whsec_+SfGI52GxrWmhHBZfEGRajXHCDTIFE7a";
+
+export const runtime = "edge";
 
 async function handler(request: Request) {
   const payload = await request.json();
@@ -41,21 +46,15 @@ async function handler(request: Request) {
     const image = attributes.image_url as string;
 
     // console.log({ clerkId, name, email, image });
-
-    await prisma.user.upsert({
-      where: { clerkId: id as string },
-      create: {
-        clerkId,
-        name,
-        email,
-        image,
-      },
-      update: {
-        name,
-        email,
-        image,
-      },
-    });
+    if (eventType === "user.created") {
+      const id = createId();
+      await db.insert(Users).values({ id, clerkId, name, email, image });
+    } else {
+      await db
+        .update(Users)
+        .set({ clerkId, name, email, image })
+        .where(eq(Users.clerkId, clerkId));
+    }
   }
 
   return NextResponse.json({}, { status: 200 });

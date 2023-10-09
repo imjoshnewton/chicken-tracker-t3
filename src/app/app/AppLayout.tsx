@@ -134,7 +134,7 @@ export default function AppLayout({
                           ? "opacity-100"
                           : "opacity-0"
                         : "opacity-0"
-                    } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                    } absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                   >
                     {notifications?.filter((not) => !not.read).length}
                   </div>

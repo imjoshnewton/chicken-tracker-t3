@@ -32,9 +32,7 @@ const config = {
     formats: ["image/avif", "image/webp"],
   },
   experimental: {
-    appDir: true,
     serverActions: true,
-    // serverComponentsExternalPackages: ["prisma"],
   },
 };
 

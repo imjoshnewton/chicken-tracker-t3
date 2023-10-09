@@ -6,7 +6,8 @@ import {
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 
-import { prisma } from "../db/client";
+// import { prisma } from "../db/client";
+import { db } from "@lib/db";
 
 interface AuthContext {
   auth: SignedInAuthObject | SignedOutAuthObject;
@@ -20,7 +21,8 @@ interface AuthContext {
 export const createContextInner = async ({ auth }: AuthContext) => {
   return {
     auth,
-    prisma,
+    // prisma,
+    db,
   };
 };
 
