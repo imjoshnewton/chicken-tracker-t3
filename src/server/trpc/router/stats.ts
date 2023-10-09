@@ -1,7 +1,7 @@
 import { eggLog } from "@lib/db/schema";
 import { getSummaryData } from "@lib/fetch";
 import { endOfDay, format, startOfDay, subDays, subMonths } from "date-fns";
-import { and, between, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, between, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -32,6 +32,8 @@ export const statsRouter = router({
         .where(
           and(
             eq(eggLog.flockId, input.flockId),
+            // gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
+            // lte(eggLog.date, format(today, "yyyy-MM-dd")),
             between(
               eggLog.date,
               format(pastDate, "yyyy-MM-dd"),
