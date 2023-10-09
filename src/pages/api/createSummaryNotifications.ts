@@ -6,9 +6,9 @@ import { subMonths } from "date-fns";
 import { eq } from "drizzle-orm";
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-export const config = {
-  runtime: "edge",
-};
+// export const config = {
+//   runtime: "edge",
+// };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const today = new Date();
