@@ -1,5 +1,5 @@
 import { breed } from "@lib/db/schema";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
@@ -18,7 +18,7 @@ export const breedsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const id = cuid();
+      const id = createId();
 
       return await ctx.db.insert(breed).values([
         {

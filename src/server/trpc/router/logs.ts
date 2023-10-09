@@ -1,7 +1,7 @@
 import { eggLog } from "@lib/db/schema";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { format } from "date-fns";
 import { eq } from "drizzle-orm";
 import { fetchLogs } from "@lib/fetch";
@@ -25,7 +25,7 @@ export const logsRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const id: string = cuid();
+      const id: string = createId();
 
       return await ctx.db.insert(eggLog).values([
         {

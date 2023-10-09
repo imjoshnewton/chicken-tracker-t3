@@ -1,7 +1,7 @@
 import { db } from "@lib/db";
 import { flock, notification } from "@lib/db/schema";
 import { verifySignature } from "@upstash/qstash/dist/nextjs";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { subMonths } from "date-fns";
 import { eq } from "drizzle-orm";
 import { type NextApiRequest, type NextApiResponse } from "next";
@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const newNotifications = await db.insert(notification).values(
     flocks.map((flock) => {
-      const id = cuid();
+      const id = createId();
       return {
         id,
         title: `Your ${monthName} summary is ready!`,

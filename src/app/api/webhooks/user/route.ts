@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { Webhook, WebhookRequiredHeaders } from "svix";
 import { db } from "@lib/db";
 import { user as Users } from "@lib/db/schema";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 
 const webhookSecret = "whsec_+SfGI52GxrWmhHBZfEGRajXHCDTIFE7a";
@@ -45,7 +45,7 @@ async function handler(request: Request) {
 
     // console.log({ clerkId, name, email, image });
     if (eventType === "user.created") {
-      const id = cuid();
+      const id = createId();
       await db.insert(Users).values({ id, clerkId, name, email, image });
     } else {
       await db

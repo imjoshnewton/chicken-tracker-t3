@@ -10,7 +10,7 @@ import {
   flock,
 } from "@lib/db/schema";
 import { eq, and, not } from "drizzle-orm";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 
 export const flocksRouter = router({
   getFlock: protectedProcedure
@@ -118,7 +118,7 @@ export const flocksRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const id = cuid();
+      const id = createId();
 
       const flock = await ctx.db.insert(Flocks).values([
         {

@@ -1,6 +1,6 @@
 import { expense } from "@lib/db/schema";
 import { fetchExpenses } from "@lib/fetch";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
@@ -25,7 +25,7 @@ export const expensesRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const id: string = cuid();
+      const id: string = createId();
       return await ctx.db.insert(expense).values([
         {
           id,

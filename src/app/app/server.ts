@@ -10,7 +10,7 @@ import {
   user as Users,
 } from "@lib/db/schema";
 import { Task } from "@prisma/client";
-import cuid from "cuid";
+import { createId } from "@paralleldrive/cuid2";
 import { addDays, addMonths, addWeeks } from "date-fns";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -46,7 +46,7 @@ export async function createFlock(input: {
 }) {
   console.log("createFlock: ", input);
 
-  const id = cuid();
+  const id = createId();
 
   await db.insert(Flocks).values([
     {
@@ -174,7 +174,7 @@ export async function createNewTask(input: {
   flockId: string;
   userId: string;
 }) {
-  const id = cuid();
+  const id = createId();
 
   await db.insert(Tasks).values([
     {
@@ -256,7 +256,7 @@ export async function markTaskAsComplete(input: {
     case "daily":
       task = await completeTask(input.taskId);
 
-      id = cuid();
+      id = createId();
 
       await db.insert(Tasks).values([
         {
@@ -276,7 +276,7 @@ export async function markTaskAsComplete(input: {
     case "weekly":
       task = await completeTask(input.taskId);
 
-      id = cuid();
+      id = createId();
 
       await db.insert(Tasks).values([
         {
@@ -296,7 +296,7 @@ export async function markTaskAsComplete(input: {
     case "monthly":
       task = await completeTask(input.taskId);
 
-      id = cuid();
+      id = createId();
 
       await db.insert(Tasks).values([
         {
