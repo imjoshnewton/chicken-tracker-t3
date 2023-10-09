@@ -9,7 +9,7 @@ import {
   // type SignedInAuthObject,
   // type SignedOutAuthObject,
 } from "@clerk/nextjs/server";
-import { db } from "@lib/db/index.js";
+import { db } from "@lib/db";
 
 // // We're using the edge-runtime
 export const config = {
