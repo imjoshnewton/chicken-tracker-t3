@@ -6,6 +6,10 @@ import { subMonths } from "date-fns";
 import { eq } from "drizzle-orm";
 import { type NextApiRequest, type NextApiResponse } from "next";
 
+export const config = {
+  runtime: "edge",
+};
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const today = new Date();
   const monthNum = subMonths(today, 1).getMonth() + 1;
@@ -36,20 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       };
     })
   );
-
-  // const newNotifications = await Promise.all(
-  //   flocks.map((flock) => {
-  //     return prisma.notification.create({
-  //       data: {
-  //         title: `Your ${monthName} summary is ready!`,
-  //         message: `Check out your flock stats for ${monthName}.`,
-  //         link: `/app/flocks/${flock.id}/summary?month=${monthString}&year=${yearString}`,
-  //         userId: flock.userId,
-  //         readDate: null,
-  //       },
-  //     });
-  //   })
-  // );
 
   console.log("New Notifications: ", newNotifications);
 
