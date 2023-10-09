@@ -9,6 +9,8 @@ import { eq } from "drizzle-orm";
 
 const webhookSecret = "whsec_+SfGI52GxrWmhHBZfEGRajXHCDTIFE7a";
 
+export const runtime = "edge";
+
 async function handler(request: Request) {
   const payload = await request.json();
   const headersList = headers();
