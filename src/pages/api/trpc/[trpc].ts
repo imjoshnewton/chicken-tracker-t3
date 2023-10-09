@@ -1,13 +1,13 @@
-import { createNextApiHandler } from "@trpc/server/adapters/next";
+// import { createNextApiHandler } from "@trpc/server/adapters/next";
 
-import { env } from "../../../env/server.mjs";
+// import { env } from "../../../env/server.mjs";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { appRouter } from "../../../server/trpc/router/_app";
 import { NextRequest } from "next/server";
 import {
   getAuth,
-  type SignedInAuthObject,
-  type SignedOutAuthObject,
+  // type SignedInAuthObject,
+  // type SignedOutAuthObject,
 } from "@clerk/nextjs/server";
 import { db } from "@lib/db/index.js";
 
