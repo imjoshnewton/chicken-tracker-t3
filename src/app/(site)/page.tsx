@@ -229,7 +229,7 @@ const Home = () => {
           </div>
         </section>
         <section className="flex w-full flex-col items-center justify-center gap-12 bg-primary py-6 text-[#FEF9F6]">
-          <span>&copy;&nbsp;FlockNerd 2022</span>
+          <span>&copy;&nbsp;FlockNerd 2023</span>
         </section>
       </main>
     </>
