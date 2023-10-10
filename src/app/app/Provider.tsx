@@ -1,8 +1,8 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, getFetch, loggerLink } from "@trpc/client";
-import { getBaseUrl, trpc, trpcReact } from "@utils/trpc";
+import { httpBatchLink, loggerLink } from "@trpc/client";
+import { getBaseUrl, trpcReact } from "@utils/trpc";
 import { useState } from "react";
 import superjson from "superjson";
 
@@ -13,7 +13,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
     () =>
       new QueryClient({
         defaultOptions: { queries: { staleTime: 5000 } },
-      })
+      }),
   );
 
   const url = process.env.NEXT_PUBLIC_VERCEL_URL
@@ -34,7 +34,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
             url: `${getBaseUrl()}/api/trpc`,
           }),
         ],
-      }
+      },
       //     {
       //   links: [
       //     loggerLink({
@@ -53,7 +53,7 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
       //   ],
       //   transformer: superjson,
       // }
-    )
+    ),
   );
   return (
     <trpcReact.Provider client={trpcClient} queryClient={queryClient}>
