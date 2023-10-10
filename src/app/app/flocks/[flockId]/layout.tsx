@@ -10,5 +10,5 @@ export default async function FlockLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <TrpcProvider>{children}</TrpcProvider>;
+  return <>{children}</>;
 }

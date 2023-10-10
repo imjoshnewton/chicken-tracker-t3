@@ -17,8 +17,13 @@ import AddTaskModal from "@components/tasks/AddTaskModal";
 import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
+import { inferRouterOutputs } from "@trpc/server";
+import { AppRouter } from "src/server/trpc/router/_app";
 
 export const runtime = "edge";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+type GetFlockOutput = RouterOutput["flocks"]["getFlock"];
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
@@ -28,7 +33,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
     userId,
     flockId,
     searchParams?.get("statsRange") || "7",
-    searchParams?.get("breedFilter")
+    searchParams?.get("breedFilter"),
   );
 
   const onRangeChange = useCallback(
@@ -39,7 +44,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
 
       router.replace(`${path}?${curParams.toString()}`);
     },
-    [router, searchParams, path]
+    [router, searchParams, path],
   );
 
   const clearFilter = useCallback(() => {
@@ -50,7 +55,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   }, [router, searchParams, path]);
 
   const filterBreed = flock?.breeds.find(
-    (breed) => breed.id == (searchParams?.get("breedFilter") as string)
+    (breed) => breed.id == (searchParams?.get("breedFilter") as string),
   );
 
   if (!flock) {

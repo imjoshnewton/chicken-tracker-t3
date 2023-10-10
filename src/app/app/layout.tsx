@@ -3,6 +3,7 @@ import { db } from "@lib/db";
 import { notification } from "@lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 import AppLayout from "./AppLayout";
+import { TrpcProvider } from "./flocks/[flockId]/Provider";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -23,5 +24,9 @@ export default async function RootLayout({
     .orderBy(desc(notification.date))
     .where(eq(notification.userId, user?.id));
 
-  return <AppLayout notifications={notifications}>{children}</AppLayout>;
+  return (
+    <TrpcProvider>
+      <AppLayout initialNotifications={notifications}>{children}</AppLayout>
+    </TrpcProvider>
+  );
 }

@@ -27,7 +27,7 @@ export const authRouter = router({
       z.object({
         name: z.string(),
         image: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       return await ctx.db
@@ -39,7 +39,7 @@ export const authRouter = router({
     .input(
       z.object({
         flockId: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       return await ctx.db
@@ -53,13 +53,13 @@ export const authRouter = router({
       .from(notification)
       .limit(10)
       .orderBy(desc(notification.date))
-      .where(eq(notification.userId, user?.id));
+      .where(eq(notification.userId, ctx.session.user.id));
   }),
   getUserUnreadNotifications: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db
       .select()
       .from(notification)
-      .where(eq(notification.userId, user?.id))
+      .where(eq(notification.userId, ctx.session.user.id))
       .where(eq(notification.read, 0))
       .limit(10);
   }),

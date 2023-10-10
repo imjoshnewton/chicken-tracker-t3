@@ -18,21 +18,26 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
-import { type Notification } from "@lib/db/schema";
+import { inferRouterOutputs } from "@trpc/server";
+import { trpc } from "@utils/trpc";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactElement, useState } from "react";
 import { Toaster } from "react-hot-toast";
+import { AppRouter } from "src/server/trpc/router/_app";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import NotificationsList from "./NotificationsList";
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+type GetUserNotifications = RouterOutput["auth"]["getUserNotifications"];
 
 // Top navbar
 export default function AppLayout({
   children,
-  notifications,
+  initialNotifications,
 }: {
   children: React.ReactNode;
-  notifications: Notification[] | undefined;
+  initialNotifications: GetUserNotifications;
 }) {
   const { user } = useUser();
 
@@ -66,6 +71,13 @@ export default function AppLayout({
       onClick: () => setSideBarOpen(false),
     },
   ];
+
+  const { data: notifications } = trpc.auth.getUserNotifications.useQuery(
+    undefined,
+    {
+      initialData: initialNotifications,
+    },
+  );
 
   return (
     <>

@@ -14,7 +14,15 @@ const Page = async ({
   params: { flockId: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
+  // const authRes = await auth();
   const user = await currentUsr();
+
+  // const serverClient = getServerClient(authRes);
+  // const flock = await serverClient.flocks.getFlock({
+  //   flockId: params.flockId,
+  // });
+
+  // console.log("flock", flock);
 
   if (!user) redirect("/api/auth/signin");
 
