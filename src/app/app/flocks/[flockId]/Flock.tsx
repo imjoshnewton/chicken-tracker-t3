@@ -17,13 +17,11 @@ import AddTaskModal from "@components/tasks/AddTaskModal";
 import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
-import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "src/server/trpc/router/_app";
 
 export const runtime = "edge";
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-type GetFlockOutput = RouterOutput["flocks"]["getFlock"];
+// type RouterOutput = inferRouterOutputs<AppRouter>;
+// type GetFlockOutput = RouterOutput["flocks"]["getFlock"];
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();

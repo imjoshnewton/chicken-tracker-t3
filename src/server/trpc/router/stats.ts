@@ -13,7 +13,7 @@ export const statsRouter = router({
         limit: z.number(),
         today: z.union([z.date(), z.string()]),
         breedFilter: z.array(z.string()).nullable().optional(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       var today = endOfDay(new Date(input.today));
@@ -32,17 +32,17 @@ export const statsRouter = router({
         .where(
           and(
             eq(eggLog.flockId, input.flockId),
-            // gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
+            gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
             // lte(eggLog.date, format(today, "yyyy-MM-dd")),
-            between(
-              eggLog.date,
-              format(pastDate, "yyyy-MM-dd"),
-              format(today, "yyyy-MM-dd")
-            ),
+            // between(
+            //   eggLog.date,
+            //   format(pastDate, "yyyy-MM-dd"),
+            //   format(today, "yyyy-MM-dd")
+            // ),
             input.breedFilter
               ? inArray(eggLog.breedId, input.breedFilter)
-              : undefined
-          )
+              : undefined,
+          ),
         )
         .orderBy(({ date }) => desc(date))
         .limit(input.limit || 7);
@@ -64,9 +64,9 @@ export const statsRouter = router({
             between(
               eggLog.date,
               format(beginThisWeek, "yyyy-MM-dd"),
-              format(endThisWeek, "yyyy-MM-dd")
-            )
-          )
+              format(endThisWeek, "yyyy-MM-dd"),
+            ),
+          ),
         );
 
       // const thisWeeksAvg = await ctx.prisma.eggLog.aggregate({
@@ -97,9 +97,9 @@ export const statsRouter = router({
             between(
               eggLog.date,
               format(beginLastWeek, "yyyy-MM-dd"),
-              format(endLastWeek, "yyyy-MM-dd")
-            )
-          )
+              format(endLastWeek, "yyyy-MM-dd"),
+            ),
+          ),
         );
 
       // const lastWeeksAvg = await ctx.prisma.eggLog.aggregate({
@@ -129,7 +129,7 @@ export const statsRouter = router({
       z.object({
         today: z.union([z.date(), z.string()]),
         flockId: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const dates = [new Date(input.today)];
@@ -143,10 +143,12 @@ export const statsRouter = router({
                     FROM Expense AS expen
                     WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
-        dates[1]?.getMonth()! + 1
-      }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
-        dates[4]?.getMonth()! + 1
-      }, ${dates[5]?.getMonth()! + 1})
+                      dates[1]?.getMonth()! + 1
+                    }, ${dates[2]?.getMonth()! + 1}, ${
+                      dates[3]?.getMonth()! + 1
+                    },${dates[4]?.getMonth()! + 1}, ${
+                      dates[5]?.getMonth()! + 1
+                    })
                     AND expen.flockId = ${input.flockId}
                     GROUP BY flockId, MonthYear, Cat
                     ORDER BY MonthYear ASC`);
@@ -158,10 +160,12 @@ export const statsRouter = router({
                     FROM EggLog AS logs
                     WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
                     AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
-        dates[1]?.getMonth()! + 1
-      }, ${dates[2]?.getMonth()! + 1}, ${dates[3]?.getMonth()! + 1},${
-        dates[4]?.getMonth()! + 1
-      }, ${dates[5]?.getMonth()! + 1})
+                      dates[1]?.getMonth()! + 1
+                    }, ${dates[2]?.getMonth()! + 1}, ${
+                      dates[3]?.getMonth()! + 1
+                    },${dates[4]?.getMonth()! + 1}, ${
+                      dates[5]?.getMonth()! + 1
+                    })
                     AND logs.flockId = ${input.flockId}
                     GROUP BY flockId, MonthYear
                     ORDER BY MonthYear ASC`);
@@ -175,7 +179,7 @@ export const statsRouter = router({
     }),
   getFlockSummary: protectedProcedure
     .input(
-      z.object({ flockId: z.string(), month: z.string(), year: z.string() })
+      z.object({ flockId: z.string(), month: z.string(), year: z.string() }),
     )
     .query(async ({ input, ctx }) => {
       const summary = await getSummaryData({
@@ -188,7 +192,7 @@ export const statsRouter = router({
     }),
   getBreedStats: protectedProcedure
     .input(
-      z.object({ today: z.union([z.date(), z.string()]), flockId: z.string() })
+      z.object({ today: z.union([z.date(), z.string()]), flockId: z.string() }),
     )
     .query(async ({ input, ctx }) => {
       var today = new Date(input.today);
@@ -208,9 +212,9 @@ export const statsRouter = router({
             between(
               eggLog.date,
               format(beginThisWeek, "yyyy-MM-dd"),
-              format(endThisWeek, "yyyy-MM-dd")
-            )
-          )
+              format(endThisWeek, "yyyy-MM-dd"),
+            ),
+          ),
         )
         .groupBy(eggLog.breedId)
         .orderBy(({ avgCount }) => desc(avgCount));
@@ -224,12 +228,12 @@ function getThisWeek(today: Date): [beginningofWeek: Date, endofWeek: Date] {
   let tempDate = new Date(today);
   const dayOfWeek = today.getDay();
   const endOfWeek = new Date(
-    tempDate.setDate(tempDate.getDate() + (6 - dayOfWeek))
+    tempDate.setDate(tempDate.getDate() + (6 - dayOfWeek)),
   );
   endOfWeek.setHours(23, 59, 59, 999);
   tempDate = new Date(today);
   const beginningOfWeek = new Date(
-    tempDate.setDate(tempDate.getDate() - dayOfWeek)
+    tempDate.setDate(tempDate.getDate() - dayOfWeek),
   );
 
   return [beginningOfWeek, endOfWeek];
@@ -243,12 +247,12 @@ function getLastWeek(today: Date): [beginningofWeek: Date, endOfWeek: Date] {
   let tempDate = new Date(dayLastWeek);
   const dayOfWeek = dayLastWeek.getDay();
   const endOfWeek = new Date(
-    tempDate.setDate(tempDate.getDate() + (6 - dayOfWeek))
+    tempDate.setDate(tempDate.getDate() + (6 - dayOfWeek)),
   );
   endOfWeek.setHours(23, 59, 59, 999);
   tempDate = new Date(dayLastWeek);
   const beginningOfWeek = new Date(
-    tempDate.setDate(tempDate.getDate() - dayOfWeek)
+    tempDate.setDate(tempDate.getDate() - dayOfWeek),
   );
 
   return [beginningOfWeek, endOfWeek];

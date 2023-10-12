@@ -68,7 +68,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     date: Date,
     amount: number,
     category: string,
-    memo?: string
+    memo?: string,
   ): Promise<void> {
     await createExpense({
       flockId,
@@ -84,6 +84,8 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   if (!flockId) {
     return null;
   }
+
+  console.log("date", handleTimezone(date));
 
   return (
     <>
@@ -139,7 +141,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             date,
                             amount,
                             category ? category : "other",
-                            memo
+                            memo,
                           );
                         }
                       }}
@@ -149,6 +151,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       </label> */}
                       <input
                         className="w-full appearance-none rounded border px-1 py-2 text-black"
+                        max={format(new Date(), "yyyy-MM-dd")}
                         required
                         value={format(handleTimezone(date), "yyyy-MM-dd")}
                         onChange={(event) =>
@@ -232,7 +235,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             date,
                             amount,
                             category ? category : "other",
-                            memo
+                            memo,
                           );
                         }
                       }}

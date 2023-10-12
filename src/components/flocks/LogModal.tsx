@@ -75,7 +75,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
     flockId: string,
     date: Date,
     count: number,
-    notes?: string
+    notes?: string,
   ): Promise<void> {
     await createLogMutation({
       flockId,
@@ -148,7 +148,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date, //new Date(date.startDate.toLocaleString()),
                             count,
-                            notes
+                            notes,
                           );
                         }
                       }}
@@ -173,6 +173,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       <input
                         id="date"
                         className="w-full appearance-none rounded border px-1 py-2 text-black"
+                        max={format(new Date(), "yyyy-MM-dd")}
                         required
                         value={format(handleTimezone(date), "yyyy-MM-dd")}
                         onChange={(event) =>
@@ -244,7 +245,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date, //new Date(date.startDate.toLocaleString()),
                             count,
-                            notes
+                            notes,
                           );
                         }
                       }}
