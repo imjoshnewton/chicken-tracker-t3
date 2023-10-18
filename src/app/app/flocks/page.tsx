@@ -46,7 +46,8 @@ const Flocks = async ({
     const [usr] = await db
       .select({ id: user.id })
       .from(user)
-      .where(eq(user.clerkId, clerkUser.id));
+      .where(eq(user.clerkId, clerkUser.id))
+      .limit(1);
     userId = usr?.id ?? "";
   }
 
@@ -88,7 +89,7 @@ const Flocks = async ({
       <div className="flex items-center justify-end">
         <AddFlockButton userId={userId} />
       </div>
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <ul className="grid grid-cols-1 grid-rows-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
         {flocks?.map((flock, index) => {
           return (
             <li
@@ -96,8 +97,8 @@ const Flocks = async ({
               style={{ animationDelay: `${index * 0.15}s` }}
               key={flock.id}
             >
-              <Link href={`/app/flocks/${flock.id}`}>
-                <div className="shadow transition-all hover:shadow-2xl">
+              <Link href={`/app/flocks/${flock.id}`} className="h-full md:flex">
+                <div className="h-full w-full shadow transition-all hover:shadow-2xl md:flex">
                   <Card title={"Flock"}>
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
                       <Image
