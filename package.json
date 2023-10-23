@@ -11,7 +11,9 @@
     "migrations:generate": "drizzle-kit generate:mysql",
     "push": "node -r esbuild-register src/lib/db/migrate.ts",
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts",
-    "pull": "drizzle-kit introspect:mysql --config=drizzle.config.ts"
+    "pull": "drizzle-kit introspect:mysql --config=drizzle.config.ts",
+    "db:push": "dotenv drizzle-kit push:mysql",
+    "db:studio": "dotenv drizzle-kit studio"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.3",
@@ -68,6 +70,7 @@
     "@typescript-eslint/parser": "^6.7.5",
     "autoprefixer": "^10.4.7",
     "dotenv": "^16.3.1",
+    "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.26.0",
     "eslint-config-next": "^13.4.4",
