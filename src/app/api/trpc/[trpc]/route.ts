@@ -1,14 +1,10 @@
 // import { createNextApiHandler } from "@trpc/server/adapters/next";
 
 // import { env } from "../../../env/server.mjs";
+import { getAuth } from "@clerk/nextjs/server";
+import { db } from "@lib/db";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { NextRequest } from "next/server";
-import {
-  getAuth,
-  // type SignedInAuthObject,
-  // type SignedOutAuthObject,
-} from "@clerk/nextjs/server";
-import { db } from "@lib/db";
 import { appRouter } from "src/server/trpc/router/_app";
 
 // // We're using the edge-runtime
@@ -36,4 +32,4 @@ async function handler(req: NextRequest) {
   });
 }
 
-export { handler as GET, handler as POST, handler as PUT, handler as DELETE };
+export { handler as DELETE, handler as GET, handler as POST, handler as PUT };
