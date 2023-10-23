@@ -107,7 +107,7 @@ const AddFlockButton = ({ userId }: { userId: string }) => {
                         zip: "",
                         userId: "",
                         breeds: [],
-                        deleted: false,
+                        deleted: 0,
                       }}
                       userId={userId}
                       onCancel={closeModal}

@@ -74,7 +74,7 @@ const Flocks = async ({
                 zip: "",
                 userId: "",
                 breeds: [],
-                deleted: false,
+                deleted: 0,
               }}
               userId={userId}
             />

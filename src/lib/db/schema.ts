@@ -258,3 +258,5 @@ export const verificationToken = mysqlTable(
 export type User = typeof user.$inferInsert;
 export type Notification = typeof notification.$inferInsert;
 export type Task = typeof task.$inferInsert;
+export type Flock = typeof flock.$inferInsert;
+export type Breed = typeof breed.$inferInsert;

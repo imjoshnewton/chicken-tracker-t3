@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Breed, Flock } from "@prisma/client";
+// import type { Breed, Flock } from "@prisma/client";
 import Loader from "../../../components/shared/Loader";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { createFlock, deleteFlock, updateFlock } from "../server";
 import { trpc } from "@utils/trpc";
+import type { Breed, Flock } from "@lib/db/schema";
 
 export default function FlockForm({
   flock,
@@ -41,7 +42,7 @@ export default function FlockForm({
   const utils = trpc.useContext();
 
   const createOrUpdateFlock = (
-    flockData: Flock & { breeds: Breed[] } & { default: boolean }
+    flockData: Flock & { breeds: Breed[] } & { default: boolean },
   ) => {
     console.log(
       "Data: ",
@@ -49,7 +50,7 @@ export default function FlockForm({
       flockData.description,
       flockData.type,
       flockData.imageUrl,
-      downloadURL
+      downloadURL,
     );
 
     if (flockData.id) {
@@ -66,7 +67,7 @@ export default function FlockForm({
             loading: `Saving flock`,
             success: (data) => `${data.name} updated successfully!!`,
             error: (err) => `This just happened: ${err.toString()}`,
-          }
+          },
         )
         .then(async (flock) => {
           await utils.flocks.invalidate();
@@ -87,7 +88,7 @@ export default function FlockForm({
             loading: `Creating flock`,
             success: (data) => `${data.name} created successfully!`,
             error: (err) => `This just happened: ${err.toString()}`,
-          }
+          },
         )
         .then((flock) => {
           if (onComplete) onComplete();
@@ -114,7 +115,7 @@ export default function FlockForm({
       onSubmit={handleSubmit(createOrUpdateFlock)}
       className="flex flex-auto flex-col"
     >
-      <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8">
+      <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pb-8 lg:pt-6">
         {/* <ImageUploader /> */}
 
         <fieldset className="mb-0">
@@ -160,7 +161,7 @@ export default function FlockForm({
         <fieldset className="mb-0">
           {/* <label>Name</label> */}
           <input
-            className="w-full appearance-none rounded border py-2 px-1 text-black"
+            className="w-full appearance-none rounded border px-1 py-2 text-black"
             placeholder="Name"
             // name='name'
             type="text"
@@ -170,7 +171,7 @@ export default function FlockForm({
         <fieldset className="mb-0">
           {/* <label>Description</label> */}
           <input
-            className="w-full appearance-none rounded border py-2 px-1 text-black"
+            className="w-full appearance-none rounded border px-1 py-2 text-black"
             // name='description'
             placeholder="Description"
             type="text"
@@ -210,7 +211,7 @@ export default function FlockForm({
                 if (onCancel) onCancel();
                 else router.push(`/app/flocks/${flock.id}`);
               }}
-              className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+              className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
             >
               CANCEL
             </button>
@@ -218,7 +219,7 @@ export default function FlockForm({
         )}
         <button
           type="submit"
-          className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+          className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
           disabled={!isDirty || !isValid}
         >
           {flock.id ? "SAVE" : "CREATE"}
