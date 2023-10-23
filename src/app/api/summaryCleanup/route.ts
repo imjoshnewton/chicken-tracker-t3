@@ -1,6 +1,6 @@
 import * as admin from "firebase-admin";
-import { verifySignature } from "@upstash/qstash/dist/nextjs";
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { verifySignatureEdge } from "@upstash/qstash/dist/nextjs";
+import { NextRequest, NextResponse } from "next/server";
 
 const serviceAccount = require("./chicken-tracker-83ef8-firebase-adminsdk-dwql3-a73864962e.json");
 
@@ -14,7 +14,7 @@ if (!admin.apps.length) {
 
 const bucket = admin.storage().bucket();
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler(req: NextRequest) {
   const folderName = "summary-images";
 
   try {
@@ -30,19 +30,23 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
           return result;
         }
-      })
+      }),
     );
 
     console.log("Files deleted successfully");
 
-    return res.status(200).json({ message: "Files deleted successfully" });
+    return NextResponse.json(
+      { message: "Files deleted successfully" },
+      { status: 200 },
+    );
   } catch (error) {
     console.error(error);
 
-    return res
-      .status(500)
-      .json({ error: "Failed to delete files", details: error });
+    return NextResponse.json(
+      { error: "Failed to delete files", details: error },
+      { status: 500 },
+    );
   }
-};
+}
 
-export default verifySignature(handler);
+export const POST = verifySignatureEdge(handler);
