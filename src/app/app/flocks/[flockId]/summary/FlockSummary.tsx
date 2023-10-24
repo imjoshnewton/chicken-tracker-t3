@@ -2,15 +2,13 @@
 
 import Card from "@components/shared/Card";
 import { format } from "date-fns";
-import saveAs from "file-saver";
 import { getDownloadURL, ref } from "firebase/storage";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdSave } from "react-icons/md";
-import { BiImageAdd } from "react-icons/bi";
-import { storage } from "../../../../../lib/firebase";
 import { RiLoader4Fill } from "react-icons/ri";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { storage } from "../../../../../lib/firebase";
 
 export default function FlockSummary({
   summary,
@@ -65,7 +63,7 @@ export default function FlockSummary({
             month: twoDigitMonth,
             year: summary.year,
           }),
-        }
+        },
       )
     ).json();
 

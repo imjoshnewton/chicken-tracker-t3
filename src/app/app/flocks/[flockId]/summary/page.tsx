@@ -1,6 +1,4 @@
 import { getSummaryData } from "@lib/fetch";
-import { addMonths, getDaysInMonth } from "date-fns";
-import { prisma } from "../../../../../server/db/client";
 import FlockSummary from "./FlockSummary";
 
 export const metadata = {

@@ -212,6 +212,13 @@ export const task = mysqlTable(
   },
 );
 
+export const taskRelations = relations(task, ({ one }) => ({
+  flock: one(flock, {
+    fields: [task.flockId],
+    references: [flock.id],
+  }),
+}));
+
 export const user = mysqlTable(
   "User",
   {
