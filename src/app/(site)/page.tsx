@@ -7,6 +7,7 @@ import eggs from "../../../public/track-eggs.png";
 import expenses from "../../../public/track-expenses.png";
 import PWAExample from "./PWAExample";
 import LearnMoreButton from "./LearnMoreButton";
+import { Button } from "@components/ui/button";
 
 const Home = () => {
   return (
@@ -121,12 +122,18 @@ const Home = () => {
                 So why wait? Sign up for FlockNerd today and take the first step
                 towards better managing your poultry farm or backyard flock.
               </p>
-              <Link
-                href="/app/flocks"
-                className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+              <Button
+                variant={"secondary"}
+                asChild
+                className="mt-4 lg:self-start"
               >
-                Start Tracking Now
-              </Link>
+                <Link
+                  href="/app/flocks"
+                  // className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+                >
+                  Start tracking now
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
@@ -181,12 +188,18 @@ const Home = () => {
                 your farm thrive. So why wait? Download FlockNerd today and
                 start seeing the benefits for yourself.
               </p>
-              <Link
-                href="/app/flocks"
-                className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+              <Button
+                variant={"secondary"}
+                asChild
+                className="mt-4 lg:self-start"
               >
-                Sign me up!
-              </Link>
+                <Link
+                  href="/app/flocks"
+                  // className="mt-4 rounded bg-secondary px-8 py-2 text-center text-white transition-all hover:bg-secondary/90 hover:shadow-xl lg:self-start"
+                >
+                  Sign me up!
+                </Link>
+              </Button>
             </div>
             <div
             //   initial={{ opacity: 0, y: 40 }}
