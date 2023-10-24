@@ -177,6 +177,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
               <div className="flex items-center gap-2">
                 <Switch
                   id="show-completed"
+                  checked={showCompleted}
                   onCheckedChange={(val) => {
                     console.log(val);
                     setShowCompleted(val);

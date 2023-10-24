@@ -8,6 +8,7 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
 import { formatDate, handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
+import { Button } from "@components/ui/button";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -89,14 +90,15 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   return (
     <>
-      <button
-        className="btn mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+      <Button
+        className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
         type="button"
+        variant={"secondary"}
         onClick={() => setShowModal(true)}
       >
         <AiOutlineDollar className="text-xl" />
         &nbsp;Log an Expense
-      </button>
+      </Button>
       <AnimatePresence
         // Disable any initial animations on children that
         // are present when the component is first rendered
