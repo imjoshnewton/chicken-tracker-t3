@@ -10,15 +10,18 @@ export const statsRouter = router({
     .input(
       z.object({
         flockId: z.string(),
-        limit: z.number(),
+        range: z.object({
+          from: z.date(),
+          to: z.date(),
+        }),
         today: z.union([z.date(), z.string()]),
         breedFilter: z.array(z.string()).nullable().optional(),
       }),
     )
     .query(async ({ input, ctx }) => {
-      var today = endOfDay(new Date(input.today));
+      var today = endOfDay(new Date(input.range.to));
 
-      var pastDate = startOfDay(subDays(today, input.limit));
+      var pastDate = startOfDay(input.range.from);
 
       console.log("Today: ", today);
       console.log("Past date: ", pastDate);
@@ -44,8 +47,7 @@ export const statsRouter = router({
               : undefined,
           ),
         )
-        .orderBy(({ date }) => desc(date))
-        .limit(input.limit || 7);
+        .orderBy(({ date }) => desc(date));
 
       console.log("Get logs: ", getLogs);
 

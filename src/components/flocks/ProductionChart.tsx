@@ -18,6 +18,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { DatePickerWithRange } from "./DatePickerWithRange";
+import { differenceInDays } from "date-fns";
 
 ChartJS.register(
   BarController,
@@ -27,7 +29,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 //
@@ -35,7 +37,7 @@ ChartJS.register(
 //
 function createChartArray(
   logs: { date: string; count: number }[],
-  limit: number
+  limit: number,
 ) {
   const dates = getDatesInRange(Number(limit));
 
@@ -78,7 +80,7 @@ function createChartArray(
 //
 function calcDailyAverage(
   flock: Flock & { breeds: Breed[] },
-  breedFilter?: string
+  breedFilter?: string,
 ): number {
   const breedAverages = flock.breeds.length
     ? breedFilter
@@ -194,20 +196,23 @@ export default function ProductionChart({
   stats,
   flock,
   className,
-  limit,
+  range,
   onRangeChange,
   breedFilter,
 }: {
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
-  limit: string;
+  range: { from: Date; to: Date };
   onRangeChange: any;
   breedFilter?: string;
 }) {
   function chartData(logs: any[], flock: Flock & { breeds: Breed[] }) {
     const flockDailyAverage = calcDailyAverage(flock, breedFilter);
-    const chartArray = createChartArray(logs, Number(limit));
+    const chartArray = createChartArray(
+      logs,
+      differenceInDays(range.to, range.from),
+    );
 
     return {
       datasets: [
@@ -274,13 +279,14 @@ export default function ProductionChart({
 
   return (
     <div className={className}>
-      <div className="flex justify-between">
-        <h3 className="mb-4 dark:text-gray-300">Production</h3>
-        <select defaultValue={limit} onChange={onRangeChange} className="mb-4">
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className=" dark:text-gray-300">Production</h3>
+        {/* <select defaultValue={limit} onChange={onRangeChange} className="mb-4">
           <option value="7">Last 7 Days</option>
           <option value="15">Last 15 Days</option>
           <option value="30">Last 30 Days</option>
-        </select>
+        </select> */}
+        <DatePickerWithRange />
       </div>
       <div className="flex flex-col">
         <div className="min-h-[300px] w-[99%] md:min-h-[275px]">

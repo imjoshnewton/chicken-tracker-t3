@@ -8,7 +8,7 @@ export default function Stats({
   stats,
   flock,
   className,
-  limit,
+  range,
   onRangeChange,
   filter,
   filterId,
@@ -17,7 +17,7 @@ export default function Stats({
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
-  limit: string;
+  range: { from: Date; to: Date };
   onRangeChange: any;
   filter?: string;
   filterId?: string;
@@ -81,7 +81,7 @@ export default function Stats({
           stats={stats}
           flock={flock}
           className={"flex-48"}
-          limit={limit}
+          range={range}
           onRangeChange={onRangeChange}
           breedFilter={filterId}
         />

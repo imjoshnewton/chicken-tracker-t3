@@ -17,6 +17,7 @@ import AddTaskModal from "@components/tasks/AddTaskModal";
 import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
+import { format, subDays } from "date-fns";
 
 export const runtime = "edge";
 
@@ -27,12 +28,20 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
+  const statsRange =
+    searchParams?.get("statsRange") ||
+    `${format(subDays(new Date(), 7), "yyyy-MM-dd")}, ${format(
+      new Date(),
+      "yyyy-MM-dd",
+    )}`;
   const { flock, stats, range, breedStats } = useFlockDataAppDir(
     userId,
     flockId,
-    searchParams?.get("statsRange") || "7",
+    statsRange,
     searchParams?.get("breedFilter"),
   );
+
+  console.log("statsRange: ", statsRange);
 
   const onRangeChange = useCallback(
     (event: any) => {
@@ -107,7 +116,7 @@ const FlockLayout = ({
           stats={stats}
           flock={flock}
           className="mt-4 basis-full xl:basis-[75%]"
-          limit={range.toString()}
+          range={range}
           onRangeChange={onRangeChange}
           filter={filterText}
           filterId={filterId}
