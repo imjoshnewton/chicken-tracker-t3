@@ -109,7 +109,7 @@ export function DatePickerWithRange({
               toDate={new Date()}
             />
           </div>
-          <div className="block rounded-md border sm:hidden">
+          <div className="block rounded-md border sm:hidden" aria-hidden>
             <Calendar
               initialFocus
               mode="range"
