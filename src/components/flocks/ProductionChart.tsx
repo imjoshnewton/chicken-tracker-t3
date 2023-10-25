@@ -279,14 +279,14 @@ export default function ProductionChart({
 
   return (
     <div className={className}>
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
         <h3 className=" dark:text-gray-300">Production</h3>
         {/* <select defaultValue={limit} onChange={onRangeChange} className="mb-4">
           <option value="7">Last 7 Days</option>
           <option value="15">Last 15 Days</option>
           <option value="30">Last 30 Days</option>
         </select> */}
-        <DatePickerWithRange />
+        <DatePickerWithRange className="w-full sm:w-auto" />
       </div>
       <div className="flex flex-col">
         <div className="min-h-[300px] w-[99%] md:min-h-[275px]">

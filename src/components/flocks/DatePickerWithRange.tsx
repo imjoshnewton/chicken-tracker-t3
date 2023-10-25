@@ -15,6 +15,13 @@ import {
   PopoverClose,
 } from "@components/ui/popover";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 
 export function DatePickerWithRange({
   className,
@@ -50,7 +57,7 @@ export function DatePickerWithRange({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "w-full justify-start text-left font-normal sm:w-[300px]",
               !date && "text-muted-foreground",
             )}
           >
@@ -69,17 +76,51 @@ export function DatePickerWithRange({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={date?.to ? subMonths(date.to, 1) : new Date()}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-            toDate={new Date()}
-          />
-          <div className="flex w-full justify-end p-3 pt-1 ">
+        <PopoverContent
+          align="start"
+          className="flex w-auto flex-col space-y-2 p-2"
+        >
+          <Select
+            onValueChange={(value) =>
+              setDate({
+                from: subDays(new Date(), parseInt(value)),
+                to: new Date(),
+              })
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="7">Last 7 Days</SelectItem>
+              <SelectItem value="15">Last 15 Days</SelectItem>
+              <SelectItem value="30">Last 30 Days</SelectItem>
+              <SelectItem value="60">Last 60 Days</SelectItem>
+            </SelectContent>
+          </Select>
+          <div className="hidden rounded-md border sm:block">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={date?.to ? subMonths(date.to, 1) : new Date()}
+              selected={date}
+              onSelect={setDate}
+              numberOfMonths={2}
+              toDate={new Date()}
+            />
+          </div>
+          <div className="block rounded-md border sm:hidden">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={date?.to}
+              selected={date}
+              onSelect={setDate}
+              numberOfMonths={1}
+              toDate={new Date()}
+            />
+          </div>
+          <div className="flex w-full justify-end ">
             <PopoverClose asChild>
               <Button
                 variant="ghost"
