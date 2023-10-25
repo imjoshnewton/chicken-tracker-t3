@@ -211,7 +211,7 @@ export default function ProductionChart({
     const flockDailyAverage = calcDailyAverage(flock, breedFilter);
     const chartArray = createChartArray(
       logs,
-      differenceInDays(range.to, range.from),
+      differenceInDays(range.to, range.from) + 1,
     );
 
     return {

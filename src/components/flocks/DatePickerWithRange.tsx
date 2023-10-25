@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { subDays, format, subMonths } from "date-fns";
+import { subDays, format, subMonths, parseISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 import { cn } from "@lib/utils";
@@ -19,17 +19,28 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 export function DatePickerWithRange({
   className,
 }: React.HTMLAttributes<HTMLDivElement>) {
-  const [date, setDate] = React.useState<DateRange | undefined>({
-    from: subDays(new Date(), 7),
-    to: new Date(),
-  });
-  const [previousDate, setPreviousDate] = React.useState<DateRange | undefined>(
-    undefined,
-  );
-
+  // Get router, searchParams, and path from next/navigation
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
+
+  // These steps make sure the date range is set correctly when the page is refreshed
+  const statsRange = searchParams.get("statsRange"); // Get statsRange from URL
+  // Split statsRange into from and to
+  const from = statsRange?.split(",")[0];
+  const to = statsRange?.split(",")[1];
+
+  console.log("statsRange: ", statsRange);
+  console.log("from: ", parseISO(from!));
+  console.log("to: ", parseISO(to!));
+
+  const [date, setDate] = React.useState<DateRange | undefined>({
+    from: from ? parseISO(from) : subDays(new Date(), 7), // If from exists, use it, otherwise use 7 days ago
+    to: to ? parseISO(to) : new Date(), // If to exists, use it, otherwise use today
+  });
+  const [previousDate, setPreviousDate] = React.useState<DateRange | undefined>(
+    date, // Set previousDate to date
+  );
 
   return (
     <div className={cn("grid gap-2", className)}>
@@ -64,10 +75,7 @@ export function DatePickerWithRange({
             mode="range"
             defaultMonth={date?.to ? subMonths(date.to, 1) : new Date()}
             selected={date}
-            onSelect={(value) => {
-              setPreviousDate(() => date);
-              setDate(value);
-            }}
+            onSelect={setDate}
             numberOfMonths={2}
             toDate={new Date()}
           />
@@ -78,8 +86,7 @@ export function DatePickerWithRange({
                 type="button"
                 role="cancel"
                 onClick={() => {
-                  console.log("previousDate", previousDate);
-                  console.log("date", date);
+                  // If previousDate exists, set date to previousDate which resets the calendar
                   if (previousDate) {
                     setDate(previousDate);
                   }
@@ -94,11 +101,16 @@ export function DatePickerWithRange({
                 type="button"
                 role="submit"
                 onClick={() => {
+                  // If date is undefined, return
                   if (!date?.from || !date?.to) {
                     return;
                   }
+
+                  setPreviousDate(date); // Set new previousDate for when people click cancel
+                  // Get current searchParams
                   const curParams = new URLSearchParams(searchParams || "");
 
+                  // Set statsRange to the new date range
                   curParams.set(
                     "statsRange",
                     `${format(date.from, "yyyy-MM-dd")},${format(
@@ -107,6 +119,7 @@ export function DatePickerWithRange({
                     )}`,
                   );
 
+                  // Replace the URL with the new searchParams
                   router.replace(`${path}?${curParams.toString()}`);
                 }}
               >
