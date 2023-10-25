@@ -75,6 +75,8 @@ export function DatePickerWithRange({
             <PopoverClose asChild>
               <Button
                 variant="ghost"
+                type="button"
+                role="cancel"
                 onClick={() => {
                   console.log("previousDate", previousDate);
                   console.log("date", date);
@@ -89,6 +91,8 @@ export function DatePickerWithRange({
             <PopoverClose asChild>
               <Button
                 variant="secondary"
+                type="button"
+                role="submit"
                 onClick={() => {
                   if (!date?.from || !date?.to) {
                     return;
