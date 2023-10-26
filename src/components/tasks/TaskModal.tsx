@@ -1,5 +1,6 @@
-import { Task } from "@prisma/client";
-import { format } from "date-fns";
+// import { Task } from "@prisma/client";
+import type { Task } from "@lib/db/schema";
+import { format, parseISO } from "date-fns";
 import { motion } from "framer-motion";
 import { MdClose } from "react-icons/md";
 import { TaskForm } from "src/app/app/flocks/TaskForm";
@@ -77,7 +78,10 @@ const TaskModal = ({
                 onComplete={closeModal}
                 task={
                   task
-                    ? { ...task, dueDate: format(task.dueDate, "yyyy-MM-dd") }
+                    ? {
+                        ...task,
+                        dueDate: format(parseISO(task.dueDate), "yyyy-MM-dd"),
+                      }
                     : undefined
                 }
               />

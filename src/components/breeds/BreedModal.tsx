@@ -1,6 +1,6 @@
 "use client";
 
-import { Breed } from "@prisma/client";
+// import { Breed } from "@prisma/client";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { storage } from "../../lib/firebase";
 import { trpc } from "../../utils/trpc";
 import Loader from "../shared/Loader";
+import { Breed } from "@lib/db/schema";
 
 const BreedModal = ({
   flockId,
@@ -102,7 +103,7 @@ const BreedModal = ({
         storage,
         `uploads/${userId}/${
           breed ? breed.id : file.name.split(".")[0]
-        }.${extension}`
+        }.${extension}`,
       );
       setUploading(true);
 
@@ -129,7 +130,7 @@ const BreedModal = ({
           // handler(downloadURL);
         });
     },
-    [userId, breed]
+    [userId, breed],
   );
 
   useEffect(() => {
@@ -184,7 +185,7 @@ const BreedModal = ({
     } else {
       console.log(
         "Not enough data provided to update or delete breed: ",
-        breedData
+        breedData,
       );
     }
   }

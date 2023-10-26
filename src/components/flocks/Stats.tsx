@@ -1,8 +1,10 @@
-import { Breed, Flock } from "@prisma/client";
+"use client";
+
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
 import { MdClose, MdFilterAlt } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
+import { Breed, Flock } from "@lib/db/schema";
 
 export default function Stats({
   stats,

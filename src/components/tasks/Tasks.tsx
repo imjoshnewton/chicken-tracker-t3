@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Task } from "@prisma/client";
+// import { Task } from "@prisma/client";
 import {
   MdCheckCircle,
   MdEdit,
@@ -14,6 +14,7 @@ import { RiLoopRightFill } from "react-icons/ri";
 import TaskModal from "./TaskModal";
 import { Switch } from "@components/ui/switch";
 import { Label } from "@components/ui/label";
+import { Task } from "@lib/db/schema";
 
 type TaskListProps = {
   tasks: Task[];
@@ -79,7 +80,7 @@ const TaskItem: React.FC<{
             "text-sm " + (passedDue && !task.completed ? "text-red-500" : "")
           }
         >
-          {task.dueDate.toLocaleDateString()}{" "}
+          {new Date(task.dueDate).toLocaleDateString()}{" "}
           {task.recurrence && task.recurrence !== "" && (
             <RiLoopRightFill className="-mt-1 inline text-sm font-bold" />
           )}

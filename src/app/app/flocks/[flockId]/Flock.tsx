@@ -18,6 +18,7 @@ import TaskList from "@components/tasks/Tasks";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { usePathname, useSearchParams } from "next/navigation";
 import { format, subDays } from "date-fns";
+import { Breed, Flock, Task } from "@lib/db/schema";
 
 export const runtime = "edge";
 
@@ -104,7 +105,49 @@ const FlockLayout = ({
   stats,
   breedStats,
   userId,
-}: any) => (
+}: {
+  flock: Flock & { breeds: Breed[]; tasks: Task[] };
+  flockId: string;
+  onRangeChange: (event: any) => void;
+  range: {
+    from: Date;
+    to: Date;
+  };
+  clearFilter: () => void;
+  filterText: string | undefined;
+  filterId: string;
+  stats: {
+    expenses:
+      | {
+          expenses: any[];
+          production: any[];
+        }
+      | undefined;
+    logs:
+      | {
+          date: string;
+          count: number;
+        }[]
+      | undefined;
+    lastWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+    thisWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+  };
+  breedStats:
+    | {
+        breedId: string | null;
+        avgCount: number;
+      }[]
+    | undefined;
+  userId: string;
+}) => (
   <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="shadow-xl">
       <Card title="Flock Details" className="" key={flockId?.toString()}>

@@ -6,7 +6,7 @@ import {
   MdArrowDownward,
   MdArrowUpward,
 } from "react-icons/md";
-import type { Breed, Flock } from "@prisma/client";
+// import type { Breed, Flock } from "@prisma/client";
 import {
   Chart as ChartJS,
   BarController,
@@ -20,6 +20,7 @@ import {
 } from "chart.js";
 import { DatePickerWithRange } from "./DatePickerWithRange";
 import { differenceInDays } from "date-fns";
+import { Breed, Flock } from "@lib/db/schema";
 
 ChartJS.register(
   BarController,
