@@ -1,7 +1,17 @@
-import { eggLog } from "@lib/db/schema";
+import { eggLog, expense } from "@lib/db/schema";
 import { getSummaryData } from "@lib/fetch";
 import { endOfDay, format, startOfDay, subDays, subMonths } from "date-fns";
-import { and, between, desc, eq, gte, inArray, lte, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  between,
+  desc,
+  eq,
+  gte,
+  inArray,
+  lte,
+  sql,
+} from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -36,12 +46,6 @@ export const statsRouter = router({
           and(
             eq(eggLog.flockId, input.flockId),
             gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
-            // lte(eggLog.date, format(today, "yyyy-MM-dd")),
-            // between(
-            //   eggLog.date,
-            //   format(pastDate, "yyyy-MM-dd"),
-            //   format(today, "yyyy-MM-dd")
-            // ),
             input.breedFilter
               ? inArray(eggLog.breedId, input.breedFilter)
               : undefined,
@@ -71,19 +75,6 @@ export const statsRouter = router({
           ),
         );
 
-      // const thisWeeksAvg = await ctx.prisma.eggLog.aggregate({
-      //   where: {
-      //     flockId: input.flockId,
-      //     date: {
-      //       lte: endThisWeek,
-      //       gte: beginThisWeek,
-      //     },
-      //   },
-      //   _avg: {
-      //     count: true,
-      //   },
-      // });
-
       const [beginLastWeek, endLastWeek] = getLastWeek(today);
 
       console.log("Last week: ", [beginLastWeek, endLastWeek]);
@@ -103,19 +94,6 @@ export const statsRouter = router({
             ),
           ),
         );
-
-      // const lastWeeksAvg = await ctx.prisma.eggLog.aggregate({
-      //   where: {
-      //     flockId: input.flockId,
-      //     date: {
-      //       lte: endLastWeek,
-      //       gte: beginLastWeek,
-      //     },
-      //   },
-      //   _avg: {
-      //     count: true,
-      //   },
-      // });
 
       console.log("This week's avg: ", thisWeeksAvg);
       console.log("Last week's avg: ", lastWeeksAvg);
@@ -140,43 +118,91 @@ export const statsRouter = router({
         dates.push(subMonths(dates[i - 1]!, 1));
       }
 
-      const getExp = await ctx.db
-        .execute(sql`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
-                    FROM Expense AS expen
-                    WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
-                    AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
-                      dates[1]?.getMonth()! + 1
-                    }, ${dates[2]?.getMonth()! + 1}, ${
-                      dates[3]?.getMonth()! + 1
-                    },${dates[4]?.getMonth()! + 1}, ${
-                      dates[5]?.getMonth()! + 1
-                    })
-                    AND expen.flockId = ${input.flockId}
-                    GROUP BY flockId, MonthYear, Cat
-                    ORDER BY MonthYear ASC`);
+      // console.log("Dates: ", dates);
 
-      // console.log("Get exp: ", getExp);
+      // const getExp = await ctx.db
+      //   .execute(sql`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
+      //               FROM Expense AS expen
+      //               WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
+      //               AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
+      //                 dates[1]?.getMonth()! + 1
+      //               }, ${dates[2]?.getMonth()! + 1}, ${
+      //                 dates[3]?.getMonth()! + 1
+      //               },${dates[4]?.getMonth()! + 1}, ${
+      //                 dates[5]?.getMonth()! + 1
+      //               })
+      //               AND expen.flockId = ${input.flockId}
+      //               GROUP BY flockId, MonthYear, Cat
+      //               ORDER BY MonthYear ASC`);
 
-      const getProd = await ctx.db
-        .execute(sql`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
-                    FROM EggLog AS logs
-                    WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()}) 
-                    AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
-                      dates[1]?.getMonth()! + 1
-                    }, ${dates[2]?.getMonth()! + 1}, ${
-                      dates[3]?.getMonth()! + 1
-                    },${dates[4]?.getMonth()! + 1}, ${
-                      dates[5]?.getMonth()! + 1
-                    })
-                    AND logs.flockId = ${input.flockId}
-                    GROUP BY flockId, MonthYear
-                    ORDER BY MonthYear ASC`);
+      const getExp2 = await ctx.db
+        .select({
+          flockId: expense.flockId,
+          category: expense.category,
+          total: sql<number>`sum(${expense.amount})`,
+          monthYear: sql<string>`concat(month(${expense.date}), '/', year(${expense.date}))`,
+        })
+        .from(expense)
+        .where(
+          and(
+            eq(expense.flockId, input.flockId),
+            between(
+              expense.date,
+              format(dates[5]!.setDate(1), "yyyy-MM-dd"),
+              format(dates[0]!, "yyyy-MM-dd"),
+            ),
+          ),
+        )
+        .groupBy(({ flockId, monthYear, category }) => [
+          flockId,
+          monthYear,
+          category,
+        ]);
 
-      // console.log("Get prod: ", getProd);
+      // console.log("Get exp from raw: ", getExp);
+      // console.log("Get exp from drizzle: ", getExp2);
+
+      // const getProd = await ctx.db
+      //   .execute(sql`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
+      //               FROM EggLog AS logs
+      //               WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
+      //               AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
+      //                 dates[1]?.getMonth()! + 1
+      //               }, ${dates[2]?.getMonth()! + 1}, ${
+      //                 dates[3]?.getMonth()! + 1
+      //               },${dates[4]?.getMonth()! + 1}, ${
+      //                 dates[5]?.getMonth()! + 1
+      //               })
+      //               AND logs.flockId = ${input.flockId}
+      //               GROUP BY flockId, MonthYear
+      //               ORDER BY MonthYear ASC`);
+
+      const getProd2 = await ctx.db
+        .select({
+          flockId: eggLog.flockId,
+          total: sql<number>`sum(${eggLog.count})`,
+          monthYear: sql<string>`concat(month(${eggLog.date}), '/', year(${eggLog.date}))`,
+        })
+        .from(eggLog)
+        .where(
+          and(
+            eq(eggLog.flockId, input.flockId),
+            between(
+              eggLog.date,
+              format(dates[5]!.setDate(1), "yyyy-MM-dd"),
+              format(dates[0]!, "yyyy-MM-dd"),
+            ),
+          ),
+        )
+        .groupBy(({ flockId, monthYear }) => [flockId, monthYear]);
+      // .orderBy(({ monthYear }) => asc(monthYear));
+
+      // console.log("Get prod from raw: ", getProd);
+      // console.log("Get prod from drizzle: ", getProd2);
 
       return {
-        expenses: getExp.rows,
-        production: getProd.rows,
+        expenses: getExp2,
+        production: getProd2,
       };
     }),
   getFlockSummary: protectedProcedure
