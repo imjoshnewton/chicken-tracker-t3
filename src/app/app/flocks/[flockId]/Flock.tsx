@@ -28,7 +28,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const path = usePathname();
   const statsRange =
     searchParams?.get("statsRange") ||
-    `${format(subDays(new Date(), 7), "yyyy-MM-dd")}, ${format(
+    `${format(subDays(new Date(), 7), "yyyy-MM-dd")},${format(
       new Date(),
       "yyyy-MM-dd",
     )}`;
@@ -60,6 +60,17 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
     [router, searchParams, path],
   );
 
+  const onMonthsChange = useCallback(
+    (value: string) => {
+      const curParams = new URLSearchParams(searchParams || "");
+
+      curParams.set("expenseMonths", value.toString());
+
+      router.replace(`${path}?${curParams.toString()}`);
+    },
+    [router, searchParams, path],
+  );
+
   const clearFilter = useCallback(() => {
     const curParams = new URLSearchParams(searchParams || "");
     curParams.delete("breedFilter");
@@ -80,6 +91,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
       flock={flock}
       flockId={flockId}
       onRangeChange={onRangeChange}
+      onMonthsChange={onMonthsChange}
       range={range}
       clearFilter={clearFilter}
       filterText={filterBreed?.name || filterBreed?.breed}
@@ -104,6 +116,7 @@ const FlockLayout = ({
   flock,
   flockId,
   onRangeChange,
+  onMonthsChange,
   range,
   clearFilter,
   filterText,
@@ -116,6 +129,7 @@ const FlockLayout = ({
   flock: Flock & { breeds: Breed[]; tasks: Task[] };
   flockId: string;
   onRangeChange: (event: any) => void;
+  onMonthsChange: (value: string) => void;
   range: {
     from: Date;
     to: Date;
@@ -178,6 +192,7 @@ const FlockLayout = ({
           className="mt-4 basis-full xl:basis-[75%]"
           range={range}
           onRangeChange={onRangeChange}
+          onMonthsChange={onMonthsChange}
           filter={filterText}
           filterId={filterId}
           clearFilter={clearFilter}

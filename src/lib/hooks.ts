@@ -3,6 +3,7 @@ import type { Session } from "next-auth";
 import { useRouter } from "next/router";
 import { trpc } from "../utils/trpc";
 import { DateRange } from "react-day-picker";
+import { parseISO } from "date-fns";
 
 //
 // Custom hook to get user's session data
@@ -126,13 +127,15 @@ export function useFlockDataAppDir(
   const from = statsRange.split(",")[0];
   const to = statsRange.split(",")[1];
   const range = {
-    from: new Date(from!),
-    to: new Date(to!),
+    from: parseISO(from!),
+    to: parseISO(to!),
   };
 
-  const today = setStartOfDay(new Date());
+  console.log("To: ", to);
+  console.log("From: ", from);
+  console.log("Range: ", range);
 
-  console.log(typeof today, today);
+  const today = setStartOfDay(new Date());
 
   const flockData = useFlockQuery(flockId, userId);
   const logsData = useStatsQuery(flockId, range, today, breedFilter, userId);

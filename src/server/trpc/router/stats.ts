@@ -30,11 +30,10 @@ export const statsRouter = router({
     )
     .query(async ({ input, ctx }) => {
       var today = endOfDay(new Date(input.range.to));
-
       var pastDate = startOfDay(input.range.from);
 
-      console.log("Today: ", today);
-      console.log("Past date: ", pastDate);
+      const from = startOfDay(input.range.from);
+      const to = endOfDay(input.range.to);
 
       const getLogs = await ctx.db
         .select({
@@ -45,7 +44,12 @@ export const statsRouter = router({
         .where(
           and(
             eq(eggLog.flockId, input.flockId),
-            gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
+            // gte(eggLog.date, format(pastDate, "yyyy-MM-dd")),
+            between(
+              eggLog.date,
+              format(from, "yyyy-MM-dd"),
+              format(to, "yyyy-MM-dd"),
+            ),
             input.breedFilter
               ? inArray(eggLog.breedId, input.breedFilter)
               : undefined,

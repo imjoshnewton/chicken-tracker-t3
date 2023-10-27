@@ -22,7 +22,7 @@ import { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@utils/trpc";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { ReactElement, useState } from "react";
+import { ReactElement, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { AppRouter } from "src/server/trpc/router/_app";
 import logo from "../../../public/FlockNerd-logo-v2.png";
@@ -72,6 +72,14 @@ export default function AppLayout({
     },
   ];
 
+  const notificationsButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  const focusNotificationsButton = () => {
+    if (notificationsButtonRef.current) {
+      notificationsButtonRef.current.focus();
+    }
+  };
+
   const { data: notifications } = trpc.auth.getUserNotifications.useQuery(
     undefined,
     {
@@ -86,6 +94,11 @@ export default function AppLayout({
         <ul>
           <li className="inline lg:hidden">
             <button
+              id="menuButton"
+              aria-haspopup="true"
+              aria-expanded={sideBarOpen}
+              aria-controls="sideNav"
+              aria-label="Open mobile nav menu"
               className="group flex h-12 w-12 flex-col items-center justify-center rounded"
               onClick={() => {
                 setSideBarOpen(!sideBarOpen);
@@ -113,12 +126,13 @@ export default function AppLayout({
             </button>
           </li>
           <li className="hidden translate-x-2 cursor-pointer sm:translate-x-0 md:block">
-            <Link href="/">
+            <Link href="/" aria-label="Go to the homepage">
               <span className="flex items-center">
                 <Image
                   src={logo}
                   height="55"
                   alt="Flock Nerd logo the white outline of a chicken"
+                  aria-hidden="true"
                 />
               </span>
             </Link>
@@ -131,6 +145,14 @@ export default function AppLayout({
                 className={`mr-2 flex items-center gap-2 rounded transition-all`}
               >
                 <button
+                  ref={notificationsButtonRef}
+                  aria-haspopup="true" // indicates that this button triggers a popover
+                  aria-expanded={notificationsOpen} // indicates whether the popover is open or closed
+                  aria-label={`Toggle notifications - ${notifications?.filter(
+                    (not) => !not.read,
+                  ).length} unread notifications`} // provides a descriptive name for the button
+                  role="button"
+                  type="button"
                   className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
                     notificationsOpen ? "open" : ""
                   }`}
@@ -138,7 +160,7 @@ export default function AppLayout({
                     setNotificationsOpen(!notificationsOpen);
                   }}
                 >
-                  <MdNotifications className=" text-2xl" />
+                  <MdNotifications aria-hidden className="text-2xl" />
                   <div
                     className={`${
                       notifications?.length
@@ -197,6 +219,8 @@ export default function AppLayout({
         {children}
       </section>
       <aside
+        aria-label="Notifications menu"
+        aria-hidden={!notificationsOpen}
         className={`fadeIn pb-safe fixed bottom-0 right-0 top-[60px] w-80 overflow-y-auto bg-[#FEF9F6] p-3 shadow-2xl transition-all lg:top-[65px] lg:pb-3 ${
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
@@ -204,10 +228,14 @@ export default function AppLayout({
         {notifications?.length ? (
           <NotificationsList
             notifications={notifications}
-            closeMenu={() => setNotificationsOpen(false)}
+            notificationsOpen={notificationsOpen}
+            closeMenu={() => {
+              setNotificationsOpen(false);
+              focusNotificationsButton();
+            }}
           />
         ) : (
-          <p>Error loading notifications.</p>
+          <p>No notifications to display.</p>
         )}
       </aside>
       <aside

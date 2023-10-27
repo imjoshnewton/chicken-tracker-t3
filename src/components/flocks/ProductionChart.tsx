@@ -19,7 +19,7 @@ import {
   Legend,
 } from "chart.js";
 import { DatePickerWithRange } from "./DatePickerWithRange";
-import { differenceInDays } from "date-fns";
+// import { differenceInDays } from "date-fns";
 import { Breed, Flock } from "@lib/db/schema";
 
 ChartJS.register(
@@ -38,9 +38,9 @@ ChartJS.register(
 //
 function createChartArray(
   logs: { date: string; count: number }[],
-  limit: number,
+  range: { from: Date; to: Date },
 ) {
-  const dates = getDatesInRange(Number(limit));
+  const dates = getDatesInRange(range);
 
   const logsArray = logs?.map((log) => {
     return {
@@ -109,7 +109,7 @@ function calcActualDailyAverage(logs: { date: string; count: number }[]) {
 //
 // Helper function to create array of dates withint a range from today
 //
-function getDatesInRange(limit: number): Date[] {
+function getDatesInRangeFromToday(limit: number): Date[] {
   const retArray: Date[] = [];
   const today = new Date(Date.now());
 
@@ -119,6 +119,21 @@ function getDatesInRange(limit: number): Date[] {
   }
 
   return retArray;
+}
+//
+// Helper function to create array of dates withint a range from today
+//
+function getDatesInRange(range: { from: Date; to: Date }): Date[] {
+  console.log("range", range);
+  let currentDate = new Date(range.from);
+  const dates: Date[] = [];
+
+  while (currentDate <= range.to) {
+    dates.push(new Date(currentDate)); // Create a new instance to avoid reference issues
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
 }
 
 //
@@ -212,7 +227,8 @@ export default function ProductionChart({
     const flockDailyAverage = calcDailyAverage(flock, breedFilter);
     const chartArray = createChartArray(
       logs,
-      differenceInDays(range.to, range.from) + 1,
+      range,
+      // differenceInDays(range.to, range.from) + 1,
     );
 
     return {

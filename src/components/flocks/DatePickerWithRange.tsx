@@ -93,7 +93,7 @@ export function DatePickerWithRange({
             </SelectTrigger>
             <SelectContent position="popper">
               <SelectItem value="7">Last 7 Days</SelectItem>
-              <SelectItem value="15">Last 15 Days</SelectItem>
+              <SelectItem value="14">Last 14 Days</SelectItem>
               <SelectItem value="30">Last 30 Days</SelectItem>
               <SelectItem value="60">Last 60 Days</SelectItem>
             </SelectContent>

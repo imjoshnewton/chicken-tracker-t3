@@ -12,6 +12,7 @@ export default function Stats({
   className,
   range,
   onRangeChange,
+  onMonthsChange,
   filter,
   filterId,
   clearFilter,
@@ -21,7 +22,8 @@ export default function Stats({
   flock: Flock & { breeds: Breed[] };
   className: string;
   range: { from: Date; to: Date };
-  onRangeChange: any;
+  onRangeChange: (event: any) => void;
+  onMonthsChange: (value: string) => void;
   filter?: string;
   filterId?: string;
   clearFilter?: () => void;
@@ -94,6 +96,7 @@ export default function Stats({
           stats={stats}
           className={"flex-48"}
           numMonths={expenseMonths}
+          onMonthsChange={onMonthsChange}
         />
       </div>
     </div>

@@ -13,6 +13,15 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   BarController,
@@ -30,10 +39,12 @@ export default function ExpenseChart({
   stats,
   className,
   numMonths,
+  onMonthsChange,
 }: {
   stats: any | null | undefined;
   className: string;
   numMonths?: number;
+  onMonthsChange?: (value: string) => void;
 }) {
   function chartData(stats: { expenses: any[]; production: any[] }) {
     const chartArray = createChartArray(stats?.expenses);
@@ -199,7 +210,7 @@ export default function ExpenseChart({
 
     const retArray = dateStrings.map((item) => {
       const index = productionArray
-        .map((e) => {
+        ?.map((e) => {
           return {
             monthYear: e.monthYear,
           };
@@ -275,8 +286,18 @@ export default function ExpenseChart({
 
   return (
     <div className={className}>
-      <div className="flex justify-between">
-        <h3 className="mb-4 dark:text-gray-300">Expenses</h3>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="dark:text-gray-300">Expenses</h3>
+        <Select onValueChange={onMonthsChange}>
+          <SelectTrigger className="max-w-max">
+            <SelectValue placeholder={`Last ${numMonths} Months`} />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            <SelectItem value="6">Last 6 Months</SelectItem>
+            <SelectItem value="9">Last 9 Months</SelectItem>
+            <SelectItem value="12">Last 12 Months</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex flex-col">
         <div className="min-h-[300px] w-[99%] md:min-h-[275px]">
