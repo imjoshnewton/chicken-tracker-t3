@@ -29,9 +29,11 @@ ChartJS.register(
 export default function ExpenseChart({
   stats,
   className,
+  numMonths,
 }: {
   stats: any | null | undefined;
   className: string;
+  numMonths?: number;
 }) {
   function chartData(stats: { expenses: any[]; production: any[] }) {
     const chartArray = createChartArray(stats?.expenses);
@@ -145,7 +147,7 @@ export default function ExpenseChart({
   }
 
   function createChartArray(expenses: any[]) {
-    const dates = getDatesInRange(6);
+    const dates = getDatesInRange(numMonths || 6);
     const datesAndCats = getDatesWithCategories(dates);
     const expenseArray = expenses as {
       monthYear: string;
@@ -184,7 +186,7 @@ export default function ExpenseChart({
   }
 
   function createProdOverlayArray(production: any[]) {
-    const dates = getDatesInRange(6);
+    const dates = getDatesInRange(numMonths || 6);
     const dateStrings = dates.map((date) => {
       return {
         monthYear: `${date.getMonth() + 1}/${date.getFullYear()}`,

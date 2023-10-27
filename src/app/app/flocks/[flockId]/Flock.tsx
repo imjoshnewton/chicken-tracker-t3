@@ -32,11 +32,19 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
       new Date(),
       "yyyy-MM-dd",
     )}`;
+  const expenseMonths = searchParams?.get("expenseMonths")
+    ? parseInt(
+        searchParams.get("expenseMonths") !== null
+          ? (searchParams.get("expenseMonths") as string)
+          : "6",
+      )
+    : 6;
   const { flock, stats, range, breedStats } = useFlockDataAppDir(
     userId,
     flockId,
     statsRange,
     searchParams?.get("breedFilter"),
+    expenseMonths,
   );
 
   console.log("statsRange: ", statsRange);
@@ -79,6 +87,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
       stats={stats}
       breedStats={breedStats}
       userId={userId}
+      expenseMonths={expenseMonths}
     />
   );
 };
@@ -102,6 +111,7 @@ const FlockLayout = ({
   stats,
   breedStats,
   userId,
+  expenseMonths,
 }: {
   flock: Flock & { breeds: Breed[]; tasks: Task[] };
   flockId: string;
@@ -153,6 +163,7 @@ const FlockLayout = ({
       }[]
     | undefined;
   userId: string;
+  expenseMonths?: number;
 }) => (
   <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="shadow-xl">
@@ -170,6 +181,7 @@ const FlockLayout = ({
           filter={filterText}
           filterId={filterId}
           clearFilter={clearFilter}
+          expenseMonths={expenseMonths}
         />
         <Breeds
           flockId={flockId?.toString()}

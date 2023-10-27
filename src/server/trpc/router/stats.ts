@@ -109,12 +109,13 @@ export const statsRouter = router({
       z.object({
         today: z.union([z.date(), z.string()]),
         flockId: z.string(),
+        numMonths: z.number().default(6),
       }),
     )
     .query(async ({ input, ctx }) => {
       const dates = [new Date(input.today)];
 
-      for (let i = 1; i < 6; i++) {
+      for (let i = 1; i < input.numMonths; i++) {
         dates.push(subMonths(dates[i - 1]!, 1));
       }
 
@@ -131,7 +132,7 @@ export const statsRouter = router({
             eq(expense.flockId, input.flockId),
             between(
               expense.date,
-              format(dates[5]!.setDate(1), "yyyy-MM-dd"),
+              format(dates[dates.length - 1]!.setDate(1), "yyyy-MM-dd"),
               format(dates[0]!, "yyyy-MM-dd"),
             ),
           ),
@@ -154,7 +155,7 @@ export const statsRouter = router({
             eq(eggLog.flockId, input.flockId),
             between(
               eggLog.date,
-              format(dates[5]!.setDate(1), "yyyy-MM-dd"),
+              format(dates[dates.length - 1]!.setDate(1), "yyyy-MM-dd"),
               format(dates[0]!, "yyyy-MM-dd"),
             ),
           ),

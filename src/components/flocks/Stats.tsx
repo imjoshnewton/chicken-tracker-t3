@@ -15,6 +15,7 @@ export default function Stats({
   filter,
   filterId,
   clearFilter,
+  expenseMonths,
 }: {
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
@@ -24,6 +25,7 @@ export default function Stats({
   filter?: string;
   filterId?: string;
   clearFilter?: () => void;
+  expenseMonths?: number;
 }) {
   return (
     <div className={className}>
@@ -88,7 +90,11 @@ export default function Stats({
           breedFilter={filterId}
         />
         <div className="p-2"></div>
-        <ExpenseChart stats={stats} className={"flex-48"} />
+        <ExpenseChart
+          stats={stats}
+          className={"flex-48"}
+          numMonths={expenseMonths}
+        />
       </div>
     </div>
   );

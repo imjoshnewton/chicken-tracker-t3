@@ -121,6 +121,7 @@ export function useFlockDataAppDir(
   flockId: string,
   statsRange: string,
   breedFilter: string | null | undefined,
+  expenseMonths?: number,
 ) {
   const from = statsRange.split(",")[0];
   const to = statsRange.split(",")[1];
@@ -135,7 +136,12 @@ export function useFlockDataAppDir(
 
   const flockData = useFlockQuery(flockId, userId);
   const logsData = useStatsQuery(flockId, range, today, breedFilter, userId);
-  const expenseData = useExpenseStatsQuery(flockId, today, userId);
+  const expenseData = useExpenseStatsQuery(
+    flockId,
+    today,
+    userId,
+    expenseMonths || 6,
+  );
   const breedStats = useBreedStatsQuery(flockId, today);
 
   return {
@@ -197,9 +203,14 @@ function useStatsQuery(
   );
 }
 
-function useExpenseStatsQuery(flockId: string, today: Date, userId: string) {
+function useExpenseStatsQuery(
+  flockId: string,
+  today: Date,
+  userId: string,
+  numMonths: number,
+) {
   return trpc.stats.getExpenseStats.useQuery(
-    { today, flockId },
+    { today, flockId, numMonths },
     {
       enabled: !!flockId && !!today && !!userId,
     },
