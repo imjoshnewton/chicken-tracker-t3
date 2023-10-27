@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a429666b-2f1a-4ddf-87fc-e49e77b4bae2",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "3495b79d-97dd-47a2-a17a-fd459be37242",
+  "prevId": "183b4ac7-ceeb-41ff-bd22-7e5c7562c703",
   "tables": {
     "flocknerd_Account": {
       "name": "flocknerd_Account",
@@ -221,7 +221,7 @@
         },
         "count": {
           "name": "count",
-          "type": "int",
+          "type": "smallint",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

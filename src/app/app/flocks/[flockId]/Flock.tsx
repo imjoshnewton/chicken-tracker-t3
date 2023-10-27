@@ -15,15 +15,12 @@ import Loader from "@components/shared/Loader";
 import EditModal from "@components/flocks/EditModal";
 import AddTaskModal from "@components/tasks/AddTaskModal";
 import TaskList from "@components/tasks/Tasks";
-import { useFlockDataAppDir } from "@lib/hooks";
-import { usePathname, useSearchParams } from "next/navigation";
-import { format, subDays } from "date-fns";
 import { Breed, Flock, Task } from "@lib/db/schema";
+import { useFlockDataAppDir } from "@lib/hooks";
+import { format, subDays } from "date-fns";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export const runtime = "edge";
-
-// type RouterOutput = inferRouterOutputs<AppRouter>;
-// type GetFlockOutput = RouterOutput["flocks"]["getFlock"];
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
@@ -119,8 +116,17 @@ const FlockLayout = ({
   stats: {
     expenses:
       | {
-          expenses: any[];
-          production: any[];
+          expenses: {
+            flockId: string;
+            category: string;
+            total: number;
+            monthYear: string;
+          }[];
+          production: {
+            flockId: string;
+            total: number;
+            monthYear: string;
+          }[];
         }
       | undefined;
     logs:

@@ -118,23 +118,6 @@ export const statsRouter = router({
         dates.push(subMonths(dates[i - 1]!, 1));
       }
 
-      // console.log("Dates: ", dates);
-
-      // const getExp = await ctx.db
-      //   .execute(sql`SELECT CONCAT(MONTH(expen.date), '/', YEAR(expen.date)) AS MonthYear, category as Cat, flockId, SUM(expen.amount) AS Tot
-      //               FROM Expense AS expen
-      //               WHERE YEAR(expen.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
-      //               AND MONTH(expen.date) IN (${dates[0]?.getMonth()! + 1}, ${
-      //                 dates[1]?.getMonth()! + 1
-      //               }, ${dates[2]?.getMonth()! + 1}, ${
-      //                 dates[3]?.getMonth()! + 1
-      //               },${dates[4]?.getMonth()! + 1}, ${
-      //                 dates[5]?.getMonth()! + 1
-      //               })
-      //               AND expen.flockId = ${input.flockId}
-      //               GROUP BY flockId, MonthYear, Cat
-      //               ORDER BY MonthYear ASC`);
-
       const getExp2 = await ctx.db
         .select({
           flockId: expense.flockId,
@@ -159,24 +142,6 @@ export const statsRouter = router({
           category,
         ]);
 
-      // console.log("Get exp from raw: ", getExp);
-      // console.log("Get exp from drizzle: ", getExp2);
-
-      // const getProd = await ctx.db
-      //   .execute(sql`SELECT CONCAT(MONTH(logs.date), '/', YEAR(logs.date)) AS MonthYear, flockId, SUM(logs.count) AS Tot
-      //               FROM EggLog AS logs
-      //               WHERE YEAR(logs.date) IN (${dates[0]?.getFullYear()}, ${dates[1]?.getFullYear()}, ${dates[2]?.getFullYear()}, ${dates[3]?.getFullYear()}, ${dates[4]?.getFullYear()}, ${dates[5]?.getFullYear()})
-      //               AND MONTH(logs.date) IN (${dates[0]?.getMonth()! + 1}, ${
-      //                 dates[1]?.getMonth()! + 1
-      //               }, ${dates[2]?.getMonth()! + 1}, ${
-      //                 dates[3]?.getMonth()! + 1
-      //               },${dates[4]?.getMonth()! + 1}, ${
-      //                 dates[5]?.getMonth()! + 1
-      //               })
-      //               AND logs.flockId = ${input.flockId}
-      //               GROUP BY flockId, MonthYear
-      //               ORDER BY MonthYear ASC`);
-
       const getProd2 = await ctx.db
         .select({
           flockId: eggLog.flockId,
@@ -195,10 +160,6 @@ export const statsRouter = router({
           ),
         )
         .groupBy(({ flockId, monthYear }) => [flockId, monthYear]);
-      // .orderBy(({ monthYear }) => asc(monthYear));
-
-      // console.log("Get prod from raw: ", getProd);
-      // console.log("Get prod from drizzle: ", getProd2);
 
       return {
         expenses: getExp2,
