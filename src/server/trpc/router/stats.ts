@@ -1,6 +1,13 @@
 import { eggLog, expense } from "@lib/db/schema";
 import { getSummaryData } from "@lib/fetch";
-import { endOfDay, format, startOfDay, subDays, subMonths } from "date-fns";
+import {
+  endOfDay,
+  format,
+  parseISO,
+  startOfDay,
+  subDays,
+  subMonths,
+} from "date-fns";
 import {
   and,
   asc,
@@ -29,11 +36,17 @@ export const statsRouter = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      var today = endOfDay(new Date(input.range.to));
+      console.log("Input to: ", input.range.to);
+      console.log("Input from: ", input.range.from);
+
+      var today = endOfDay(input.range.to);
       var pastDate = startOfDay(input.range.from);
 
       const from = startOfDay(input.range.from);
       const to = endOfDay(input.range.to);
+
+      console.log("From: ", format(from, "yyyy-MM-dd"));
+      console.log("To: ", format(to, "yyyy-MM-dd"));
 
       const getLogs = await ctx.db
         .select({

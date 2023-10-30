@@ -21,6 +21,7 @@ import {
 import { DatePickerWithRange } from "./DatePickerWithRange";
 // import { differenceInDays } from "date-fns";
 import { Breed, Flock } from "@lib/db/schema";
+import { format, parseISO } from "date-fns";
 
 ChartJS.register(
   BarController,
@@ -42,23 +43,20 @@ function createChartArray(
 ) {
   const dates = getDatesInRange(range);
 
+  console.log("Dates in range: ", dates);
+  console.log("Logs: ", logs);
+
   const logsArray = logs?.map((log) => {
     return {
       ...log,
-      date: new Date(log.date).toLocaleString("us-EN", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      }),
+      date: format(parseISO(log.date), "MM/dd/yyyy"),
     };
   });
 
   const retArray = dates.map((date) => {
-    const stringValue = date.toLocaleString("us-EN", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    });
+    const stringValue = format(date, "MM/dd/yyyy");
+
+    console.log("stringValue", stringValue);
 
     const total = logsArray?.reduce((sum, log) => {
       if (log.date === stringValue) {
@@ -230,6 +228,8 @@ export default function ProductionChart({
       range,
       // differenceInDays(range.to, range.from) + 1,
     );
+
+    // console.log("chartArray", chartArray);
 
     return {
       datasets: [

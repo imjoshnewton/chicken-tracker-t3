@@ -65,7 +65,7 @@
     "react-icons": "^4.10.1",
     "react-tailwindcss-datepicker": "^1.6.0",
     "sass": "^1.57.0",
-    "sharp": "^0.32.1",
+    "sharp": "^0.32.6",
     "superjson": "^1.13.3",
     "svix": "^1.10.0",
     "tailwind-merge": "^1.14.0",

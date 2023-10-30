@@ -15,6 +15,13 @@
       "when": 1698376887508,
       "tag": "0001_unknown_zombie",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1698694229963,
+      "tag": "0002_sweet_aqueduct",
+      "breakpoints": true
     }
   ]
 }

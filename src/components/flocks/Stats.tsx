@@ -16,7 +16,39 @@ export default function Stats({
   clearFilter,
   expenseMonths,
 }: {
-  stats: any | null | undefined;
+  stats: {
+    expenses:
+      | {
+          expenses: {
+            flockId: string;
+            category: string;
+            total: number;
+            monthYear: string;
+          }[];
+          production: {
+            flockId: string;
+            total: number;
+            monthYear: string;
+          }[];
+        }
+      | undefined;
+    logs:
+      | {
+          date: string;
+          count: number;
+        }[]
+      | undefined;
+    lastWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+    thisWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+  };
   flock: Flock & { breeds: Breed[] };
   className: string;
   range: { from: Date; to: Date };
