@@ -31,9 +31,9 @@ const config = {
     ],
     formats: ["image/avif", "image/webp"],
   },
-  experimental: {
-    serverActions: true,
-  },
+  // experimental: {
+  //   serverActions: true,
+  // },
 };
 
 export default pwa(config);

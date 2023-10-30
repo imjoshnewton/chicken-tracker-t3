@@ -1,5 +1,3 @@
-"use client";
-
 import type { Notification } from "@lib/db/schema";
 import Link from "next/link";
 import { markNotificationAsRead } from "./server";
@@ -18,6 +16,8 @@ export default function NotificationActionButtons({
 }) {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const linkRef = useRef<HTMLAnchorElement | null>(null);
+
+  console.log("Date: ", new Date());
 
   useEffect(() => {
     if (isOpen && index === 0) {

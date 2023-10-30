@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  date,
   datetime,
   double,
   index,
@@ -259,6 +260,17 @@ export const verificationToken = mysqlTable(
       ).on(table.identifier, table.token),
       tokenKey: uniqueIndex("VerificationToken_token_key").on(table.token),
     };
+  },
+);
+
+export const dateTest = mysqlTable(
+  "DateTest",
+  {
+    dt_column: datetime("dt_column").notNull(),
+    d_column: date("d_column").notNull(),
+  },
+  (table) => {
+    return {};
   },
 );
 

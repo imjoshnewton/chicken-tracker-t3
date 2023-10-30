@@ -1,5 +1,3 @@
-"use client";
-
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
 import { MdClose, MdFilterAlt } from "react-icons/md";
