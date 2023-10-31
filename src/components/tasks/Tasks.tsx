@@ -180,7 +180,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
                   id="show-completed"
                   checked={showCompleted}
                   onCheckedChange={(val) => {
-                    console.log(val);
+                    // console.log(val);
                     setShowCompleted(val);
                   }}
                   disabled={

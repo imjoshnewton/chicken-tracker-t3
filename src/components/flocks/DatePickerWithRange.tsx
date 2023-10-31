@@ -37,9 +37,9 @@ export function DatePickerWithRange({
   const from = statsRange?.split(",")[0];
   const to = statsRange?.split(",")[1];
 
-  console.log("statsRange: ", statsRange);
-  console.log("from: ", parseISO(from!));
-  console.log("to: ", parseISO(to!));
+  // console.log("statsRange: ", statsRange);
+  // console.log("from: ", parseISO(from!));
+  // console.log("to: ", parseISO(to!));
 
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: from ? parseISO(from) : subDays(new Date(), 7), // If from exists, use it, otherwise use 7 days ago

@@ -50,8 +50,6 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     mode: "onChange",
   });
 
-  console.log("Task: ", task);
-
   const { isValid, isDirty, errors } = formState;
 
   const utils = trpc.useContext();
@@ -85,7 +83,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
             loading: "Creating task...",
             success: (data) => `${data.title} created successfully!!`,
             error: (err) => `This just happened: ${err.toString()}`,
-          }
+          },
         )
         .then(async (task) => {
           await utils.flocks.invalidate();
@@ -109,7 +107,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
             loading: "Creating task...",
             success: (data) => `${data.title} created successfully!!`,
             error: (err) => `This just happened: ${err.toString()}`,
-          }
+          },
         )
         .then(async (task) => {
           await utils.flocks.invalidate();
@@ -131,7 +129,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
             loading: "Deleting task...",
             success: (data) => `${data.title} deleted successfully!!`,
             error: (err) => `This just happened: ${err.toString()}`,
-          }
+          },
         )
         .then(async (task) => {
           await utils.flocks.invalidate();
@@ -146,32 +144,32 @@ export const TaskForm: React.FC<TaskFormProps> = ({
       onSubmit={handleSubmit(createOrUpdateTask)}
       className="flex flex-auto flex-col"
     >
-      <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pt-6 lg:pb-8">
+      <div className="flex w-full flex-col gap-4 p-4 lg:px-8 lg:pb-8 lg:pt-6">
         <input
           {...register("title")}
           placeholder="Title"
           type="text"
-          className="w-full appearance-none rounded border py-2 px-1 text-black"
+          className="w-full appearance-none rounded border px-1 py-2 text-black"
         />
         {errors.title && <p>{errors.title.message}</p>}
 
         <textarea
           {...register("description")}
           placeholder="Description"
-          className="w-full appearance-none rounded border py-2 px-1 text-black"
+          className="w-full appearance-none rounded border px-1 py-2 text-black"
         />
         {errors.description && <p>{errors.description.message}</p>}
 
         <input
           {...register("dueDate")}
           type="date"
-          className="w-full appearance-none rounded border py-2 px-1 text-black"
+          className="w-full appearance-none rounded border px-1 py-2 text-black"
         />
         {errors.dueDate && <p>{errors.dueDate.message}</p>}
 
         <select
           {...register("recurrence")}
-          className="h-12 w-full rounded border py-2 px-1 text-black"
+          className="h-12 w-full rounded border px-1 py-2 text-black"
         >
           <option value="">Select recurrence</option>
           <option value="daily">Daily</option>
@@ -194,14 +192,14 @@ export const TaskForm: React.FC<TaskFormProps> = ({
         <button
           type="button"
           onClick={onCancel}
-          className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+          className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
         >
           CANCEL
         </button>
         <button
           type="submit"
           disabled={!isDirty || !isValid}
-          className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+          className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
         >
           {task ? "UPDATE" : "CREATE"} TASK
         </button>

@@ -17,8 +17,6 @@ export default function NotificationActionButtons({
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const linkRef = useRef<HTMLAnchorElement | null>(null);
 
-  console.log("Date: ", new Date());
-
   useEffect(() => {
     if (isOpen && index === 0) {
       if (!notification.read && buttonRef.current) {

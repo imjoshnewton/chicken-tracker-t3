@@ -43,8 +43,8 @@ function createChartArray(
 ) {
   const dates = getDatesInRange(range);
 
-  console.log("Dates in range: ", dates);
-  console.log("Logs: ", logs);
+  // console.log("Dates in range: ", dates);
+  // console.log("Logs: ", logs);
 
   const logsArray = logs?.map((log) => {
     return {
@@ -56,7 +56,7 @@ function createChartArray(
   const retArray = dates.map((date) => {
     const stringValue = format(date, "MM/dd/yyyy");
 
-    console.log("stringValue", stringValue);
+    // console.log("stringValue", stringValue);
 
     const total = logsArray?.reduce((sum, log) => {
       if (log.date === stringValue) {
@@ -122,7 +122,7 @@ function getDatesInRangeFromToday(limit: number): Date[] {
 // Helper function to create array of dates withint a range from today
 //
 function getDatesInRange(range: { from: Date; to: Date }): Date[] {
-  console.log("range", range);
+  // console.log("range", range);
   let currentDate = new Date(range.from);
   const dates: Date[] = [];
 
@@ -148,10 +148,10 @@ function DailyAverages({
   thisWeekAvg: number;
   lastWeekAvg: number;
 }) {
-  console.log("thisWeekAvg", thisWeekAvg);
-  console.log(typeof thisWeekAvg);
-  console.log("lastWeekAvg", lastWeekAvg);
-  console.log(typeof lastWeekAvg);
+  // console.log("thisWeekAvg", thisWeekAvg);
+  // console.log(typeof thisWeekAvg);
+  // console.log("lastWeekAvg", lastWeekAvg);
+  // console.log(typeof lastWeekAvg);
 
   return (
     <>
@@ -292,7 +292,7 @@ export default function ProductionChart({
   const targetDailyAvg = calcDailyAverage(flock, breedFilter);
   const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
-  console.log("stats", stats);
+  // console.log("stats", stats);
 
   return (
     <div className={className}>

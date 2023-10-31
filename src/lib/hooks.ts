@@ -19,7 +19,7 @@ export function useUserData() {
     },
   );
 
-  console.log("User: ", user);
+  // console.log("User: ", user);
 
   return {
     user: user,
@@ -131,9 +131,9 @@ export function useFlockDataAppDir(
     to: parseISO(to!),
   };
 
-  console.log("To: ", to);
-  console.log("From: ", from);
-  console.log("Range: ", range);
+  // console.log("To: ", to);
+  // console.log("From: ", from);
+  // console.log("Range: ", range);
 
   const today = setStartOfDay(new Date());
 

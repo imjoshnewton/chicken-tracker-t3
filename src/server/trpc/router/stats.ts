@@ -36,17 +36,11 @@ export const statsRouter = router({
       }),
     )
     .query(async ({ input, ctx }) => {
-      console.log("Input to: ", input.range.to);
-      console.log("Input from: ", input.range.from);
-
       var today = endOfDay(input.range.to);
       var pastDate = startOfDay(input.range.from);
 
       const from = startOfDay(input.range.from);
       const to = endOfDay(input.range.to);
-
-      console.log("From: ", format(from, "yyyy-MM-dd"));
-      console.log("To: ", format(to, "yyyy-MM-dd"));
 
       const getLogs = await ctx.db
         .select({

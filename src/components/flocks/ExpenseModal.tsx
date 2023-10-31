@@ -86,8 +86,6 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     return null;
   }
 
-  console.log("date", handleTimezone(date));
-
   return (
     <>
       <Button

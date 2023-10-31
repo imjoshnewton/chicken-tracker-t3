@@ -99,8 +99,8 @@ export async function getSummaryData({
   const startOfMonth = new Date(`${month}/01/${year}`);
   const startOfNextMonth = addMonths(startOfMonth, 1);
 
-  console.log("Start of this month: ", startOfMonth);
-  console.log("Start of next month: ", startOfNextMonth);
+  // console.log("Start of this month: ", startOfMonth);
+  // console.log("Start of next month: ", startOfNextMonth);
 
   const flockData = await db.query.flock.findFirst({
     where: eq(flock.id, flockId),
@@ -125,9 +125,9 @@ export async function getSummaryData({
         between(
           expense.date,
           format(startOfMonth, "yyyy-MM-dd"),
-          format(startOfNextMonth, "yyyy-MM-dd")
-        )
-      )
+          format(startOfNextMonth, "yyyy-MM-dd"),
+        ),
+      ),
     )
     .groupBy(expense.category);
 
@@ -147,9 +147,9 @@ export async function getSummaryData({
         between(
           eggLog.date,
           format(startOfMonth, "yyyy-MM-dd"),
-          format(startOfNextMonth, "yyyy-MM-dd")
-        )
-      )
+          format(startOfNextMonth, "yyyy-MM-dd"),
+        ),
+      ),
     )
     .as("logs");
 

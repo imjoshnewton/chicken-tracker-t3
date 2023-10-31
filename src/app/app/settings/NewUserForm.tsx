@@ -42,7 +42,7 @@ export default function NewUserForm({
       // Makes reference to the storage bucket location
       const uploadRef = ref(
         storage,
-        `uploads/${user.id}/${user.id}.${extension}`
+        `uploads/${user.id}/${user.id}.${extension}`,
       );
       setUploading(true);
 
@@ -69,12 +69,12 @@ export default function NewUserForm({
           // handler(downloadURL);
         });
     },
-    [user.id]
+    [user.id],
   );
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log("Watch: ", value, name, type);
+      // console.log("Watch: ", value, name, type);
 
       if (name == "imageFile" && type == "change") {
         uploadFile(value.imageFile);
@@ -88,7 +88,7 @@ export default function NewUserForm({
     image: string;
     imageFile: any;
   }) => {
-    console.log("Data: ", data, downloadURL);
+    // console.log("Data: ", data, downloadURL);
 
     updateUser({
       userId: user.id,
@@ -145,7 +145,7 @@ export default function NewUserForm({
         <fieldset className="mb-3">
           <label>Name</label>
           <input
-            className="w-full appearance-none rounded border py-2 px-1 text-black"
+            className="w-full appearance-none rounded border px-1 py-2 text-black"
             // name='name'
             type="text"
             {...register("name")}

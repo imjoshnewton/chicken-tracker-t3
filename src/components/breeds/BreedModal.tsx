@@ -135,7 +135,7 @@ const BreedModal = ({
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) => {
-      console.log("Watch: ", value, name, type);
+      // console.log("Watch: ", value, name, type);
 
       if (name == "image" && type == "change") {
         if (value.image[0].size < 850000) {
@@ -149,7 +149,7 @@ const BreedModal = ({
   }, [watch, uploadFile]);
 
   async function createOrUpdateBreed(breedData: Partial<Breed>) {
-    console.log("Data: ", breedData);
+    // console.log("Data: ", breedData);
 
     if (breedData.flockId && !breedData.id) {
       await createNewBreed({

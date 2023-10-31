@@ -47,8 +47,6 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
     expenseMonths,
   );
 
-  console.log("statsRange: ", statsRange);
-
   const onRangeChange = useCallback(
     (event: any) => {
       const curParams = new URLSearchParams(searchParams || "");
