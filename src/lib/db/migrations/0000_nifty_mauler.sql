@@ -28,11 +28,16 @@ CREATE TABLE `flocknerd_Breed` (
 	CONSTRAINT `flocknerd_Breed_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
+CREATE TABLE `flocknerd_DateTest` (
+	`dt_column` datetime NOT NULL,
+	`d_column` date NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE `flocknerd_EggLog` (
 	`id` varchar(191) NOT NULL,
-	`count` int NOT NULL,
+	`count` smallint NOT NULL,
 	`notes` text,
-	`date` datetime(3) NOT NULL,
+	`date` date NOT NULL,
 	`flockId` varchar(191) NOT NULL,
 	`breedId` varchar(191),
 	CONSTRAINT `flocknerd_EggLog_id` PRIMARY KEY(`id`)

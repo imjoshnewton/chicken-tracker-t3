@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "3495b79d-97dd-47a2-a17a-fd459be37242",
-  "prevId": "183b4ac7-ceeb-41ff-bd22-7e5c7562c703",
+  "id": "21ede004-d5c2-4b16-8628-c754a70492d7",
+  "prevId": "803f4469-066d-446a-9f3b-e40b6037b8b0",
   "tables": {
     "flocknerd_Account": {
       "name": "flocknerd_Account",
@@ -209,6 +209,29 @@
       },
       "uniqueConstraints": {}
     },
+    "flocknerd_DateTest": {
+      "name": "flocknerd_DateTest",
+      "columns": {
+        "dt_column": {
+          "name": "dt_column",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "d_column": {
+          "name": "d_column",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "flocknerd_EggLog": {
       "name": "flocknerd_EggLog",
       "columns": {
@@ -235,7 +258,7 @@
         },
         "date": {
           "name": "date",
-          "type": "datetime(3)",
+          "type": "date",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -301,7 +324,7 @@
         },
         "date": {
           "name": "date",
-          "type": "datetime(3)",
+          "type": "date",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

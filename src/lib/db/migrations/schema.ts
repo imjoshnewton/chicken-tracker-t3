@@ -1,25 +1,23 @@
-import { relations, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
   date,
   datetime,
   double,
   index,
   int,
-  mysqlTableCreator,
+  mysqlTable,
   primaryKey,
   smallint,
   text,
   tinyint,
-  uniqueIndex,
+  unique,
   varchar,
 } from "drizzle-orm/mysql-core";
 
-export const mysqlTable = mysqlTableCreator((name) => `flocknerd_${name}`);
-
-export const account = mysqlTable(
-  "Account",
+export const flocknerdAccount = mysqlTable(
+  "flocknerd_Account",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     provider: varchar("provider", { length: 191 }).notNull(),
@@ -34,18 +32,19 @@ export const account = mysqlTable(
   },
   (table) => {
     return {
-      providerProviderAccountIdKey: uniqueIndex(
+      accountUserIdIdx: index("Account_userId_idx").on(table.userId),
+      flocknerdAccountId: primaryKey(table.id),
+      accountProviderProviderAccountIdKey: unique(
         "Account_provider_providerAccountId_key",
       ).on(table.provider, table.providerAccountId),
-      userIdIdx: index("Account_userId_idx").on(table.userId),
     };
   },
 );
 
-export const breed = mysqlTable(
-  "Breed",
+export const flocknerdBreed = mysqlTable(
+  "flocknerd_Breed",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     name: text("name"),
     description: text("description"),
     count: smallint("count").notNull(),
@@ -53,78 +52,66 @@ export const breed = mysqlTable(
     averageProduction: double("averageProduction").notNull(),
     flockId: varchar("flockId", { length: 191 }).notNull(),
     breed: text("breed")
-      .default(sql`('')`)
+      .default(sql`''`)
       .notNull(),
     deleted: tinyint("deleted").default(0).notNull(),
   },
   (table) => {
     return {
-      flockIdIdx: index("Breed_flockId_idx").on(table.flockId),
+      breedFlockIdIdx: index("Breed_flockId_idx").on(table.flockId),
+      flocknerdBreedId: primaryKey(table.id),
     };
   },
 );
 
-export const breedRelations = relations(breed, ({ one }) => ({
-  flock: one(flock, {
-    fields: [breed.flockId],
-    references: [flock.id],
-  }),
-}));
+export const flocknerdDateTest = mysqlTable("flocknerd_DateTest", {
+  dtColumn: datetime("dt_column", { mode: "string" }),
+  // you can use { mode: 'date' }, if you want to have Date as type for this column
+  dColumn: date("d_column", { mode: "string" }),
+});
 
-export const eggLog = mysqlTable(
-  "EggLog",
+export const flocknerdEggLog = mysqlTable(
+  "flocknerd_EggLog",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     count: smallint("count").notNull(),
     notes: text("notes"),
-    // date: datetime("date", { mode: "string", fsp: 3 }).notNull(),
+    // you can use { mode: 'date' }, if you want to have Date as type for this column
     date: date("date", { mode: "string" }).notNull(),
     flockId: varchar("flockId", { length: 191 }).notNull(),
     breedId: varchar("breedId", { length: 191 }),
   },
   (table) => {
     return {
-      breedIdIdx: index("EggLog_breedId_idx").on(table.breedId),
-      flockIdIdx: index("EggLog_flockId_idx").on(table.flockId),
+      eggLogFlockIdIdx: index("EggLog_flockId_idx").on(table.flockId),
+      eggLogBreedIdIdx: index("EggLog_breedId_idx").on(table.breedId),
+      flocknerdEggLogId: primaryKey(table.id),
     };
   },
 );
 
-export const eggLogRelations = relations(eggLog, ({ one }) => ({
-  flock: one(flock, {
-    fields: [eggLog.flockId],
-    references: [flock.id],
-  }),
-}));
-
-export const expense = mysqlTable(
-  "Expense",
+export const flocknerdExpense = mysqlTable(
+  "flocknerd_Expense",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     amount: double("amount").notNull(),
-    date: date("date", { mode: "string" }).notNull(),
+    date: datetime("date", { mode: "string", fsp: 3 }).notNull(),
     memo: text("memo"),
     flockId: varchar("flockId", { length: 191 }).notNull(),
     category: varchar("category", { length: 191 }).default("other").notNull(),
   },
   (table) => {
     return {
-      flockIdIdx: index("Expense_flockId_idx").on(table.flockId),
+      expenseFlockIdIdx: index("Expense_flockId_idx").on(table.flockId),
+      flocknerdExpenseId: primaryKey(table.id),
     };
   },
 );
 
-export const expenseRelations = relations(expense, ({ one }) => ({
-  flock: one(flock, {
-    fields: [expense.flockId],
-    references: [flock.id],
-  }),
-}));
-
-export const flock = mysqlTable(
-  "Flock",
+export const flocknerdFlock = mysqlTable(
+  "flocknerd_Flock",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     name: text("name").notNull(),
     description: text("description"),
     imageUrl: text("imageUrl").notNull(),
@@ -135,30 +122,20 @@ export const flock = mysqlTable(
   },
   (table) => {
     return {
-      userIdIdx: index("Flock_userId_idx").on(table.userId),
+      flockUserIdIdx: index("Flock_userId_idx").on(table.userId),
+      flocknerdFlockId: primaryKey(table.id),
     };
   },
 );
 
-export const flockRelations = relations(flock, ({ many, one }) => ({
-  breeds: many(breed),
-  eggLogs: many(eggLog),
-  expenses: many(expense),
-  user: one(user, {
-    fields: [flock.userId],
-    references: [user.id],
-  }),
-  tasks: many(task),
-}));
-
-export const notification = mysqlTable(
-  "Notification",
+export const flocknerdNotification = mysqlTable(
+  "flocknerd_Notification",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     title: varchar("title", { length: 191 }).notNull(),
     message: text("message").notNull(),
     date: datetime("date", { mode: "string", fsp: 3 })
-      .default(sql`(CURRENT_TIMESTAMP(3))`)
+      .default(sql`now(3)`)
       .notNull(),
     read: tinyint("read").default(0).notNull(),
     readDate: datetime("readDate", { mode: "string", fsp: 3 }),
@@ -168,31 +145,33 @@ export const notification = mysqlTable(
   },
   (table) => {
     return {
-      userIdIdx: index("Notification_userId_idx").on(table.userId),
+      notificationUserIdIdx: index("Notification_userId_idx").on(table.userId),
+      flocknerdNotificationId: primaryKey(table.id),
     };
   },
 );
 
-export const session = mysqlTable(
-  "Session",
+export const flocknerdSession = mysqlTable(
+  "flocknerd_Session",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
   },
   (table) => {
     return {
-      sessionTokenKey: uniqueIndex("Session_sessionToken_key").on(
+      sessionUserIdIdx: index("Session_userId_idx").on(table.userId),
+      flocknerdSessionId: primaryKey(table.id),
+      sessionSessionTokenKey: unique("Session_sessionToken_key").on(
         table.sessionToken,
       ),
-      userIdIdx: index("Session_userId_idx").on(table.userId),
     };
   },
 );
 
-export const task = mysqlTable(
-  "Task",
+export const flocknerdTask = mysqlTable(
+  "flocknerd_Task",
   {
     id: varchar("id", { length: 191 }).notNull(),
     title: varchar("title", { length: 191 }).notNull(),
@@ -207,24 +186,17 @@ export const task = mysqlTable(
   },
   (table) => {
     return {
-      flockIdIdx: index("Task_flockId_idx").on(table.flockId),
-      userIdIdx: index("Task_userId_idx").on(table.userId),
-      taskId: primaryKey(table.id),
+      taskUserIdIdx: index("Task_userId_idx").on(table.userId),
+      taskFlockIdIdx: index("Task_flockId_idx").on(table.flockId),
+      flocknerdTaskId: primaryKey(table.id),
     };
   },
 );
 
-export const taskRelations = relations(task, ({ one }) => ({
-  flock: one(flock, {
-    fields: [task.flockId],
-    references: [flock.id],
-  }),
-}));
-
-export const user = mysqlTable(
-  "User",
+export const flocknerdUser = mysqlTable(
+  "flocknerd_User",
   {
-    id: varchar("id", { length: 191 }).primaryKey().notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     name: varchar("name", { length: 191 }),
     email: varchar("email", { length: 191 }),
     emailVerified: datetime("emailVerified", { mode: "string", fsp: 3 }),
@@ -236,47 +208,29 @@ export const user = mysqlTable(
   },
   (table) => {
     return {
-      emailKey: uniqueIndex("User_email_key").on(table.email),
-      clerkIdKey: uniqueIndex("User_clerkId_key").on(table.clerkId),
-      clerkIdIdx: index("User_clerkId_idx").on(table.clerkId),
+      userClerkIdIdx: index("User_clerkId_idx").on(table.clerkId),
+      flocknerdUserId: primaryKey(table.id),
+      userEmailKey: unique("User_email_key").on(table.email),
+      userClerkIdKey: unique("User_clerkId_key").on(table.clerkId),
     };
   },
 );
 
-export const userRelations = relations(user, ({ many }) => ({
-  flocks: many(flock),
-}));
-
-export const verificationToken = mysqlTable(
-  "VerificationToken",
+export const flocknerdVerificationToken = mysqlTable(
+  "flocknerd_VerificationToken",
   {
     identifier: varchar("identifier", { length: 191 }).notNull(),
-    token: varchar("token", { length: 191 }).primaryKey().notNull(),
+    token: varchar("token", { length: 191 }).notNull(),
     expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
   },
   (table) => {
     return {
-      identifierTokenKey: uniqueIndex(
+      verificationTokenTokenKey: unique("VerificationToken_token_key").on(
+        table.token,
+      ),
+      verificationTokenIdentifierTokenKey: unique(
         "VerificationToken_identifier_token_key",
       ).on(table.identifier, table.token),
-      tokenKey: uniqueIndex("VerificationToken_token_key").on(table.token),
     };
   },
 );
-
-export const dateTest = mysqlTable(
-  "DateTest",
-  {
-    dt_column: datetime("dt_column").notNull(),
-    d_column: date("d_column").notNull(),
-  },
-  (table) => {
-    return {};
-  },
-);
-
-export type User = typeof user.$inferInsert;
-export type Notification = typeof notification.$inferInsert;
-export type Task = typeof task.$inferInsert;
-export type Flock = typeof flock.$inferInsert;
-export type Breed = typeof breed.$inferInsert;

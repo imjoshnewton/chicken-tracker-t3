@@ -5,22 +5,15 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1698376723282,
-      "tag": "0001_broken_cable",
+      "when": 1698723154773,
+      "tag": "0000_nifty_mauler",
       "breakpoints": true
     },
     {
       "idx": 1,
       "version": "5",
-      "when": 1698376887508,
-      "tag": "0001_unknown_zombie",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1698694229963,
-      "tag": "0002_sweet_aqueduct",
+      "when": 1698723403725,
+      "tag": "0001_long_kate_bishop",
       "breakpoints": true
     }
   ]

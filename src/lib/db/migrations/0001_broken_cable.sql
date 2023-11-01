@@ -1,1 +1,0 @@
-ALTER TABLE `flocknerd_Breed` MODIFY COLUMN `count` smallint NOT NULL;
