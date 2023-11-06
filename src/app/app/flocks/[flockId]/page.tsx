@@ -17,13 +17,6 @@ const Page = async ({
   // const authRes = await auth();
   const user = await currentUsr();
 
-  // const serverClient = getServerClient(authRes);
-  // const flock = await serverClient.flocks.getFlock({
-  //   flockId: params.flockId,
-  // });
-
-  // console.log("flock", flock);
-
   if (!user) redirect("/api/auth/signin");
 
   return <Flock userId={user.id} flockId={params.flockId} />;

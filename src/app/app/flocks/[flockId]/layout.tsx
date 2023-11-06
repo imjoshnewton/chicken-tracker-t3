@@ -1,5 +1,3 @@
-import { TrpcProvider } from "../../Provider";
-
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
   description: "Flock Stats for Nerds",

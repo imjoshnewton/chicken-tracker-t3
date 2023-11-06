@@ -1,9 +1,6 @@
 import { useUser } from "@clerk/nextjs";
-import type { Session } from "next-auth";
-import { useRouter } from "next/router";
-import { trpc } from "../utils/trpc";
-import { DateRange } from "react-day-picker";
 import { parseISO } from "date-fns";
+import { trpc } from "../utils/trpc";
 
 //
 // Custom hook to get user's session data
