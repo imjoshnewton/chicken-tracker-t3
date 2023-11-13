@@ -10,10 +10,10 @@ export default function DeleteButton({ id }: { id: string }) {
 
   return (
     <button
-      className="rounded bg-red-500 px-2 py-1 text-white hover:cursor-pointer hover:shadow-lg"
+      className="rounded bg-red-500 px-2 py-1 text-white hover:cursor-pointer"
       disabled={loading}
       onClick={async () => {
-        setLoading(true);
+        setLoading(true); // TODO: use a loading state
         await toast
           .promise(deleteExpense(id), {
             loading: "Deleting log",
@@ -21,7 +21,6 @@ export default function DeleteButton({ id }: { id: string }) {
             error: "Something went wrong",
           })
           .finally(() => setLoading(false));
-        // setLoading(false);
       }}
     >
       {loading ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}

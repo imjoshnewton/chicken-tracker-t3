@@ -1,15 +1,9 @@
-import { useState } from "react";
-import { trpc } from "../../utils/trpc";
-import { MdClose, MdOutlineEdit } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { MdClose, MdOutlineEdit } from "react-icons/md";
 import FlockForm from "src/app/app/flocks/FlockEditForm";
-import { Session } from "next-auth";
-// import Datepicker from "react-tailwindcss-datepicker";
-// import {
-//   PopoverDirectionType,
-//   type DateValueType,
-// } from "react-tailwindcss-datepicker/dist/types";
+import { trpc } from "../../utils/trpc";
 
 const EditModal = ({
   userId,
@@ -110,7 +104,16 @@ const EditModal = ({
                   </div>
                   <div className="relative flex flex-auto flex-col">
                     <FlockForm
-                      flock={flock}
+                      flock={{
+                        ...flock,
+                        deleted: flock.deleted ? 1 : 0,
+                        breeds: flock.breeds.map((breed) => {
+                          return {
+                            ...breed,
+                            deleted: breed.deleted ? 1 : 0,
+                          };
+                        }),
+                      }}
                       userId={userId}
                       onCancel={closeModal}
                       onComplete={closeModal}

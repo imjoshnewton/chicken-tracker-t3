@@ -14,6 +14,7 @@ const Page = async ({
   params: { flockId: string };
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
+  // const authRes = await auth();
   const user = await currentUsr();
 
   if (!user) redirect("/api/auth/signin");

@@ -10,4 +10,5 @@ export default {
   dbCredentials: {
     connectionString: process.env.DB_URL!,
   },
+  tablesFilter: ["flocknerd_*"],
 } satisfies Config;

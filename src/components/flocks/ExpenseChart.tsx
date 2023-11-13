@@ -13,6 +13,15 @@ import {
   Legend,
   BarElement,
 } from "chart.js";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 ChartJS.register(
   BarController,
@@ -23,27 +32,33 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  BarElement
+  BarElement,
 );
 
 export default function ExpenseChart({
   stats,
   className,
+  numMonths,
+  onMonthsChange,
 }: {
   stats: any | null | undefined;
   className: string;
+  numMonths?: number;
+  onMonthsChange?: (value: string) => void;
 }) {
   function chartData(stats: { expenses: any[]; production: any[] }) {
     const chartArray = createChartArray(stats?.expenses);
     const prodArray = createProdOverlayArray(stats?.production);
 
-    console.log("Chart Bar Data: ", chartArray);
-    console.log("Production Line Data: ", prodArray);
+    // console.log("Chart Bar Data: ", chartArray);
+    // console.log("Production Line Data: ", prodArray);
 
     return {
       datasets: [
         {
-          data: chartArray.filter((i) => i.Cat == "feed").map((i) => i.Tot),
+          data: chartArray
+            .filter((i) => i.category == "feed")
+            .map((i) => i.total),
           label: "Feed",
           backgroundColor: "rgba(39,70,84,0.75)",
           // borderColor: "rgba(39,166,154,1)",
@@ -58,8 +73,8 @@ export default function ExpenseChart({
         },
         {
           data: chartArray
-            .filter((i) => i.Cat == "suplements")
-            .map((i) => i.Tot),
+            .filter((i) => i.category == "suplements")
+            .map((i) => i.total),
           label: "Suplements",
           backgroundColor: "rgba(39,166,154,0.75)",
           // borderColor: "rgba(39,166,154,1)",
@@ -74,8 +89,8 @@ export default function ExpenseChart({
         },
         {
           data: chartArray
-            .filter((i) => i.Cat == "medication")
-            .map((i) => i.Tot),
+            .filter((i) => i.category == "medication")
+            .map((i) => i.total),
           label: "Medication",
           backgroundColor: "rgba(231, 111, 82, 0.75)",
           // borderColor: "rgba(39,166,154,1)",
@@ -89,7 +104,9 @@ export default function ExpenseChart({
           order: 2,
         },
         {
-          data: chartArray.filter((i) => i.Cat == "other").map((i) => i.Tot),
+          data: chartArray
+            .filter((i) => i.category == "other")
+            .map((i) => i.total),
           label: "Other",
           backgroundColor: "rgba(244, 162, 98,0.75)",
           // borderColor: "rgba(39,166,154,1)",
@@ -103,7 +120,7 @@ export default function ExpenseChart({
           order: 2,
         },
         {
-          data: prodArray.map((i) => i.Tot),
+          data: prodArray.map((i) => i.total),
           label: "Egg Production",
           // backgroundColor: "rgba(39,166,154,0.2)",
           borderColor: "rgba(39,166,154,1)",
@@ -120,19 +137,19 @@ export default function ExpenseChart({
           hoverRadius: 7,
         },
       ],
-      labels: Array.from(new Set(chartArray.map((i: any) => i.MonthYear))),
+      labels: Array.from(new Set(chartArray.map((i: any) => i.monthYear))),
     };
   }
 
   function getDatesWithCategories(dates: Date[]) {
-    const retArray: { MonthYear: string; Cat: string }[] = [];
+    const retArray: { monthYear: string; category: string }[] = [];
     const types = ["feed", "suplements", "medication", "other"];
 
     dates.forEach((date) => {
       types.forEach((type) => {
         retArray.push({
-          MonthYear: `${date.getMonth() + 1}/${date.getFullYear()}`,
-          Cat: type,
+          monthYear: `${date.getMonth() + 1}/${date.getFullYear()}`,
+          category: type,
         });
       });
     });
@@ -141,24 +158,26 @@ export default function ExpenseChart({
   }
 
   function createChartArray(expenses: any[]) {
-    const dates = getDatesInRange(6);
+    const dates = getDatesInRange(numMonths || 6);
     const datesAndCats = getDatesWithCategories(dates);
     const expenseArray = expenses as {
-      MonthYear: string;
-      Cat: string;
-      Tot: number;
+      monthYear: string;
+      category: string;
+      total: number;
     }[];
 
     const retArray = datesAndCats.map((item) => {
       const index = expenseArray
         ?.map((e) => {
           return {
-            MonthYear: e.MonthYear,
-            Cat: e.Cat,
+            monthYear: e.monthYear,
+            category: e.category,
           };
         })
         .findIndex((res) => {
-          return res.MonthYear == item.MonthYear && res.Cat == item.Cat;
+          return (
+            res.monthYear == item.monthYear && res.category == item.category
+          );
         });
 
       if (index >= 0) {
@@ -167,9 +186,9 @@ export default function ExpenseChart({
         };
       } else {
         return {
-          MonthYear: item.MonthYear,
-          Cat: item.Cat,
-          Tot: 0,
+          monthYear: item.monthYear,
+          category: item.category,
+          total: 0,
         };
       }
     });
@@ -178,26 +197,26 @@ export default function ExpenseChart({
   }
 
   function createProdOverlayArray(production: any[]) {
-    const dates = getDatesInRange(6);
+    const dates = getDatesInRange(numMonths || 6);
     const dateStrings = dates.map((date) => {
       return {
-        MonthYear: `${date.getMonth() + 1}/${date.getFullYear()}`,
+        monthYear: `${date.getMonth() + 1}/${date.getFullYear()}`,
       };
     });
     const productionArray = production as {
-      MonthYear: string;
-      Tot: number;
+      monthYear: string;
+      total: number;
     }[];
 
     const retArray = dateStrings.map((item) => {
       const index = productionArray
-        .map((e) => {
+        ?.map((e) => {
           return {
-            MonthYear: e.MonthYear,
+            monthYear: e.monthYear,
           };
         })
         .findIndex((res) => {
-          return res.MonthYear == item.MonthYear;
+          return res.monthYear == item.monthYear;
         });
 
       if (index >= 0) {
@@ -206,8 +225,8 @@ export default function ExpenseChart({
         };
       } else {
         return {
-          MonthYear: item,
-          Tot: 0,
+          monthYear: item,
+          total: 0,
         };
       }
     });
@@ -267,13 +286,18 @@ export default function ExpenseChart({
 
   return (
     <div className={className}>
-      <div className="flex justify-between">
-        <h3 className="mb-4 dark:text-gray-300">Expenses</h3>
-        {/* <select defaultValue={limit} onChange={onRangeChange} className='mb-4'>
-          <option value='7'>Last 7 Days</option>
-          <option value='15'>Last 15 Days</option>
-          <option value='30'>Last 30 Days</option>
-        </select> */}
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="dark:text-gray-300">Expenses</h3>
+        <Select onValueChange={onMonthsChange}>
+          <SelectTrigger className="max-w-max">
+            <SelectValue placeholder={`Last ${numMonths} Months`} />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            <SelectItem value="6">Last 6 Months</SelectItem>
+            <SelectItem value="9">Last 9 Months</SelectItem>
+            <SelectItem value="12">Last 12 Months</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex flex-col">
         <div className="min-h-[300px] w-[99%] md:min-h-[275px]">
@@ -284,44 +308,6 @@ export default function ExpenseChart({
             id="expenseChart"
           ></Chart>
         </div>
-        {/* <div className='p-2'></div>
-        <div className='flex justify-between'>
-          <div className='dark:text-gray-300'>
-            Target Daily Avg: {targetDailyAvg.toFixed(2)}
-          </div>
-          <div className='flex items-center dark:text-gray-300'>
-            Actual Daily Avg:
-            <span className='ml-1'>{actualDailyAvg.toFixed(2)}</span>
-            <span className='ml-1'>
-              {actualDailyAvg < targetDailyAvg ? (
-                <MdArrowDownward className='text-red-600' />
-              ) : (
-                <MdArrowUpward className=' text-green-600' />
-              )}
-            </span>
-          </div>
-        </div> */}
-        {/* <div className='flex justify-between dark:text-gray-300'>
-          <div>
-            Last Weeks Avg:{" "}
-            {stats.lastWeekAvg._avg.count
-              ? stats.lastWeekAvg._avg.count.toFixed(2)
-              : "n/a"}
-          </div>
-          <div className='flex items-center dark:text-gray-300'>
-            This Weeks Avg:
-            <span className='ml-1'>
-              {stats.thisWeekAvg._avg.count?.toFixed(2)}
-            </span>
-            <span className='ml-1'>
-              {stats.thisWeekAvg._avg.count < stats.lastWeekAvg._avg.count ? (
-                <MdOutlineTrendingDown className='text-red-600' />
-              ) : (
-                <MdOutlineTrendingUp className=' text-green-600' />
-              )}
-            </span>
-          </div>
-        </div> */}
         <div className="p-2"></div>
         <Link
           href="/app/expenses"

@@ -7,6 +7,7 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { formatDate, handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
+import { Button } from "@components/ui/button";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -75,7 +76,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
     flockId: string,
     date: Date,
     count: number,
-    notes?: string
+    notes?: string,
   ): Promise<void> {
     await createLogMutation({
       flockId,
@@ -94,16 +95,17 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   return (
     <>
-      <motion.button
+      <Button
         // whileHover={{ scale: 1.05 }}
         // whileTap={{ scale: 0.95 }}
-        className="btn mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+        className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
         type="button"
+        variant={"secondary"}
         onClick={() => setShowModal(true)}
       >
         <MdOutlineEditNote className="text-2xl" />
         &nbsp;Log Eggs
-      </motion.button>
+      </Button>
       <AnimatePresence
         // Disable any initial animations on children that
         // are present when the component is first rendered
@@ -148,7 +150,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date, //new Date(date.startDate.toLocaleString()),
                             count,
-                            notes
+                            notes,
                           );
                         }
                       }}
@@ -173,6 +175,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       <input
                         id="date"
                         className="w-full appearance-none rounded border px-1 py-2 text-black"
+                        max={format(new Date(), "yyyy-MM-dd")}
                         required
                         value={format(handleTimezone(date), "yyyy-MM-dd")}
                         onChange={(event) =>
@@ -244,7 +247,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                             flockId,
                             date, //new Date(date.startDate.toLocaleString()),
                             count,
-                            notes
+                            notes,
                           );
                         }
                       }}

@@ -6,7 +6,7 @@ import {
   MdArrowDownward,
   MdArrowUpward,
 } from "react-icons/md";
-import type { Breed, Flock } from "@prisma/client";
+// import type { Breed, Flock } from "@prisma/client";
 import {
   Chart as ChartJS,
   BarController,
@@ -18,6 +18,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { DatePickerWithRange } from "./DatePickerWithRange";
+// import { differenceInDays } from "date-fns";
+import { Breed, Flock } from "@lib/db/schema";
+import { format, parseISO } from "date-fns";
 
 ChartJS.register(
   BarController,
@@ -27,7 +31,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 );
 
 //
@@ -35,27 +39,24 @@ ChartJS.register(
 //
 function createChartArray(
   logs: { date: string; count: number }[],
-  limit: number
+  range: { from: Date; to: Date },
 ) {
-  const dates = getDatesInRange(Number(limit));
+  const dates = getDatesInRange(range);
+
+  // console.log("Dates in range: ", dates);
+  // console.log("Logs: ", logs);
 
   const logsArray = logs?.map((log) => {
     return {
       ...log,
-      date: new Date(log.date).toLocaleString("us-EN", {
-        year: "numeric",
-        month: "numeric",
-        day: "numeric",
-      }),
+      date: format(parseISO(log.date), "MM/dd/yyyy"),
     };
   });
 
   const retArray = dates.map((date) => {
-    const stringValue = date.toLocaleString("us-EN", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    });
+    const stringValue = format(date, "MM/dd/yyyy");
+
+    // console.log("stringValue", stringValue);
 
     const total = logsArray?.reduce((sum, log) => {
       if (log.date === stringValue) {
@@ -78,7 +79,7 @@ function createChartArray(
 //
 function calcDailyAverage(
   flock: Flock & { breeds: Breed[] },
-  breedFilter?: string
+  breedFilter?: string,
 ): number {
   const breedAverages = flock.breeds.length
     ? breedFilter
@@ -106,7 +107,7 @@ function calcActualDailyAverage(logs: { date: string; count: number }[]) {
 //
 // Helper function to create array of dates withint a range from today
 //
-function getDatesInRange(limit: number): Date[] {
+function getDatesInRangeFromToday(limit: number): Date[] {
   const retArray: Date[] = [];
   const today = new Date(Date.now());
 
@@ -116,6 +117,21 @@ function getDatesInRange(limit: number): Date[] {
   }
 
   return retArray;
+}
+//
+// Helper function to create array of dates withint a range from today
+//
+function getDatesInRange(range: { from: Date; to: Date }): Date[] {
+  // console.log("range", range);
+  let currentDate = new Date(range.from);
+  const dates: Date[] = [];
+
+  while (currentDate <= range.to) {
+    dates.push(new Date(currentDate)); // Create a new instance to avoid reference issues
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return dates;
 }
 
 //
@@ -132,10 +148,10 @@ function DailyAverages({
   thisWeekAvg: number;
   lastWeekAvg: number;
 }) {
-  console.log("thisWeekAvg", thisWeekAvg);
-  console.log(typeof thisWeekAvg);
-  console.log("lastWeekAvg", lastWeekAvg);
-  console.log(typeof lastWeekAvg);
+  // console.log("thisWeekAvg", thisWeekAvg);
+  // console.log(typeof thisWeekAvg);
+  // console.log("lastWeekAvg", lastWeekAvg);
+  // console.log(typeof lastWeekAvg);
 
   return (
     <>
@@ -194,20 +210,26 @@ export default function ProductionChart({
   stats,
   flock,
   className,
-  limit,
+  range,
   onRangeChange,
   breedFilter,
 }: {
   stats: any | null | undefined;
   flock: Flock & { breeds: Breed[] };
   className: string;
-  limit: string;
+  range: { from: Date; to: Date };
   onRangeChange: any;
   breedFilter?: string;
 }) {
   function chartData(logs: any[], flock: Flock & { breeds: Breed[] }) {
     const flockDailyAverage = calcDailyAverage(flock, breedFilter);
-    const chartArray = createChartArray(logs, Number(limit));
+    const chartArray = createChartArray(
+      logs,
+      range,
+      // differenceInDays(range.to, range.from) + 1,
+    );
+
+    // console.log("chartArray", chartArray);
 
     return {
       datasets: [
@@ -270,17 +292,18 @@ export default function ProductionChart({
   const targetDailyAvg = calcDailyAverage(flock, breedFilter);
   const actualDailyAvg = calcActualDailyAverage(stats.logs);
 
-  console.log("stats", stats);
+  // console.log("stats", stats);
 
   return (
     <div className={className}>
-      <div className="flex justify-between">
-        <h3 className="mb-4 dark:text-gray-300">Production</h3>
-        <select defaultValue={limit} onChange={onRangeChange} className="mb-4">
+      <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+        <h3 className=" dark:text-gray-300">Production</h3>
+        {/* <select defaultValue={limit} onChange={onRangeChange} className="mb-4">
           <option value="7">Last 7 Days</option>
           <option value="15">Last 15 Days</option>
           <option value="30">Last 30 Days</option>
-        </select>
+        </select> */}
+        <DatePickerWithRange className="w-full sm:w-auto" />
       </div>
       <div className="flex flex-col">
         <div className="min-h-[300px] w-[99%] md:min-h-[275px]">

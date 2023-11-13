@@ -7,20 +7,10 @@ import { deleteLog } from "../server-edge";
 
 export default function DeleteButton({ id }: { id: string }) {
   const [loading, setLoading] = useState(false);
-  // const [isPending, startTransition] = useTransition();
 
   return (
     <button
-      className="rounded bg-red-500 px-2 py-1 text-white hover:cursor-pointer hover:shadow-lg"
-      // onClick={() =>
-      //   startTransition(() =>
-      //     toast.promise(deleteLog(id), {
-      //       loading: "Deleting log",
-      //       success: "Log deleted successfully",
-      //       error: "Something went wrong",
-      //     })
-      //   )
-      // }
+      className="rounded bg-red-500 px-2 py-1 text-white hover:cursor-pointer"
       onClick={async () => {
         setLoading(true);
         await toast
@@ -30,8 +20,6 @@ export default function DeleteButton({ id }: { id: string }) {
             error: "Something went wrong",
           })
           .finally(() => setLoading(false));
-        // await deleteLog(id);
-        // setLoading(false);
       }}
       disabled={loading}
     >

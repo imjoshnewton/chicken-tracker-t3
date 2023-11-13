@@ -1,16 +1,12 @@
 import { db } from "@lib/db";
 import { flock, notification } from "@lib/db/schema";
-import { verifySignature } from "@upstash/qstash/dist/nextjs";
 import { createId } from "@paralleldrive/cuid2";
+import { verifySignatureEdge } from "@upstash/qstash/dist/nextjs";
 import { subMonths } from "date-fns";
 import { eq } from "drizzle-orm";
-import { type NextApiRequest, type NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 
-// export const config = {
-//   runtime: "edge",
-// };
-
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+async function handler(req: NextRequest) {
   const today = new Date();
   const monthNum = subMonths(today, 1).getMonth() + 1;
   const monthString = monthNum < 10 ? `0${monthNum}` : monthNum.toString();
@@ -38,14 +34,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         userId: flock.userId,
         readDate: null,
       };
-    })
+    }),
   );
 
   console.log("New Notifications: ", newNotifications);
 
-  res.status(200).json({
-    notifications: newNotifications,
-  });
-};
+  return NextResponse.json(
+    { notifications: newNotifications },
+    { status: 200 },
+  );
+}
 
-export default verifySignature(handler);
+export const POST = verifySignatureEdge(handler);
+
+export const runtime = "edge";

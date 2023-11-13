@@ -21,7 +21,7 @@ const Edit = async ({
   const user = await currentUsr();
 
   const flockId = params.flockId;
-  const flockRes = await db.query.flock.findFirst({
+  const flock = await db.query.flock.findFirst({
     where: eq(Flocks.id, flockId),
     with: {
       breeds: {
@@ -31,18 +31,18 @@ const Edit = async ({
     },
   });
 
-  if (!flockRes) redirect("/app/flocks");
+  if (!flock) redirect("/app/flocks");
 
-  const flock = {
-    ...flockRes,
-    deleted: flockRes.deleted === 1,
-    breeds: flockRes.breeds.map((breed) => {
-      return {
-        ...breed,
-        deleted: breed.deleted === 1,
-      };
-    }, []),
-  };
+  // const flock = {
+  //   ...flockRes,
+  //   deleted: flockRes.deleted === 1,
+  //   breeds: flockRes.breeds.map((breed) => {
+  //     return {
+  //       ...breed,
+  //       deleted: breed.deleted === 1,
+  //     };
+  //   }, []),
+  // };
 
   return (
     <main className="h-full p-0 lg:h-auto lg:p-8 lg:px-[3.5vw]">

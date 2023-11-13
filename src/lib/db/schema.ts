@@ -1,16 +1,20 @@
 import { relations, sql } from "drizzle-orm";
 import {
+  date,
   datetime,
   double,
   index,
   int,
-  mysqlTable,
+  mysqlTableCreator,
   primaryKey,
+  smallint,
   text,
   tinyint,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
+
+export const mysqlTable = mysqlTableCreator((name) => `flocknerd_${name}`);
 
 export const account = mysqlTable(
   "Account",
@@ -31,11 +35,11 @@ export const account = mysqlTable(
   (table) => {
     return {
       providerProviderAccountIdKey: uniqueIndex(
-        "Account_provider_providerAccountId_key"
+        "Account_provider_providerAccountId_key",
       ).on(table.provider, table.providerAccountId),
       userIdIdx: index("Account_userId_idx").on(table.userId),
     };
-  }
+  },
 );
 
 export const breed = mysqlTable(
@@ -44,7 +48,7 @@ export const breed = mysqlTable(
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
     name: text("name"),
     description: text("description"),
-    count: int("count").notNull(),
+    count: smallint("count").notNull(),
     imageUrl: text("imageUrl"),
     averageProduction: double("averageProduction").notNull(),
     flockId: varchar("flockId", { length: 191 }).notNull(),
@@ -57,7 +61,7 @@ export const breed = mysqlTable(
     return {
       flockIdIdx: index("Breed_flockId_idx").on(table.flockId),
     };
-  }
+  },
 );
 
 export const breedRelations = relations(breed, ({ one }) => ({
@@ -71,9 +75,10 @@ export const eggLog = mysqlTable(
   "EggLog",
   {
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
-    count: int("count").notNull(),
+    count: smallint("count").notNull(),
     notes: text("notes"),
-    date: datetime("date", { mode: "string", fsp: 3 }).notNull(),
+    // date: datetime("date", { mode: "string", fsp: 3 }).notNull(),
+    date: date("date", { mode: "string" }).notNull(),
     flockId: varchar("flockId", { length: 191 }).notNull(),
     breedId: varchar("breedId", { length: 191 }),
   },
@@ -82,7 +87,7 @@ export const eggLog = mysqlTable(
       breedIdIdx: index("EggLog_breedId_idx").on(table.breedId),
       flockIdIdx: index("EggLog_flockId_idx").on(table.flockId),
     };
-  }
+  },
 );
 
 export const eggLogRelations = relations(eggLog, ({ one }) => ({
@@ -97,7 +102,7 @@ export const expense = mysqlTable(
   {
     id: varchar("id", { length: 191 }).primaryKey().notNull(),
     amount: double("amount").notNull(),
-    date: datetime("date", { mode: "string", fsp: 3 }).notNull(),
+    date: date("date", { mode: "string" }).notNull(),
     memo: text("memo"),
     flockId: varchar("flockId", { length: 191 }).notNull(),
     category: varchar("category", { length: 191 }).default("other").notNull(),
@@ -106,7 +111,7 @@ export const expense = mysqlTable(
     return {
       flockIdIdx: index("Expense_flockId_idx").on(table.flockId),
     };
-  }
+  },
 );
 
 export const expenseRelations = relations(expense, ({ one }) => ({
@@ -132,7 +137,7 @@ export const flock = mysqlTable(
     return {
       userIdIdx: index("Flock_userId_idx").on(table.userId),
     };
-  }
+  },
 );
 
 export const flockRelations = relations(flock, ({ many, one }) => ({
@@ -165,7 +170,7 @@ export const notification = mysqlTable(
     return {
       userIdIdx: index("Notification_userId_idx").on(table.userId),
     };
-  }
+  },
 );
 
 export const session = mysqlTable(
@@ -179,11 +184,11 @@ export const session = mysqlTable(
   (table) => {
     return {
       sessionTokenKey: uniqueIndex("Session_sessionToken_key").on(
-        table.sessionToken
+        table.sessionToken,
       ),
       userIdIdx: index("Session_userId_idx").on(table.userId),
     };
-  }
+  },
 );
 
 export const task = mysqlTable(
@@ -206,8 +211,15 @@ export const task = mysqlTable(
       userIdIdx: index("Task_userId_idx").on(table.userId),
       taskId: primaryKey(table.id),
     };
-  }
+  },
 );
+
+export const taskRelations = relations(task, ({ one }) => ({
+  flock: one(flock, {
+    fields: [task.flockId],
+    references: [flock.id],
+  }),
+}));
 
 export const user = mysqlTable(
   "User",
@@ -228,7 +240,7 @@ export const user = mysqlTable(
       clerkIdKey: uniqueIndex("User_clerkId_key").on(table.clerkId),
       clerkIdIdx: index("User_clerkId_idx").on(table.clerkId),
     };
-  }
+  },
 );
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -245,13 +257,28 @@ export const verificationToken = mysqlTable(
   (table) => {
     return {
       identifierTokenKey: uniqueIndex(
-        "VerificationToken_identifier_token_key"
+        "VerificationToken_identifier_token_key",
       ).on(table.identifier, table.token),
       tokenKey: uniqueIndex("VerificationToken_token_key").on(table.token),
     };
-  }
+  },
+);
+
+export const dateTest = mysqlTable(
+  "DateTest",
+  {
+    dt_column: datetime("dt_column").notNull(),
+    d_column: date("d_column").notNull(),
+  },
+  (table) => {
+    return {};
+  },
 );
 
 export type User = typeof user.$inferInsert;
 export type Notification = typeof notification.$inferInsert;
 export type Task = typeof task.$inferInsert;
+export type Flock = typeof flock.$inferInsert;
+export type Breed = typeof breed.$inferInsert;
+export type Expense = typeof expense.$inferInsert;
+export type EggLog = typeof eggLog.$inferInsert;

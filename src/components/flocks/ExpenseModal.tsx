@@ -8,6 +8,7 @@ import { RiLoader4Fill } from "react-icons/ri";
 import { MdClose } from "react-icons/md";
 import { formatDate, handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
+import { Button } from "@components/ui/button";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -68,7 +69,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     date: Date,
     amount: number,
     category: string,
-    memo?: string
+    memo?: string,
   ): Promise<void> {
     await createExpense({
       flockId,
@@ -87,14 +88,15 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   return (
     <>
-      <button
-        className="btn mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+      <Button
+        className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
         type="button"
+        variant={"secondary"}
         onClick={() => setShowModal(true)}
       >
         <AiOutlineDollar className="text-xl" />
         &nbsp;Log an Expense
-      </button>
+      </Button>
       <AnimatePresence
         // Disable any initial animations on children that
         // are present when the component is first rendered
@@ -139,7 +141,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             date,
                             amount,
                             category ? category : "other",
-                            memo
+                            memo,
                           );
                         }
                       }}
@@ -149,6 +151,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       </label> */}
                       <input
                         className="w-full appearance-none rounded border px-1 py-2 text-black"
+                        max={format(new Date(), "yyyy-MM-dd")}
                         required
                         value={format(handleTimezone(date), "yyyy-MM-dd")}
                         onChange={(event) =>
@@ -232,7 +235,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                             date,
                             amount,
                             category ? category : "other",
-                            memo
+                            memo,
                           );
                         }
                       }}

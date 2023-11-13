@@ -17,7 +17,7 @@ export const flocksRouter = router({
     .input(
       z.object({
         flockId: z.string(),
-      })
+      }),
     )
     .query(async ({ input, ctx }) => {
       const flock = await ctx.db.query.flock.findFirst({
@@ -42,8 +42,8 @@ export const flocksRouter = router({
       ).map((task) => {
         return {
           ...task,
-          completed: task.completed === 1,
-          dueDate: task.dueDate === null ? null : new Date(task.dueDate),
+          completed: task.completed,
+          dueDate: task.dueDate,
         };
       });
 
@@ -52,23 +52,23 @@ export const flocksRouter = router({
           .select()
           .from(task)
           .where(
-            and(eq(task.flockId, input.flockId), not(eq(task.recurrence, "")))
+            and(eq(task.flockId, input.flockId), not(eq(task.recurrence, ""))),
           )
       ).map((task) => {
         return {
           ...task,
-          completed: task.completed === 1,
-          dueDate: task.dueDate === null ? null : new Date(task.dueDate),
+          completed: task.completed,
+          dueDate: task.dueDate,
         };
       });
 
       const flockWithTasks = {
         ...flock,
-        deleted: flock.deleted === 1,
+        deleted: flock.deleted,
         breeds: flock.breeds.map((breed) => {
           return {
             ...breed,
-            deleted: breed.deleted === 1,
+            deleted: breed.deleted,
           };
         }, []),
         tasks: [...nonRecurring, ...recurring].sort((a, b) => {
@@ -80,7 +80,9 @@ export const flocksRouter = router({
             } else if (b.dueDate === null) {
               return -1;
             } else {
-              return a.dueDate.getTime() - b.dueDate.getTime();
+              return (
+                new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
+              );
             }
           } else {
             if (a.completed) {
@@ -115,7 +117,7 @@ export const flocksRouter = router({
         description: z.string(),
         type: z.string(),
         imageUrl: z.string().nullable(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const id = createId();
@@ -140,7 +142,7 @@ export const flocksRouter = router({
         type: z.string(),
         imageUrl: z.string().nullable(),
         default: z.boolean().optional(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const flockRes = await ctx.db

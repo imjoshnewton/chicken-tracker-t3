@@ -3,8 +3,6 @@
 import { MdArrowDownward } from "react-icons/md";
 
 const LearnMoreButton = () => {
-  console.log("LearnMoreButton Rendered");
-
   const scroll = () => {
     const section = document.querySelector("#track");
     section?.scrollIntoView({ behavior: "smooth", block: "start" });

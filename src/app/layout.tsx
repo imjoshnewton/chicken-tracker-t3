@@ -33,6 +33,10 @@ export default function RootLayout({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
 
           <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta
+            name="p:domain_verify"
+            content="a56a324f4a3c80efd3c29fb744830168"
+          />
 
           <link
             rel="apple-touch-startup-image"

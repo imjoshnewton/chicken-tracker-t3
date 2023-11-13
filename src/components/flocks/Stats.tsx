@@ -1,27 +1,63 @@
-import { Breed, Flock } from "@prisma/client";
 import ProductionChart from "./ProductionChart";
 import ExpenseChart from "./ExpenseChart";
 import { MdClose, MdFilterAlt } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
+import { Breed, Flock } from "@lib/db/schema";
 
 export default function Stats({
   stats,
   flock,
   className,
-  limit,
+  range,
   onRangeChange,
+  onMonthsChange,
   filter,
   filterId,
   clearFilter,
+  expenseMonths,
 }: {
-  stats: any | null | undefined;
+  stats: {
+    expenses:
+      | {
+          expenses: {
+            flockId: string;
+            category: string;
+            total: number;
+            monthYear: string;
+          }[];
+          production: {
+            flockId: string;
+            total: number;
+            monthYear: string;
+          }[];
+        }
+      | undefined;
+    logs:
+      | {
+          date: string;
+          count: number;
+        }[]
+      | undefined;
+    lastWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+    thisWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+  };
   flock: Flock & { breeds: Breed[] };
   className: string;
-  limit: string;
-  onRangeChange: any;
+  range: { from: Date; to: Date };
+  onRangeChange: (event: any) => void;
+  onMonthsChange: (value: string) => void;
   filter?: string;
   filterId?: string;
   clearFilter?: () => void;
+  expenseMonths?: number;
 }) {
   return (
     <div className={className}>
@@ -81,12 +117,17 @@ export default function Stats({
           stats={stats}
           flock={flock}
           className={"flex-48"}
-          limit={limit}
+          range={range}
           onRangeChange={onRangeChange}
           breedFilter={filterId}
         />
         <div className="p-2"></div>
-        <ExpenseChart stats={stats} className={"flex-48"} />
+        <ExpenseChart
+          stats={stats}
+          className={"flex-48"}
+          numMonths={expenseMonths}
+          onMonthsChange={onMonthsChange}
+        />
       </div>
     </div>
   );

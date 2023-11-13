@@ -1,4 +1,4 @@
-import { Breed } from "@prisma/client";
+// import { Breed } from "@prisma/client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
@@ -11,6 +11,7 @@ import BreedModal from "./BreedModal";
 import Loader from "../shared/Loader";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { Breed } from "@lib/db/schema";
 
 export default function Breeds({
   flockId,

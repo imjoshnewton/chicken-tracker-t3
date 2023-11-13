@@ -15,7 +15,9 @@ import Loader from "@components/shared/Loader";
 import EditModal from "@components/flocks/EditModal";
 import AddTaskModal from "@components/tasks/AddTaskModal";
 import TaskList from "@components/tasks/Tasks";
+import { Breed, Flock, Task } from "@lib/db/schema";
 import { useFlockDataAppDir } from "@lib/hooks";
+import { format, subDays } from "date-fns";
 import { usePathname, useSearchParams } from "next/navigation";
 
 export const runtime = "edge";
@@ -24,11 +26,25 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const path = usePathname();
+  const statsRange =
+    searchParams?.get("statsRange") ||
+    `${format(subDays(new Date(), 7), "yyyy-MM-dd")},${format(
+      new Date(),
+      "yyyy-MM-dd",
+    )}`;
+  const expenseMonths = searchParams?.get("expenseMonths")
+    ? parseInt(
+        searchParams.get("expenseMonths") !== null
+          ? (searchParams.get("expenseMonths") as string)
+          : "6",
+      )
+    : 6;
   const { flock, stats, range, breedStats } = useFlockDataAppDir(
     userId,
     flockId,
-    searchParams?.get("statsRange") || "7",
-    searchParams?.get("breedFilter")
+    statsRange,
+    searchParams?.get("breedFilter"),
+    expenseMonths,
   );
 
   const onRangeChange = useCallback(
@@ -39,7 +55,18 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
 
       router.replace(`${path}?${curParams.toString()}`);
     },
-    [router, searchParams, path]
+    [router, searchParams, path],
+  );
+
+  const onMonthsChange = useCallback(
+    (value: string) => {
+      const curParams = new URLSearchParams(searchParams || "");
+
+      curParams.set("expenseMonths", value.toString());
+
+      router.replace(`${path}?${curParams.toString()}`);
+    },
+    [router, searchParams, path],
   );
 
   const clearFilter = useCallback(() => {
@@ -50,7 +77,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   }, [router, searchParams, path]);
 
   const filterBreed = flock?.breeds.find(
-    (breed) => breed.id == (searchParams?.get("breedFilter") as string)
+    (breed) => breed.id == (searchParams?.get("breedFilter") as string),
   );
 
   if (!flock) {
@@ -62,6 +89,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
       flock={flock}
       flockId={flockId}
       onRangeChange={onRangeChange}
+      onMonthsChange={onMonthsChange}
       range={range}
       clearFilter={clearFilter}
       filterText={filterBreed?.name || filterBreed?.breed}
@@ -69,6 +97,7 @@ const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
       stats={stats}
       breedStats={breedStats}
       userId={userId}
+      expenseMonths={expenseMonths}
     />
   );
 };
@@ -85,6 +114,7 @@ const FlockLayout = ({
   flock,
   flockId,
   onRangeChange,
+  onMonthsChange,
   range,
   clearFilter,
   filterText,
@@ -92,7 +122,61 @@ const FlockLayout = ({
   stats,
   breedStats,
   userId,
-}: any) => (
+  expenseMonths,
+}: {
+  flock: Flock & { breeds: Breed[]; tasks: Task[] };
+  flockId: string;
+  onRangeChange: (event: any) => void;
+  onMonthsChange: (value: string) => void;
+  range: {
+    from: Date;
+    to: Date;
+  };
+  clearFilter: () => void;
+  filterText: string | undefined;
+  filterId: string;
+  stats: {
+    expenses:
+      | {
+          expenses: {
+            flockId: string;
+            category: string;
+            total: number;
+            monthYear: string;
+          }[];
+          production: {
+            flockId: string;
+            total: number;
+            monthYear: string;
+          }[];
+        }
+      | undefined;
+    logs:
+      | {
+          date: string;
+          count: number;
+        }[]
+      | undefined;
+    lastWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+    thisWeekAvg:
+      | {
+          avg: number;
+        }
+      | undefined;
+  };
+  breedStats:
+    | {
+        breedId: string | null;
+        avgCount: number;
+      }[]
+    | undefined;
+  userId: string;
+  expenseMonths?: number;
+}) => (
   <main className="flex flex-col justify-center p-0 lg:p-8 lg:px-[3.5vw]">
     <div className="shadow-xl">
       <Card title="Flock Details" className="" key={flockId?.toString()}>
@@ -104,11 +188,13 @@ const FlockLayout = ({
           stats={stats}
           flock={flock}
           className="mt-4 basis-full xl:basis-[75%]"
-          limit={range.toString()}
+          range={range}
           onRangeChange={onRangeChange}
+          onMonthsChange={onMonthsChange}
           filter={filterText}
           filterId={filterId}
           clearFilter={clearFilter}
+          expenseMonths={expenseMonths}
         />
         <Breeds
           flockId={flockId?.toString()}

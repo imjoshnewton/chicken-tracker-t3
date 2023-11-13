@@ -24,16 +24,16 @@ const config = {
   //   defaultLocale: "en",
   // },
   images: {
-    domains: [
-      "firebasestorage.googleapis.com",
-      "lh3.googleusercontent.com",
-      "img.clerk.com",
+    remotePatterns: [
+      { hostname: "firebasestorage.googleapis.com" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "img.clerk.com" },
     ],
     formats: ["image/avif", "image/webp"],
   },
-  experimental: {
-    serverActions: true,
-  },
+  // experimental: {
+  //   serverActions: true,
+  // },
 };
 
 export default pwa(config);

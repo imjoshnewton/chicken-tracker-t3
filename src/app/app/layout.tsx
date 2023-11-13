@@ -1,8 +1,7 @@
-import { currentUsr } from "@lib/auth";
-import { db } from "@lib/db";
-import { notification } from "@lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { auth } from "@clerk/nextjs";
+import { getServerClient } from "../_trpc/serverClient";
 import AppLayout from "./AppLayout";
+import { TrpcProvider } from "./Provider";
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -14,14 +13,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUsr();
+  const authRes = await auth();
 
-  const notifications = await db
-    .select()
-    .from(notification)
-    .limit(10)
-    .orderBy(desc(notification.date))
-    .where(eq(notification.userId, user?.id));
+  const serverClient = getServerClient(authRes);
 
-  return <AppLayout notifications={notifications}>{children}</AppLayout>;
+  const notifications = await serverClient.auth.getUserNotifications();
+
+  return (
+    <TrpcProvider>
+      <AppLayout initialNotifications={notifications}>{children}</AppLayout>
+    </TrpcProvider>
+  );
 }
