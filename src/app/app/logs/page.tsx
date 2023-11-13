@@ -1,10 +1,11 @@
-import { type EggLog } from "@prisma/client";
 import { redirect } from "next/navigation";
 import Card from "../../../components/shared/Card";
 import { currentUsr } from "@lib/auth";
 import Pagination from "../../../components/flocks/Pagination";
 import DeleteButton from "./DeleteButton";
 import { fetchLogCount, fetchLogs, PAGE_SIZE } from "@lib/fetch";
+import { type EggLog } from "@lib/db/schema";
+import { parseISO } from "date-fns";
 
 export const metadata = {
   title: "FlockNerd - All Logs",
@@ -21,7 +22,7 @@ function LogItem({ log, index }: { log: EggLog; index: number }) {
       style={{ animationDelay: `${index * 0.03}s` }}
       key={log.id}
     >
-      <div className="basis-1/3 md:basis-1/4">{log.date.toDateString()}</div>
+      <div className="basis-1/3 md:basis-1/4">{parseISO(log.date).toDateString()}</div>
       <span className="basis-1/3 md:basis-1/6">Count: {log.count}</span>
       <span className="hidden basis-1/3 md:block">Notes: {log.notes}</span>
       <div className="ml-auto">

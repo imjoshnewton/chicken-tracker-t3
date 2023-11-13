@@ -1,4 +1,3 @@
-"use client";
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -52,7 +51,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
   const { isValid, isDirty, errors } = formState;
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const createOrUpdateTask = async (taskData: TaskFormValues) => {
     // const parsedData = {

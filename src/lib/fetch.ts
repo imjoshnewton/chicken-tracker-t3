@@ -23,12 +23,14 @@ export async function fetchExpenses(userId: string, page: number) {
     .offset(page * PAGE_SIZE)
     .limit(PAGE_SIZE);
 
-  return flockJoin.map((f) => {
-    return {
-      ...f,
-      date: new Date(f.date),
-    };
-  });
+  return flockJoin;
+
+  // return flockJoin.map((f) => {
+  //   return {
+  //     ...f,
+  //     date: new Date(f.date),
+  //   };
+  // });
 }
 
 // Fetch expense count function
@@ -64,12 +66,13 @@ export async function fetchLogs(userId: string, page: number) {
     .offset(page * PAGE_SIZE)
     .limit(PAGE_SIZE);
 
-  return flockJoin.map((f) => {
-    return {
-      ...f,
-      date: new Date(f.date),
-    };
-  });
+  return flockJoin;
+  // return flockJoin.map((f) => {
+  //   return {
+  //     ...f,
+  //     date: new Date(f.date),
+  //   };
+  // });
 }
 
 export async function fetchLogCount(userId: string) {
@@ -135,8 +138,8 @@ export async function getSummaryData({
     expenseData.length == 0
       ? 0
       : expenseData
-          .map((exp) => exp.amountByCategory ?? 0)
-          .reduce((acc, cur) => acc + cur, 0);
+        .map((exp) => exp.amountByCategory ?? 0)
+        .reduce((acc, cur) => acc + cur, 0);
 
   const logs = await db
     .select()

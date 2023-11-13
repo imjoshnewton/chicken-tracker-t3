@@ -68,7 +68,7 @@ async function FlockList() {
                 <Card title={"Flock"}>
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
                     <Image
-                      src={flock?.imageUrl}
+                      src={flock.imageUrl}
                       width="150"
                       height="150"
                       className="flock-image aspect-square object-cover"
@@ -77,14 +77,14 @@ async function FlockList() {
                     <div>
                       <div className="flex items-center">
                         <h1 className="mr-3 dark:text-gray-300">
-                          {flock?.name}
+                          {flock.name}
                         </h1>
                       </div>
                       <p className="description dark:text-gray-300">
                         {flock?.description}
                       </p>
                       <p className="mt-2 text-gray-400 dark:text-gray-400">
-                        {flock?.type}
+                        {flock.type}
                       </p>
                     </div>
                   </div>
@@ -94,6 +94,7 @@ async function FlockList() {
           </li>
         );
       })}
+      {/* I'm not sure why this is necesary  */}
       <li className="basis-3/4"></li>
     </ul>
   );

@@ -1,10 +1,11 @@
 import { currentUsr } from "@lib/auth";
 import { fetchExpenseCount, fetchExpenses, PAGE_SIZE } from "@lib/fetch";
-import { type Expense } from "@prisma/client";
+import { type Expense } from "@lib/db/schema";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
 import Card from "../../../components/shared/Card";
 import DeleteButton from "./DeleteButton";
+import { parseISO } from "date-fns";
 
 export const metadata = {
   title: "FlockNerd - All Expenses",
@@ -22,7 +23,7 @@ function ExpenseItem({ expense, index }: { expense: Expense; index: number }) {
       key={expense.id}
     >
       <div className="basis-1/3 md:basis-1/4">
-        {expense.date.toDateString()}
+        {parseISO(expense.date).toDateString()}
       </div>
       <span className="basis-1/3 md:basis-1/6">Amount: ${expense.amount}</span>
       <span className="hidden basis-1/3 md:block">Memo: {expense.memo}</span>
