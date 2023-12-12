@@ -4,22 +4,26 @@ export default function Card({
   className,
   titleStyle,
 }: {
-  title: string;
+  title?: string;
   children: any;
   className?: string;
   titleStyle?: string;
 }) {
   return (
     <div
-      className={`relative rounded-lg bg-[#FEF9F6] pl-8 pr-8 pb-8 pt-6 dark:bg-gray-900 ${
+      className={`relative rounded-lg bg-[#FEF9F6] pb-8 pl-8 pr-8 pt-6 dark:bg-gray-900 ${
         className ? className : ""
       }`}
     >
-      <h5
-        className={"mt-0 mb-4 text-stone-400 " + (titleStyle ? titleStyle : "")}
-      >
-        {title}
-      </h5>
+      {title && (
+        <h5
+          className={
+            "mb-4 mt-0 text-stone-400 " + (titleStyle ? titleStyle : "")
+          }
+        >
+          {title}
+        </h5>
+      )}
       <div className="">{children}</div>
     </div>
   );
