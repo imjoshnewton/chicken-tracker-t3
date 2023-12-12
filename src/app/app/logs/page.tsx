@@ -1,6 +1,6 @@
 import { currentUsr } from "@lib/auth";
 import { type EggLog } from "@lib/db/schema";
-import { fetchLogCount, fetchLogs, PAGE_SIZE } from "@lib/fetch";
+import { fetchLogs } from "@lib/fetch";
 import { parseISO } from "date-fns";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
@@ -46,15 +46,12 @@ async function Logs({
 
   if (!user) redirect("/auth/sign-in");
 
-  const totalPages = Math.ceil(
-    (await fetchLogCount(user.id, flockId)) / PAGE_SIZE,
-  );
-  const logs = await fetchLogs(user.id, page, flockId);
+  const [logs, totalPages] = await fetchLogs(user.id, page, flockId);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
-        <Card className="pb-safe py-0 lg:pb-4 lg:pt-4">
+        <Card className="pb-safe py-0 lg:pb-4 lg:pt-7">
           <FlockSelect />
           <ul className="mt-4 flex flex-col">
             {logs?.map((log, index) => (

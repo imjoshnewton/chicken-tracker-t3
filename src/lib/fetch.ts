@@ -42,17 +42,26 @@ export async function fetchExpenseCount(userId: string) {
   return result ? result.count : 0;
 }
 
-// Feetch logs function - takes an optional flockId and calls the correct fetch function
+// Feetch logs function - takes an optional flockId and calls the correct fetch function and count function
 export async function fetchLogs(
   userId: string,
   page: number,
   flockId?: string,
 ) {
+  let logs;
+  let count;
+
   if (flockId) {
-    return await fetchLogsByFlock(userId, flockId, page);
+    logs = await fetchLogsByFlock(userId, flockId, page);
+    count = await fetchLogCountByFlock(userId, flockId);
   } else {
-    return await fetchAllLogs(userId, page);
+    logs = await fetchAllLogs(userId, page);
+    count = await fetchAllLogCount(userId);
   }
+
+  const totalPages = Math.ceil(count / PAGE_SIZE);
+
+  return [logs, totalPages] as const;
 }
 
 // Fetch all logs function
