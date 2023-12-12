@@ -1,4 +1,5 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { addMonths, format, getDaysInMonth } from "date-fns";
+import { and, between, desc, eq, sql } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { db } from "./db";
 import { eggLog, expense, flock } from "./db/schema";
@@ -24,13 +25,6 @@ export async function fetchExpenses(userId: string, page: number) {
     .limit(PAGE_SIZE);
 
   return flockJoin;
-
-  // return flockJoin.map((f) => {
-  //   return {
-  //     ...f,
-  //     date: new Date(f.date),
-  //   };
-  // });
 }
 
 // Fetch expense count function
@@ -48,8 +42,21 @@ export async function fetchExpenseCount(userId: string) {
   return result ? result.count : 0;
 }
 
-// Fetch logs function
-export async function fetchLogs(userId: string, page: number) {
+// Feetch logs function - takes an optional flockId and calls the correct fetch function
+export async function fetchLogs(
+  userId: string,
+  page: number,
+  flockId?: string,
+) {
+  if (flockId) {
+    return await fetchLogsByFlock(userId, flockId, page);
+  } else {
+    return await fetchAllLogs(userId, page);
+  }
+}
+
+// Fetch all logs function
+export async function fetchAllLogs(userId: string, page: number) {
   const flockJoin = await db
     .select({
       id: eggLog.id,
@@ -67,15 +74,47 @@ export async function fetchLogs(userId: string, page: number) {
     .limit(PAGE_SIZE);
 
   return flockJoin;
-  // return flockJoin.map((f) => {
-  //   return {
-  //     ...f,
-  //     date: new Date(f.date),
-  //   };
-  // });
 }
 
-export async function fetchLogCount(userId: string) {
+// Fet logs by flock function
+export async function fetchLogsByFlock(
+  userId: string,
+  flockId: string,
+  page: number,
+) {
+  const flockJoin = await db
+    .select({
+      id: eggLog.id,
+      date: eggLog.date,
+      count: eggLog.count,
+      flockId: flock.id,
+      notes: eggLog.notes,
+      breedId: eggLog.breedId,
+    })
+    .from(flock)
+    .where(and(eq(flock.userId, userId), eq(flock.id, flockId)))
+    .innerJoin(eggLog, eq(eggLog.flockId, flock.id))
+    .orderBy(desc(eggLog.date))
+    .offset(page * PAGE_SIZE)
+    .limit(PAGE_SIZE);
+
+  return flockJoin;
+}
+
+// Fetch log count function - takes an optional flockId and calls the correct fetch function
+export async function fetchLogCount(
+  userId: string,
+  flockId?: string,
+): Promise<number> {
+  if (flockId) {
+    return await fetchLogCountByFlock(userId, flockId);
+  } else {
+    return await fetchAllLogCount(userId);
+  }
+}
+
+// Fetch all log count function
+export async function fetchAllLogCount(userId: string) {
   const [result] = await db
     .select({
       count: sql<number>`count(*)`,
@@ -87,8 +126,18 @@ export async function fetchLogCount(userId: string) {
   return result ? result.count : 0;
 }
 
-import { addMonths, format, getDaysInMonth } from "date-fns";
-import { and, between } from "drizzle-orm";
+// Fetch log count by flock function
+export async function fetchLogCountByFlock(userId: string, flockId: string) {
+  const [result] = await db
+    .select({
+      count: sql<number>`count(*)`,
+    })
+    .from(flock)
+    .where(and(eq(flock.userId, userId), eq(flock.id, flockId)))
+    .innerJoin(eggLog, eq(eggLog.flockId, flock.id));
+
+  return result ? result.count : 0;
+}
 
 export async function getSummaryData({
   month,
@@ -138,8 +187,8 @@ export async function getSummaryData({
     expenseData.length == 0
       ? 0
       : expenseData
-        .map((exp) => exp.amountByCategory ?? 0)
-        .reduce((acc, cur) => acc + cur, 0);
+          .map((exp) => exp.amountByCategory ?? 0)
+          .reduce((acc, cur) => acc + cur, 0);
 
   const logs = await db
     .select()
