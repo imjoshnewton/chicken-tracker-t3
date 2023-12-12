@@ -90,7 +90,7 @@ export default function AppLayout({
   return (
     <>
       <Toaster position="top-right" />
-      <nav className="navbar z-30 h-[60px] pl-2 pr-3 lg:h-16 lg:pl-6">
+      <nav className="navbar z-30 h-15 pl-2 pr-3 lg:h-16 lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button

@@ -26,6 +26,12 @@ module.exports = {
       margin: {
         3.5: "-3.5vw",
       },
+      padding: {
+        15: "3.75rem",
+      },
+      height: {
+        15: "3.75rem",
+      },
       screens: {
         pwa: { raw: "(display-mode: standalone)" },
       },
