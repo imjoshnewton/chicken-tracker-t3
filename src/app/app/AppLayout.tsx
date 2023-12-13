@@ -54,13 +54,13 @@ export default function AppLayout({
     },
     {
       icon: <MdOutlineEditNote className="mr-5 mt-[-3px] inline text-2xl" />,
-      title: "Logs",
+      title: "All Logs",
       path: "/app/logs",
       onClick: () => setSideBarOpen(false),
     },
     {
       icon: <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />,
-      title: "Expenses",
+      title: "All Expenses",
       path: "/app/expenses",
       onClick: () => setSideBarOpen(false),
     },
