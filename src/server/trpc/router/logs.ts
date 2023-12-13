@@ -1,5 +1,5 @@
 import { eggLog } from "@lib/db/schema";
-import { fetchLogs, fetchLogsByFlock } from "@lib/fetch";
+import { fetchLogs } from "@lib/fetch";
 import { createId } from "@paralleldrive/cuid2";
 import { format } from "date-fns";
 import { eq } from "drizzle-orm";
@@ -10,17 +10,17 @@ export const logsRouter = router({
   getLogs: protectedProcedure
     .input(z.object({ page: z.number() }))
     .query(async ({ input, ctx }) => {
-      const logs = await fetchLogs(ctx.session.user.id, input.page);
+      const [logs] = await fetchLogs(ctx.session.user.id, input.page);
 
       return logs;
     }),
   getLogsByFlock: protectedProcedure
     .input(z.object({ page: z.number(), flockId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const logs = await fetchLogsByFlock(
+      const [logs] = await fetchLogs(
         ctx.session.user.id,
-        input.flockId,
         input.page,
+        input.flockId,
       );
 
       return logs;

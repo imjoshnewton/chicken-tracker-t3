@@ -3,14 +3,14 @@ import { fetchExpenses } from "@lib/fetch";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { router, protectedProcedure } from "../trpc";
+import { protectedProcedure, router } from "../trpc";
 import { formatDateForMySQL } from "./logs";
 
 export const expensesRouter = router({
   getExpenses: protectedProcedure
     .input(z.object({ page: z.number() }))
     .query(async ({ input, ctx }) => {
-      const expenses = await fetchExpenses(ctx.session.user.id, input.page);
+      const [expenses] = await fetchExpenses(ctx.session.user.id, input.page);
 
       return expenses;
     }),
@@ -22,7 +22,7 @@ export const expensesRouter = router({
         amount: z.number(),
         memo: z.string().optional(),
         category: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       const id: string = createId();
@@ -38,7 +38,7 @@ export const expensesRouter = router({
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input, ctx }) => {
       return await ctx.db.delete(expense).where(eq(expense.id, input.id));
