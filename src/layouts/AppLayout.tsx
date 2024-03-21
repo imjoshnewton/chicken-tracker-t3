@@ -19,6 +19,7 @@ import { trpc } from "../utils/trpc";
 import Loader from "../components/shared/Loader";
 import NotificationsList from "../components/NotificationsList";
 import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "@components/ui/button";
 
 // Top navbar
 export default function AppLayout({ children }: { children: any }) {
@@ -66,7 +67,8 @@ export default function AppLayout({ children }: { children: any }) {
       <nav className="navbar h-[60px] pl-2 pr-3 lg:h-[65px] lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
-            <button
+            <Button
+              variant="ghost"
               className="group flex h-12 w-12 flex-col items-center justify-center rounded"
               onClick={() => {
                 setSideBarOpen(!sideBarOpen);
@@ -91,7 +93,7 @@ export default function AppLayout({ children }: { children: any }) {
                     : "group-hover:opacity-100"
                 }`}
               />
-            </button>
+            </Button>
           </li>
           <li className="hidden translate-x-2 cursor-pointer sm:translate-x-0 md:block">
             <Link href="/">
