@@ -1,6 +1,5 @@
 import { addMonths, format, getDaysInMonth } from "date-fns";
 import { and, between, desc, eq, sql } from "drizzle-orm";
-import { redirect } from "next/navigation";
 import { db } from "./db";
 import { eggLog, expense, flock } from "./db/schema";
 
@@ -160,16 +159,6 @@ async function fetchLogsByFlock(userId: string, flockId: string, page: number) {
 }
 
 // Fetch log count function - takes an optional flockId and calls the correct fetch function
-async function fetchLogCount(
-  userId: string,
-  flockId?: string,
-): Promise<number> {
-  if (flockId) {
-    return await fetchLogCountByFlock(userId, flockId);
-  } else {
-    return await fetchAllLogCount(userId);
-  }
-}
 
 // Fetch all log count function
 async function fetchAllLogCount(userId: string) {

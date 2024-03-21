@@ -148,9 +148,9 @@ export default function AppLayout({
                   ref={notificationsButtonRef}
                   aria-haspopup="true" // indicates that this button triggers a popover
                   aria-expanded={notificationsOpen} // indicates whether the popover is open or closed
-                  aria-label={`Toggle notifications - ${notifications?.filter(
-                    (not) => !not.read,
-                  ).length} unread notifications`} // provides a descriptive name for the button
+                  aria-label={`Toggle notifications - ${
+                    notifications?.filter((not) => !not.read).length
+                  } unread notifications`} // provides a descriptive name for the button
                   role="button"
                   type="button"
                   className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${

@@ -14,8 +14,7 @@ import Loader from "@components/shared/Loader";
 
 import EditModal from "@components/flocks/EditModal";
 import AddTaskModal from "@components/tasks/AddTaskModal";
-import TaskList from "@components/tasks/Tasks";
-import { Breed, Flock, Task } from "@lib/db/schema";
+import type { Breed, Flock, Task } from "@lib/db/schema";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { format, subDays } from "date-fns";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -183,7 +182,7 @@ const FlockLayout = ({
         {/* <EditLink flockId={flockId} /> */}
         <FlockActions flockId={flockId?.toString()} userId={userId} />
         <FlockInfo flock={flock} flockId={flockId} />
-        <TaskList tasks={flock?.tasks} flockId={flockId} userId={userId} />
+        {/* <TaskList tasks={flock?.tasks} flockId={flockId} userId={userId} /> */}
         <Stats
           stats={stats}
           flock={flock}
@@ -216,7 +215,7 @@ const FlockActions = ({
   userId: string;
 }) => (
   <div className="absolute right-0 top-0 mr-5 mt-3 flex self-start md:mt-2">
-    <AddTaskModal userId={userId} flockId={flockId} />
+    {/* <AddTaskModal userId={userId} flockId={flockId} /> */}
     <EditModal userId={userId} flockId={flockId} />
   </div>
 );
