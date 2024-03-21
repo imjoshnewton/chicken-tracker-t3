@@ -13,7 +13,6 @@ import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
 
 import EditModal from "@components/flocks/EditModal";
-import AddTaskModal from "@components/tasks/AddTaskModal";
 import type { Breed, Flock, Task } from "@lib/db/schema";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { format, subDays } from "date-fns";
