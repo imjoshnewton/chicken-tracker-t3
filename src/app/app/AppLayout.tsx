@@ -27,6 +27,7 @@ import { Toaster } from "react-hot-toast";
 import { AppRouter } from "src/server/trpc/router/_app";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import NotificationsList from "./NotificationsList";
+import { Button } from "@components/ui/button";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type GetUserNotifications = RouterOutput["auth"]["getUserNotifications"];
@@ -144,7 +145,8 @@ export default function AppLayout({
               <li
                 className={`mr-2 flex items-center gap-2 rounded transition-all`}
               >
-                <button
+                <Button
+                  variant="ghost"
                   ref={notificationsButtonRef}
                   aria-haspopup="true" // indicates that this button triggers a popover
                   aria-expanded={notificationsOpen} // indicates whether the popover is open or closed
@@ -153,7 +155,7 @@ export default function AppLayout({
                   } unread notifications`} // provides a descriptive name for the button
                   role="button"
                   type="button"
-                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
+                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 hover:text-white ${
                     notificationsOpen ? "open" : ""
                   }`}
                   onClick={() => {
@@ -168,11 +170,11 @@ export default function AppLayout({
                           ? "opacity-100"
                           : "opacity-0"
                         : "opacity-0"
-                    } absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                    } absolute right-1 top-0 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                   >
                     {notifications?.filter((not) => !not.read).length}
                   </div>
-                </button>
+                </Button>
                 {/* <div className="user-name animate__animated animate__fadeInLeft hidden lg:block">
                   {user.fullName}
                 </div> */}

@@ -2,6 +2,7 @@ import type { Notification } from "@lib/db/schema";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { trpc } from "@utils/trpc";
+import { Button } from "@components/ui/button";
 
 export default function NotificationActionButtons({
   notification,
@@ -38,7 +39,8 @@ export default function NotificationActionButtons({
 
   return (
     <div className="mt-3 flex gap-2">
-      <button
+      <Button
+        variant="outline"
         ref={buttonRef}
         className={`${
           notification.read
@@ -52,18 +54,23 @@ export default function NotificationActionButtons({
         disabled={!!notification.read}
       >
         Mark as read
-      </button>
-      <Link
-        ref={linkRef}
-        href={notification.link}
-        className="rounded bg-secondary px-3 py-1 text-white transition-all hover:bg-secondary/80"
-        onClick={() => {
-          markNotificationAsRead({ id: notification.id });
-          closeMenu();
-        }}
+      </Button>
+      <Button
+        asChild
+        variant="ghost"
+        className="rounded bg-secondary px-3 py-1 text-white transition-all hover:bg-secondary/80 hover:text-white"
       >
-        {notification.action}
-      </Link>
+        <Link
+          ref={linkRef}
+          href={notification.link}
+          onClick={() => {
+            markNotificationAsRead({ id: notification.id });
+            closeMenu();
+          }}
+        >
+          {notification.action}
+        </Link>
+      </Button>
     </div>
   );
 }
