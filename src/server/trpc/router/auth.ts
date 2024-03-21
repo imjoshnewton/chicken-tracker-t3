@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { notification, user } from "@lib/db/schema";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -59,8 +59,12 @@ export const authRouter = router({
     return await ctx.db
       .select()
       .from(notification)
-      .where(eq(notification.userId, ctx.session.user.id))
-      .where(eq(notification.read, 0))
+      .where(
+        and(
+          eq(notification.userId, ctx.session.user.id),
+          eq(notification.read, 0),
+        ),
+      )
       .limit(10);
   }),
   markNotificationasRead: protectedProcedure

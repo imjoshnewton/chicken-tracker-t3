@@ -170,7 +170,7 @@ export default function RootLayout({
           />
         </head>
         <body className="lg:flex lg:h-full lg:flex-1 lg:flex-col">
-          {children}
+          <div className="pt-15 lg:pt-16">{children}</div>
         </body>
       </html>
     </ClerkProvider>

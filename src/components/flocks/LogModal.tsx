@@ -4,7 +4,7 @@ import { MdClose, MdOutlineEditNote } from "react-icons/md";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLoader4Fill } from "react-icons/ri";
-import { formatDate, handleTimezone } from "./date-utils";
+import { handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
@@ -18,7 +18,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const router = useRouter();
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const { mutateAsync: createLogMutation, isLoading } =
     trpc.logs.createLog.useMutation({

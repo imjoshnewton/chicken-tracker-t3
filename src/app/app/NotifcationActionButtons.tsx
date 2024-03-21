@@ -1,7 +1,8 @@
 import type { Notification } from "@lib/db/schema";
 import Link from "next/link";
-import { markNotificationAsRead } from "./server";
 import { useEffect, useRef } from "react";
+import { trpc } from "@utils/trpc";
+import { Button } from "@components/ui/button";
 
 export default function NotificationActionButtons({
   notification,
@@ -27,9 +28,19 @@ export default function NotificationActionButtons({
     }
   }, [isOpen, index, notification.read]);
 
+  const utils = trpc.useUtils();
+  const { mutateAsync: markNotificationAsRead } =
+    trpc.auth.markNotificationasRead.useMutation({
+      onSuccess() {
+        console.log("Marked as read");
+        utils.auth.getUserNotifications.invalidate();
+      },
+    });
+
   return (
     <div className="mt-3 flex gap-2">
-      <button
+      <Button
+        variant="outline"
         ref={buttonRef}
         className={`${
           notification.read
@@ -37,24 +48,29 @@ export default function NotificationActionButtons({
             : "rounded border border-gray-700 px-3 py-1 font-normal text-gray-700 transition-all hover:border-slate-200 hover:bg-slate-200"
         }`}
         onClick={() => {
-          markNotificationAsRead({ notificationId: notification.id });
+          markNotificationAsRead({ id: notification.id });
           closeMenu();
         }}
         disabled={!!notification.read}
       >
         Mark as read
-      </button>
-      <Link
-        ref={linkRef}
-        href={notification.link}
-        className="rounded bg-secondary px-3 py-1 text-white transition-all hover:bg-secondary/80"
-        onClick={() => {
-          markNotificationAsRead({ notificationId: notification.id });
-          closeMenu();
-        }}
+      </Button>
+      <Button
+        asChild
+        variant="ghost"
+        className="rounded bg-secondary px-3 py-1 text-white transition-all hover:bg-secondary/80 hover:text-white"
       >
-        {notification.action}
-      </Link>
+        <Link
+          ref={linkRef}
+          href={notification.link}
+          onClick={() => {
+            markNotificationAsRead({ id: notification.id });
+            closeMenu();
+          }}
+        >
+          {notification.action}
+        </Link>
+      </Button>
     </div>
   );
 }

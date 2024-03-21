@@ -27,6 +27,7 @@ import { Toaster } from "react-hot-toast";
 import { AppRouter } from "src/server/trpc/router/_app";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import NotificationsList from "./NotificationsList";
+import { Button } from "@components/ui/button";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type GetUserNotifications = RouterOutput["auth"]["getUserNotifications"];
@@ -54,13 +55,13 @@ export default function AppLayout({
     },
     {
       icon: <MdOutlineEditNote className="mr-5 mt-[-3px] inline text-2xl" />,
-      title: "Logs",
+      title: "All Logs",
       path: "/app/logs",
       onClick: () => setSideBarOpen(false),
     },
     {
       icon: <AiOutlineDollar className="mr-5 mt-[-3px] inline text-2xl" />,
-      title: "Expenses",
+      title: "All Expenses",
       path: "/app/expenses",
       onClick: () => setSideBarOpen(false),
     },
@@ -90,7 +91,7 @@ export default function AppLayout({
   return (
     <>
       <Toaster position="top-right" />
-      <nav className="navbar z-30 h-[60px] pl-2 pr-3 lg:h-[65px] lg:pl-6">
+      <nav className="navbar z-30 h-15 pl-2 pr-3 lg:h-16 lg:pl-6">
         <ul>
           <li className="inline lg:hidden">
             <button
@@ -144,16 +145,17 @@ export default function AppLayout({
               <li
                 className={`mr-2 flex items-center gap-2 rounded transition-all`}
               >
-                <button
+                <Button
+                  variant="ghost"
                   ref={notificationsButtonRef}
                   aria-haspopup="true" // indicates that this button triggers a popover
                   aria-expanded={notificationsOpen} // indicates whether the popover is open or closed
-                  aria-label={`Toggle notifications - ${notifications?.filter(
-                    (not) => !not.read,
-                  ).length} unread notifications`} // provides a descriptive name for the button
+                  aria-label={`Toggle notifications - ${
+                    notifications?.filter((not) => !not.read).length
+                  } unread notifications`} // provides a descriptive name for the button
                   role="button"
                   type="button"
-                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 ${
+                  className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 hover:text-white ${
                     notificationsOpen ? "open" : ""
                   }`}
                   onClick={() => {
@@ -168,11 +170,11 @@ export default function AppLayout({
                           ? "opacity-100"
                           : "opacity-0"
                         : "opacity-0"
-                    } absolute right-1 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
+                    } absolute right-1 top-0 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                   >
                     {notifications?.filter((not) => !not.read).length}
                   </div>
-                </button>
+                </Button>
                 {/* <div className="user-name animate__animated animate__fadeInLeft hidden lg:block">
                   {user.fullName}
                 </div> */}

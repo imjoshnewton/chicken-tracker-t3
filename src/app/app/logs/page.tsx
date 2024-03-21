@@ -1,11 +1,12 @@
-import { redirect } from "next/navigation";
-import Card from "../../../components/shared/Card";
 import { currentUsr } from "@lib/auth";
-import Pagination from "../../../components/flocks/Pagination";
-import DeleteButton from "./DeleteButton";
-import { fetchLogCount, fetchLogs, PAGE_SIZE } from "@lib/fetch";
 import { type EggLog } from "@lib/db/schema";
+import { fetchLogs } from "@lib/fetch";
 import { parseISO } from "date-fns";
+import { redirect } from "next/navigation";
+import Pagination from "../../../components/flocks/Pagination";
+import Card from "../../../components/shared/Card";
+import DeleteButton from "./DeleteButton";
+import FlockSelect from "./FlockSelect";
 
 export const metadata = {
   title: "FlockNerd - All Logs",
@@ -22,7 +23,9 @@ function LogItem({ log, index }: { log: EggLog; index: number }) {
       style={{ animationDelay: `${index * 0.03}s` }}
       key={log.id}
     >
-      <div className="basis-1/3 md:basis-1/4">{parseISO(log.date).toDateString()}</div>
+      <div className="basis-1/3 md:basis-1/4">
+        {parseISO(log.date).toDateString()}
+      </div>
       <span className="basis-1/3 md:basis-1/6">Count: {log.count}</span>
       <span className="hidden basis-1/3 md:block">Notes: {log.notes}</span>
       <div className="ml-auto">
@@ -39,16 +42,17 @@ async function Logs({
 }) {
   const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
+  const flockId = searchParams.flockId as string;
 
   if (!user) redirect("/auth/sign-in");
 
-  const totalPages = Math.ceil((await fetchLogCount(user.id)) / PAGE_SIZE);
-  const logs = await fetchLogs(user.id, page);
+  const [logs, totalPages] = await fetchLogs(user.id, page, flockId);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
-        <Card title="All Logs" className="pb-safe py-0 lg:pb-4 lg:pt-4">
+        <Card className="pb-safe py-0 lg:pb-4 lg:pt-7">
+          <FlockSelect />
           <ul className="mt-4 flex flex-col">
             {logs?.map((log, index) => (
               <LogItem log={log} index={index} key={index} />

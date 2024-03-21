@@ -6,10 +6,10 @@ import {
   expense,
   flock as Flocks,
   notification as Notifications,
+  Task,
   task as Tasks,
   user as Users,
 } from "@lib/db/schema";
-import { Task } from "@prisma/client";
 import { createId } from "@paralleldrive/cuid2";
 import { addDays, addMonths, addWeeks } from "date-fns";
 import { eq } from "drizzle-orm";
@@ -160,7 +160,7 @@ export async function markNotificationAsRead(input: {
     .from(Notifications)
     .where(eq(Notifications.id, input.notificationId));
 
-  revalidatePath(`/app`);
+  revalidatePath(`/app/flocks`);
 
   return notification;
 }
@@ -263,7 +263,7 @@ export async function markTaskAsComplete(input: {
           id: id,
           title: task.title,
           description: task.description,
-          dueDate: formatDateForMySQL(addDays(task.dueDate, 1)),
+          dueDate: formatDateForMySQL(addDays(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
           completed: 0,
@@ -283,7 +283,7 @@ export async function markTaskAsComplete(input: {
           id: id,
           title: task.title,
           description: task.description,
-          dueDate: formatDateForMySQL(addWeeks(task.dueDate, 1)),
+          dueDate: formatDateForMySQL(addWeeks(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
           completed: 0,
@@ -303,7 +303,7 @@ export async function markTaskAsComplete(input: {
           id: id,
           title: task.title,
           description: task.description,
-          dueDate: formatDateForMySQL(addMonths(task.dueDate, 1)),
+          dueDate: formatDateForMySQL(addMonths(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
           completed: 0,
@@ -338,8 +338,8 @@ async function completeTask(taskId: string) {
 
   return {
     ...result,
-    completed: result?.completed === 1,
-    dueDate: new Date(result.dueDate),
-    completedAt: result.completedAt ? new Date(result.completedAt) : null,
+    // completed: result?.completed === 1,
+    // dueDate: new Date(result.dueDate),
+    // completedAt: result.completedAt ? new Date(result.completedAt) : null,
   };
 }

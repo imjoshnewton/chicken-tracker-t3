@@ -1,11 +1,12 @@
 import { currentUsr } from "@lib/auth";
-import { fetchExpenseCount, fetchExpenses, PAGE_SIZE } from "@lib/fetch";
+import { fetchExpenses } from "@lib/fetch";
 import { type Expense } from "@lib/db/schema";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
 import Card from "../../../components/shared/Card";
 import DeleteButton from "./DeleteButton";
 import { parseISO } from "date-fns";
+import FlockSelect from "../logs/FlockSelect";
 
 export const metadata = {
   title: "FlockNerd - All Expenses",
@@ -41,16 +42,17 @@ async function Expenses({
 }) {
   const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
+  const flockId = searchParams.flockId as string;
 
   if (!user) redirect("/auth/sign-in");
 
-  const totalPages = Math.ceil((await fetchExpenseCount(user.id)) / PAGE_SIZE);
-  const expenses = await fetchExpenses(user.id, page);
+  const [expenses, totalPages] = await fetchExpenses(user.id, page, flockId);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">
       <div className="shadow-xl">
-        <Card title="All Expenses" className="pb-safe py-0 lg:pb-4 lg:pt-4">
+        <Card className="pb-safe py-0 lg:pb-4 lg:pt-7">
+          <FlockSelect />
           <ul className="mt-4 flex flex-col">
             {expenses?.map((expense, index) => (
               <ExpenseItem expense={expense} index={index} key={index} />

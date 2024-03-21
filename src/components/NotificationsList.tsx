@@ -10,11 +10,12 @@ export default function NotificationsList({
   notifications: Notification[];
   closeMenu: () => void;
 }) {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const markAsRead = trpc.auth.markNotificationasRead.useMutation({
-    onSuccess(data, variables, context) {
-      utils.auth.getUserNotifications.invalidate();
+    onSuccess() {
+      console.log("Marked as read");
+      utils.auth.getUserNotifications.invalidate(undefined);
     },
   });
 
@@ -49,13 +50,13 @@ export default function NotificationsList({
                       ? "rounded border border-gray-700 px-3 py-1 font-normal text-gray-700 opacity-70"
                       : "rounded border border-gray-700 px-3 py-1 font-normal text-gray-700 transition-all hover:border-slate-200 hover:bg-slate-200"
                   }`}
-                  onClick={() => {
-                    markAsRead.mutate({ id: not.id });
+                  onClick={async () => {
+                    await markAsRead.mutateAsync({ id: not.id });
                     closeMenu();
                   }}
                   disabled={!!not.read}
                 >
-                  Mark as read
+                  Mark read
                 </button>
                 <Link
                   href={not.link}
