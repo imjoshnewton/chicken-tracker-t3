@@ -1,14 +1,31 @@
+import { Button } from "@components/ui/button";
+import { format, startOfDay } from "date-fns";
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import CurrencyInput from "react-currency-input-field";
-import { trpc } from "../../utils/trpc";
-import { AiOutlineDollar } from "react-icons/ai";
 import toast from "react-hot-toast";
-import { AnimatePresence, motion } from "framer-motion";
-import { RiLoader4Fill } from "react-icons/ri";
+import { AiOutlineDollar } from "react-icons/ai";
 import { MdClose } from "react-icons/md";
-import { formatDate, handleTimezone } from "./date-utils";
-import { format, startOfDay } from "date-fns";
-import { Button } from "@components/ui/button";
+import { RiLoader4Fill } from "react-icons/ri";
+import { trpc } from "../../utils/trpc";
+import { handleTimezone } from "./date-utils";
+import MoneyInput from "@components/ui/moneyinput";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@components/ui/popover";
+import { Calendar } from "@components/ui/calendar";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { cn } from "@lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import { Textarea } from "@components/ui/textarea";
 
 const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -17,7 +34,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   const [memo, setMemo] = useState<string>();
   const [category, setCategory] = useState<string>("feed");
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const { mutateAsync: createExpense, isLoading } =
     trpc.expenses.createExpense.useMutation({
@@ -149,66 +166,116 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       {/* <label className="mb-1 block text-sm font-bold text-black">
                         Date
                       </label> */}
-                      <input
-                        className="w-full appearance-none rounded border px-1 py-2 text-black"
-                        max={format(new Date(), "yyyy-MM-dd")}
-                        required
-                        value={format(handleTimezone(date), "yyyy-MM-dd")}
-                        onChange={(event) =>
-                          setDate(handleTimezone(new Date(event.target.value)))
-                        }
-                        // onChange={(e) => {
-                        //   if (e.target.valueAsDate) {
-                        //     var date = e.target.valueAsDate;
-                        //     var userTimezoneOffset =
-                        //       date.getTimezoneOffset() * 60000;
-
-                        //     setDate(
-                        //       new Date(date.getTime() + userTimezoneOffset)
-                        //     );
-                        //   }
-                        // }}
-                        type="date"
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "h-12 w-full justify-start bg-white text-left font-normal",
+                              !date && "text-muted-foreground",
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {date ? (
+                              format(date, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={(date) => {
+                              return setDate(handleTimezone(date));
+                            }}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {/* <input */}
+                      {/*   className="w-full appearance-none rounded border px-1 py-2 text-black" */}
+                      {/*   max={format(new Date(), "yyyy-MM-dd")} */}
+                      {/*   required */}
+                      {/*   value={format(handleTimezone(date), "yyyy-MM-dd")} */}
+                      {/*   onChange={(event) => */}
+                      {/*     setDate(handleTimezone(new Date(event.target.value))) */}
+                      {/*   } */}
+                      {/*   // onChange={(e) => { */}
+                      {/*   //   if (e.target.valueAsDate) { */}
+                      {/*   //     var date = e.target.valueAsDate; */}
+                      {/*   //     var userTimezoneOffset = */}
+                      {/*   //       date.getTimezoneOffset() * 60000; */}
+                      {/**/}
+                      {/*   //     setDate( */}
+                      {/*   //       new Date(date.getTime() + userTimezoneOffset) */}
+                      {/*   //     ); */}
+                      {/*   //   } */}
+                      {/*   // }} */}
+                      {/*   type="date" */}
+                      {/* /> */}
                       {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                         Amount
                       </label> */}
-                      <CurrencyInput
-                        id="amount-input"
-                        name="amount-input"
-                        prefix="$"
+                      <MoneyInput
+                        name="Money Input"
                         placeholder="Amount"
-                        decimalsLimit={2}
-                        decimalScale={2}
-                        onValueChange={(value, name) =>
-                          setAmount(Number(value))
-                        }
-                        className="w-full appearance-none rounded border px-1 py-2 text-black"
+                        value={amount}
+                        setValue={setAmount}
                       />
+                      {/* <CurrencyInput */}
+                      {/*   id="amount-input" */}
+                      {/*   name="amount-input" */}
+                      {/*   prefix="$" */}
+                      {/*   placeholder="Amount" */}
+                      {/*   decimalsLimit={2} */}
+                      {/*   decimalScale={2} */}
+                      {/*   onValueChange={(value) => setAmount(Number(value))} */}
+                      {/*   className="w-full appearance-none rounded border px-1 py-2 text-black" */}
+                      {/* /> */}
                       <fieldset className="my-0">
                         {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                           Category:&nbsp;&nbsp;
                         </label> */}
-                        <select
-                          onChange={(e) => setCategory(e.target.value)}
-                          value={category}
-                          className="h-12 w-full rounded border px-1 py-2 text-black"
-                        >
-                          <option value="" disabled>
-                            Category
-                          </option>
-                          <option value="feed">Feed</option>
-                          <option value="suplements">Suplements</option>
-                          <option value="medication">Medication</option>
-                          <option value="other">Other</option>
-                        </select>
+                        <Select onValueChange={(val) => setCategory(val)}>
+                          <SelectTrigger className="h-12 w-full bg-white text-black">
+                            <SelectValue placeholder="Select Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="feed">Feed</SelectItem>
+                            <SelectItem value="suplements">
+                              Suplements
+                            </SelectItem>
+                            <SelectItem value="medication">
+                              Medication
+                            </SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        {/* <select */}
+                        {/*   onChange={(e) => setCategory(e.target.value)} */}
+                        {/*   value={category} */}
+                        {/*   className="h-12 w-full rounded border px-1 py-2 text-black" */}
+                        {/* > */}
+                        {/*   <option value="" disabled> */}
+                        {/*     Category */}
+                        {/*   </option> */}
+                        {/*   <option value="feed">Feed</option> */}
+                        {/*   <option value="suplements">Suplements</option> */}
+                        {/*   <option value="medication">Medication</option> */}
+                        {/*   <option value="other">Other</option> */}
+                        {/* </select> */}
                       </fieldset>
 
                       {/* <label className="mb-1 block text-sm font-bold text-black">
                         Memo
                       </label> */}
-                      <textarea
-                        className="w-full appearance-none rounded border px-1 py-2 text-black"
+                      <Textarea
+                        className="w-full appearance-none rounded border bg-white px-2 py-2 text-black "
                         value={memo}
                         onChange={(e) => setMemo(e.target.value)}
                         placeholder="Memo..."
@@ -216,14 +283,16 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                     </form>
                   </div>
                   <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
-                    <button
-                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                    <Button
+                      variant="outline"
+                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase hover:bg-slate-50 focus:outline-none"
                       type="button"
                       onClick={closeModal}
                     >
                       CANCEL
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="secondary"
                       className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                       type="button"
                       disabled={isLoading}
@@ -245,7 +314,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
                       ) : (
                         "Submit"
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </motion.div>
