@@ -8,6 +8,23 @@ import { handleTimezone } from "./date-utils";
 import { format, startOfDay } from "date-fns";
 import { useRouter } from "next/navigation";
 import { Button } from "@components/ui/button";
+import { Input } from "@components/ui/input";
+import { Textarea } from "@components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@components/ui/popover";
+import { cn } from "@lib/utils";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar } from "@components/ui/calendar";
 
 const LogModal = ({ flockId }: { flockId: string | undefined }) => {
   const [showModal, setShowModal] = useState(false);
@@ -131,12 +148,13 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                 <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
                   <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
                     <h3 className="text-xl">Log Eggs</h3>
-                    <button
+                    <Button
+                      variant="ghost"
                       onClick={() => closeModal()}
                       className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
                     >
                       <MdClose />
-                    </button>
+                    </Button>
                   </div>
                   <div className="relative flex-auto">
                     <form
@@ -172,23 +190,54 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         displayFormat={"MM/DD/YYYY"}
                         toggleClassName="absolute top-0 rounded-r-lg text-white right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
                       /> */}
-                      <input
-                        id="date"
-                        className="w-full appearance-none rounded border px-1 py-2 text-black"
-                        max={format(new Date(), "yyyy-MM-dd")}
-                        required
-                        value={format(handleTimezone(date), "yyyy-MM-dd")}
-                        onChange={(event) =>
-                          setDate(handleTimezone(new Date(event.target.value)))
-                        }
-                        type="date"
-                      />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "h-12 w-full justify-start bg-white text-left font-normal",
+                              !date && "text-muted-foreground",
+                            )}
+                          >
+                            <CalendarIcon className="mr-2 h-4 w-4" />
+                            {date ? (
+                              format(date, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0">
+                          <Calendar
+                            mode="single"
+                            selected={date}
+                            onSelect={(date) => {
+                              return setDate(handleTimezone(date));
+                            }}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      {/* <input */}
+                      {/*   id="date" */}
+                      {/*   className="w-full appearance-none rounded border px-1 py-2 text-black" */}
+                      {/*   max={format(new Date(), "yyyy-MM-dd")} */}
+                      {/*   required */}
+                      {/*   value={format(handleTimezone(date), "yyyy-MM-dd")} */}
+                      {/*   onChange={(event) => */}
+                      {/*     setDate(handleTimezone(new Date(event.target.value))) */}
+                      {/*   } */}
+                      {/*   type="date" */}
+                      {/* /> */}
                       {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                         Count
                       </label> */}
-                      <input
+                      <Input
                         type="tel"
-                        className="w-full appearance-none rounded border px-2 py-2 text-black"
+                        className="h-12 w-full rounded border bg-white px-2 py-2 text-black"
                         required
                         value={count}
                         onChange={(e) => setCount(Number(e.target.value))}
@@ -199,29 +248,46 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                         {/* <label className="mb-1 mt-2 block text-sm font-bold text-black">
                           Bird(s) (optional)
                         </label> */}
-                        <select
-                          onChange={(e) => setBreedId(e.target.value)}
-                          value={breedId}
-                          className="h-12 w-full rounded border px-1 py-2 text-black"
-                        >
-                          <option value="">Select bird(s) (Optional)</option>
-                          {flockQuery.data?.breeds
-                            .filter((breed) => breed.averageProduction > 0)
-                            .map((breed) => {
-                              return (
-                                <option value={breed.id} key={breed.id}>
-                                  {breed.name && `${breed.name} - `}
-                                  {breed.breed}
-                                </option>
-                              );
-                            })}
-                        </select>
+                        <Select onValueChange={(val) => setBreedId(val)}>
+                          <SelectTrigger className="h-12 w-full bg-white text-black">
+                            <SelectValue placeholder="Select bird(s) (Optional)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {flockQuery.data?.breeds
+                              .filter((breed) => breed.averageProduction > 0)
+                              .map((breed) => {
+                                return (
+                                  <SelectItem value={breed.id} key={breed.id}>
+                                    {breed.name && `${breed.name} - `}
+                                    {breed.breed}
+                                  </SelectItem>
+                                );
+                              })}
+                          </SelectContent>
+                        </Select>
+                        {/* <select */}
+                        {/*   onChange={(e) => setBreedId(e.target.value)} */}
+                        {/*   value={breedId} */}
+                        {/*   className="h-12 w-full rounded border px-1 py-2 text-black" */}
+                        {/* > */}
+                        {/*   <option value="">Select bird(s) (Optional)</option> */}
+                        {/*   {flockQuery.data?.breeds */}
+                        {/*     .filter((breed) => breed.averageProduction > 0) */}
+                        {/*     .map((breed) => { */}
+                        {/*       return ( */}
+                        {/*         <option value={breed.id} key={breed.id}> */}
+                        {/*           {breed.name && `${breed.name} - `} */}
+                        {/*           {breed.breed} */}
+                        {/*         </option> */}
+                        {/*       ); */}
+                        {/*     })} */}
+                        {/* </select> */}
                       </fieldset>
                       {/* <label className="mb-1 block text-sm font-bold text-black">
                         Notes
                       </label> */}
-                      <textarea
-                        className="w-full appearance-none rounded border px-1 py-2 text-black"
+                      <Textarea
+                        className="w-full rounded border bg-white px-2 py-2 text-black"
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Notes..."
@@ -229,14 +295,16 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                     </form>
                   </div>
                   <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
-                    <button
-                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+                    <Button
+                      variant="outline"
+                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase hover:bg-slate-50 focus:outline-none"
                       type="button"
                       onClick={closeModal}
                     >
                       CANCEL
-                    </button>
-                    <button
+                    </Button>
+                    <Button
+                      variant="secondary"
                       className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                       type="button"
                       disabled={isLoading}
@@ -257,7 +325,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                       ) : (
                         "Submit"
                       )}
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </motion.div>
