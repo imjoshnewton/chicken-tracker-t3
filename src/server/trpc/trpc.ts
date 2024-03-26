@@ -28,6 +28,20 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
+  // console.log(ctx.auth);
+  //
+  // const primaryEmail = ctx.auth.user?.emailAddresses.find(
+  //   (email) => email.id === ctx.auth.user?.primaryEmailAddressId,
+  // );
+  //
+  // console.log(primaryEmail);
+  //
+  // if (!primaryEmail) {
+  //   throw new TRPCError({
+  //     code: "UNAUTHORIZED",
+  //   });
+  // }
+
   const [dbUser] = await ctx.db
     .select()
     .from(user)
