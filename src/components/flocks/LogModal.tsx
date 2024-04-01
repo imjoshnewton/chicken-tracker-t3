@@ -297,7 +297,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                   <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
                     <Button
                       variant="outline"
-                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase hover:bg-slate-50 focus:outline-none"
+                      className="background-transparent mb-1 mr-1 rounded px-6 py-3 uppercase hover:bg-slate-50 focus:outline-none"
                       type="button"
                       onClick={closeModal}
                     >
@@ -305,7 +305,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
                     </Button>
                     <Button
                       variant="secondary"
-                      className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+                      className="btn mb-1 mr-1 rounded px-6 py-3 font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
                       type="button"
                       disabled={isLoading}
                       onClick={async () => {

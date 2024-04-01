@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import superjson from "superjson";
 
 import { type Context } from "./context";
+import { clerkClient } from "@clerk/nextjs";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -29,9 +30,12 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
   }
 
   // console.log(ctx.auth);
+  // const clerkUser = ctx.auth.userId
+  //   ? await clerkClient.users.getUser(ctx.auth.userId)
+  //   : null;
   //
-  // const primaryEmail = ctx.auth.user?.emailAddresses.find(
-  //   (email) => email.id === ctx.auth.user?.primaryEmailAddressId,
+  // const primaryEmail = clerkUser?.emailAddresses.find(
+  //   (email) => email.id === clerkUser.primaryEmailAddressId,
   // );
   //
   // console.log(primaryEmail);
@@ -41,6 +45,8 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
   //     code: "UNAUTHORIZED",
   //   });
   // }
+  //
+  console.log(ctx.auth.userId);
 
   const [dbUser] = await ctx.db
     .select()
