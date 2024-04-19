@@ -7,7 +7,7 @@ import { user as Users } from "@lib/db/schema";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 
-const webhookSecret = "whsec_+SfGI52GxrWmhHBZfEGRajXHCDTIFE7a";
+const webhookSecret = "whsec_ITq1TGfSvKy1eKVfFnUkkLTDuwHWR1Rp";
 
 export const runtime = "edge";
 
@@ -25,7 +25,7 @@ async function handler(request: Request) {
   try {
     evt = wh.verify(
       JSON.stringify(payload),
-      heads as IncomingHttpHeaders & WebhookRequiredHeaders
+      heads as IncomingHttpHeaders & WebhookRequiredHeaders,
     ) as Event;
   } catch (err) {
     console.error((err as Error).message);
@@ -41,7 +41,7 @@ async function handler(request: Request) {
     const clerkId = id as string;
     const name = `${attributes.first_name} ${attributes.last_name}`;
     const email = (attributes.email_addresses as any).find(
-      (e: any) => e.id == attributes.primary_email_address_id
+      (e: any) => e.id == attributes.primary_email_address_id,
     )?.email_address as string;
     const image = attributes.image_url as string;
 
