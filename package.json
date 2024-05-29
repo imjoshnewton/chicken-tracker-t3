@@ -54,6 +54,7 @@
     "framer-motion": "^10.12.5",
     "google-auth-library": "^9.1.0",
     "html-to-image": "^1.11.11",
+    "langchain": "^0.1.37",
     "next": "^14.0.0",
     "next-auth": "^4.22.1",
     "next-pwa": "^5.6.0",
