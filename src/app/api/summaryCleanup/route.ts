@@ -1,5 +1,5 @@
 import * as admin from "firebase-admin";
-import { verifySignatureEdge } from "@upstash/qstash/dist/nextjs";
+import { verifySignatureEdge } from "@upstash/qstash/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
 const serviceAccount = require("./chicken-tracker-83ef8-firebase-adminsdk-dwql3-a73864962e.json");

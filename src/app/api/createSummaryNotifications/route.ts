@@ -1,12 +1,12 @@
 import { db } from "@lib/db";
 import { flock, notification } from "@lib/db/schema";
 import { createId } from "@paralleldrive/cuid2";
-import { verifySignatureEdge } from "@upstash/qstash/dist/nextjs";
+import { verifySignatureEdge } from "@upstash/qstash/nextjs";
 import { subMonths } from "date-fns";
 import { eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
-async function handler(req: NextRequest) {
+async function handler(_req: NextRequest) {
   const today = new Date();
   const monthNum = subMonths(today, 1).getMonth() + 1;
   const monthString = monthNum < 10 ? `0${monthNum}` : monthNum.toString();
