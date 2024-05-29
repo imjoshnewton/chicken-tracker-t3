@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 // import type { Breed, Flock } from "@prisma/client";
-import Loader from "../../../components/shared/Loader";
-import { MdImage, MdOutlineDelete } from "react-icons/md";
-import toast from "react-hot-toast";
-import Image from "next/image";
-import { createFlock, deleteFlock, updateFlock } from "../server";
-import { trpc } from "@utils/trpc";
 import type { Breed, Flock } from "@lib/db/schema";
+import { storage } from "@lib/firebase";
+import { trpc } from "@utils/trpc";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { MdImage, MdOutlineDelete } from "react-icons/md";
+import Loader from "../../../components/shared/Loader";
+import { createFlock, deleteFlock, updateFlock } from "../server";
 
 export default function FlockForm({
   flock,
@@ -28,18 +30,69 @@ export default function FlockForm({
   onDelete?: () => void;
 }) {
   const router = useRouter();
-  const { register, handleSubmit, formState, reset, watch } = useForm({
+  const { register, handleSubmit, formState, watch } = useForm({
     defaultValues: { ...flock, image: null as any, default: false },
     mode: "onChange",
   });
 
-  const { isValid, isDirty, errors } = formState; // TO-DO: embed errors if they exist in the page
+  const { isValid, isDirty } = formState; // TO-DO: embed errors if they exist in the page
 
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
   const utils = trpc.useContext();
+
+  // TO-DO: move this to the libs folder
+  const uploadFile = useCallback(
+    async (e: any) => {
+      // Get the file
+      const file: any = Array.from(e)[0];
+      const extension = file.type.split("/")[1];
+
+      // Makes reference to the storage bucket location
+      const uploadRef = ref(
+        storage,
+        `uploads/${userId}/${flock.id}.${extension}`,
+      );
+      setUploading(true);
+
+      // Starts the upload
+      const task = uploadBytesResumable(uploadRef, file);
+
+      // Listen to updates to upload task
+      task.on("state_changed", (snapshot) => {
+        const pct = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+        setProgress(Number(pct));
+      });
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then(() => getDownloadURL(uploadRef))
+        .then((url) => {
+          if (typeof url == "string") {
+            setDownloadURL(url);
+            setUploading(false);
+          }
+          // handler(downloadURL);
+        });
+    },
+    [flock.id, userId],
+  );
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      console.log("Watch: ", value, name, type);
+
+      if (name == "image" && type == "change") {
+        uploadFile(value.image);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, uploadFile]);
 
   const createOrUpdateFlock = (
     flockData: Flock & { breeds: Breed[] } & { default: boolean },
