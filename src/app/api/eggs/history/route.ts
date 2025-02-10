@@ -46,7 +46,7 @@ export async function GET(req: Request) {
 
   const result = dateList.map((date) => ({
     date,
-    eggs: date ? dataMap.get(date) : 0,
+    eggs: date ? dataMap.get(date) ?? 0 : 0,
   }));
 
   return NextResponse.json(result);
