@@ -9,6 +9,9 @@ export default authMiddleware({
     "/api/summaryCleanup",
     "/api/createSummaryNotifications",
     "/api/webhooks/user",
+    "/api/eggs",
+    "/api/eggs/stats",
+    "/api/eggs/history",
   ],
 });
 // {
