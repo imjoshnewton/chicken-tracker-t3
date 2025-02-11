@@ -24,7 +24,8 @@ export async function GET(req: Request) {
   const dateList = Array.from({ length: days }, (_, i) => {
     const d = new Date();
     d.setDate(today.getDate() - i);
-    return d.toISOString().split("T")[0];
+    d.setUTCHours(0, 0, 0, 0); // Force to UTC midnight
+    return d.toISOString().split("T")[0]; // Ensure correct format (YYYY-MM-DD)
   }).reverse();
 
   const dbResults = await db
