@@ -49,5 +49,5 @@ export async function GET(req: Request) {
     eggs: date ? dataMap.get(date) ?? 0 : 0,
   }));
 
-  return NextResponse.json(result);
+  return NextResponse.json({ eggs_data: result });
 }
