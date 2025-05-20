@@ -11,20 +11,39 @@ const runMigrate = async () => {
   }
 
   // Use postgres.js for migrations
-  const connection = postgres(process.env.POSTGRES_URL, { max: 1 });
+  // For migrations, we use a dedicated connection with optimized settings:
+  // - max: 1 - Only need one connection for migrations
+  // - timeout: Longer timeout for potentially complex migrations
+  // - idle_timeout: Close connection after 10 seconds of inactivity
+  // - connect_timeout: Allow more time to establish initial connection
+  const connection = postgres(process.env.POSTGRES_URL, { 
+    max: 1,
+    idle_timeout: 10, 
+    connect_timeout: 10,
+    ssl: true,
+    application_name: "chicken-tracker-migrations" 
+  });
+  
   const db = drizzle(connection);
 
   console.log("⏳ Running migrations...");
 
   const start = Date.now();
 
-  await migrate(db, { migrationsFolder: "src/lib/db/migrations" });
-
-  const end = Date.now();
-
-  console.log(`✅ Migrations completed in ${end - start}ms`);
-
-  process.exit(0);
+  try {
+    await migrate(db, { migrationsFolder: "src/lib/db/migrations" });
+    
+    const end = Date.now();
+    console.log(`✅ Migrations completed in ${end - start}ms`);
+  } catch (error) {
+    console.error("❌ Migration failed");
+    console.error(error);
+    process.exit(1);
+  } finally {
+    // Explicitly end the connection to avoid hanging
+    await connection.end();
+    process.exit(0);
+  }
 };
 
 runMigrate().catch((err) => {
