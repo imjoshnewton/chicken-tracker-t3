@@ -1,19 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+// Import from '@lib/db' instead
+// This file is kept for backwards compatibility
+// New code should use the Drizzle client from '@lib/db'
 
-import { env } from "../../env/server.mjs";
+import { db } from "@lib/db";
 
-declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
-}
+// Re-export the DB client
+export { db as prisma };
 
-export const prisma =
-  global.prisma ||
-  new PrismaClient({
-    log:
-      env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
-  });
-
-if (env.NODE_ENV !== "production") {
-  global.prisma = prisma;
-}
+// Export the sql client for direct query usage if needed
+export { sql } from "@lib/db";
