@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 // import type { Breed, Flock } from "@prisma/client";
-import type { Breed, Flock } from "@lib/db/schema";
+import type { Breed, Flock } from "@lib/db/schema-postgres";
 import { storage } from "@lib/firebase";
 import { trpc } from "@utils/trpc";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -118,7 +118,7 @@ export default function FlockForm({
           }),
           {
             loading: `Saving flock`,
-            success: (data) => `${data.name} updated successfully!!`,
+            success: (data: { name: string }) => `${data.name} updated successfully!!`,
             error: (err) => `This just happened: ${err.toString()}`,
           },
         )
@@ -139,7 +139,7 @@ export default function FlockForm({
           }),
           {
             loading: `Creating flock`,
-            success: (data) => `${data.name} created successfully!`,
+            success: (data: { name: string }) => `${data.name} created successfully!`,
             error: (err) => `This just happened: ${err.toString()}`,
           },
         )
@@ -154,7 +154,7 @@ export default function FlockForm({
     toast
       .promise(deleteFlock({ flockId }), {
         loading: `Deleting flock`,
-        success: (data) => `${data.name} deleted successfully!`,
+        success: (data: { name: string }) => `${data.name} deleted successfully!`,
         error: (err) => `This just happened: ${err.toString()}`,
       })
       .then(() => {

@@ -264,16 +264,10 @@ export const verificationToken = mysqlTable(
   },
 );
 
-export const dateTest = mysqlTable(
-  "DateTest",
-  {
-    dt_column: datetime("dt_column").notNull(),
-    d_column: date("d_column").notNull(),
-  },
-  (table) => {
-    return {};
-  },
-);
+export const dateTest = mysqlTable("DateTest", {
+  dt_column: datetime("dt_column").notNull(),
+  d_column: date("d_column").notNull(),
+});
 
 export type User = typeof user.$inferInsert;
 export type Notification = typeof notification.$inferInsert;

@@ -1,4 +1,5 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+
 import { getServerClient } from "../_trpc/serverClient";
 import AppLayout from "./AppLayout";
 import { TrpcProvider } from "./Provider";

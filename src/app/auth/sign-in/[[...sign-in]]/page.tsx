@@ -1,12 +1,11 @@
 import { SignIn } from "@clerk/nextjs";
 
-export default function Page({
-  params,
-  searchParams,
-}: {
-  params: { slug: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+
+
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Page(props: any) {
+  const searchParams = await (props ? props.searchParams : {});
+  const params = props ? await props.params : {};
   const redirectUrl =
     typeof searchParams.redirect_url == "string"
       ? searchParams.redirect_url

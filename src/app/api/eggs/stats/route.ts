@@ -1,5 +1,5 @@
 import { db } from "@lib/db";
-import { eggLog } from "@lib/db/schema";
+import { eggLog } from "@lib/db/schema-postgres";
 import { eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 

@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@lib/db";
-import { eggLog, expense } from "@lib/db/schema";
+import { eggLog, expense } from "@lib/db/schema-postgres";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 // import toast from "react-hot-toast";

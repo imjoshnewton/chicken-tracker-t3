@@ -6,7 +6,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const AppHome = async () => {
   redirect("/app/flocks");

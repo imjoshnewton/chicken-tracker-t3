@@ -1,4 +1,4 @@
-import { type Notification } from "@lib/db/schema";
+import { type Notification } from "@lib/db/schema-postgres";
 import Link from "next/link";
 import { MdClose } from "react-icons/md";
 import { trpc } from "../utils/trpc";

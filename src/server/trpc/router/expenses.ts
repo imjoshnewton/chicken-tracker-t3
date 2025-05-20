@@ -1,4 +1,4 @@
-import { expense } from "@lib/db/schema";
+import { expense } from "@lib/db/schema-postgres";
 import { fetchExpenses } from "@lib/fetch";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";

@@ -1,10 +1,11 @@
-import { user } from "@lib/db/schema";
+import { user } from "@lib/db/schema-postgres";
 import { initTRPC, TRPCError } from "@trpc/server";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import superjson from "superjson";
 
 import { type Context } from "./context";
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/nextjs/server";
+
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -48,15 +49,21 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
   //
   console.log(ctx.auth.userId);
 
+  // Try to find user by primary or secondary Clerk ID
   const [dbUser] = await ctx.db
     .select()
     .from(user)
-    .where(eq(user.clerkId, ctx.auth.userId))
+    .where(
+      // Check both primary and secondary Clerk IDs
+      sql`${user.clerkId} = ${ctx.auth.userId} OR ${user.secondaryClerkId} = ${ctx.auth.userId}`
+    )
     .limit(1);
 
   if (!dbUser) {
+    console.error(`User not found with Clerk ID: ${ctx.auth.userId}`);
     throw new TRPCError({
       code: "UNAUTHORIZED",
+      message: "User not found in database"
     });
   }
 

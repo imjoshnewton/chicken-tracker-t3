@@ -1,13 +1,8 @@
 import withPWA from "next-pwa";
 import runtimeCaching from "next-pwa/cache.js";
 
-const pwa = withPWA({
-  dest: "./public",
-  register: true,
-  skipWaiting: true,
-  runtimeCaching,
-  disable: process.env.NODE_ENV === "development",
-});
+// Next.js 15 compatible runtime config
+
 // @ts-check
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -18,7 +13,6 @@ const pwa = withPWA({
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
-  swcMinify: true,
   // i18n: {
   //   locales: ["en"],
   //   defaultLocale: "en",
@@ -31,9 +25,23 @@ const config = {
     ],
     formats: ["image/avif", "image/webp"],
   },
-  // experimental: {
-  //   serverActions: true,
-  // },
+  // Transpile specific packages for Edge runtime compatibility
+  transpilePackages: ['scheduler', '@clerk/nextjs', '@clerk/clerk-react', '@clerk/shared'],
+  experimental: {
+    // Improved scheduler for edge runtime
+    optimizePackageImports: ['@clerk/nextjs', 'react-icons'],
+  },
+  // External packages for server components (new config in Next 15)
+  serverExternalPackages: ["@clerk/backend", "firebase-admin"],
 };
 
-export default pwa(config);
+// Apply PWA config
+const nextConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  runtimeCaching,
+  disable: process.env.NODE_ENV === "development",
+})(config);
+
+export default nextConfig;

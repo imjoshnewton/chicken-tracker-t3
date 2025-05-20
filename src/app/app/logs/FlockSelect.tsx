@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@components/ui/select";
 import { trpc } from "@utils/trpc";
+import { Flock } from "@lib/db/schema-postgres";
 import { usePathname, useRouter } from "next/navigation";
 
 // FlockSelect component
@@ -15,7 +16,7 @@ export default function FlockSelect() {
   const router = useRouter();
   const path = usePathname();
 
-  const { data: flocks } = trpc.flocks.getFlocks.useQuery();
+  const { data: flocks } = trpc.flocks.getFlocks.useQuery() as { data: Array<{id: string, name: string}> | undefined };
 
   const handleChange = (value: string) => {
     if (value === "All") router.push(path);

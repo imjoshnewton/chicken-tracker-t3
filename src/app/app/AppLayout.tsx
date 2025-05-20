@@ -18,9 +18,11 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
+
+
 import { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@utils/trpc";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { ReactElement, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
@@ -88,6 +90,25 @@ export default function AppLayout({
     },
   );
 
+  // Cast notifications to the correct type
+  const typedNotifications = notifications as unknown as {
+    id: string;
+    title: string;
+    message: string;
+    date?: string;
+    read: boolean;
+    readDate?: string | null;
+    userId: string;
+    link: string;
+    action?: string;
+  }[];
+
+  // Function to safely count unread notifications
+  const countUnreadNotifications = () => {
+    if (!typedNotifications || !Array.isArray(typedNotifications)) return 0;
+    return typedNotifications.filter(not => not && not.read === false).length;
+  };
+
   return (
     <>
       <Toaster position="top-right" />
@@ -151,9 +172,7 @@ export default function AppLayout({
                   ref={notificationsButtonRef}
                   aria-haspopup="true" // indicates that this button triggers a popover
                   aria-expanded={notificationsOpen} // indicates whether the popover is open or closed
-                  aria-label={`Toggle notifications - ${
-                    notifications?.filter((not) => !not.read).length
-                  } unread notifications`} // provides a descriptive name for the button
+                  aria-label={`Toggle notifications - ${countUnreadNotifications()} unread notifications`} // provides a descriptive name for the button
                   role="button"
                   type="button"
                   className={`animate__animated animate__fadeInRight relative cursor-pointer px-3 py-3 hover:bg-slate-400/10 hover:text-white ${
@@ -166,14 +185,10 @@ export default function AppLayout({
                   <MdNotifications aria-hidden className="text-2xl" />
                   <div
                     className={`${
-                      notifications?.length
-                        ? notifications.filter((not) => !not.read).length > 0
-                          ? "opacity-100"
-                          : "opacity-0"
-                        : "opacity-0"
+                      countUnreadNotifications() > 0 ? "opacity-100" : "opacity-0"
                     } absolute right-1 top-0 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                   >
-                    {notifications?.filter((not) => !not.read).length}
+                    {countUnreadNotifications()}
                   </div>
                 </Button>
                 {/* <div className="user-name animate__animated animate__fadeInLeft hidden lg:block">
@@ -228,9 +243,9 @@ export default function AppLayout({
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
-        {notifications?.length ? (
+        {typedNotifications?.length ? (
           <NotificationsList
-            notifications={notifications}
+            notifications={typedNotifications}
             notificationsOpen={notificationsOpen}
             closeMenu={() => {
               setNotificationsOpen(false);
@@ -312,11 +327,16 @@ function SidebarNavLink({
         </Link>
         {/* <AnimatePresence mode="wait" initial={false}> */}
         {pathName?.startsWith(path) && (
-          <motion.div
-            layoutId="highlight"
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]"
-          ></motion.div>
+          <div className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]">
+            {/* Specify HTMLMotionProps explicitly to help TypeScript */}
+            {(() => {
+              const motionProps: HTMLMotionProps<"div"> = {
+                layoutId: "highlight",
+                transition: { type: "spring", bounce: 0.2, duration: 0.6 }
+              };
+              return <motion.div {...motionProps} />;
+            })()}
+          </div>
         )}
         {/* </AnimatePresence> */}
       </li>

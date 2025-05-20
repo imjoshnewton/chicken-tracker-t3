@@ -13,7 +13,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 // Log item component
 function LogItem({ log, index }: { log: EggLog; index: number }) {
@@ -35,11 +35,9 @@ function LogItem({ log, index }: { log: EggLog; index: number }) {
   );
 }
 
-async function Logs({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Page(props: any) {
+  const searchParams = await props.searchParams || {};
   const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
   const flockId = searchParams.flockId as string;
@@ -65,4 +63,3 @@ async function Logs({
   );
 }
 
-export default Logs;

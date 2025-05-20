@@ -6,16 +6,13 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-const Summary = async ({
-  params,
-  searchParams,
-}: {
-  params: { flockId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Summary(props: any) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const flockId = params.flockId;
-  const month = searchParams.month as string;
-  const year = searchParams.year as string;
+  const month = searchParams?.month as string;
+  const year = searchParams?.year as string;
 
   const summary = await getSummaryData({
     flockId: typeof flockId == "string" ? flockId : "",
@@ -32,6 +29,4 @@ const Summary = async ({
       </main>
     </>
   );
-};
-
-export default Summary;
+}

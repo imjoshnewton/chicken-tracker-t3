@@ -1,6 +1,6 @@
 import { currentUsr } from "@lib/auth";
 import { fetchExpenses } from "@lib/fetch";
-import { type Expense } from "@lib/db/schema";
+import { type Expense } from "@lib/db/schema-postgres";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
 import Card from "../../../components/shared/Card";
@@ -13,7 +13,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 // Expense item component
 function ExpenseItem({ expense, index }: { expense: Expense; index: number }) {
@@ -35,11 +35,9 @@ function ExpenseItem({ expense, index }: { expense: Expense; index: number }) {
   );
 }
 
-async function Expenses({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Page(props: any) {
+  const searchParams = await props.searchParams || {};
   const user = await currentUsr();
   const page = parseInt(searchParams.page as string) || 0;
   const flockId = searchParams.flockId as string;
@@ -65,4 +63,3 @@ async function Expenses({
   );
 }
 
-export default Expenses;

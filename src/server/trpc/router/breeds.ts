@@ -1,4 +1,4 @@
-import { breed } from "@lib/db/schema";
+import { breed } from "@lib/db/schema-postgres";
 import { createId } from "@paralleldrive/cuid2";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -55,7 +55,7 @@ export const breedsRouter = router({
     .mutation(async ({ input, ctx }) => {
       return await ctx.db
         .update(breed)
-        .set({ deleted: 1 })
+        .set({ deleted: true })
         .where(eq(breed.id, input.id));
     }),
 });

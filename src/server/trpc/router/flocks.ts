@@ -8,7 +8,7 @@ import {
   user,
   task,
   flock,
-} from "@lib/db/schema";
+} from "@lib/db/schema-postgres";
 import { eq, and, not } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 
@@ -24,7 +24,7 @@ export const flocksRouter = router({
         where: eq(Flocks.id, input.flockId),
         with: {
           breeds: {
-            where: eq(Breeds.deleted, 0),
+            where: eq(Breeds.deleted, false),
             orderBy: (breeds, { asc }) => [asc(breeds.id)],
           },
         },

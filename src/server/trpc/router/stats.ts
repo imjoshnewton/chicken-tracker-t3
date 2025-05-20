@@ -1,24 +1,7 @@
-import { eggLog, expense } from "@lib/db/schema";
+import { eggLog, expense } from "@lib/db/schema-postgres";
 import { getSummaryData } from "@lib/fetch";
-import {
-  endOfDay,
-  format,
-  parseISO,
-  startOfDay,
-  subDays,
-  subMonths,
-} from "date-fns";
-import {
-  and,
-  asc,
-  between,
-  desc,
-  eq,
-  gte,
-  inArray,
-  lte,
-  sql,
-} from "drizzle-orm";
+import { endOfDay, format, startOfDay, subMonths } from "date-fns";
+import { and, between, desc, eq, inArray, sql } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
@@ -37,7 +20,7 @@ export const statsRouter = router({
     )
     .query(async ({ input, ctx }) => {
       var today = endOfDay(input.range.to);
-      var pastDate = startOfDay(input.range.from);
+      // var pastDate = startOfDay(input.range.from);
 
       const from = startOfDay(input.range.from);
       const to = endOfDay(input.range.to);
@@ -135,7 +118,7 @@ export const statsRouter = router({
           flockId: expense.flockId,
           category: expense.category,
           total: sql<number>`sum(${expense.amount})`,
-          monthYear: sql<string>`concat(month(${expense.date}), '/', year(${expense.date}))`,
+          monthYear: sql<string>`concat(EXTRACT(MONTH FROM ${expense.date}), '/', EXTRACT(YEAR FROM ${expense.date}))`,
         })
         .from(expense)
         .where(
@@ -158,7 +141,7 @@ export const statsRouter = router({
         .select({
           flockId: eggLog.flockId,
           total: sql<number>`sum(${eggLog.count})`,
-          monthYear: sql<string>`concat(month(${eggLog.date}), '/', year(${eggLog.date}))`,
+          monthYear: sql<string>`concat(EXTRACT(MONTH FROM ${eggLog.date}), '/', EXTRACT(YEAR FROM ${eggLog.date}))`,
         })
         .from(eggLog)
         .where(
@@ -182,7 +165,7 @@ export const statsRouter = router({
     .input(
       z.object({ flockId: z.string(), month: z.string(), year: z.string() }),
     )
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const summary = await getSummaryData({
         flockId: input.flockId,
         month: input.month,

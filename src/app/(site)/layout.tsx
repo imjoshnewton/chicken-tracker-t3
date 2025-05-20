@@ -2,13 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
-import {
-  currentUser,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { currentUser, auth } from "@clerk/nextjs/server";
+
+
 
 export const metadata = {
   title: "FlockNerd - Egg-ceptional Insights",
@@ -93,7 +90,7 @@ export default async function RootLayout({
           {/* user is not signed-in */}
           <SignedOut>
             <li>
-              <SignInButton mode="modal" afterSignInUrl="/app/flocks/">
+              <SignInButton mode="modal">
                 <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in

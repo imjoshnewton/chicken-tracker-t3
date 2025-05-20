@@ -1,7 +1,7 @@
 import { addMonths, format, getDaysInMonth } from "date-fns";
 import { and, between, desc, eq, sql } from "drizzle-orm";
 import { db } from "./db";
-import { eggLog, expense, flock } from "./db/schema";
+import { eggLog, expense, flock } from "./db/schema-postgres";
 
 export const PAGE_SIZE = 25;
 

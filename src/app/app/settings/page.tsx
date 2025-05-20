@@ -1,11 +1,13 @@
 import { UserProfile } from "@clerk/nextjs";
 
+
+
 export const metadata = {
   title: "FlockNerd - Account Settings",
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const Settings = async () => {
   return (

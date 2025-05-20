@@ -1,4 +1,4 @@
-import { type Notification } from "@lib/db/schema";
+import { type Notification } from "@lib/db/schema-postgres";
 import { MdClose } from "react-icons/md";
 import NotificationActionButtons from "./NotifcationActionButtons";
 

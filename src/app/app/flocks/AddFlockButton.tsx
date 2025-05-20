@@ -1,7 +1,7 @@
 "use client";
 
 import { useUserData } from "@lib/hooks";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, HTMLMotionProps } from "framer-motion";
 import { useState } from "react";
 import { MdAdd, MdClose } from "react-icons/md";
 import FlockForm from "./FlockEditForm";
@@ -58,83 +58,68 @@ const AddFlockButton = () => {
       >
         {showModal && (
           <>
-            <motion.div
-              onClick={() => closeModal()}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="modal-overlay fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center"
-            >
-              <motion.div
-                onClick={(e) => e.stopPropagation()}
-                variants={dropIn}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="relative mx-auto h-full w-full min-w-[350px] rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg"
-              >
-                <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
-                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
-                    <h3 className="text-xl">New Flock</h3>
-                    <button
-                      onClick={() => closeModal()}
-                      className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
-                    >
-                      <MdClose />
-                    </button>
-                  </div>
-                  <div className="relative flex flex-auto flex-col">
-                    <FlockForm
-                      flock={{
-                        id: "",
-                        name: "",
-                        description: "",
-                        imageUrl: "",
-                        type: "",
-                        zip: "",
-                        userId: "",
-                        breeds: [],
-                        deleted: 0,
-                      }}
-                      userId={user?.id ?? ""}
-                      onCancel={closeModal}
-                      onComplete={closeModal}
-                    ></FlockForm>
-                  </div>
-                  {/* <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
-                    <button
-                      className="background-transparent mr-1 mb-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
-                      type="button"
-                      onClick={closeModal}
-                    >
-                      Close
-                    </button>
-                    <button
-                      className="btn mr-1 mb-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
-                      type="button"
-                      disabled={isLoading}
-                      onClick={async () => {
-                        // await createNewLog(flockId, date, count, notes);
-                        if (date && count) {
-                          await createNewLog(
-                            flockId,
-                            date, //new Date(date.startDate.toLocaleString()),
-                            count,
-                            notes
-                          );
-                        }
-                      }}
-                    >
-                      {isLoading ? (
-                        <RiLoader4Fill className="animate-spin text-2xl" />
-                      ) : (
-                        "Submit"
-                      )}
-                    </button>
-                  </div> */}
-                </div>
-              </motion.div>
-            </motion.div>
+            <div className="modal-overlay fixed inset-0 z-50 flex items-start justify-center overflow-y-auto overflow-x-hidden outline-none focus:outline-none lg:items-center">
+              <div onClick={() => closeModal()}>
+                {/* Modal backdrop with animation */}
+                {(() => {
+                  const backdropProps: HTMLMotionProps<"div"> = {
+                    initial: { opacity: 0 },
+                    animate: { opacity: 1 },
+                    exit: { opacity: 0 }
+                  };
+                  return (
+                    <motion.div {...backdropProps}>
+                      <div className="relative mx-auto h-full w-full min-w-[350px] rounded-t-sm pt-4 lg:my-6 lg:h-auto lg:w-auto lg:max-w-3xl lg:rounded-lg">
+                        <div onClick={(e) => e.stopPropagation()}>
+                          {/* Modal content with animation */}
+                          {(() => {
+                            const contentProps: HTMLMotionProps<"div"> = {
+                              variants: dropIn,
+                              initial: "hidden",
+                              animate: "visible",
+                              exit: "exit"
+                            };
+                            return (
+                              <motion.div {...contentProps}>
+                                <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
+                                  <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
+                                    <h3 className="text-xl">New Flock</h3>
+                                    <button
+                                      onClick={() => closeModal()}
+                                      className=" rounded p-3 text-xl hover:bg-slate-50 hover:shadow"
+                                    >
+                                      <MdClose />
+                                    </button>
+                                  </div>
+                                  <div className="relative flex flex-auto flex-col">
+                                    <FlockForm
+                                      flock={{
+                                        id: "",
+                                        name: "",
+                                        description: "",
+                                        imageUrl: "",
+                                        type: "",
+                                        zip: "",
+                                        userId: "",
+                                        breeds: [],
+                                        deleted: false,
+                                      }}
+                                      userId={(user as any)?.id ?? ""}
+                                      onCancel={closeModal}
+                                      onComplete={closeModal}
+                                    ></FlockForm>
+                                  </div>
+                                </div>
+                              </motion.div>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                })()}
+              </div>
+            </div>
           </>
         )}
       </AnimatePresence>

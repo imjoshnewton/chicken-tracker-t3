@@ -1,4 +1,4 @@
-import { eggLog } from "@lib/db/schema";
+import { eggLog } from "@lib/db/schema-postgres";
 import { fetchLogs } from "@lib/fetch";
 import { createId } from "@paralleldrive/cuid2";
 import { format } from "date-fns";

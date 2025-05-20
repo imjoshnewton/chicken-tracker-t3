@@ -1,4 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
+
+
 import { Noto_Sans } from "next/font/google";
 import "../styles/globals.scss";
 import "animate.css";

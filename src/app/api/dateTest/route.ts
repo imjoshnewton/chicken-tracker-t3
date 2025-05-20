@@ -1,22 +1,17 @@
 import { NextResponse } from "next/server";
-import { createId } from "@paralleldrive/cuid2";
 import { db } from "@lib/db";
-import { dateTest } from "@lib/db/schema";
 
 export const runtime = "edge";
+export const preferredRegion = "auto";
 
 export const GET = async (req: Request) => {
-  const id = createId();
+  // Simple endpoint for testing database connectivity
+  const currentTimeResult = await db.execute(
+    "SELECT NOW() as current_time"
+  );
 
-  await db.insert(dateTest).values({
-    d_column: new Date(),
-    dt_column: new Date(),
-  });
-
-  const result = await db.select().from(dateTest);
-
-  console.log("Date:; ", new Date());
-  console.log("Result: ", result);
-
-  return NextResponse.json({ result }, { status: 200 });
+  return NextResponse.json({ 
+    connection: "PostgreSQL connection successful",
+    currentTime: currentTimeResult.rows[0]?.current_time || new Date().toISOString(),
+  }, { status: 200 });
 };

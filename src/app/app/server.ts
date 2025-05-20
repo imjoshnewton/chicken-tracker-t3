@@ -9,7 +9,7 @@ import {
   Task,
   task as Tasks,
   user as Users,
-} from "@lib/db/schema";
+} from "@lib/db/schema-postgres";
 import { createId } from "@paralleldrive/cuid2";
 import { addDays, addMonths, addWeeks } from "date-fns";
 import { eq } from "drizzle-orm";
@@ -151,7 +151,7 @@ export async function markNotificationAsRead(input: {
   await db
     .update(Notifications)
     .set({
-      read: 1,
+      read: true,
     })
     .where(eq(Notifications.id, input.notificationId));
 
@@ -228,7 +228,7 @@ export async function updateTask(input: {
     .update(Tasks)
     .set({
       ...input,
-      completed: input.completed ? 1 : 0,
+      completed: input.completed,
       dueDate: formatDateForMySQL(input.dueDate),
     })
     .where(eq(Tasks.id, input.id));
@@ -266,7 +266,7 @@ export async function markTaskAsComplete(input: {
           dueDate: formatDateForMySQL(addDays(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
-          completed: 0,
+          completed: false,
           flockId: task.flockId,
           userId: task.userId,
         },
@@ -286,7 +286,7 @@ export async function markTaskAsComplete(input: {
           dueDate: formatDateForMySQL(addWeeks(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
-          completed: 0,
+          completed: false,
           flockId: task.flockId,
           userId: task.userId,
         },
@@ -306,7 +306,7 @@ export async function markTaskAsComplete(input: {
           dueDate: formatDateForMySQL(addMonths(new Date(task.dueDate), 1)),
           recurrence: task.recurrence,
           status: "active",
-          completed: 0,
+          completed: false,
           flockId: task.flockId,
           userId: task.userId,
         },
@@ -326,7 +326,7 @@ async function completeTask(taskId: string) {
   await db
     .update(Tasks)
     .set({
-      completed: 1,
+      completed: true,
     })
     .where(eq(Tasks.id, taskId));
 

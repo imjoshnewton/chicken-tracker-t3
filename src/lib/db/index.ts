@@ -1,19 +1,10 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-import * as schema from "./schema";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+import { sql } from "@vercel/postgres";
+import * as schema from "./schema-postgres";
 
-const client = new Client({
-  host: process.env.DATABASE_HOST,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-});
+// Use Vercel's postgres client with Neon database
+// It will automatically use the POSTGRES_URL environment variable
+export const db = drizzle(sql, { schema });
 
-// create database connection
-// const connection = connect({
-//   // url: process.env.DATABASE_URL,
-//   host: process.env.DATABASE_HOST,
-//   username: process.env.DATABASE_USERNAME,
-//   password: process.env.DATABASE_PASSWORD,
-// });
-
-export const db = drizzle(client, { schema });
+// Export sql for direct query usage if needed
+export { sql };
