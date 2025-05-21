@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 import Loader from "../../../components/shared/Loader";
 import { createFlock, deleteFlock, updateFlock } from "../server";
+import { Button } from "@components/ui/button";
 
 export default function FlockForm({
   flock,
@@ -258,25 +259,24 @@ export default function FlockForm({
             >
               <MdOutlineDelete />
             </button>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
               onClick={() => {
                 if (onCancel) onCancel();
                 else router.push(`/app/flocks/${flock.id}`);
               }}
-              className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
             >
-              CANCEL
-            </button>
+              Cancel
+            </Button>
           </>
         )}
-        <button
+        <Button
           type="submit"
-          className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+          variant="secondary"
           disabled={!isDirty || !isValid}
         >
-          {flock.id ? "SAVE" : "CREATE"}
-        </button>
+          {flock.id ? "Save" : "Create"}
+        </Button>
       </div>
     </form>
   );

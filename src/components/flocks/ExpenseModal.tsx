@@ -101,7 +101,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
     <div className="pb-8">
       <DialogClose asChild>
         <Button
-          variant="outline"
+          variant="ghost"
           type="button"
           onClick={closeModal}
         >

@@ -102,7 +102,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       footer={
         <div className="pb-8">
           <DrawerClose asChild>
-            <Button variant="outline" onClick={closeModal}>
+            <Button variant="ghost" onClick={closeModal}>
               Cancel
             </Button>
           </DrawerClose>
