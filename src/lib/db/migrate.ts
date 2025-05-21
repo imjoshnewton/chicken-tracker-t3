@@ -13,15 +13,13 @@ const runMigrate = async () => {
   // Use postgres.js for migrations
   // For migrations, we use a dedicated connection with optimized settings:
   // - max: 1 - Only need one connection for migrations
-  // - timeout: Longer timeout for potentially complex migrations
   // - idle_timeout: Close connection after 10 seconds of inactivity
   // - connect_timeout: Allow more time to establish initial connection
   const connection = postgres(process.env.POSTGRES_URL, { 
     max: 1,
     idle_timeout: 10, 
     connect_timeout: 10,
-    ssl: true,
-    application_name: "chicken-tracker-migrations" 
+    ssl: true
   });
   
   const db = drizzle(connection);

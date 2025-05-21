@@ -60,7 +60,7 @@ export async function checkDatabaseConnection(): Promise<boolean> {
   try {
     // Simple query to check if the database is responsive
     const result = await sql`SELECT 1 as connected`;
-    return result.rows.length > 0 && result.rows[0].connected === 1;
+    return result.rows.length > 0 && result.rows[0]?.connected === 1;
   } catch (error) {
     console.error("Database connection check failed:", error);
     return false;

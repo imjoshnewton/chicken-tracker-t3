@@ -14,8 +14,7 @@ const pool = createPool({
   connectionTimeoutMillis: 5000, // 5 seconds to establish a connection
   idleTimeoutMillis: 10000, // 10 seconds idle before releasing connection
   keepAlive: true, // Keep connections alive to reduce connection churn
-  ssl: true, // Secure connections
-  application_name: "chicken-tracker" // Identify app in Neon monitoring
+  ssl: true // Secure connections
 });
 
 // Use Vercel's postgres client with Neon database
