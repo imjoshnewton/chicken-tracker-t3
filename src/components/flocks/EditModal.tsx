@@ -5,7 +5,7 @@ import FlockForm from "src/app/app/flocks/FlockEditForm";
 import { trpc } from "../../utils/trpc";
 import { useState } from "react";
 import { Button } from "@components/ui/button";
-import { ResponsiveDialog, DialogClose } from "@components/ui/responsive-dialog";
+import { ResponsiveDialog } from "@components/ui/responsive-dialog";
 
 const EditModal = ({
   userId,
@@ -16,11 +16,7 @@ const EditModal = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const {
-    data: flock,
-    isLoading,
-    isError,
-  } = trpc.flocks.getFlock.useQuery({ flockId });
+  const { data: flock } = trpc.flocks.getFlock.useQuery({ flockId });
 
   function handleClose() {
     setOpen(false);
@@ -40,11 +36,7 @@ const EditModal = ({
     </Button>
   );
 
-  const footer = (
-    <>
-      {/* Empty footer - Cancel button is in the form */}
-    </>
-  );
+  const footer = <>{/* Empty footer - Cancel button is in the form */}</>;
 
   return (
     <ResponsiveDialog
@@ -77,3 +69,4 @@ const EditModal = ({
 };
 
 export default EditModal;
+

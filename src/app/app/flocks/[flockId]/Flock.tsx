@@ -13,7 +13,7 @@ import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
 
 import EditModal from "@components/flocks/EditModal";
-import type { Breed, Flock, Task } from "@lib/db/schema-postgres";
+import type { Breed, Flock } from "@lib/db/schema-postgres";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { format, subDays } from "date-fns";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -188,12 +188,12 @@ const FlockActions = ({
 );
 
 const FlockInfo = ({ flock, flockId }: any) => (
-  <div className="flex flex-wrap items-center">
-    <motion.div
-      initial={{ opacity: 0, translateY: 10 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ duration: 0.5 }}
-    >
+  <motion.div
+    initial={{ opacity: 0, translateY: 10 }}
+    animate={{ opacity: 1, translateY: 0 }}
+    transition={{ duration: 0.5 }}
+  >
+    <div className="flex flex-wrap items-center">
       <Image
         src={flock?.imageUrl}
         width="150"
@@ -203,8 +203,8 @@ const FlockInfo = ({ flock, flockId }: any) => (
       />
       <FlockDetails flock={flock} />
       <Actions flockId={flockId} />
-    </motion.div>
-  </div>
+    </div>
+  </motion.div>
 );
 
 const FlockDetails = ({ flock }: any) => (

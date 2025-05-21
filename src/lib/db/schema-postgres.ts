@@ -33,14 +33,13 @@ export const account = pgTable(
     idToken: text("id_token"),
     sessionState: varchar("session_state", { length: 255 }),
   },
-  (table) => {
-    return {
-      providerProviderAccountIdKey: uniqueIndex(
-        "Account_provider_providerAccountId_key",
-      ).on(table.provider, table.providerAccountId),
-      userIdIdx: index("Account_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [
+    uniqueIndex("Account_provider_providerAccountId_key").on(
+      table.provider,
+      table.providerAccountId,
+    ),
+    index("Account_userId_idx").on(table.userId),
+  ],
 );
 
 export const breed = pgTable(
@@ -53,16 +52,10 @@ export const breed = pgTable(
     imageUrl: text("imageUrl"),
     averageProduction: doublePrecision("averageProduction").notNull(),
     flockId: varchar("flockId", { length: 255 }).notNull(),
-    breed: text("breed")
-      .default('')
-      .notNull(),
+    breed: text("breed").default("").notNull(),
     deleted: boolean("deleted").default(false).notNull(),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Breed_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [index("Breed_flockId_idx").on(table.flockId)],
 );
 
 export const breedRelations = relations(breed, ({ one }) => ({
@@ -82,12 +75,10 @@ export const eggLog = pgTable(
     flockId: varchar("flockId", { length: 255 }).notNull(),
     breedId: varchar("breedId", { length: 255 }),
   },
-  (table) => {
-    return {
-      breedIdIdx: index("EggLog_breedId_idx").on(table.breedId),
-      flockIdIdx: index("EggLog_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [
+    index("EggLog_breedId_idx").on(table.breedId),
+    index("EggLog_flockId_idx").on(table.flockId),
+  ],
 );
 
 export const eggLogRelations = relations(eggLog, ({ one }) => ({
@@ -107,11 +98,7 @@ export const expense = pgTable(
     flockId: varchar("flockId", { length: 255 }).notNull(),
     category: varchar("category", { length: 255 }).default("other").notNull(),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Expense_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [index("Expense_flockId_idx").on(table.flockId)],
 );
 
 export const expenseRelations = relations(expense, ({ one }) => ({
@@ -133,11 +120,7 @@ export const flock = pgTable(
     zip: varchar("zip", { length: 255 }).default(""),
     deleted: boolean("deleted").default(false).notNull(),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Flock_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [index("Flock_userId_idx").on(table.userId)],
 );
 
 export const flockRelations = relations(flock, ({ many, one }) => ({
@@ -166,11 +149,7 @@ export const notification = pgTable(
     link: varchar("link", { length: 255 }).notNull(),
     action: varchar("action", { length: 255 }).default("View").notNull(),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Notification_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [index("Notification_userId_idx").on(table.userId)],
 );
 
 export const session = pgTable(
@@ -181,14 +160,10 @@ export const session = pgTable(
     userId: varchar("userId", { length: 255 }).notNull(),
     expires: timestamp("expires", { precision: 3, mode: "string" }).notNull(),
   },
-  (table) => {
-    return {
-      sessionTokenKey: uniqueIndex("Session_sessionToken_key").on(
-        table.sessionToken,
-      ),
-      userIdIdx: index("Session_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [
+    uniqueIndex("Session_sessionToken_key").on(table.sessionToken),
+    index("Session_userId_idx").on(table.userId),
+  ],
 );
 
 export const task = pgTable(
@@ -205,13 +180,11 @@ export const task = pgTable(
     completed: boolean("completed").default(false).notNull(),
     completedAt: timestamp("completedAt", { precision: 3, mode: "string" }),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Task_flockId_idx").on(table.flockId),
-      userIdIdx: index("Task_userId_idx").on(table.userId),
-      taskId: primaryKey(table.id),
-    };
-  },
+  (table) => [
+    index("Task_flockId_idx").on(table.flockId),
+    index("Task_userId_idx").on(table.userId),
+    primaryKey({ columns: [table.id] }),
+  ],
 );
 
 export const taskRelations = relations(task, ({ one }) => ({
@@ -235,14 +208,12 @@ export const user = pgTable(
     clerkId: varchar("clerkId", { length: 255 }),
     secondaryClerkId: varchar("secondaryClerkId", { length: 255 }),
   },
-  (table) => {
-    return {
-      emailKey: uniqueIndex("User_email_key").on(table.email),
-      clerkIdKey: uniqueIndex("User_clerkId_key").on(table.clerkId),
-      clerkIdIdx: index("User_clerkId_idx").on(table.clerkId),
-      secondaryClerkIdIdx: index("User_secondaryClerkId_idx").on(table.secondaryClerkId),
-    };
-  },
+  (table) => [
+    uniqueIndex("User_email_key").on(table.email),
+    uniqueIndex("User_clerkId_key").on(table.clerkId),
+    index("User_clerkId_idx").on(table.clerkId),
+    index("User_secondaryClerkId_idx").on(table.secondaryClerkId),
+  ],
 );
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -256,14 +227,13 @@ export const verificationToken = pgTable(
     token: varchar("token", { length: 255 }).primaryKey().notNull(),
     expires: timestamp("expires", { precision: 3, mode: "string" }).notNull(),
   },
-  (table) => {
-    return {
-      identifierTokenKey: uniqueIndex(
-        "VerificationToken_identifier_token_key",
-      ).on(table.identifier, table.token),
-      tokenKey: uniqueIndex("VerificationToken_token_key").on(table.token),
-    };
-  },
+  (table) => [
+    uniqueIndex("VerificationToken_identifier_token_key").on(
+      table.identifier,
+      table.token,
+    ),
+    uniqueIndex("VerificationToken_token_key").on(table.token),
+  ],
 );
 
 export const dateTest = pgTable("DateTest", {
@@ -278,3 +248,4 @@ export type Flock = typeof flock.$inferInsert;
 export type Breed = typeof breed.$inferInsert;
 export type Expense = typeof expense.$inferInsert;
 export type EggLog = typeof eggLog.$inferInsert;
+
