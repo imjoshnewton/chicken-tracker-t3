@@ -12,10 +12,10 @@ This checklist outlines optimization tasks to reduce compute time on Neon databa
 
 ## Remaining Optimizations
 
-- [ ] Fix additional N+1 query patterns
-  - [ ] Audit other routers for N+1 patterns
-  - [ ] Update to use consolidated queries
-  - [ ] Use Promise.all for parallel queries where appropriate
+- [x] Fix additional N+1 query patterns
+  - [x] Audit other routers for N+1 patterns
+  - [x] Update to use consolidated queries
+  - [x] Use Promise.all for parallel queries where appropriate
 
 - [ ] Optimize edge function usage
   - [ ] Move read-heavy operations to edge functions
