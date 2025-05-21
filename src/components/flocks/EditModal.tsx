@@ -42,14 +42,7 @@ const EditModal = ({
 
   const footer = (
     <>
-      <DialogClose asChild>
-        <Button 
-          variant="outline" 
-          onClick={handleClose}
-        >
-          Cancel
-        </Button>
-      </DialogClose>
+      {/* Empty footer - Cancel button is in the form */}
     </>
   );
 

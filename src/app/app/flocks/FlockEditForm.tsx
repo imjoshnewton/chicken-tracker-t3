@@ -258,6 +258,16 @@ export default function FlockForm({
             >
               <MdOutlineDelete />
             </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (onCancel) onCancel();
+                else router.push(`/app/flocks/${flock.id}`);
+              }}
+              className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
+            >
+              CANCEL
+            </button>
           </>
         )}
         <button
