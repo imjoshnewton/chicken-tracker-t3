@@ -9,23 +9,25 @@ This checklist outlines optimization tasks to reduce compute time on Neon databa
 - [x] Add transaction support for mutations
 - [x] Fix N+1 query patterns in flock router
 - [x] Add proper connection cleanup in migrations
-
-## Remaining Optimizations
-
 - [x] Fix additional N+1 query patterns
   - [x] Audit other routers for N+1 patterns
   - [x] Update to use consolidated queries
   - [x] Use Promise.all for parallel queries where appropriate
+- [x] Add error handling with retries
+  - [x] Add retry logic to all database operations
+  - [x] Implement exponential backoff for retries
+  - [x] Add monitoring for database connection failures
+- [x] Batch operations where possible
+  - [x] Identify multi-operation tasks
+  - [x] Implement batching for related operations
+  - [x] Use transactions for atomic operations
+
+## Remaining Optimizations
 
 - [ ] Optimize edge function usage
   - [ ] Move read-heavy operations to edge functions
   - [ ] Identify routes that would benefit from edge runtime
   - [ ] Update route handlers with proper runtime directives
-
-- [ ] Add error handling with retries
-  - [ ] Add retry logic to all database operations
-  - [ ] Implement exponential backoff for retries
-  - [ ] Add monitoring for database connection failures
 
 - [ ] Add compound indexes
   - [ ] Identify frequently filtered columns
@@ -42,11 +44,6 @@ This checklist outlines optimization tasks to reduce compute time on Neon databa
   - [ ] Combine related aggregations into single queries
   - [ ] Use SQL window functions to reduce roundtrips
 
-- [ ] Batch operations where possible
-  - [ ] Identify multi-operation tasks
-  - [ ] Implement batching for related operations
-  - [ ] Use transactions for atomic operations
-
 - [ ] Server-side caching implementation
   - [ ] Add caching layer for summary statistics
   - [ ] Implement cache invalidation strategy
@@ -59,7 +56,11 @@ This checklist outlines optimization tasks to reduce compute time on Neon databa
 
 ## Performance Monitoring
 
+- [x] Create performance baseline
+  - [x] Add performance testing scripts for fetch operations
+  - [x] Add performance testing scripts for server actions
+  - [x] Document performance improvements (up to 52% faster server actions)
+
 - [ ] Set up database query monitoring
-- [ ] Create performance baseline
 - [ ] Track compute time savings after each optimization
 - [ ] Monitor connection usage patterns
