@@ -24,10 +24,10 @@ This checklist outlines optimization tasks to reduce compute time on Neon databa
 
 ## Remaining Optimizations
 
-- [ ] Optimize edge function usage
-  - [ ] Move read-heavy operations to edge functions
-  - [ ] Identify routes that would benefit from edge runtime
-  - [ ] Update route handlers with proper runtime directives
+- [x] Optimize edge function usage
+  - [x] Move read-heavy operations to edge functions
+  - [x] Identify routes that would benefit from edge runtime
+  - [x] Update route handlers with proper runtime directives
 
 - [ ] Add compound indexes
   - [ ] Identify frequently filtered columns
