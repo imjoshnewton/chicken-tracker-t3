@@ -91,7 +91,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       onOpenChange={setOpen}
       trigger={
         <Button
-          className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+          className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none"
           variant={"secondary"}
         >
           <MdOutlineEditNote className="text-2xl" />

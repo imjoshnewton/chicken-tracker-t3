@@ -88,7 +88,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const trigger = (
     <Button
-      className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none md:w-auto"
+      className="mb-1 mr-1 h-10 w-full rounded px-4 py-2 shadow outline-none transition-all focus:outline-none"
       type="button"
       variant={"secondary"}
     >
@@ -102,15 +102,14 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
       <DialogClose asChild>
         <Button
           variant="outline"
-          className="background-transparent rounded px-6 py-3 uppercase hover:bg-slate-50 focus:outline-none"
           type="button"
+          onClick={closeModal}
         >
-          CANCEL
+          Cancel
         </Button>
       </DialogClose>
       <Button
         variant="secondary"
-        className="btn rounded px-6 py-3 font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
         type="button"
         disabled={isLoading}
         onClick={handleSubmit}
