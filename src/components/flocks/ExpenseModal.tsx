@@ -130,7 +130,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
       footer={footer}
       open={showModal}
       onOpenChange={setShowModal}
-      contentClassName="bg-[#FEF9F6]"
+      contentClassName="bg-[#FEF9F6] p-0"
     >
       <form
         className="flex w-full flex-col gap-4 p-4"

@@ -130,7 +130,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       }
     >
       <form
-        className="flex w-full flex-col gap-4 py-4"
+        className="flex w-full flex-col gap-4 p-4"
         onSubmit={async (e) => {
           e.preventDefault();
           if (date && count) {
