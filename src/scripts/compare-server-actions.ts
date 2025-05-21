@@ -97,6 +97,10 @@ async function runTest() {
       // This is what original code does - separate SELECT after INSERT
       const [task] = await db.select().from(Tasks).where(eq(Tasks.id, taskId));
       
+      if (!task) {
+        throw new Error("Failed to retrieve the created task");
+      }
+      
       origTaskId = taskId;
       tasksToCleanup.push(taskId);
       return task;
@@ -120,9 +124,15 @@ async function runTest() {
         },
       ]).returning();
       
+      const task = insertResult[0];
+      
+      if (!task) {
+        throw new Error("Failed to create and return task");
+      }
+      
       optTaskId = taskId;
       tasksToCleanup.push(taskId);
-      return insertResult[0];
+      return task;
     },
     "Optimized createNewTask approach",
     ITERATIONS
@@ -172,6 +182,10 @@ async function runTest() {
       
       const [result] = await db.select().from(Tasks).where(eq(Tasks.id, origCompTaskId));
       
+      if (!result) {
+        throw new Error("Could not find task to mark as completed");
+      }
+      
       // Create next recurring task
       const newId = createId();
       origRecurringTaskId = newId;
@@ -192,6 +206,11 @@ async function runTest() {
       
       // Final select to get the task
       const [task] = await db.select().from(Tasks).where(eq(Tasks.id, newId));
+      
+      if (!task) {
+        throw new Error("Failed to retrieve the new recurring task");
+      }
+      
       tasksToCleanup.push(newId);
       
       return task;
@@ -204,16 +223,22 @@ async function runTest() {
   const optMarkCompleteTime = await measureAverageTime(
     async () => {
       // Do everything in one "transaction" (simulated here)
-      const [completedTask] = await db.update(Tasks)
+      const updateResult = await db.update(Tasks)
         .set({ completed: true })
         .where(eq(Tasks.id, optCompTaskId))
         .returning();
+      
+      const completedTask = updateResult[0];
+      
+      if (!completedTask) {
+        throw new Error("Could not find task to mark as completed");
+      }
       
       const newId = createId();
       optRecurringTaskId = newId;
       
       // Insert the new recurring task
-      const [newTask] = await db.insert(Tasks).values([
+      const insertResult = await db.insert(Tasks).values([
         {
           id: newId,
           title: completedTask.title,
@@ -226,6 +251,12 @@ async function runTest() {
           userId: completedTask.userId,
         },
       ]).returning();
+      
+      const newTask = insertResult[0];
+      
+      if (!newTask) {
+        throw new Error("Failed to create new recurring task");
+      }
       
       tasksToCleanup.push(newId);
       
