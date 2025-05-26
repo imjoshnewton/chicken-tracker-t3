@@ -177,7 +177,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
         </select>
         {errors.recurrence && <p>{errors.recurrence.message}</p>}
       </div>
-      <div className="border-blueGray-200 mt-auto flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
+      <div className="drawer-footer border-blueGray-200 mt-auto flex items-center justify-end rounded-b border-t border-solid p-3 lg:p-6">
         {task?.id && (
           <button
             type="button"

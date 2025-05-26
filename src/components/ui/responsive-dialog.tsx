@@ -73,7 +73,7 @@ export function ResponsiveDialog({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent className={className}>
+      <DrawerContent className={cn("drawer-container", className)}>
         {(title || description) && (
           <DrawerHeader className="text-left">
             {title && <DrawerTitle>{title}</DrawerTitle>}
@@ -82,9 +82,9 @@ export function ResponsiveDialog({
             )}
           </DrawerHeader>
         )}
-        <div className={cn("px-4", contentClassName)}>{children}</div>
+        <div className={cn("px-4 mobile-modal-content", contentClassName)}>{children}</div>
         {footer && (
-          <DrawerFooter className="flex flex-row justify-end gap-2 pt-2">
+          <DrawerFooter className="drawer-footer flex flex-row justify-end gap-2 pt-2">
             {footer}
           </DrawerFooter>
         )}

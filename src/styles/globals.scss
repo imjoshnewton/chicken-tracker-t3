@@ -6,6 +6,40 @@
   .pb-safe {
     padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
   }
+  
+  /* Fix mobile modal button positioning issues */
+  .modal-footer-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 1rem;
+    z-index: 50;
+  }
+  
+  /* Ensure drawers account for mobile keyboard */
+  @supports (height: 100dvh) {
+    .drawer-container {
+      max-height: 100dvh;
+    }
+  }
+  
+  /* Force button reflow on mobile */
+  @media (max-width: 768px) {
+    .mobile-modal-content {
+      padding-bottom: 5rem; /* Space for fixed footer */
+    }
+    
+    .drawer-footer {
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      margin-top: auto;
+    }
+  }
 }
 
 html,
