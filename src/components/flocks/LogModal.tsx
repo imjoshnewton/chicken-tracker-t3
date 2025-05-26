@@ -100,7 +100,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
       }
       title="Log Eggs"
       footer={
-        <div className="pb-8">
+        <>
           <DrawerClose asChild>
             <Button variant="ghost" onClick={closeModal}>
               Cancel
@@ -126,7 +126,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               "Submit"
             )}
           </Button>
-        </div>
+        </>
       }
     >
       <form

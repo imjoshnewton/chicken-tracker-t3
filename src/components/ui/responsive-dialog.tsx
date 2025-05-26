@@ -82,9 +82,9 @@ export function ResponsiveDialog({
             )}
           </DrawerHeader>
         )}
-        <div className={cn("px-4", contentClassName)}>{children}</div>
+        <div className={cn("px-4 pb-20", contentClassName)}>{children}</div>
         {footer && (
-          <DrawerFooter className="flex flex-row justify-end gap-2 pt-2">
+          <DrawerFooter className="flex flex-row justify-end gap-2 pt-2 pb-safe sticky bottom-0 bg-white border-t">
             {footer}
           </DrawerFooter>
         )}

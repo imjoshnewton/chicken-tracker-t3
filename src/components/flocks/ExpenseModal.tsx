@@ -98,7 +98,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
   );
 
   const footer = (
-    <div className="pb-8">
+    <>
       <DialogClose asChild>
         <Button
           variant="ghost"
@@ -120,7 +120,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
           "Submit"
         )}
       </Button>
-    </div>
+    </>
   );
 
   return (

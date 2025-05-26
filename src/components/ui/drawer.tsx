@@ -44,6 +44,7 @@ const DrawerContent = React.forwardRef<
       ref={ref}
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950",
+        "max-h-[90vh] overflow-y-auto", // Add max height and scrolling
         className
       )}
       {...props}
