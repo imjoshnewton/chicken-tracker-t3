@@ -222,7 +222,7 @@ const BreedModal = ({
                 return (
                   <motion.div {...contentProps}>
             
-          <div className="drawer-container pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
+          <div className="pb-safe relative flex h-full w-full flex-col border-0 bg-[#FEF9F6] shadow-lg outline-none focus:outline-none lg:h-auto lg:rounded-lg lg:pb-0">
             <div className="flex items-center justify-between rounded-t border-b border-solid border-gray-300 py-3 pl-4 pr-3 lg:py-3 lg:pl-5 lg:pr-3 ">
               <h3 className="font=semibold text-xl">
                 {breed?.id ? "Edit Breed" : "Add Birds"}
@@ -234,7 +234,7 @@ const BreedModal = ({
                 <MdClose />
               </button>
             </div>
-            <div className="mobile-modal-content relative flex-auto">
+            <div className="relative flex-auto">
               <form
                 className="w-full p-4 lg:px-8 lg:pb-8 lg:pt-6"
                 onSubmit={handleSubmit(createOrUpdateBreed)}
@@ -322,7 +322,7 @@ const BreedModal = ({
                 />
               </form>
             </div>
-            <div className="drawer-footer border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
+            <div className="border-blueGray-200 flex items-center justify-end rounded-b border-t border-solid p-6">
               {breed?.id && (
                 <button
                   onClick={() => deleteBreedClick(breed?.id)}
