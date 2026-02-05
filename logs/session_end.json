@@ -1,0 +1,18 @@
+[
+  {
+    "session_id": "dea1da88-7470-4a4b-bc87-38f8aa16288c",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/dea1da88-7470-4a4b-bc87-38f8aa16288c.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "SessionEnd",
+    "reason": "clear",
+    "logged_at": "2026-02-05T15:22:57.140480"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "SessionEnd",
+    "reason": "clear",
+    "logged_at": "2026-02-05T15:52:01.902449"
+  }
+]

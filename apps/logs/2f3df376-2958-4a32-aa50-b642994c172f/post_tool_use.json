@@ -1,0 +1,83 @@
+[
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3/apps",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Bash",
+    "tool_input": {
+      "command": "cd /Users/joshnewton/Development/chicken-tracker-t3/apps && bunx create-expo-app@latest mobile --template tabs 2>&1 | tail -30",
+      "timeout": 120000,
+      "description": "Create Expo app with tabs template"
+    },
+    "tool_response": {
+      "stdout": "web\n+ typescript@5.9.3\n+ @expo/vector-icons@15.0.3\n+ @react-navigation/native@7.1.28\n+ expo@54.0.33\n+ expo-constants@18.0.13\n+ expo-font@14.0.11\n+ expo-linking@8.0.11\n+ expo-router@6.0.23\n+ expo-splash-screen@31.0.13\n+ expo-status-bar@3.0.9\n+ expo-web-browser@15.0.10\n+ react@19.1.0 (v19.2.4 available)\n+ react-dom@19.1.0 (v19.2.4 available)\n+ react-native@0.81.5\n+ react-native-reanimated@4.1.6 (v4.2.1 available)\n+ react-native-safe-area-context@5.6.2\n+ react-native-screens@4.16.0 (v4.22.0 available)\n+ react-native-web@0.21.2\n+ react-native-worklets@0.5.1\n\n473 packages installed [3.17s]\n\n\u2705 Your project is ready!\n\nTo run your project, navigate to the directory and run one of the following bun commands.\n\n- cd mobile\n- bun run android\n- bun run ios\n- bun run web",
+      "stderr": "",
+      "interrupted": false,
+      "isImage": false
+    },
+    "tool_use_id": "toolu_01YD73b1Y8BEvyqTDF5Yhdom"
+  },
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3/apps",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Read",
+    "tool_input": {
+      "file_path": "/Users/joshnewton/Development/chicken-tracker-t3/apps/mobile/package.json"
+    },
+    "tool_response": {
+      "type": "text",
+      "file": {
+        "filePath": "/Users/joshnewton/Development/chicken-tracker-t3/apps/mobile/package.json",
+        "content": "{\n  \"name\": \"mobile\",\n  \"main\": \"expo-router/entry\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"start\": \"expo start\",\n    \"android\": \"expo start --android\",\n    \"ios\": \"expo start --ios\",\n    \"web\": \"expo start --web\"\n  },\n  \"dependencies\": {\n    \"@expo/vector-icons\": \"^15.0.3\",\n    \"@react-navigation/native\": \"^7.1.8\",\n    \"expo\": \"~54.0.33\",\n    \"expo-constants\": \"~18.0.13\",\n    \"expo-font\": \"~14.0.11\",\n    \"expo-linking\": \"~8.0.11\",\n    \"expo-router\": \"~6.0.23\",\n    \"expo-splash-screen\": \"~31.0.13\",\n    \"expo-status-bar\": \"~3.0.9\",\n    \"expo-web-browser\": \"~15.0.10\",\n    \"react\": \"19.1.0\",\n    \"react-dom\": \"19.1.0\",\n    \"react-native\": \"0.81.5\",\n    \"react-native-worklets\": \"0.5.1\",\n    \"react-native-reanimated\": \"~4.1.1\",\n    \"react-native-safe-area-context\": \"~5.6.0\",\n    \"react-native-screens\": \"~4.16.0\",\n    \"react-native-web\": \"~0.21.0\"\n  },\n  \"devDependencies\": {\n    \"@types/react\": \"~19.1.0\",\n    \"react-test-renderer\": \"19.1.0\",\n    \"typescript\": \"~5.9.2\"\n  },\n  \"private\": true\n}\n",
+        "numLines": 38,
+        "startLine": 1,
+        "totalLines": 38
+      }
+    },
+    "tool_use_id": "toolu_01LSebvrgvaKYAPQaaKijGkF"
+  },
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3/apps",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "PostToolUse",
+    "tool_name": "Edit",
+    "tool_input": {
+      "file_path": "/Users/joshnewton/Development/chicken-tracker-t3/apps/mobile/package.json",
+      "old_string": "  \"name\": \"mobile\",",
+      "new_string": "  \"name\": \"@flocknerd/mobile\",",
+      "replace_all": false
+    },
+    "tool_response": {
+      "filePath": "/Users/joshnewton/Development/chicken-tracker-t3/apps/mobile/package.json",
+      "oldString": "  \"name\": \"mobile\",",
+      "newString": "  \"name\": \"@flocknerd/mobile\",",
+      "originalFile": "{\n  \"name\": \"mobile\",\n  \"main\": \"expo-router/entry\",\n  \"version\": \"1.0.0\",\n  \"scripts\": {\n    \"start\": \"expo start\",\n    \"android\": \"expo start --android\",\n    \"ios\": \"expo start --ios\",\n    \"web\": \"expo start --web\"\n  },\n  \"dependencies\": {\n    \"@expo/vector-icons\": \"^15.0.3\",\n    \"@react-navigation/native\": \"^7.1.8\",\n    \"expo\": \"~54.0.33\",\n    \"expo-constants\": \"~18.0.13\",\n    \"expo-font\": \"~14.0.11\",\n    \"expo-linking\": \"~8.0.11\",\n    \"expo-router\": \"~6.0.23\",\n    \"expo-splash-screen\": \"~31.0.13\",\n    \"expo-status-bar\": \"~3.0.9\",\n    \"expo-web-browser\": \"~15.0.10\",\n    \"react\": \"19.1.0\",\n    \"react-dom\": \"19.1.0\",\n    \"react-native\": \"0.81.5\",\n    \"react-native-worklets\": \"0.5.1\",\n    \"react-native-reanimated\": \"~4.1.1\",\n    \"react-native-safe-area-context\": \"~5.6.0\",\n    \"react-native-screens\": \"~4.16.0\",\n    \"react-native-web\": \"~0.21.0\"\n  },\n  \"devDependencies\": {\n    \"@types/react\": \"~19.1.0\",\n    \"react-test-renderer\": \"19.1.0\",\n    \"typescript\": \"~5.9.2\"\n  },\n  \"private\": true\n}\n",
+      "structuredPatch": [
+        {
+          "oldStart": 1,
+          "oldLines": 5,
+          "newStart": 1,
+          "newLines": 5,
+          "lines": [
+            " {",
+            "-  \"name\": \"mobile\",",
+            "+  \"name\": \"@flocknerd/mobile\",",
+            "   \"main\": \"expo-router/entry\",",
+            "   \"version\": \"1.0.0\",",
+            "   \"scripts\": {"
+          ]
+        }
+      ],
+      "userModified": false,
+      "replaceAll": false
+    },
+    "tool_use_id": "toolu_01DASUp5RmtyPUaCqLJZgny9"
+  }
+]

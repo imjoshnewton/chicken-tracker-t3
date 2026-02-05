@@ -1,0 +1,159 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Necessary for Next auth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String         @id @default(cuid())
+  clerkId       String?        @unique
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?        @db.Text
+  defaultFlock  String         @default("")
+  accounts      Account[]
+  sessions      Session[]
+  flocks        Flock[]
+  notification  Notification[]
+  tasks         Task[]
+
+  @@index([clerkId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Flock {
+  id          String    @id @default(cuid())
+  name        String    @db.Text
+  description String?   @db.Text
+  imageUrl    String    @db.Text
+  type        String
+  zip         String?   @default("")
+  userId      String
+  deleted     Boolean   @default(false)
+  owner       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  breeds      Breed[]
+  logs        EggLog[]
+  expenses    Expense[]
+  tasks       Task[]
+
+  @@index([userId])
+}
+
+model Breed {
+  id                String   @id @default(cuid())
+  name              String?  @db.Text
+  breed             String   @default("") @db.Text
+  description       String?  @db.Text
+  count             Int
+  imageUrl          String?  @db.Text
+  averageProduction Float
+  deleted           Boolean  @default(false)
+  flockId           String
+  flock             Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+  EggLog            EggLog[]
+
+  @@index([flockId])
+}
+
+model EggLog {
+  id      String   @id @default(cuid())
+  count   Int
+  notes   String?  @db.Text
+  date    DateTime
+  flockId String
+  flock   Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+  breed   Breed?   @relation(fields: [breedId], references: [id], onDelete: NoAction)
+  breedId String?
+
+  @@index([flockId])
+  @@index([breedId])
+}
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  dueDate     DateTime
+  recurrence  String
+  status      String    @default("Incomplete")
+  completed   Boolean   @default(false)
+  completedAt DateTime? @updatedAt
+  userId      String
+  User        User      @relation(fields: [userId], references: [id])
+  flockId     String
+  Flock       Flock     @relation(fields: [flockId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([flockId])
+}
+
+model Expense {
+  id       String   @id @default(cuid())
+  amount   Float
+  date     DateTime
+  memo     String?  @db.Text
+  flockId  String
+  category String   @default("other")
+  flock    Flock    @relation(fields: [flockId], references: [id], onDelete: Cascade)
+
+  @@index([flockId])
+}
+
+model Notification {
+  id       String    @id @default(cuid())
+  title    String
+  message  String    @db.Text
+  date     DateTime  @default(now())
+  read     Boolean   @default(false)
+  readDate DateTime? @updatedAt
+  action   String    @default("View")
+  link     String
+  user     User      @relation(fields: [userId], references: [id])
+  userId   String
+
+  @@index([userId])
+}

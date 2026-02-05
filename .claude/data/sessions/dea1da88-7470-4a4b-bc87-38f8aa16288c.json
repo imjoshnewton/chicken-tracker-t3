@@ -1,0 +1,8 @@
+{
+  "session_id": "dea1da88-7470-4a4b-bc87-38f8aa16288c",
+  "prompts": [
+    "I think there is a PR so let's just merge the PR into main",
+    "sure",
+    "why is th deployment failing on Vercel? do we need to update to the latest version of Next.js and react? Make sure all packages are their latest stable versions and fix any breaking changes"
+  ]
+}

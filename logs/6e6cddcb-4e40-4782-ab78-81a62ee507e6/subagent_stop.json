@@ -1,0 +1,112 @@
+[
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "addb1d8",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-addb1d8.jsonl",
+    "agent_type": "Explore"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a1c70d4",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a1c70d4.jsonl",
+    "agent_type": ""
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a2e7e93",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a2e7e93.jsonl",
+    "agent_type": ""
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a4c0851",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a4c0851.jsonl",
+    "agent_type": ""
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a7800bd",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a7800bd.jsonl",
+    "agent_type": "Bash"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a8aee23",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a8aee23.jsonl",
+    "agent_type": ""
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "aa3c1e4",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-aa3c1e4.jsonl",
+    "agent_type": ""
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "plan",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a63014c",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-a63014c.jsonl",
+    "agent_type": "Explore"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "plan",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "ac279ed",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-ac279ed.jsonl",
+    "agent_type": "Explore"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "plan",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "ab9bf1c",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6/subagents/agent-ab9bf1c.jsonl",
+    "agent_type": "Plan"
+  }
+]
