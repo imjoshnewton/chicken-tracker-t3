@@ -1,28 +1,22 @@
-import { eggLog } from "@lib/db/schema-postgres";
-import { fetchLogs } from "@lib/fetch";
-import { createId } from "@paralleldrive/cuid2";
-import { format } from "date-fns";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
+import * as logsService from "../../../services/logs.service";
 
 export const logsRouter = router({
   getLogs: protectedProcedure
     .input(z.object({ page: z.number() }))
     .query(async ({ input, ctx }) => {
-      const [logs] = await fetchLogs(ctx.session.user.id, input.page);
-
+      const [logs] = await logsService.getLogs(ctx.session.user.id, input.page);
       return logs;
     }),
   getLogsByFlock: protectedProcedure
     .input(z.object({ page: z.number(), flockId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const [logs] = await fetchLogs(
+      const [logs] = await logsService.getLogs(
         ctx.session.user.id,
         input.page,
         input.flockId,
       );
-
       return logs;
     }),
   createLog: protectedProcedure
@@ -35,16 +29,8 @@ export const logsRouter = router({
         notes: z.string().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const id: string = createId();
-
-      return await ctx.db.insert(eggLog).values([
-        {
-          id,
-          ...input,
-          date: formatDateForMySQL(input.date),
-        },
-      ]);
+    .mutation(async ({ input }) => {
+      return logsService.createLog(input);
     }),
   deleteLog: protectedProcedure
     .input(
@@ -52,11 +38,7 @@ export const logsRouter = router({
         id: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      return await ctx.db.delete(eggLog).where(eq(eggLog.id, input.id));
+    .mutation(async ({ input }) => {
+      return logsService.deleteLog(input.id);
     }),
 });
-
-export const formatDateForMySQL = (dateObj: Date) => {
-  return format(dateObj, "yyyy-MM-dd HH:mm:ss.SSS");
-};

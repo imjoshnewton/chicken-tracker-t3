@@ -1,8 +1,6 @@
-import { breed } from "@lib/db/schema-postgres";
-import { createId } from "@paralleldrive/cuid2";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
+import * as breedsService from "../../../services/breeds.service";
 
 export const breedsRouter = router({
   createBreed: protectedProcedure
@@ -17,15 +15,8 @@ export const breedsRouter = router({
         flockId: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      const id = createId();
-
-      return await ctx.db.insert(breed).values([
-        {
-          id,
-          ...input,
-        },
-      ]);
+    .mutation(async ({ input }) => {
+      return breedsService.createBreed(input);
     }),
   updateBreed: protectedProcedure
     .input(
@@ -40,11 +31,8 @@ export const breedsRouter = router({
         flockId: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      return await ctx.db
-        .update(breed)
-        .set(input)
-        .where(eq(breed.id, input.id));
+    .mutation(async ({ input }) => {
+      return breedsService.updateBreed(input);
     }),
   deleteBreed: protectedProcedure
     .input(
@@ -52,10 +40,7 @@ export const breedsRouter = router({
         id: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      return await ctx.db
-        .update(breed)
-        .set({ deleted: true })
-        .where(eq(breed.id, input.id));
+    .mutation(async ({ input }) => {
+      return breedsService.deleteBreed(input.id);
     }),
 });

@@ -7,12 +7,13 @@ import {
 } from "react-icons/md";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";
-import { markTaskAsComplete } from "src/app/app/server";
+import { markTaskAsComplete } from "../../actions/tasks.actions";
 import { RiLoopRightFill } from "react-icons/ri";
 import TaskModal from "./TaskModal";
 import { Switch } from "@components/ui/switch";
 import { Label } from "@components/ui/label";
 import { Task } from "@lib/db/schema";
+import { useMutation } from "@tanstack/react-query";
 
 type TaskListProps = {
   tasks: Task[];
@@ -28,19 +29,21 @@ const TaskItem: React.FC<{
   const utils = trpc.useContext();
   const passedDue = new Date(task.dueDate).getTime() < new Date().getTime();
 
+  const { mutate: completeTask } = useMutation({
+    mutationFn: () =>
+      markTaskAsComplete({ taskId: task.id, recurrence: task.recurrence }),
+    onSuccess: () => {
+      utils.flocks.invalidate();
+      toast.success("Task completed!");
+    },
+    onError: () => {
+      toast.error("Error completing task");
+    },
+  });
+
   const handleMarkComplete = () => {
     console.log(`Completing task with id: ${task.id}`);
-
-    toast
-      .promise(
-        markTaskAsComplete({ taskId: task.id, recurrence: task.recurrence }),
-        {
-          loading: "Updating task...",
-          success: "Task completed!",
-          error: "Error completing task",
-        },
-      )
-      .then(() => utils.flocks.invalidate());
+    completeTask();
   };
 
   return (

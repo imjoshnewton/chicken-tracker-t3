@@ -1,5 +1,5 @@
 import { currentUsr } from "@lib/auth";
-import { fetchExpenses } from "@lib/fetch";
+import * as expensesService from "../../../services/expenses.service";
 import { type Expense } from "@lib/db/schema-postgres";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
@@ -44,7 +44,7 @@ export default async function Page(props: any) {
 
   if (!user) redirect("/auth/sign-in");
 
-  const [expenses, totalPages] = await fetchExpenses(user.id, page, flockId);
+  const [expenses, totalPages] = await expensesService.getExpenses(user.id, page, flockId);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">

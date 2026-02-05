@@ -5,8 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { trpc } from "@utils/trpc";
 import toast from "react-hot-toast";
-import { createNewTask, updateTask, deleteTask } from "../server";
+import { createNewTask, updateTask, deleteTask } from "../../../actions/tasks.actions";
 import { MdOutlineDeleteOutline } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
 
 const TaskSchema = z.object({
   title: z.string(),
@@ -53,10 +54,61 @@ export const TaskForm: React.FC<TaskFormProps> = ({
 
   const utils = trpc.useUtils();
 
+  const updateTaskMutation = useMutation({
+    mutationFn: (data: {
+      title: string;
+      description: string;
+      dueDate: Date;
+      recurrence: string;
+      id: string;
+      status: string;
+      completed: boolean;
+    }) => updateTask(data),
+    onSuccess: async (data) => {
+      await utils.flocks.invalidate();
+      toast.success(`${data.title} updated successfully!!`);
+      if (onComplete) onComplete();
+      else if (task?.id) router.push(`/app/tasks/${task.id}`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const createTaskMutation = useMutation({
+    mutationFn: (data: {
+      title: string;
+      description: string;
+      dueDate: Date;
+      recurrence: string;
+      userId: string;
+      flockId: string;
+    }) => createNewTask(data),
+    onSuccess: async (data) => {
+      await utils.flocks.invalidate();
+      toast.success(`${data.title} created successfully!!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/tasks/`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const deleteTaskMutation = useMutation({
+    mutationFn: (data: { taskId: string }) => deleteTask(data),
+    onSuccess: async (data) => {
+      await utils.flocks.invalidate();
+      toast.success(`${data.title} deleted successfully!!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/tasks/`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
   const createOrUpdateTask = async (taskData: TaskFormValues) => {
-    // const parsedData = {
-    //   ...taskData,
-    // };
     const result = TaskSchema.safeParse(taskData);
     if (!result.success) {
       console.error(result.error);
@@ -67,74 +119,30 @@ export const TaskForm: React.FC<TaskFormProps> = ({
     const [year = 0, month = 0, day = 0] = dueDate.split("-").map(Number);
 
     if (task?.id) {
-      toast
-        .promise(
-          updateTask({
-            title,
-            description,
-            dueDate: new Date(year, month - 1, day),
-            recurrence,
-            id: task.id,
-            status: status ? status : "",
-            completed: false,
-          }),
-          {
-            loading: "Creating task...",
-            success: (data) => `${data.title} created successfully!!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then(async (task) => {
-          await utils.flocks.invalidate();
-        });
-      if (onComplete) onComplete();
-      else router.push(`/app/tasks/${task.id}`);
+      updateTaskMutation.mutate({
+        title,
+        description,
+        dueDate: new Date(year, month - 1, day),
+        recurrence,
+        id: task.id,
+        status: status ? status : "",
+        completed: false,
+      });
     } else {
-      // Here you can call the method for creating a new task using taskData
-      toast
-        .promise(
-          createNewTask({
-            title,
-            description,
-            dueDate: new Date(year, month - 1, day),
-            recurrence,
-            // status,
-            userId,
-            flockId,
-          }),
-          {
-            loading: "Creating task...",
-            success: (data) => `${data.title} created successfully!!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then(async (task) => {
-          await utils.flocks.invalidate();
-        });
-
-      if (onComplete) onComplete();
-      else router.push(`/app/tasks/`);
+      createTaskMutation.mutate({
+        title,
+        description,
+        dueDate: new Date(year, month - 1, day),
+        recurrence,
+        userId,
+        flockId,
+      });
     }
   };
 
   const deleteCurrentTask = async () => {
     if (task?.id) {
-      toast
-        .promise(
-          deleteTask({
-            taskId: task.id,
-          }),
-          {
-            loading: "Deleting task...",
-            success: (data) => `${data.title} deleted successfully!!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then(async (task) => {
-          await utils.flocks.invalidate();
-        });
-      if (onComplete) onComplete();
-      else router.push(`/app/tasks/`);
+      deleteTaskMutation.mutate({ taskId: task.id });
     }
   };
 

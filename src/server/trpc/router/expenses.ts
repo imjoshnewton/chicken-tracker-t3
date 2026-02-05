@@ -1,17 +1,12 @@
-import { expense } from "@lib/db/schema-postgres";
-import { fetchExpenses } from "@lib/fetch";
-import { createId } from "@paralleldrive/cuid2";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
-import { formatDateForMySQL } from "./logs";
+import * as expensesService from "../../../services/expenses.service";
 
 export const expensesRouter = router({
   getExpenses: protectedProcedure
     .input(z.object({ page: z.number() }))
     .query(async ({ input, ctx }) => {
-      const [expenses] = await fetchExpenses(ctx.session.user.id, input.page);
-
+      const [expenses] = await expensesService.getExpenses(ctx.session.user.id, input.page);
       return expenses;
     }),
   createExpense: protectedProcedure
@@ -24,15 +19,8 @@ export const expensesRouter = router({
         category: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const id: string = createId();
-      return await ctx.db.insert(expense).values([
-        {
-          id,
-          ...input,
-          date: formatDateForMySQL(input.date),
-        },
-      ]);
+    .mutation(async ({ input }) => {
+      return expensesService.createExpense(input);
     }),
   deleteExpense: protectedProcedure
     .input(
@@ -40,7 +28,7 @@ export const expensesRouter = router({
         id: z.string(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      return await ctx.db.delete(expense).where(eq(expense.id, input.id));
+    .mutation(async ({ input }) => {
+      return expensesService.deleteExpense(input.id);
     }),
 });

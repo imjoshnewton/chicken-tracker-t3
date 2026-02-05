@@ -1,6 +1,6 @@
 import { currentUsr } from "@lib/auth";
 import { type EggLog } from "@lib/db/schema";
-import { fetchLogs } from "@lib/fetch";
+import * as logsService from "../../../services/logs.service";
 import { parseISO } from "date-fns";
 import { redirect } from "next/navigation";
 import Pagination from "../../../components/flocks/Pagination";
@@ -44,7 +44,7 @@ export default async function Page(props: any) {
 
   if (!user) redirect("/auth/sign-in");
 
-  const [logs, totalPages] = await fetchLogs(user.id, page, flockId);
+  const [logs, totalPages] = await logsService.getLogs(user.id, page, flockId);
 
   return (
     <main className="p-0 lg:p-8 lg:px-[3.5vw]">

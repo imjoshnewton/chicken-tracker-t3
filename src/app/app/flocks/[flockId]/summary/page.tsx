@@ -1,4 +1,4 @@
-import { getSummaryData } from "@lib/fetch";
+import * as statsService from "../../../../../services/stats.service";
 import FlockSummary from "./FlockSummary";
 
 export const metadata = {
@@ -14,7 +14,7 @@ export default async function Summary(props: any) {
   const month = searchParams?.month as string;
   const year = searchParams?.year as string;
 
-  const summary = await getSummaryData({
+  const summary = await statsService.getFlockSummary({
     flockId: typeof flockId == "string" ? flockId : "",
     month: typeof month == "string" ? month : "",
     year: typeof year == "string" ? year : "",

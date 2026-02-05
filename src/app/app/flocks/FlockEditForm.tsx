@@ -12,8 +12,9 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import { MdImage, MdOutlineDelete } from "react-icons/md";
 import Loader from "../../../components/shared/Loader";
-import { createFlock, deleteFlock, updateFlock } from "../server";
+import { createFlock, deleteFlock, updateFlock } from "../../../actions/flocks.actions";
 import { Button } from "@components/ui/button";
+import { useMutation } from "@tanstack/react-query";
 
 export default function FlockForm({
   flock,
@@ -43,6 +44,57 @@ export default function FlockForm({
   const [downloadURL, setDownloadURL] = useState("");
 
   const utils = trpc.useContext();
+
+  const updateFlockMutation = useMutation({
+    mutationFn: (data: {
+      id: string;
+      name: string;
+      description: string;
+      type: string;
+      imageUrl: string;
+    }) => updateFlock(data),
+    onSuccess: async (data: { id: string; name: string }) => {
+      await utils.flocks.invalidate();
+      toast.success(`${data.name} updated successfully!!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/flocks/${data.id}`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const createFlockMutation = useMutation({
+    mutationFn: (data: {
+      userId: string;
+      name: string;
+      description: string;
+      type: string;
+      imageUrl: string;
+    }) => createFlock(data),
+    onSuccess: (data: { id: string; name: string }) => {
+      utils.flocks.invalidate();
+      toast.success(`${data.name} created successfully!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/flocks/${data.id}`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const deleteFlockMutation = useMutation({
+    mutationFn: (data: { flockId: string }) => deleteFlock(data),
+    onSuccess: (data: { name: string }) => {
+      utils.flocks.invalidate();
+      toast.success(`${data.name} deleted successfully!`);
+      if (onDelete) onDelete();
+      else router.push(`/app/flocks`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
 
   // TO-DO: move this to the libs folder
   const uploadFile = useCallback(
@@ -108,60 +160,26 @@ export default function FlockForm({
     );
 
     if (flockData.id) {
-      toast
-        .promise(
-          updateFlock({
-            id: flockData.id,
-            name: flockData.name,
-            description: flockData.description ? flockData.description : "",
-            type: flockData.type,
-            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-          }),
-          {
-            loading: `Saving flock`,
-            success: (data: { name: string }) => `${data.name} updated successfully!!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then(async (flock) => {
-          await utils.flocks.invalidate();
-          if (onComplete) onComplete();
-          else router.push(`/app/flocks/${flock.id}`);
-        });
+      updateFlockMutation.mutate({
+        id: flockData.id,
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl ?? "",
+      });
     } else {
-      toast
-        .promise(
-          createFlock({
-            userId: userId,
-            name: flockData.name,
-            description: flockData.description ? flockData.description : "",
-            type: flockData.type,
-            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-          }),
-          {
-            loading: `Creating flock`,
-            success: (data: { name: string }) => `${data.name} created successfully!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then((flock) => {
-          if (onComplete) onComplete();
-          else router.push(`/app/flocks/${flock.id}`);
-        });
+      createFlockMutation.mutate({
+        userId: userId,
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl ?? "",
+      });
     }
   };
 
   const deleteCurrentFlock = async (flockId: string) => {
-    toast
-      .promise(deleteFlock({ flockId }), {
-        loading: `Deleting flock`,
-        success: (data: { name: string }) => `${data.name} deleted successfully!`,
-        error: (err) => `This just happened: ${err.toString()}`,
-      })
-      .then(() => {
-        if (onDelete) onDelete();
-        else router.push(`/app/flocks`);
-      });
+    deleteFlockMutation.mutate({ flockId });
   };
 
   return (
