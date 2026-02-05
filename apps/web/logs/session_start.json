@@ -1,0 +1,10 @@
+[
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3/apps/web",
+    "hook_event_name": "SessionStart",
+    "source": "compact",
+    "model": "claude-opus-4-6"
+  }
+]

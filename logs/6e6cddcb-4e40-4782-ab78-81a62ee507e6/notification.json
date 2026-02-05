@@ -1,0 +1,34 @@
+[
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "Notification",
+    "message": "Claude is waiting for your input",
+    "notification_type": "idle_prompt"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your attention",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your attention",
+    "notification_type": "permission_prompt"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "hook_event_name": "Notification",
+    "message": "Claude Code needs your approval for the plan",
+    "notification_type": "permission_prompt"
+  }
+]

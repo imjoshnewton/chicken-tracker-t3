@@ -1,0 +1,24 @@
+[
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a628028",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f/subagents/agent-a628028.jsonl",
+    "agent_type": "Explore"
+  },
+  {
+    "session_id": "2f3df376-2958-4a32-aa50-b642994c172f",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "SubagentStop",
+    "stop_hook_active": false,
+    "agent_id": "a084719",
+    "agent_transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/2f3df376-2958-4a32-aa50-b642994c172f/subagents/agent-a084719.jsonl",
+    "agent_type": "Bash"
+  }
+]

@@ -1,1 +1,0 @@
-ALTER TABLE `flocknerd_Expense` MODIFY COLUMN `date` date NOT NULL;

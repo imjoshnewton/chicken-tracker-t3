@@ -1,0 +1,66 @@
+[
+  {
+    "session_id": "dea1da88-7470-4a4b-bc87-38f8aa16288c",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/dea1da88-7470-4a4b-bc87-38f8aa16288c.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "I think there is a PR so let's just merge the PR into main"
+  },
+  {
+    "session_id": "dea1da88-7470-4a4b-bc87-38f8aa16288c",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/dea1da88-7470-4a4b-bc87-38f8aa16288c.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "sure"
+  },
+  {
+    "session_id": "dea1da88-7470-4a4b-bc87-38f8aa16288c",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/dea1da88-7470-4a4b-bc87-38f8aa16288c.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "why is th deployment failing on Vercel? do we need to update to the latest version of Next.js and react? Make sure all packages are their latest stable versions and fix any breaking changes"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "any thing me missed?"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "why did we remove the pwa function?"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "no let's keep going, ship it"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "sure"
+  },
+  {
+    "session_id": "6e6cddcb-4e40-4782-ab78-81a62ee507e6",
+    "transcript_path": "/Users/joshnewton/.claude/projects/-Users-joshnewton-Development-chicken-tracker-t3/6e6cddcb-4e40-4782-ab78-81a62ee507e6.jsonl",
+    "cwd": "/Users/joshnewton/Development/chicken-tracker-t3",
+    "permission_mode": "bypassPermissions",
+    "hook_event_name": "UserPromptSubmit",
+    "prompt": "once thats done i want uou to create a plan to make a react-native app based on the current web app"
+  }
+]
