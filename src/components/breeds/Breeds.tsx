@@ -1,7 +1,7 @@
 "use client";
 
 import { Breed } from "@lib/db/schema-postgres";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

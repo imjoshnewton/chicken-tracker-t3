@@ -100,7 +100,7 @@ export function DatePickerWithRange({
           </Select>
           <div className="hidden rounded-md border sm:block">
             <Calendar
-              initialFocus
+              autoFocus
               mode="range"
               defaultMonth={date?.to ? subMonths(date.to, 1) : new Date()}
               selected={date}
@@ -111,7 +111,7 @@ export function DatePickerWithRange({
           </div>
           <div className="block rounded-md border sm:hidden" aria-hidden>
             <Calendar
-              initialFocus
+              autoFocus
               mode="range"
               defaultMonth={date?.to}
               selected={date}

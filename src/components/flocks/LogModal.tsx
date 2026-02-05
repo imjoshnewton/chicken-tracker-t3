@@ -39,7 +39,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const utils = trpc.useUtils();
 
-  const { mutateAsync: createLogMutation, isLoading } =
+  const { mutateAsync: createLogMutation, isPending } =
     trpc.logs.createLog.useMutation({
       onSuccess: () => {
         utils.stats.getStats.invalidate();
@@ -108,7 +108,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
           </DrawerClose>
           <Button
             variant="secondary"
-            disabled={isLoading}
+            disabled={isPending}
             onClick={async () => {
               if (date && count) {
                 await createNewLog(
@@ -120,7 +120,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               }
             }}
           >
-            {isLoading ? (
+            {isPending ? (
               <RiLoader4Fill className="animate-spin text-2xl" />
             ) : (
               "Submit"
@@ -170,7 +170,7 @@ const LogModal = ({ flockId }: { flockId: string | undefined }) => {
               disabled={(date) =>
                 date > new Date() || date < new Date("1900-01-01")
               }
-              initialFocus
+              autoFocus
             />
           </PopoverContent>
         </Popover>

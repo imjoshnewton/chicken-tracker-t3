@@ -17,13 +17,10 @@ const TaskSchema = z.object({
   status: z.optional(z.string()),
 });
 
-interface TaskFormValues {
+type TaskFormValues = z.infer<typeof TaskSchema>;
+
+interface TaskData extends TaskFormValues {
   id?: string;
-  title: string;
-  description: string;
-  dueDate: string;
-  recurrence: string;
-  status?: string;
   userId: string;
   flockId: string;
 }
@@ -31,7 +28,7 @@ interface TaskFormValues {
 interface TaskFormProps {
   userId: string;
   flockId: string;
-  task?: TaskFormValues;
+  task?: TaskData;
   onComplete?: () => void;
   onCancel?: () => void;
 }
@@ -109,12 +106,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({
   });
 
   const createOrUpdateTask = async (taskData: TaskFormValues) => {
-    const result = TaskSchema.safeParse(taskData);
-    if (!result.success) {
-      console.error(result.error);
-      return;
-    }
-    const { title, description, dueDate, recurrence, status } = result.data;
+    const { title, description, dueDate, recurrence, status } = taskData;
 
     const [year = 0, month = 0, day = 0] = dueDate.split("-").map(Number);
 

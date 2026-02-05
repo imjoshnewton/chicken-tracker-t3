@@ -1,4 +1,4 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { MdAddTask } from "react-icons/md";
 import TaskModal from "./TaskModal";

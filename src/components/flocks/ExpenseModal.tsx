@@ -34,7 +34,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
 
   const utils = trpc.useUtils();
 
-  const { mutateAsync: createExpense, isLoading } =
+  const { mutateAsync: createExpense, isPending } =
     trpc.expenses.createExpense.useMutation({
       onSuccess: () => {
         utils.stats.getExpenseStats.invalidate();
@@ -111,10 +111,10 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
       <Button
         variant="secondary"
         type="button"
-        disabled={isLoading}
+        disabled={isPending}
         onClick={handleSubmit}
       >
-        {isLoading ? (
+        {isPending ? (
           <RiLoader4Fill className="animate-spin text-2xl" />
         ) : (
           "Submit"
@@ -166,7 +166,7 @@ const ExpenseModal = ({ flockId }: { flockId: string | undefined }) => {
               disabled={(date) =>
                 date > new Date() || date < new Date("1900-01-01")
               }
-              initialFocus
+              autoFocus
             />
           </PopoverContent>
         </Popover>
