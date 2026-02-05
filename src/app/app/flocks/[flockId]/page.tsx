@@ -7,19 +7,17 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-const Page = async ({
-  params,
-  searchParams,
-}: {
-  params: { flockId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Page(props: any) {
+  // Extract params and searchParams from props
+  const searchParams = await props.searchParams;
+  const params = await props.params;
+  const flockId = params.flockId;
+  
   // const authRes = await auth();
   const user = await currentUsr();
 
   if (!user) redirect("/api/auth/signin");
 
-  return <Flock userId={user.id} flockId={params.flockId} />;
-};
-
-export default Page;
+  return <Flock userId={user.id} flockId={flockId} />;
+}

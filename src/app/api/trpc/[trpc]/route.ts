@@ -9,6 +9,7 @@ import { appRouter } from "src/server/trpc/router/_app";
 
 // // We're using the edge-runtime
 export const runtime = "edge";
+export const preferredRegion = "auto";
 
 // export API handler
 async function handler(req: NextRequest) {

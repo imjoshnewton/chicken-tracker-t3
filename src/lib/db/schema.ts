@@ -32,14 +32,13 @@ export const account = mysqlTable(
     idToken: text("id_token"),
     sessionState: varchar("session_state", { length: 191 }),
   },
-  (table) => {
-    return {
-      providerProviderAccountIdKey: uniqueIndex(
-        "Account_provider_providerAccountId_key",
-      ).on(table.provider, table.providerAccountId),
-      userIdIdx: index("Account_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [
+    uniqueIndex("Account_provider_providerAccountId_key").on(
+      table.provider,
+      table.providerAccountId,
+    ),
+    index("Account_userId_idx").on(table.userId),
+  ],
 );
 
 export const breed = mysqlTable(
@@ -57,11 +56,7 @@ export const breed = mysqlTable(
       .notNull(),
     deleted: tinyint("deleted").default(0).notNull(),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Breed_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [index("Breed_flockId_idx").on(table.flockId)],
 );
 
 export const breedRelations = relations(breed, ({ one }) => ({
@@ -82,12 +77,10 @@ export const eggLog = mysqlTable(
     flockId: varchar("flockId", { length: 191 }).notNull(),
     breedId: varchar("breedId", { length: 191 }),
   },
-  (table) => {
-    return {
-      breedIdIdx: index("EggLog_breedId_idx").on(table.breedId),
-      flockIdIdx: index("EggLog_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [
+    index("EggLog_breedId_idx").on(table.breedId),
+    index("EggLog_flockId_idx").on(table.flockId),
+  ],
 );
 
 export const eggLogRelations = relations(eggLog, ({ one }) => ({
@@ -107,11 +100,7 @@ export const expense = mysqlTable(
     flockId: varchar("flockId", { length: 191 }).notNull(),
     category: varchar("category", { length: 191 }).default("other").notNull(),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Expense_flockId_idx").on(table.flockId),
-    };
-  },
+  (table) => [index("Expense_flockId_idx").on(table.flockId)],
 );
 
 export const expenseRelations = relations(expense, ({ one }) => ({
@@ -133,11 +122,7 @@ export const flock = mysqlTable(
     zip: varchar("zip", { length: 191 }).default(""),
     deleted: tinyint("deleted").default(0).notNull(),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Flock_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [index("Flock_userId_idx").on(table.userId)],
 );
 
 export const flockRelations = relations(flock, ({ many, one }) => ({
@@ -166,11 +151,7 @@ export const notification = mysqlTable(
     link: varchar("link", { length: 191 }).notNull(),
     action: varchar("action", { length: 191 }).default("View").notNull(),
   },
-  (table) => {
-    return {
-      userIdIdx: index("Notification_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [index("Notification_userId_idx").on(table.userId)],
 );
 
 export const session = mysqlTable(
@@ -181,14 +162,10 @@ export const session = mysqlTable(
     userId: varchar("userId", { length: 191 }).notNull(),
     expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
   },
-  (table) => {
-    return {
-      sessionTokenKey: uniqueIndex("Session_sessionToken_key").on(
-        table.sessionToken,
-      ),
-      userIdIdx: index("Session_userId_idx").on(table.userId),
-    };
-  },
+  (table) => [
+    uniqueIndex("Session_sessionToken_key").on(table.sessionToken),
+    index("Session_userId_idx").on(table.userId),
+  ],
 );
 
 export const task = mysqlTable(
@@ -205,13 +182,11 @@ export const task = mysqlTable(
     completed: tinyint("completed").default(0).notNull(),
     completedAt: datetime("completedAt", { mode: "string", fsp: 3 }),
   },
-  (table) => {
-    return {
-      flockIdIdx: index("Task_flockId_idx").on(table.flockId),
-      userIdIdx: index("Task_userId_idx").on(table.userId),
-      taskId: primaryKey(table.id),
-    };
-  },
+  (table) => [
+    index("Task_flockId_idx").on(table.flockId),
+    index("Task_userId_idx").on(table.userId),
+    primaryKey({ columns: [table.id] }),
+  ],
 );
 
 export const taskRelations = relations(task, ({ one }) => ({
@@ -234,13 +209,11 @@ export const user = mysqlTable(
       .notNull(),
     clerkId: varchar("clerkId", { length: 191 }),
   },
-  (table) => {
-    return {
-      emailKey: uniqueIndex("User_email_key").on(table.email),
-      clerkIdKey: uniqueIndex("User_clerkId_key").on(table.clerkId),
-      clerkIdIdx: index("User_clerkId_idx").on(table.clerkId),
-    };
-  },
+  (table) => [
+    uniqueIndex("User_email_key").on(table.email),
+    uniqueIndex("User_clerkId_key").on(table.clerkId),
+    index("User_clerkId_idx").on(table.clerkId),
+  ],
 );
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -254,26 +227,19 @@ export const verificationToken = mysqlTable(
     token: varchar("token", { length: 191 }).primaryKey().notNull(),
     expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
   },
-  (table) => {
-    return {
-      identifierTokenKey: uniqueIndex(
-        "VerificationToken_identifier_token_key",
-      ).on(table.identifier, table.token),
-      tokenKey: uniqueIndex("VerificationToken_token_key").on(table.token),
-    };
-  },
+  (table) => [
+    uniqueIndex("VerificationToken_identifier_token_key").on(
+      table.identifier,
+      table.token,
+    ),
+    uniqueIndex("VerificationToken_token_key").on(table.token),
+  ],
 );
 
-export const dateTest = mysqlTable(
-  "DateTest",
-  {
-    dt_column: datetime("dt_column").notNull(),
-    d_column: date("d_column").notNull(),
-  },
-  (table) => {
-    return {};
-  },
-);
+export const dateTest = mysqlTable("DateTest", {
+  dt_column: datetime("dt_column").notNull(),
+  d_column: date("d_column").notNull(),
+});
 
 export type User = typeof user.$inferInsert;
 export type Notification = typeof notification.$inferInsert;

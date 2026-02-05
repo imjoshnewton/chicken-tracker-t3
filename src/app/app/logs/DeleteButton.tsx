@@ -1,30 +1,33 @@
 "use client";
 
-import { useState } from "react";
 import toast from "react-hot-toast";
 import { RiLoader4Fill } from "react-icons/ri";
-import { deleteLog } from "../server-edge";
+import { deleteLog } from "../../../actions/logs.actions";
 import { Button } from "@components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { trpc } from "@utils/trpc";
 
 export default function DeleteButton({ id }: { id: string }) {
-  const [loading, setLoading] = useState(false);
+  const utils = trpc.useContext();
+
+  const { mutateAsync: doDelete, isLoading } = useMutation({
+    mutationFn: () => deleteLog(id),
+    onSuccess: () => {
+      utils.logs.invalidate();
+      toast.success("Log deleted successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
 
   return (
     <Button
       variant="destructive"
-      onClick={async () => {
-        setLoading(true);
-        await toast
-          .promise(deleteLog(id), {
-            loading: "Deleting log",
-            success: "Log deleted successfully",
-            error: "Something went wrong",
-          })
-          .finally(() => setLoading(false));
-      }}
-      disabled={loading}
+      disabled={isLoading}
+      onClick={() => doDelete()}
     >
-      {loading ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}
+      {isLoading ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}
     </Button>
   );
 }

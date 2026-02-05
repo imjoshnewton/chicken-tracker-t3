@@ -1,6 +1,8 @@
 import { useUser } from "@clerk/nextjs";
 import { parseISO } from "date-fns";
 import { trpc } from "../utils/trpc";
+import { type User } from "@lib/db/schema-postgres";
+import { useEffect, useState } from "react";
 
 //
 // Custom hook to get user's session data
@@ -19,7 +21,7 @@ export function useUserData() {
   // console.log("User: ", user);
 
   return {
-    user: user,
+    user: user as User | undefined,
     status:
       !isLoaded && isLoading
         ? "loading"
@@ -230,4 +232,28 @@ export function useAllFlocks() {
     userId: user?.id,
     loading: flocks.isLoading,
   };
+}
+
+/**
+ * Custom hook for responsive design - returns true if the media query matches
+ */
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    if (media.matches !== matches) {
+      setMatches(media.matches);
+    }
+    
+    const listener = () => setMatches(media.matches);
+    
+    // Add listener
+    media.addEventListener("change", listener);
+    
+    // Clean up
+    return () => media.removeEventListener("change", listener);
+  }, [matches, query]);
+
+  return matches;
 }

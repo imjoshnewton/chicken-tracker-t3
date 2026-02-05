@@ -1,6 +1,6 @@
 import { currentUsr } from "@lib/auth";
 import { db } from "@lib/db";
-import { breed as Breeds, flock as Flocks } from "@lib/db/schema";
+import { breed as Breeds, flock as Flocks } from "@lib/db/schema-postgres";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import Card from "../../../../../components/shared/Card";
@@ -11,21 +11,17 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-const Edit = async ({
-  params,
-  searchParams,
-}: {
-  params: { flockId: string };
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  const user = await currentUsr();
-
+// Simplest possible approach for Next.js 15 compatibility
+export default async function Edit(props: any) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const flockId = params.flockId;
+  const user = await currentUsr();
   const flock = await db.query.flock.findFirst({
     where: eq(Flocks.id, flockId),
     with: {
       breeds: {
-        where: eq(Breeds.deleted, 0),
+        where: eq(Breeds.deleted, false),
         orderBy: (breeds, { asc }) => [asc(breeds.id)],
       },
     },
@@ -55,6 +51,4 @@ const Edit = async ({
       </Card>
     </main>
   );
-};
-
-export default Edit;
+}

@@ -6,18 +6,18 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const AppHome = async () => {
   redirect("/app/flocks");
 
-  return (
-    <>
-      <main className="flex min-h-screen flex-col items-center justify-center">
-        <Loader show={true} />
-      </main>
-    </>
-  );
+  // return (
+  //   <>
+  //     <main className="flex min-h-screen flex-col items-center justify-center">
+  //       <Loader show={true} />
+  //     </main>
+  //   </>
+  // );
 };
 
 export default AppHome;

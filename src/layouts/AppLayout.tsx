@@ -13,6 +13,7 @@ import { AiOutlineDollar } from "react-icons/ai";
 
 import logo from "../../public/FlockNerd-logo-v2.png";
 import { ReactElement, useState } from "react";
+import { type Notification } from "@lib/db/schema-postgres";
 import { useRouter } from "next/router";
 import { signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
@@ -31,6 +32,12 @@ export default function AppLayout({ children }: { children: any }) {
   } = trpc.auth.getUserNotifications.useQuery(undefined, {
     refetchInterval: 5 * 60 * 1000,
   });
+  
+  // Function to safely count unread notifications
+  const countUnreadNotifications = () => {
+    if (!notifications || !Array.isArray(notifications)) return 0;
+    return notifications.filter(not => not && typeof not === 'object' && 'read' in not && not.read === false).length;
+  };
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -132,14 +139,10 @@ export default function AppLayout({ children }: { children: any }) {
                     />
                     <div
                       className={`${
-                        notifications?.length
-                          ? notifications.filter((not) => !not.read).length > 0
-                            ? "opacity-100"
-                            : "opacity-0"
-                          : "opacity-0"
+                        countUnreadNotifications() > 0 ? "opacity-100" : "opacity-0"
                       } absolute right-3 top-1 inline-flex h-5 w-5 items-center justify-center rounded bg-red-500 text-[0.6rem] font-bold text-white dark:border-gray-900`}
                     >
-                      {notifications?.filter((not) => !not.read).length}
+                      {countUnreadNotifications()}
                     </div>
                   </div>
                 )}
@@ -179,9 +182,9 @@ export default function AppLayout({ children }: { children: any }) {
           <Loader show={true} />
         ) : isError ? (
           <p>Error loading notifications.</p>
-        ) : notifications.length ? (
+        ) : notifications && notifications.length ? (
           <NotificationsList
-            notifications={notifications}
+            notifications={notifications as any[]}
             closeMenu={() => setNotificationsOpen(false)}
           />
         ) : (
@@ -265,11 +268,12 @@ function SidebarNavLink({
         </Link>
         {/* <AnimatePresence mode="wait" initial={false}> */}
         {router.pathname.startsWith(path) && (
-          <motion.div
-            layoutId="highlight"
-            transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-            className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]"
-          ></motion.div>
+          <div className="absolute left-0 top-0 z-0 h-full w-full origin-left bg-[#CD7660]">
+            <motion.div
+              layoutId="highlight"
+              transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+            ></motion.div>
+          </div>
         )}
         {/* </AnimatePresence> */}
       </li>

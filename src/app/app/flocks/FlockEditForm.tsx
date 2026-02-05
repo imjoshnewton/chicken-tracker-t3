@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 // import type { Breed, Flock } from "@prisma/client";
-import Loader from "../../../components/shared/Loader";
-import { MdImage, MdOutlineDelete } from "react-icons/md";
-import toast from "react-hot-toast";
-import Image from "next/image";
-import { createFlock, deleteFlock, updateFlock } from "../server";
+import type { Breed, Flock } from "@lib/db/schema-postgres";
+import { storage } from "@lib/firebase";
 import { trpc } from "@utils/trpc";
-import type { Breed, Flock } from "@lib/db/schema";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import Image from "next/image";
+import toast from "react-hot-toast";
+import { MdImage, MdOutlineDelete } from "react-icons/md";
+import Loader from "../../../components/shared/Loader";
+import { createFlock, deleteFlock, updateFlock } from "../../../actions/flocks.actions";
+import { Button } from "@components/ui/button";
+import { useMutation } from "@tanstack/react-query";
 
 export default function FlockForm({
   flock,
@@ -28,18 +32,120 @@ export default function FlockForm({
   onDelete?: () => void;
 }) {
   const router = useRouter();
-  const { register, handleSubmit, formState, reset, watch } = useForm({
+  const { register, handleSubmit, formState, watch } = useForm({
     defaultValues: { ...flock, image: null as any, default: false },
     mode: "onChange",
   });
 
-  const { isValid, isDirty, errors } = formState; // TO-DO: embed errors if they exist in the page
+  const { isValid, isDirty } = formState; // TO-DO: embed errors if they exist in the page
 
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
   const utils = trpc.useContext();
+
+  const updateFlockMutation = useMutation({
+    mutationFn: (data: {
+      id: string;
+      name: string;
+      description: string;
+      type: string;
+      imageUrl: string;
+    }) => updateFlock(data),
+    onSuccess: async (data: { id: string; name: string }) => {
+      await utils.flocks.invalidate();
+      toast.success(`${data.name} updated successfully!!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/flocks/${data.id}`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const createFlockMutation = useMutation({
+    mutationFn: (data: {
+      userId: string;
+      name: string;
+      description: string;
+      type: string;
+      imageUrl: string;
+    }) => createFlock(data),
+    onSuccess: (data: { id: string; name: string }) => {
+      utils.flocks.invalidate();
+      toast.success(`${data.name} created successfully!`);
+      if (onComplete) onComplete();
+      else router.push(`/app/flocks/${data.id}`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  const deleteFlockMutation = useMutation({
+    mutationFn: (data: { flockId: string }) => deleteFlock(data),
+    onSuccess: (data: { name: string }) => {
+      utils.flocks.invalidate();
+      toast.success(`${data.name} deleted successfully!`);
+      if (onDelete) onDelete();
+      else router.push(`/app/flocks`);
+    },
+    onError: (err) => {
+      toast.error(`This just happened: ${String(err)}`);
+    },
+  });
+
+  // TO-DO: move this to the libs folder
+  const uploadFile = useCallback(
+    async (e: any) => {
+      // Get the file
+      const file: any = Array.from(e)[0];
+      const extension = file.type.split("/")[1];
+
+      // Makes reference to the storage bucket location
+      const uploadRef = ref(
+        storage,
+        `uploads/${userId}/${flock.id}.${extension}`,
+      );
+      setUploading(true);
+
+      // Starts the upload
+      const task = uploadBytesResumable(uploadRef, file);
+
+      // Listen to updates to upload task
+      task.on("state_changed", (snapshot) => {
+        const pct = (
+          (snapshot.bytesTransferred / snapshot.totalBytes) *
+          100
+        ).toFixed(0);
+        setProgress(Number(pct));
+      });
+
+      // Get downloadURL AFTER task resolves (Note: this is not a native Promise)
+      task
+        .then(() => getDownloadURL(uploadRef))
+        .then((url) => {
+          if (typeof url == "string") {
+            setDownloadURL(url);
+            setUploading(false);
+          }
+          // handler(downloadURL);
+        });
+    },
+    [flock.id, userId],
+  );
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      console.log("Watch: ", value, name, type);
+
+      if (name == "image" && type == "change") {
+        uploadFile(value.image);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, uploadFile]);
 
   const createOrUpdateFlock = (
     flockData: Flock & { breeds: Breed[] } & { default: boolean },
@@ -54,60 +160,26 @@ export default function FlockForm({
     );
 
     if (flockData.id) {
-      toast
-        .promise(
-          updateFlock({
-            id: flockData.id,
-            name: flockData.name,
-            description: flockData.description ? flockData.description : "",
-            type: flockData.type,
-            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-          }),
-          {
-            loading: `Saving flock`,
-            success: (data) => `${data.name} updated successfully!!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then(async (flock) => {
-          await utils.flocks.invalidate();
-          if (onComplete) onComplete();
-          else router.push(`/app/flocks/${flock.id}`);
-        });
+      updateFlockMutation.mutate({
+        id: flockData.id,
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl ?? "",
+      });
     } else {
-      toast
-        .promise(
-          createFlock({
-            userId: userId,
-            name: flockData.name,
-            description: flockData.description ? flockData.description : "",
-            type: flockData.type,
-            imageUrl: downloadURL ? downloadURL : flockData.imageUrl,
-          }),
-          {
-            loading: `Creating flock`,
-            success: (data) => `${data.name} created successfully!`,
-            error: (err) => `This just happened: ${err.toString()}`,
-          },
-        )
-        .then((flock) => {
-          if (onComplete) onComplete();
-          else router.push(`/app/flocks/${flock.id}`);
-        });
+      createFlockMutation.mutate({
+        userId: userId,
+        name: flockData.name,
+        description: flockData.description ? flockData.description : "",
+        type: flockData.type,
+        imageUrl: downloadURL ? downloadURL : flockData.imageUrl ?? "",
+      });
     }
   };
 
   const deleteCurrentFlock = async (flockId: string) => {
-    toast
-      .promise(deleteFlock({ flockId }), {
-        loading: `Deleting flock`,
-        success: (data) => `${data.name} deleted successfully!`,
-        error: (err) => `This just happened: ${err.toString()}`,
-      })
-      .then(() => {
-        if (onDelete) onDelete();
-        else router.push(`/app/flocks`);
-      });
+    deleteFlockMutation.mutate({ flockId });
   };
 
   return (
@@ -205,25 +277,24 @@ export default function FlockForm({
             >
               <MdOutlineDelete />
             </button>
-            <button
-              type="button"
+            <Button
+              variant="ghost"
               onClick={() => {
                 if (onCancel) onCancel();
                 else router.push(`/app/flocks/${flock.id}`);
               }}
-              className="background-transparent mb-1 mr-1 rounded px-6 py-3 text-sm uppercase text-black outline-none hover:bg-slate-50 focus:outline-none"
             >
-              CANCEL
-            </button>
+              Cancel
+            </Button>
           </>
         )}
-        <button
+        <Button
           type="submit"
-          className="btn mb-1 mr-1 rounded px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none hover:shadow-lg focus:outline-none"
+          variant="secondary"
           disabled={!isDirty || !isValid}
         >
-          {flock.id ? "SAVE" : "CREATE"}
-        </button>
+          {flock.id ? "Save" : "Create"}
+        </Button>
       </div>
     </form>
   );

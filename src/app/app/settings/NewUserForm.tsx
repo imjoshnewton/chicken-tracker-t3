@@ -7,7 +7,9 @@ import { useForm } from "react-hook-form";
 import { MdImage } from "react-icons/md";
 import { storage } from "../../../lib/firebase";
 import Loader from "../../../components/shared/Loader";
-import { updateUser } from "../server";
+import { updateUser } from "../../../actions/users.actions";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function NewUserForm({
   user,
@@ -31,6 +33,17 @@ export default function NewUserForm({
   const [progress, setProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
+
+  const updateUserMutation = useMutation({
+    mutationFn: (data: { userId: string; name: string; image: string }) =>
+      updateUser(data),
+    onSuccess: () => {
+      toast.success("Profile updated successfully");
+    },
+    onError: () => {
+      toast.error("Something went wrong updating your profile");
+    },
+  });
 
   // TO-DO: move this to the libs folder
   const uploadFile = useCallback(
@@ -90,7 +103,7 @@ export default function NewUserForm({
   }) => {
     // console.log("Data: ", data, downloadURL);
 
-    updateUser({
+    updateUserMutation.mutate({
       userId: user.id,
       name: data.name,
       image: downloadURL ? downloadURL : user.image ? user.image : "",

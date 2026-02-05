@@ -20,7 +20,7 @@ import {
 } from "chart.js";
 import { DatePickerWithRange } from "./DatePickerWithRange";
 // import { differenceInDays } from "date-fns";
-import { Breed, Flock } from "@lib/db/schema";
+import { Breed, Flock } from "@lib/db/schema-postgres";
 import { format, parseISO } from "date-fns";
 
 ChartJS.register(

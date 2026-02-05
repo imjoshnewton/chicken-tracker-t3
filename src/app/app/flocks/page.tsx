@@ -1,7 +1,8 @@
-import { currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+
 import { db } from "@lib/db";
-import { flock, user } from "@lib/db/schema";
-import { eq } from "drizzle-orm";
+import { flock, user } from "@lib/db/schema-postgres";
+import { eq, sql } from "drizzle-orm";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -15,7 +16,7 @@ export const metadata = {
   description: "Flock Stats for Nerds",
 };
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const Flocks = async () => {
   return (
@@ -51,7 +52,10 @@ async function FlockList() {
       userId: flock.userId,
     })
     .from(user)
-    .where(eq(user.clerkId, clerkUser.id))
+    .where(
+      // Check both primary and secondary Clerk IDs
+      sql`${user.clerkId} = ${clerkUser.id} OR ${user.secondaryClerkId} = ${clerkUser.id}`
+    )
     .innerJoin(flock, eq(flock.userId, user.id));
 
   return (

@@ -13,12 +13,12 @@ import Card from "@components/shared/Card";
 import Loader from "@components/shared/Loader";
 
 import EditModal from "@components/flocks/EditModal";
-import type { Breed, Flock, Task } from "@lib/db/schema";
+import type { Breed, Flock } from "@lib/db/schema-postgres";
 import { useFlockDataAppDir } from "@lib/hooks";
 import { format, subDays } from "date-fns";
 import { usePathname, useSearchParams } from "next/navigation";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 const Flock = ({ userId, flockId }: { userId: string; flockId: string }) => {
   const router = useRouter();
@@ -122,7 +122,7 @@ const FlockLayout = ({
   userId,
   expenseMonths,
 }: {
-  flock: Flock & { breeds: Breed[]; tasks: Task[] };
+  flock: Flock & { breeds: Breed[]; tasks?: any[] };
   flockId: string;
   onRangeChange: (event: any) => void;
   onMonthsChange: (value: string) => void;
@@ -134,44 +134,12 @@ const FlockLayout = ({
   filterText: string | undefined;
   filterId: string;
   stats: {
-    expenses:
-      | {
-          expenses: {
-            flockId: string;
-            category: string;
-            total: number;
-            monthYear: string;
-          }[];
-          production: {
-            flockId: string;
-            total: number;
-            monthYear: string;
-          }[];
-        }
-      | undefined;
-    logs:
-      | {
-          date: string;
-          count: number;
-        }[]
-      | undefined;
-    lastWeekAvg:
-      | {
-          avg: number;
-        }
-      | undefined;
-    thisWeekAvg:
-      | {
-          avg: number;
-        }
-      | undefined;
+    expenses?: any;
+    logs?: any;
+    lastWeekAvg?: any;
+    thisWeekAvg?: any;
   };
-  breedStats:
-    | {
-        breedId: string | null;
-        avgCount: number;
-      }[]
-    | undefined;
+  breedStats?: any;
   userId: string;
   expenseMonths?: number;
 }) => (
@@ -224,17 +192,18 @@ const FlockInfo = ({ flock, flockId }: any) => (
     initial={{ opacity: 0, translateY: 10 }}
     animate={{ opacity: 1, translateY: 0 }}
     transition={{ duration: 0.5 }}
-    className="flex flex-wrap items-center"
   >
-    <Image
-      src={flock?.imageUrl}
-      width="150"
-      height="150"
-      className="flock-image aspect-square object-cover"
-      alt="A user uploaded image that represents this flock"
-    />
-    <FlockDetails flock={flock} />
-    <Actions flockId={flockId} />
+    <div className="flex flex-wrap items-center">
+      <Image
+        src={flock?.imageUrl}
+        width="150"
+        height="150"
+        className="flock-image aspect-square object-cover"
+        alt="A user uploaded image that represents this flock"
+      />
+      <FlockDetails flock={flock} />
+      <Actions flockId={flockId} />
+    </div>
   </motion.div>
 );
 

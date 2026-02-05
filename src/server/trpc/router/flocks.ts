@@ -1,16 +1,6 @@
 import { z } from "zod";
 import { router, protectedProcedure } from "../trpc";
-// import { JWT } from "google-auth-library";
-// import { Breed, Flock, Task } from "@prisma/client";
-import {
-  flock as Flocks,
-  breed as Breeds,
-  user,
-  task,
-  flock,
-} from "@lib/db/schema";
-import { eq, and, not } from "drizzle-orm";
-import { createId } from "@paralleldrive/cuid2";
+import * as flocksService from "../../../services/flocks.service";
 
 export const flocksRouter = router({
   getFlock: protectedProcedure
@@ -19,53 +9,34 @@ export const flocksRouter = router({
         flockId: z.string(),
       }),
     )
-    .query(async ({ input, ctx }) => {
-      const flock = await ctx.db.query.flock.findFirst({
-        where: eq(Flocks.id, input.flockId),
-        with: {
-          breeds: {
-            where: eq(Breeds.deleted, 0),
-            orderBy: (breeds, { asc }) => [asc(breeds.id)],
-          },
-        },
-      });
+    .query(async ({ input }) => {
+      const { flockData, taskData } = await flocksService.getFlockWithTasks(input.flockId);
 
-      if (!flock) {
+      if (!flockData) {
         throw new Error("Flock not found");
       }
 
-      const nonRecurring = (
-        await ctx.db
-          .select()
-          .from(task)
-          .where(and(eq(task.flockId, input.flockId), eq(task.recurrence, "")))
-      ).map((task) => {
-        return {
+      // Process tasks locally: split into non-recurring and recurring
+      const nonRecurring = taskData
+        .filter(t => t.recurrence === "")
+        .map(task => ({
           ...task,
           completed: task.completed,
           dueDate: task.dueDate,
-        };
-      });
+        }));
 
-      const recurring = (
-        await ctx.db
-          .select()
-          .from(task)
-          .where(
-            and(eq(task.flockId, input.flockId), not(eq(task.recurrence, ""))),
-          )
-      ).map((task) => {
-        return {
+      const recurring = taskData
+        .filter(t => t.recurrence !== "")
+        .map(task => ({
           ...task,
           completed: task.completed,
           dueDate: task.dueDate,
-        };
-      });
+        }));
 
       const flockWithTasks = {
-        ...flock,
-        deleted: flock.deleted,
-        breeds: flock.breeds.map((breed) => {
+        ...flockData,
+        deleted: flockData.deleted,
+        breeds: flockData.breeds.map((breed) => {
           return {
             ...breed,
             deleted: breed.deleted,
@@ -97,18 +68,7 @@ export const flocksRouter = router({
       return flockWithTasks;
     }),
   getFlocks: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db
-      .select({
-        id: Flocks.id,
-        name: Flocks.name,
-        description: Flocks.description,
-        imageUrl: Flocks.imageUrl,
-        type: Flocks.type,
-        userId: Flocks.userId,
-      })
-      .from(user)
-      .where(eq(user.id, ctx.session.user.id))
-      .innerJoin(Flocks, eq(Flocks.userId, user.id));
+    return flocksService.getUserFlocks(ctx.session.user.id);
   }),
   createFlock: protectedProcedure
     .input(
@@ -120,18 +80,11 @@ export const flocksRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const id = createId();
-
-      const flock = await ctx.db.insert(Flocks).values([
-        {
-          ...input,
-          id: id,
-          imageUrl: input.imageUrl ? input.imageUrl : "",
-          userId: ctx.session.user.id,
-        },
-      ]);
-
-      return flock;
+      return flocksService.createFlock({
+        ...input,
+        imageUrl: input.imageUrl || "",
+        userId: ctx.session.user.id,
+      });
     }),
   updateFlock: protectedProcedure
     .input(
@@ -144,15 +97,16 @@ export const flocksRouter = router({
         default: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input, ctx }) => {
-      const flockRes = await ctx.db
-        .update(Flocks)
-        .set({
-          ...input,
-          imageUrl: input.imageUrl ? input.imageUrl : "",
-        })
-        .where(eq(Flocks.id, input.id));
-
-      return flockRes;
+    .mutation(async ({ input }) => {
+      const result = await flocksService.updateFlock(input.id, {
+        name: input.name,
+        description: input.description,
+        type: input.type,
+        imageUrl: input.imageUrl,
+      });
+      if (!result) {
+        throw new Error("Flock not found");
+      }
+      return result;
     }),
 });

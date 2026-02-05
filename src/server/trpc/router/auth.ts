@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from "../trpc";
 import { z } from "zod";
-import { notification, user } from "@lib/db/schema";
-import { eq, desc, and } from "drizzle-orm";
+import * as usersService from "../../../services/users.service";
+import * as notificationsService from "../../../services/notifications.service";
 
 export const authRouter = router({
   getSession: publicProcedure.query(({ ctx }) => {
@@ -10,11 +10,13 @@ export const authRouter = router({
   getUser: protectedProcedure
     .input(z.object({ clerkId: z.string() }))
     .query(async ({ input, ctx }) => {
-      const [dbUser] = await ctx.db
-        .select()
-        .from(user)
-        .where(eq(user.clerkId, input.clerkId))
-        .limit(1);
+      // First, handle empty clerkId case
+      if (!input.clerkId) {
+        // If clerkId is empty, return the currently authenticated user
+        return ctx.session.user;
+      }
+
+      const dbUser = await usersService.getUserByClerkId(input.clerkId);
 
       if (!dbUser) {
         throw new Error("User not found");
@@ -30,10 +32,11 @@ export const authRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.db
-        .update(user)
-        .set({ name: input.name, image: input.image })
-        .where(eq(user.id, ctx.session.user.id));
+      if (!ctx.session.user.id) {
+        throw new Error("User id not found in session");
+      }
+
+      return usersService.updateUser(ctx.session.user.id, input);
     }),
   setDefaultFlock: protectedProcedure
     .input(
@@ -42,37 +45,29 @@ export const authRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return await ctx.db
-        .update(user)
-        .set({ defaultFlock: input.flockId })
-        .where(eq(user.id, ctx.session.user.id));
+      if (!ctx.session.user.id) {
+        throw new Error("User id not found in session");
+      }
+
+      return usersService.setDefaultFlock(ctx.session.user.id, input.flockId);
     }),
   getUserNotifications: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db
-      .select()
-      .from(notification)
-      .limit(10)
-      .orderBy(desc(notification.date))
-      .where(eq(notification.userId, ctx.session.user.id));
+    if (!ctx.session.user.id) {
+      throw new Error("User id not found in session");
+    }
+
+    return notificationsService.getUserNotifications(ctx.session.user.id);
   }),
   getUserUnreadNotifications: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.db
-      .select()
-      .from(notification)
-      .where(
-        and(
-          eq(notification.userId, ctx.session.user.id),
-          eq(notification.read, 0),
-        ),
-      )
-      .limit(10);
+    if (!ctx.session.user.id) {
+      throw new Error("User id not found in session");
+    }
+
+    return notificationsService.getUnreadNotifications(ctx.session.user.id);
   }),
   markNotificationasRead: protectedProcedure
     .input(z.object({ id: z.string() }))
-    .mutation(async ({ input, ctx }) => {
-      return await ctx.db
-        .update(notification)
-        .set({ read: 1 })
-        .where(eq(notification.id, input.id));
+    .mutation(async ({ input }) => {
+      return notificationsService.markNotificationAsRead(input.id);
     }),
 });

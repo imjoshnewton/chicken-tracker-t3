@@ -1,19 +1,36 @@
-import { Client } from "@planetscale/database";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-import * as schema from "./schema";
+import { drizzle } from "drizzle-orm/vercel-postgres";
+import { sql, createPool } from "@vercel/postgres";
+import * as schema from "./schema-postgres";
 
-const client = new Client({
-  host: process.env.DATABASE_HOST,
-  username: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
+// Detect if we're running in Edge Runtime
+// Using a safer check method that won't cause issues during static analysis
+const isEdgeRuntime = typeof process !== 'undefined' && 
+  process.env.NEXT_RUNTIME === 'edge';
+
+// Create an optimized connection pool using DATABASE_URL
+const pool = createPool({
+  connectionString: process.env.DATABASE_URL,
+  ...(isEdgeRuntime
+    ? {
+        // Edge Runtime has different connection handling
+        ssl: true,
+      }
+    : {
+        // Optimize for Vercel serverless with Neon:
+        // - Max: Limit total connections to avoid overloading Neon 
+        // - Min: Keep some connections warm to reduce cold starts
+        // - Idle timeout: Release connections when not in use
+        max: 10,
+        min: 2,
+        connectionTimeoutMillis: 5000, // 5 seconds to establish connection
+        idleTimeoutMillis: 10000, // 10 seconds idle before releasing
+        keepAlive: true, // Keep connections alive to reduce connection churn
+        ssl: true, // Secure connections
+      }),
 });
 
-// create database connection
-// const connection = connect({
-//   // url: process.env.DATABASE_URL,
-//   host: process.env.DATABASE_HOST,
-//   username: process.env.DATABASE_USERNAME,
-//   password: process.env.DATABASE_PASSWORD,
-// });
+// Use Vercel's postgres client with Neon database
+export const db = drizzle(pool, { schema });
 
-export const db = drizzle(client, { schema });
+// Export sql for direct query usage if needed
+export { sql };

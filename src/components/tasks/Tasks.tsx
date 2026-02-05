@@ -1,20 +1,19 @@
 import { useState } from "react";
-// import { Task } from "@prisma/client";
 import {
   MdCheckCircle,
   MdEdit,
   MdOutlineCircle,
   MdOutlineExpandMore,
 } from "react-icons/md";
-import { AnimatePresence, motion } from "framer-motion";
 import { trpc } from "@utils/trpc";
 import { toast } from "react-hot-toast";
-import { markTaskAsComplete } from "src/app/app/server";
+import { markTaskAsComplete } from "../../actions/tasks.actions";
 import { RiLoopRightFill } from "react-icons/ri";
 import TaskModal from "./TaskModal";
 import { Switch } from "@components/ui/switch";
 import { Label } from "@components/ui/label";
 import { Task } from "@lib/db/schema";
+import { useMutation } from "@tanstack/react-query";
 
 type TaskListProps = {
   tasks: Task[];
@@ -30,34 +29,28 @@ const TaskItem: React.FC<{
   const utils = trpc.useContext();
   const passedDue = new Date(task.dueDate).getTime() < new Date().getTime();
 
+  const { mutate: completeTask } = useMutation({
+    mutationFn: () =>
+      markTaskAsComplete({ taskId: task.id, recurrence: task.recurrence }),
+    onSuccess: () => {
+      utils.flocks.invalidate();
+      toast.success("Task completed!");
+    },
+    onError: () => {
+      toast.error("Error completing task");
+    },
+  });
+
   const handleMarkComplete = () => {
     console.log(`Completing task with id: ${task.id}`);
-
-    toast
-      .promise(
-        markTaskAsComplete({ taskId: task.id, recurrence: task.recurrence }),
-        {
-          loading: "Updating task...",
-          success: "Task completed!",
-          error: "Error completing task",
-        },
-      )
-      .then(() => utils.flocks.invalidate());
+    completeTask();
   };
 
   return (
-    <motion.li
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{
-        ease: "easeInOut",
-        duration: 0.3,
-        delay: index * 0.1,
-      }}
-      className={`border-1 group relative flex w-full items-center justify-between border-gray-200 px-2 py-2 hover:cursor-pointer`}
+    <li
+      className="border-1 group relative flex w-full items-center justify-between border-gray-200 px-2 py-2 transition-opacity duration-300 ease-in-out hover:cursor-pointer"
       key={task.id}
-      layout
-      layoutId={task.id}
+      style={{ animationDelay: `${index * 100}ms` }}
     >
       <button
         type="button"
@@ -97,7 +90,7 @@ const TaskItem: React.FC<{
           </span>
         </button>
       )}
-    </motion.li>
+    </li>
   );
 };
 
@@ -137,139 +130,114 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, flockId, userId }) => {
         />
       </h2>
 
-      <AnimatePresence>
-        {isActive && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="flex flex-col gap-y-4"
-          >
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div className="flex gap-4 !border-b-0 text-sm text-stone-500">
-                <button
-                  onClick={() => setShowToday(true)}
-                  // disabled={showToday}
-                  className="relative p-1 "
-                >
-                  Today
-                  {showToday ? (
-                    <motion.div
-                      className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-gray-500"
-                      layoutId="underline"
-                    />
-                  ) : null}
-                </button>
-                <button
-                  onClick={() => setShowToday(false)}
-                  // disabled={!showToday}
-                  className="relative p-1 "
-                >
-                  Upcoming
-                  {!showToday ? (
-                    <motion.div
-                      className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-gray-500"
-                      layoutId="underline"
-                    />
-                  ) : null}
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="show-completed"
-                  checked={showCompleted}
-                  onCheckedChange={(val) => {
-                    // console.log(val);
-                    setShowCompleted(val);
-                  }}
-                  disabled={
-                    tasks.length > 0 && completedTasks.length > 0 && isActive
-                      ? false
-                      : true
-                  }
-                />
-                <Label className="text-stone-500" htmlFor="show-completed">
-                  Show Completed
-                </Label>
-              </div>
+      {isActive && (
+        <div
+          className="flex flex-col gap-y-4 animate-fade-in"
+        >
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div className="flex gap-4 !border-b-0 text-sm text-stone-500">
+              <button
+                onClick={() => setShowToday(true)}
+                className="relative p-1"
+              >
+                Today
+                {showToday ? (
+                  <div
+                    className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-gray-500"
+                  />
+                ) : null}
+              </button>
+              <button
+                onClick={() => setShowToday(false)}
+                className="relative p-1"
+              >
+                Upcoming
+                {!showToday ? (
+                  <div
+                    className="absolute bottom-[-1px] left-0 right-0 h-[1px] bg-gray-500"
+                  />
+                ) : null}
+              </button>
             </div>
-            <motion.ul
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="flex flex-wrap justify-between gap-y-4 divide-y overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
-            >
-              {tasks.length > 0 ? (
-                todaysTasks.length > 0 && showToday ? (
-                  todaysTasks.map((task, index) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      index={index}
-                      onClick={() => {
-                        setSellectedTask(task);
-                        setShowModal(true);
-                      }}
-                    />
-                  ))
-                ) : upComingTasks.length > 0 && !showToday ? (
-                  upComingTasks.map((task, index) => (
-                    <TaskItem
-                      key={task.id}
-                      task={task}
-                      index={index}
-                      onClick={() => {
-                        setSellectedTask(task);
-                        setShowModal(true);
-                      }}
-                    />
-                  ))
-                ) : (
-                  !showCompleted && (
-                    <p className="w-full !border-t-0 py-2 text-center">
-                      You&apos;ve completed all of your tasks! 👍
-                    </p>
-                  )
-                )
-              ) : (
-                <p className="w-full py-2 text-center">No tasks available.</p>
-              )}
-              {showCompleted &&
-                completedTasks.map((task, index) => (
+            <div className="flex items-center gap-2">
+              <Switch
+                id="show-completed"
+                checked={showCompleted}
+                onCheckedChange={(val) => {
+                  setShowCompleted(val);
+                }}
+                disabled={
+                  tasks.length > 0 && completedTasks.length > 0 && isActive
+                    ? false
+                    : true
+                }
+              />
+              <Label className="text-stone-500" htmlFor="show-completed">
+                Show Completed
+              </Label>
+            </div>
+          </div>
+          <ul
+            className="flex flex-wrap justify-between gap-y-4 divide-y overflow-y-hidden dark:text-gray-300 lg:gap-x-2"
+          >
+            {tasks.length > 0 ? (
+              todaysTasks.length > 0 && showToday ? (
+                todaysTasks.map((task, index) => (
                   <TaskItem
                     key={task.id}
                     task={task}
                     index={index}
-                    onClick={() => void 0}
+                    onClick={() => {
+                      setSellectedTask(task);
+                      setShowModal(true);
+                    }}
                   />
-                ))}
-              {/* {tasks.length > 0 && completedTasks.length > 0 && isActive && (
-                <button
-                  className="background-transparent mx-auto rounded !border-t-0 px-6 py-3 text-sm uppercase outline-none hover:bg-slate-50 focus:outline-none"
-                  onClick={() => setShowCompleted(!showCompleted)}
-                >
-                  {showCompleted ? "Hide" : "Show"} completed tasks
-                </button>
-              )} */}
-            </motion.ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-      <AnimatePresence initial={false}>
-        {showModal && (
-          <TaskModal
-            flockId={flockId}
-            userId={userId}
-            task={selectedTask}
-            closeModal={() => {
-              setShowModal(false);
-              setSellectedTask(undefined);
-            }}
-          />
-        )}
-      </AnimatePresence>
+                ))
+              ) : upComingTasks.length > 0 && !showToday ? (
+                upComingTasks.map((task, index) => (
+                  <TaskItem
+                    key={task.id}
+                    task={task}
+                    index={index}
+                    onClick={() => {
+                      setSellectedTask(task);
+                      setShowModal(true);
+                    }}
+                  />
+                ))
+              ) : (
+                !showCompleted && (
+                  <p className="w-full !border-t-0 py-2 text-center">
+                    You&apos;ve completed all of your tasks! 👍
+                  </p>
+                )
+              )
+            ) : (
+              <p className="w-full py-2 text-center">No tasks available.</p>
+            )}
+            {showCompleted &&
+              completedTasks.map((task, index) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  index={index}
+                  onClick={() => void 0}
+                />
+              ))}
+          </ul>
+        </div>
+      )}
+      {showModal && (
+        <TaskModal
+          flockId={flockId}
+          userId={userId}
+          task={selectedTask}
+          closeModal={() => {
+            setShowModal(false);
+            setSellectedTask(undefined);
+          }}
+        />
+      )}
     </div>
   );
 };
