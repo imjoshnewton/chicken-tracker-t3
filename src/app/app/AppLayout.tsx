@@ -22,7 +22,7 @@ import {
 
 import { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@utils/trpc";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion, HTMLMotionProps } from "motion/react";
 import { usePathname } from "next/navigation";
 import { ReactElement, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";

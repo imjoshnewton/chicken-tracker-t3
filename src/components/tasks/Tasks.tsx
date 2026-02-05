@@ -26,7 +26,7 @@ const TaskItem: React.FC<{
   index: number;
   onClick: () => void;
 }> = ({ task, index, onClick }) => {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   const passedDue = new Date(task.dueDate).getTime() < new Date().getTime();
 
   const { mutate: completeTask } = useMutation({

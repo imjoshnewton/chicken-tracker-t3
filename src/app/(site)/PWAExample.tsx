@@ -1,7 +1,7 @@
 "use client";
 
 import { Switch } from "@components/ui/switch";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { useState } from "react";
 
 const PWAExample = () => {

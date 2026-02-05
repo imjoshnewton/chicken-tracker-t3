@@ -8,9 +8,9 @@ import { useMutation } from "@tanstack/react-query";
 import { trpc } from "@utils/trpc";
 
 export default function DeleteButton({ id }: { id: string }) {
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
-  const { mutateAsync: doDelete, isLoading } = useMutation({
+  const { mutateAsync: doDelete, isPending } = useMutation({
     mutationFn: () => deleteExpense(id),
     onSuccess: () => {
       utils.expenses.invalidate();
@@ -24,10 +24,10 @@ export default function DeleteButton({ id }: { id: string }) {
   return (
     <Button
       variant="destructive"
-      disabled={isLoading}
+      disabled={isPending}
       onClick={() => doDelete()}
     >
-      {isLoading ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}
+      {isPending ? <RiLoader4Fill className="animate-spin text-2xl" /> : "Delete"}
     </Button>
   );
 }

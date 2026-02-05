@@ -21,39 +21,19 @@ export const TrpcProvider: React.FC<{ children: React.ReactNode }> = ({
     : "http://localhost:3000/api/trpc/";
 
   const [trpcClient] = useState(() =>
-    trpcReact.createClient(
-      {
-        transformer: superjson,
-        links: [
-          loggerLink({
-            enabled: (opts) =>
-              process.env.NODE_ENV === "development" ||
-              (opts.direction === "down" && opts.result instanceof Error),
-          }),
-          httpBatchLink({
-            url: `${getBaseUrl()}/api/trpc`,
-          }),
-        ],
-      },
-      //     {
-      //   links: [
-      //     loggerLink({
-      //       enabled: () => true,
-      //     }),
-      //     httpBatchLink({
-      //       url,
-      //       fetch: async (input, init?) => {
-      //         const fetch = getFetch();
-      //         return fetch(input, {
-      //           ...init,
-      //           credentials: "include",
-      //         });
-      //       },
-      //     }),
-      //   ],
-      //   transformer: superjson,
-      // }
-    ),
+    trpcReact.createClient({
+      links: [
+        loggerLink({
+          enabled: (opts) =>
+            process.env.NODE_ENV === "development" ||
+            (opts.direction === "down" && opts.result instanceof Error),
+        }),
+        httpBatchLink({
+          transformer: superjson,
+          url: `${getBaseUrl()}/api/trpc`,
+        }),
+      ],
+    }),
   );
   return (
     <trpcReact.Provider client={trpcClient} queryClient={queryClient}>

@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 //
 export function useUserData() {
   const { isLoaded, isSignedIn, user: clerkUser } = useUser();
-  const { data: user, isLoading } = trpc.auth.getUser.useQuery(
+  const { data: user, isPending } = trpc.auth.getUser.useQuery(
     {
       clerkId: clerkUser?.id ? clerkUser.id : "",
     },
@@ -23,9 +23,9 @@ export function useUserData() {
   return {
     user: user as User | undefined,
     status:
-      !isLoaded && isLoading
+      !isLoaded && isPending
         ? "loading"
-        : isSignedIn && isLoaded && !isLoading
+        : isSignedIn && isLoaded && !isPending
         ? "authenticated"
         : null,
   };
@@ -50,7 +50,7 @@ export function useUserData() {
 //   const {
 //     data: flockData,
 //     error: flockError,
-//     isLoading: flockLoading,
+//     isPending: flockLoading,
 //   } = trpc.flocks.getFlock.useQuery(
 //     { flockId: flockId as string },
 //     {
@@ -60,7 +60,7 @@ export function useUserData() {
 //   const {
 //     data: logsData,
 //     error: logsError,
-//     isLoading: logsLoading,
+//     isPending: logsLoading,
 //   } = trpc.stats.getStats.useQuery(
 //     {
 //       flockId: flockId as string,
@@ -74,7 +74,7 @@ export function useUserData() {
 //   );
 //   const {
 //     data: expenseData,
-//     isLoading: expensesLoading,
+//     isPending: expensesLoading,
 //     isError: expensesError,
 //   } = trpc.stats.getExpenseStats.useQuery(
 //     { today: today, flockId: flockId as string },
@@ -84,7 +84,7 @@ export function useUserData() {
 //   );
 //   const {
 //     data: breedStats,
-//     isLoading: breedStatsLoading,
+//     isPending: breedStatsLoading,
 //     isError: breedStatsError,
 //   } = trpc.stats.getBreedStats.useQuery({
 //     today: today,
@@ -158,10 +158,10 @@ export function useFlockDataAppDir(
     range,
     breedStats: breedStats.data,
     loading:
-      flockData.isLoading &&
-      logsData.isLoading &&
-      expenseData.isLoading &&
-      breedStats.isLoading,
+      flockData.isPending &&
+      logsData.isPending &&
+      expenseData.isPending &&
+      breedStats.isPending,
     error: {
       flock: flockData.error,
       stats: logsData.error,
@@ -230,7 +230,7 @@ export function useAllFlocks() {
   return {
     flocks: flocks.data,
     userId: user?.id,
-    loading: flocks.isLoading,
+    loading: flocks.isPending,
   };
 }
 

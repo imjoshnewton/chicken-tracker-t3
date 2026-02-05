@@ -2,7 +2,7 @@
 
 // import { Breed } from "@prisma/client";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { motion, HTMLMotionProps } from "framer-motion";
+import { motion, HTMLMotionProps } from "motion/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -29,9 +29,9 @@ const BreedModal = ({
     defaultValues: { ...breed, image: null as any, flockId: flockId },
     mode: "onChange",
   });
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
-  const { mutateAsync: createNewBreed, isLoading: creatingBreed } =
+  const { mutateAsync: createNewBreed, isPending: creatingBreed } =
     trpc.breeds.createBreed.useMutation({
       onSuccess: () => {
         toast.success("New breed created!");
@@ -39,7 +39,7 @@ const BreedModal = ({
       },
     });
 
-  const { mutateAsync: updateBreed, isLoading: updatingBreed } =
+  const { mutateAsync: updateBreed, isPending: updatingBreed } =
     trpc.breeds.updateBreed.useMutation({
       onSuccess: () => {
         toast.success("Breed updated!");
@@ -47,7 +47,7 @@ const BreedModal = ({
       },
     });
 
-  const { mutateAsync: deleteBreed, isLoading: deletingBreed } =
+  const { mutateAsync: deleteBreed, isPending: deletingBreed } =
     trpc.breeds.deleteBreed.useMutation({
       onSuccess: () => {
         toast.success("Breed deleted!");
@@ -65,7 +65,7 @@ const BreedModal = ({
       opacity: 1,
       transition: {
         duration: 0.15,
-        type: "spring",
+        type: "spring" as const,
         damping: 25,
         stiffness: 500,
       },
@@ -75,7 +75,7 @@ const BreedModal = ({
       opacity: 0,
       transition: {
         duration: 0.3,
-        type: "spring",
+        type: "spring" as const,
         damping: 25,
         stiffness: 500,
       },

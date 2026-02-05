@@ -15,11 +15,10 @@ import logo from "../../public/FlockNerd-logo-v2.png";
 import { ReactElement, useState } from "react";
 import { type Notification } from "@lib/db/schema-postgres";
 import { useRouter } from "next/router";
-import { signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import Loader from "../components/shared/Loader";
 import NotificationsList from "../components/NotificationsList";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@components/ui/button";
 
 // Top navbar
@@ -27,7 +26,7 @@ export default function AppLayout({ children }: { children: any }) {
   const { user } = useUserData();
   const {
     data: notifications,
-    isLoading,
+    isPending,
     isError,
   } = trpc.auth.getUserNotifications.useQuery(undefined, {
     refetchInterval: 5 * 60 * 1000,
@@ -178,7 +177,7 @@ export default function AppLayout({ children }: { children: any }) {
           notificationsOpen ? "translate-x-0" : "translate-x-80"
         }`}
       >
-        {isLoading ? (
+        {isPending ? (
           <Loader show={true} />
         ) : isError ? (
           <p>Error loading notifications.</p>
@@ -210,7 +209,6 @@ export default function AppLayout({ children }: { children: any }) {
             <button
               className="flex items-center px-2 py-3"
               onClick={() => {
-                signOut();
                 setSideBarOpen(false);
               }}
             >

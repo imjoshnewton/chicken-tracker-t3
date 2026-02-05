@@ -43,7 +43,7 @@ export default function FlockForm({
   const [uploading, setUploading] = useState(false);
   const [downloadURL, setDownloadURL] = useState("");
 
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
 
   const updateFlockMutation = useMutation({
     mutationFn: (data: {

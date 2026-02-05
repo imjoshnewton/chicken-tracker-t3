@@ -13,11 +13,9 @@ import { AiOutlineDollar } from "react-icons/ai";
 import logo from "../../public/FlockNerd-logo-v2.png";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
-
 // Top navbar
 export default function SiteLayout({ children }: { children: any }) {
-  const { data } = useSession();
+  const data: any = null; // Legacy layout - session removed with next-auth
   const router = useRouter();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -218,7 +216,6 @@ export default function SiteLayout({ children }: { children: any }) {
                 <button
                   className="flex items-center px-2 py-3"
                   onClick={() => {
-                    signOut();
                     setSideBarOpen(false);
                   }}
                 >
