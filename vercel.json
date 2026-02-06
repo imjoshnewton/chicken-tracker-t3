@@ -1,5 +1,0 @@
-{
-  "buildCommand": "cd apps/web && bun run build && cp -r .next ../../.next",
-  "installCommand": "bun install",
-  "framework": "nextjs"
-}
