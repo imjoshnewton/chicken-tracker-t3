@@ -5,7 +5,6 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { NextRequest, NextResponse } from "next/server";
 import { appRouter } from "src/server/trpc/router/_app";
 
-export const runtime = "edge";
 export const preferredRegion = "auto";
 
 function corsHeaders() {
@@ -25,16 +24,20 @@ async function getAuthFromRequest(req: NextRequest) {
       const payload = await verifyToken(token, {
         secretKey: process.env.CLERK_SECRET_KEY!,
       });
-      if (payload && typeof payload === "object" && "sub" in payload) {
-        return { userId: payload.sub as string };
+      console.log("verifyToken result:", JSON.stringify({ sub: payload?.sub, iss: payload?.iss }));
+      if (payload?.sub) {
+        return { userId: payload.sub };
       }
+      console.error("verifyToken returned payload without sub:", payload);
       return { userId: null };
-    } catch {
+    } catch (error) {
+      console.error("verifyToken error:", error instanceof Error ? error.message : error);
       return { userId: null };
     }
   }
   // Fall back to cookie-based auth (web app)
-  return await getAuth(req);
+  const auth = await getAuth(req);
+  return auth;
 }
 
 async function handler(req: NextRequest) {
