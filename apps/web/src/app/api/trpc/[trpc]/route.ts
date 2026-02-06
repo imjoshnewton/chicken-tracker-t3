@@ -1,4 +1,5 @@
 import { getAuth } from "@clerk/nextjs/server";
+import { verifyToken } from "@clerk/backend";
 import { db } from "@lib/db";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,13 +16,34 @@ function corsHeaders() {
   };
 }
 
+async function getAuthFromRequest(req: NextRequest) {
+  // Check for Bearer token (mobile app)
+  const authHeader = req.headers.get("Authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.substring(7);
+    try {
+      const payload = await verifyToken(token, {
+        secretKey: process.env.CLERK_SECRET_KEY!,
+      });
+      if (payload && typeof payload === "object" && "sub" in payload) {
+        return { userId: payload.sub as string };
+      }
+      return { userId: null };
+    } catch {
+      return { userId: null };
+    }
+  }
+  // Fall back to cookie-based auth (web app)
+  return await getAuth(req);
+}
+
 async function handler(req: NextRequest) {
   const response = await fetchRequestHandler({
     endpoint: "/api/trpc",
     router: appRouter,
     req,
     createContext: async () => {
-      const auth = await getAuth(req);
+      const auth = await getAuthFromRequest(req);
       return {
         auth,
         db,
