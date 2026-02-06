@@ -3,7 +3,31 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "POSTGRES_URL",
+        "DATABASE_URL",
+        "DATABASE_HOST",
+        "DATABASE_USERNAME",
+        "DATABASE_PASSWORD",
+        "CLERK_SECRET_KEY",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+        "NEXTAUTH_SECRET",
+        "NEXTAUTH_URL",
+        "GOOGLE_ID",
+        "GOOGLE_SECRET",
+        "FACEBOOK_CLIENT_ID",
+        "FACEBOOK_CLIENT_SECRET",
+        "EMAIL_SERVER",
+        "EMAIL_FROM",
+        "GCP_CLIENT_EMAIL",
+        "GCP_PRIVATE_KEY",
+        "QSTASH_NEXT_SIGNING_KEY",
+        "QSTASH_CURRENT_SIGNING_KEY",
+        "FIREBASE_PROJECT_ID",
+        "FIREBASE_PRIVATE_KEY",
+        "FIREBASE_CLIENT_EMAIL"
+      ]
     },
     "dev": {
       "cache": false,
