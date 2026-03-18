@@ -3,7 +3,7 @@ import { Stack } from "expo-router";
 export default function AppLayout() {
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Home" }} />
       <Stack.Screen
         name="flocks/[flockId]/index"
         options={{ title: "Flock Details" }}

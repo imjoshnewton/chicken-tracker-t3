@@ -28,6 +28,9 @@ export function getTRPCClient(getToken: () => Promise<string | null>) {
         url: `${getBaseUrl()}/api/trpc`,
         async headers() {
           const token = await getToken();
+          if (__DEV__) {
+            console.log("[tRPC] token exists:", !!token, "length:", token?.length ?? 0);
+          }
           return {
             Authorization: token ? `Bearer ${token}` : "",
           };

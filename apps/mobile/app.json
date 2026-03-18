@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "flocknerd",
+    "scheme": ["flocknerd", "com.flocknerd.app"],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -15,7 +15,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.flocknerd.app"
+      "bundleIdentifier": "com.flocknerd.app",
+      "appleTeamId": "Z499G7FHGQ"
     },
     "android": {
       "adaptiveIcon": {
