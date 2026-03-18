@@ -5,6 +5,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@flocknerd/api": [
+        "../../packages/api/src/index"
       ]
     }
   },

@@ -41,11 +41,8 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
   const utils = trpc.useContext();
   const createExpense = trpc.expenses.createExpense.useMutation({
     onSuccess: () => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       utils.expenses.getExpenses.invalidate();
       utils.stats.getExpenseStats.invalidate();
-      resetForm();
-      onClose();
     },
     onError: () => showErrorToast("Failed to log expense"),
   });
@@ -65,6 +62,7 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
   const handleSubmit = () => {
     const numAmount = parseFloat(amount);
     if (!numAmount || numAmount <= 0) { showErrorToast("Enter a valid amount"); return; }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     createExpense.mutate({
       flockId,
       date: startOfDay(date),
@@ -72,6 +70,7 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
       category,
       memo: memo || undefined,
     });
+    onClose();
   };
 
   const isValid = amount && parseFloat(amount) > 0;
@@ -160,22 +159,6 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
           />
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.submitButton, !isValid && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={!isValid || createExpense.isLoading}
-            accessibilityLabel="Log expense"
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !isValid || createExpense.isLoading }}
-          >
-            {createExpense.isLoading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={styles.submitButtonText}>Log Expense</Text>
-            )}
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -204,8 +187,4 @@ const styles = StyleSheet.create({
   categoryChipTextActive: { color: colors.white },
   input: { backgroundColor: colors.white, borderRadius: 12, padding: 16, fontSize: 16, borderWidth: 1, borderColor: colors.gray[200], color: colors.gray[900] },
   textArea: { minHeight: 80, textAlignVertical: "top" },
-  footer: { padding: 16, paddingBottom: 32, borderTopWidth: 1, borderTopColor: colors.gray[200] },
-  submitButton: { backgroundColor: colors.tertiary, borderRadius: 12, padding: 16, alignItems: "center" },
-  submitButtonDisabled: { opacity: 0.5 },
-  submitButtonText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 });

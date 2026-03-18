@@ -4,9 +4,9 @@ import * as expensesService from "../../../services/expenses.service";
 
 export const expensesRouter = router({
   getExpenses: protectedProcedure
-    .input(z.object({ page: z.number() }))
+    .input(z.object({ cursor: z.number().default(1) }))
     .query(async ({ input, ctx }) => {
-      const [expenses] = await expensesService.getExpenses(ctx.session.user.id, input.page);
+      const [expenses] = await expensesService.getExpenses(ctx.session.user.id, input.cursor);
       return expenses;
     }),
   createExpense: protectedProcedure

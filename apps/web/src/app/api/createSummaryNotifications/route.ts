@@ -52,5 +52,3 @@ export async function POST(req: NextRequest) {
   return handler(req);
 }
 
-export const runtime = "edge";
-export const preferredRegion = "auto";

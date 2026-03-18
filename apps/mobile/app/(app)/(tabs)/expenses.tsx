@@ -61,22 +61,28 @@ function SwipeableExpenseRow({ item, onDelete }: { item: any; onDelete: (id: str
 }
 
 export default function ExpensesScreen() {
-  const [page, setPage] = React.useState(1);
-  const [allExpenses, setAllExpenses] = React.useState<any[]>([]);
-  const [hasMore, setHasMore] = React.useState(true);
   const [showLogExpense, setShowLogExpense] = React.useState(false);
-  const { data: expenses, isLoading, refetch, isRefetching, isFetching } = trpc.expenses.getExpenses.useQuery({ page }, {
-    onSuccess: (data) => {
-      if (page === 1) {
-        setAllExpenses(data ?? []);
-      } else {
-        setAllExpenses((prev) => [...prev, ...(data ?? [])]);
-      }
-      setHasMore((data?.length ?? 0) >= 20);
-    },
-  });
   const { data: flocks } = trpc.flocks.getFlocks.useQuery();
   const utils = trpc.useContext();
+
+  const {
+    data,
+    isLoading,
+    isRefetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = trpc.expenses.getExpenses.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage.length >= 25 ? allPages.length + 1 : undefined,
+      initialCursor: 1,
+    },
+  );
+
+  const allExpenses = data?.pages.flatMap((page) => page) ?? [];
 
   const defaultFlock = flocks?.[0];
 
@@ -85,9 +91,6 @@ export default function ExpensesScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       utils.expenses.getExpenses.invalidate();
       utils.stats.getExpenseStats.invalidate();
-      setPage(1);
-      setAllExpenses([]);
-      setHasMore(true);
     },
     onError: () => showErrorToast("Failed to delete expense"),
   });
@@ -97,20 +100,7 @@ export default function ExpensesScreen() {
     deleteExpense.mutate({ id });
   };
 
-  const handleRefresh = () => {
-    setPage(1);
-    setAllExpenses([]);
-    setHasMore(true);
-    refetch();
-  };
-
-  const handleLoadMore = () => {
-    if (hasMore && !isFetching) {
-      setPage((p) => p + 1);
-    }
-  };
-
-  if (isLoading && page === 1) {
+  if (isLoading) {
     return <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>;
   }
 
@@ -119,13 +109,13 @@ export default function ExpensesScreen() {
       <FlatList
         data={allExpenses}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} tintColor={colors.primary} />}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} tintColor={colors.primary} />}
         contentContainerStyle={[styles.list, { paddingBottom: 80 }]}
         renderItem={({ item }) => <SwipeableExpenseRow item={item} onDelete={handleDelete} />}
         ListEmptyComponent={<View style={styles.empty}><Text style={styles.emptyText}>No expenses yet</Text></View>}
-        onEndReached={handleLoadMore}
+        onEndReached={() => { if (hasNextPage) fetchNextPage(); }}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={isFetching && page > 1 ? <ActivityIndicator style={{ paddingVertical: 16 }} color={colors.primary} /> : null}
+        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator style={{ paddingVertical: 16 }} color={colors.primary} /> : null}
       />
       <TouchableOpacity style={styles.fab} onPress={() => setShowLogExpense(true)} activeOpacity={0.8} accessibilityLabel="Log expense" accessibilityRole="button">
         <Text style={styles.fabPlus}>+</Text>

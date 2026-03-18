@@ -4,9 +4,9 @@ import * as logsService from "../../../services/logs.service";
 
 export const logsRouter = router({
   getLogs: protectedProcedure
-    .input(z.object({ page: z.number() }))
+    .input(z.object({ cursor: z.number().default(1) }))
     .query(async ({ input, ctx }) => {
-      const [logs] = await logsService.getLogs(ctx.session.user.id, input.page);
+      const [logs] = await logsService.getLogs(ctx.session.user.id, input.cursor);
       return logs;
     }),
   getLogsByFlock: protectedProcedure

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  ActivityIndicator,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
@@ -36,8 +35,6 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
   const createFlock = trpc.flocks.createFlock.useMutation({
     onSuccess: () => {
       utils.flocks.getFlocks.invalidate();
-      resetForm();
-      onClose();
     },
     onError: () => showErrorToast("Failed to create flock"),
   });
@@ -60,6 +57,7 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
       type,
       imageUrl: null,
     });
+    onClose();
   };
 
   return (
@@ -117,22 +115,6 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
           </View>
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.submitButton, !name.trim() && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={!name.trim() || createFlock.isLoading}
-            accessibilityLabel="Create flock"
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !name.trim() || createFlock.isLoading }}
-          >
-            {createFlock.isLoading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={styles.submitButtonText}>Create Flock</Text>
-            )}
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -154,8 +136,4 @@ const styles = StyleSheet.create({
   typeChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   typeChipText: { fontSize: 14, color: colors.gray[700] },
   typeChipTextActive: { color: colors.white },
-  footer: { padding: 16, paddingBottom: 32, borderTopWidth: 1, borderTopColor: colors.gray[200] },
-  submitButton: { backgroundColor: colors.primary, borderRadius: 12, padding: 16, alignItems: "center" },
-  submitButtonDisabled: { opacity: 0.5 },
-  submitButtonText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 });

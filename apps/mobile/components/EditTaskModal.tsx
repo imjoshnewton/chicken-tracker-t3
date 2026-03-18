@@ -48,25 +48,18 @@ export default function EditTaskModal({ visible, onClose, task }: EditTaskModalP
   }, [task]);
 
   const updateTask = trpc.tasks.updateTask.useMutation({
-    onSuccess: () => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      utils.flocks.getFlock.invalidate();
-      onClose();
-    },
+    onSuccess: () => { utils.flocks.getFlock.invalidate(); },
     onError: () => showErrorToast("Failed to update task"),
   });
 
   const deleteTask = trpc.tasks.deleteTask.useMutation({
-    onSuccess: () => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      utils.flocks.getFlock.invalidate();
-      onClose();
-    },
+    onSuccess: () => { utils.flocks.getFlock.invalidate(); },
     onError: () => showErrorToast("Failed to delete task"),
   });
 
   const handleSave = () => {
     if (!title.trim()) { showErrorToast("Enter a task title"); return; }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     updateTask.mutate({
       id: task.id,
       title: title.trim(),
@@ -76,6 +69,7 @@ export default function EditTaskModal({ visible, onClose, task }: EditTaskModalP
       status: task.completed ? "Complete" : "Incomplete",
       completed: task.completed ?? false,
     });
+    onClose();
   };
 
   const handleDelete = () => {

@@ -2,9 +2,8 @@ import { createTRPCReact } from "@trpc/react-query";
 import { httpBatchLink, loggerLink } from "@trpc/client";
 import superjson from "superjson";
 
-// Import AppRouter type from the web app
-// In the monorepo, we reference it via the shared api package path
-import type { AppRouter } from "../../packages/api/src/index";
+// Import AppRouter type from the shared api package
+import type { AppRouter } from "@flocknerd/api";
 
 export const trpc = createTRPCReact<AppRouter>();
 

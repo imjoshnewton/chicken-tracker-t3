@@ -45,22 +45,28 @@ function SwipeableLogRow({ item, onDelete }: { item: any; onDelete: (id: string)
 }
 
 export default function LogsScreen() {
-  const [page, setPage] = React.useState(1);
-  const [allLogs, setAllLogs] = React.useState<any[]>([]);
-  const [hasMore, setHasMore] = React.useState(true);
   const [showLogEggs, setShowLogEggs] = React.useState(false);
-  const { data: logs, isLoading, refetch, isRefetching, isFetching } = trpc.logs.getLogs.useQuery({ page }, {
-    onSuccess: (data) => {
-      if (page === 1) {
-        setAllLogs(data ?? []);
-      } else {
-        setAllLogs((prev) => [...prev, ...(data ?? [])]);
-      }
-      setHasMore((data?.length ?? 0) >= 20);
-    },
-  });
   const { data: flocks } = trpc.flocks.getFlocks.useQuery();
   const utils = trpc.useContext();
+
+  const {
+    data,
+    isLoading,
+    isRefetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = trpc.logs.getLogs.useInfiniteQuery(
+    {},
+    {
+      getNextPageParam: (lastPage, allPages) =>
+        lastPage.length >= 25 ? allPages.length + 1 : undefined,
+      initialCursor: 1,
+    },
+  );
+
+  const allLogs = data?.pages.flatMap((page) => page) ?? [];
 
   const defaultFlock = flocks?.[0];
   const breeds = defaultFlock?.breeds?.filter((b: any) => !b.deleted) ?? [];
@@ -70,9 +76,6 @@ export default function LogsScreen() {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       utils.logs.getLogs.invalidate();
       utils.stats.getStats.invalidate();
-      setPage(1);
-      setAllLogs([]);
-      setHasMore(true);
     },
     onError: () => showErrorToast("Failed to delete log"),
   });
@@ -82,20 +85,7 @@ export default function LogsScreen() {
     deleteLog.mutate({ id });
   };
 
-  const handleRefresh = () => {
-    setPage(1);
-    setAllLogs([]);
-    setHasMore(true);
-    refetch();
-  };
-
-  const handleLoadMore = () => {
-    if (hasMore && !isFetching) {
-      setPage((p) => p + 1);
-    }
-  };
-
-  if (isLoading && page === 1) {
+  if (isLoading) {
     return <View style={styles.center}><ActivityIndicator size="large" color={colors.primary} /></View>;
   }
 
@@ -104,13 +94,13 @@ export default function LogsScreen() {
       <FlatList
         data={allLogs}
         keyExtractor={(item) => item.id}
-        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={handleRefresh} tintColor={colors.primary} />}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={() => refetch()} tintColor={colors.primary} />}
         contentContainerStyle={[styles.list, { paddingBottom: 80 }]}
         renderItem={({ item }) => <SwipeableLogRow item={item} onDelete={handleDelete} />}
         ListEmptyComponent={<View style={styles.empty}><Text style={styles.emptyText}>No egg logs yet</Text></View>}
-        onEndReached={handleLoadMore}
+        onEndReached={() => { if (hasNextPage) fetchNextPage(); }}
         onEndReachedThreshold={0.5}
-        ListFooterComponent={isFetching && page > 1 ? <ActivityIndicator style={{ paddingVertical: 16 }} color={colors.primary} /> : null}
+        ListFooterComponent={isFetchingNextPage ? <ActivityIndicator style={{ paddingVertical: 16 }} color={colors.primary} /> : null}
       />
       <TouchableOpacity style={styles.fab} onPress={() => setShowLogEggs(true)} activeOpacity={0.8} accessibilityLabel="Log eggs" accessibilityRole="button">
         <Text style={styles.fabPlus}>+</Text>

@@ -63,29 +63,17 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
   const utils = trpc.useContext();
 
   const createBreed = trpc.breeds.createBreed.useMutation({
-    onSuccess: () => {
-      utils.flocks.getFlock.invalidate({ flockId });
-      resetForm();
-      onClose();
-    },
+    onSuccess: () => { utils.flocks.getFlock.invalidate({ flockId }); },
     onError: () => showErrorToast("Failed to add breed"),
   });
 
   const updateBreed = trpc.breeds.updateBreed.useMutation({
-    onSuccess: () => {
-      utils.flocks.getFlock.invalidate({ flockId });
-      resetForm();
-      onClose();
-    },
+    onSuccess: () => { utils.flocks.getFlock.invalidate({ flockId }); },
     onError: () => showErrorToast("Failed to update breed"),
   });
 
   const deleteBreed = trpc.breeds.deleteBreed.useMutation({
-    onSuccess: () => {
-      utils.flocks.getFlock.invalidate({ flockId });
-      resetForm();
-      onClose();
-    },
+    onSuccess: () => { utils.flocks.getFlock.invalidate({ flockId }); },
     onError: () => showErrorToast("Failed to delete breed"),
   });
 
@@ -125,6 +113,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
         flockId,
       });
     }
+    onClose();
   };
 
   const handleDelete = () => {
@@ -245,22 +234,6 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
           )}
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.submitButton, !breedType.trim() && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={!breedType.trim() || isSubmitting}
-            accessibilityLabel={isEdit ? "Save breed changes" : "Add breed"}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: !breedType.trim() || isSubmitting }}
-          >
-            {isSubmitting ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={styles.submitButtonText}>{isEdit ? "Save Changes" : "Add Breed"}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -286,8 +259,4 @@ const styles = StyleSheet.create({
   halfField: { flex: 1 },
   deleteButton: { marginTop: 24, padding: 16, alignItems: "center" },
   deleteButtonText: { fontSize: 16, color: "#dc2626", fontWeight: "500" },
-  footer: { padding: 16, paddingBottom: 32, borderTopWidth: 1, borderTopColor: colors.gray[200] },
-  submitButton: { backgroundColor: colors.primary, borderRadius: 12, padding: 16, alignItems: "center" },
-  submitButtonDisabled: { opacity: 0.5 },
-  submitButtonText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 });

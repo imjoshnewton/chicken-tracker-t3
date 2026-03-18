@@ -3,8 +3,6 @@ import { eggLog } from "@lib/db/schema-postgres";
 import { and, eq, sql } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-export const preferredRegion = "auto";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);

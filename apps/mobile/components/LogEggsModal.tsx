@@ -42,12 +42,9 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
   const utils = trpc.useContext();
   const createLog = trpc.logs.createLog.useMutation({
     onSuccess: () => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       utils.logs.getLogs.invalidate();
       utils.stats.getStats.invalidate();
       utils.flocks.getFlock.invalidate();
-      resetForm();
-      onClose();
     },
     onError: () => showErrorToast("Failed to log eggs"),
   });
@@ -66,6 +63,7 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
 
   const handleSubmit = () => {
     if (count <= 0) { showErrorToast("Add at least 1 egg"); return; }
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     createLog.mutate({
       flockId,
       date: startOfDay(date),
@@ -73,6 +71,7 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
       breedId,
       notes: notes || undefined,
     });
+    onClose();
   };
 
   const increment = () => {
@@ -192,22 +191,6 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
           />
         </ScrollView>
 
-        <View style={styles.footer}>
-          <TouchableOpacity
-            style={[styles.submitButton, count <= 0 && styles.submitButtonDisabled]}
-            onPress={handleSubmit}
-            disabled={count <= 0 || createLog.isLoading}
-            accessibilityLabel={`Log ${count} egg${count !== 1 ? "s" : ""}`}
-            accessibilityRole="button"
-            accessibilityState={{ disabled: count <= 0 || createLog.isLoading }}
-          >
-            {createLog.isLoading ? (
-              <ActivityIndicator color={colors.white} />
-            ) : (
-              <Text style={styles.submitButtonText}>Log {count} Egg{count !== 1 ? "s" : ""}</Text>
-            )}
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -241,8 +224,4 @@ const styles = StyleSheet.create({
   breedChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   breedChipText: { fontSize: 14, color: colors.gray[700] },
   breedChipTextActive: { color: colors.white },
-  footer: { padding: 16, paddingBottom: 32, borderTopWidth: 1, borderTopColor: colors.gray[200] },
-  submitButton: { backgroundColor: colors.primary, borderRadius: 12, padding: 16, alignItems: "center" },
-  submitButtonDisabled: { opacity: 0.5 },
-  submitButtonText: { color: colors.white, fontSize: 16, fontWeight: "600" },
 });

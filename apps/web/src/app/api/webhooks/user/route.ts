@@ -9,8 +9,6 @@ import { eq } from "drizzle-orm";
 
 const webhookSecret = "whsec_ITq1TGfSvKy1eKVfFnUkkLTDuwHWR1Rp";
 
-export const runtime = "edge";
-export const preferredRegion = "auto";
 
 async function handler(request: Request) {
   const payload = await request.json();
