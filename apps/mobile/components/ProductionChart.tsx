@@ -52,7 +52,7 @@ export default function ProductionChart({ logs, range, thisWeekAvg, lastWeekAvg,
   const barGap = (CHART_WIDTH - barWidth * data.length) / (data.length + 1);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityLabel="Egg production chart" accessibilityRole="image">
       <View style={styles.headerRow}>
         <Text style={styles.title}>Egg Production</Text>
         <View style={styles.rangeSelector}>
@@ -61,6 +61,8 @@ export default function ProductionChart({ logs, range, thisWeekAvg, lastWeekAvg,
               key={r}
               style={[styles.rangeButton, selectedRange === r && styles.rangeButtonActive]}
               onPress={() => setSelectedRange(r)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: selectedRange === r }}
             >
               <Text style={[styles.rangeButtonText, selectedRange === r && styles.rangeButtonTextActive]}>
                 {r}d
@@ -126,13 +128,13 @@ export default function ProductionChart({ logs, range, thisWeekAvg, lastWeekAvg,
         )}
         {thisWeekAvg && (
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{thisWeekAvg.avg?.toFixed(1) ?? "0"}</Text>
+            <Text style={styles.statValue}>{Number(thisWeekAvg.avg ?? 0).toFixed(1)}</Text>
             <Text style={styles.statLabel}>This Week</Text>
           </View>
         )}
         {lastWeekAvg && (
           <View style={styles.stat}>
-            <Text style={styles.statValue}>{lastWeekAvg.avg?.toFixed(1) ?? "0"}</Text>
+            <Text style={styles.statValue}>{Number(lastWeekAvg.avg ?? 0).toFixed(1)}</Text>
             <Text style={styles.statLabel}>Last Week</Text>
           </View>
         )}
@@ -146,7 +148,7 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
   title: { fontSize: 16, fontWeight: "600", color: colors.gray[900] },
   rangeSelector: { flexDirection: "row", gap: 4 },
-  rangeButton: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 12, backgroundColor: colors.gray[100] },
+  rangeButton: { paddingVertical: 10, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.gray[100] },
   rangeButtonActive: { backgroundColor: colors.primary },
   rangeButtonText: { fontSize: 12, color: colors.gray[600] },
   rangeButtonTextActive: { color: colors.white },
@@ -155,7 +157,7 @@ const styles = StyleSheet.create({
   bar: { position: "absolute", borderTopLeftRadius: 3, borderTopRightRadius: 3 },
   targetLine: { position: "absolute", left: 0, right: 0, height: 1, borderTopWidth: 1, borderTopColor: colors.gray[400], borderStyle: "dashed" },
   xAxis: { flexDirection: "row", justifyContent: "space-between", marginTop: 4 },
-  xLabel: { fontSize: 10, color: colors.gray[400] },
+  xLabel: { fontSize: 10, color: colors.text.muted },
   statsRow: { flexDirection: "row", justifyContent: "space-around", paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.gray[100] },
   stat: { alignItems: "center" },
   statValue: { fontSize: 18, fontWeight: "700", color: colors.primary },

@@ -65,7 +65,7 @@ export default function ExpenseChart({ expenses, production, numMonths, onMonths
   const categories = ["feed", "suplements", "medication", "other"];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} accessibilityLabel="Expense chart" accessibilityRole="image">
       <View style={styles.headerRow}>
         <Text style={styles.title}>Expenses</Text>
         <View style={styles.rangeSelector}>
@@ -74,6 +74,8 @@ export default function ExpenseChart({ expenses, production, numMonths, onMonths
               key={m}
               style={[styles.rangeButton, numMonths === m && styles.rangeButtonActive]}
               onPress={() => onMonthsChange?.(m)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: numMonths === m }}
             >
               <Text style={[styles.rangeButtonText, numMonths === m && styles.rangeButtonTextActive]}>
                 {m}mo
@@ -154,20 +156,20 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
   title: { fontSize: 16, fontWeight: "600", color: colors.gray[900] },
   rangeSelector: { flexDirection: "row", gap: 4 },
-  rangeButton: { paddingVertical: 4, paddingHorizontal: 10, borderRadius: 12, backgroundColor: colors.gray[100] },
+  rangeButton: { paddingVertical: 10, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.gray[100] },
   rangeButtonActive: { backgroundColor: colors.tertiary },
   rangeButtonText: { fontSize: 12, color: colors.gray[600] },
   rangeButtonTextActive: { color: colors.white },
   chartContainer: { marginBottom: 8 },
   chart: { height: CHART_HEIGHT, position: "relative" },
   xAxis: { flexDirection: "row", marginTop: 4 },
-  xLabel: { fontSize: 9, color: colors.gray[400], textAlign: "center" },
+  xLabel: { fontSize: 9, color: colors.text.muted, textAlign: "center" },
   legend: { flexDirection: "row", flexWrap: "wrap", gap: 12, marginBottom: 12 },
   legendItem: { flexDirection: "row", alignItems: "center", gap: 4 },
   legendDot: { width: 10, height: 10, borderRadius: 5 },
   legendText: { fontSize: 11, color: colors.gray[600] },
   statsRow: { flexDirection: "row", justifyContent: "space-around", paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.gray[100] },
   stat: { alignItems: "center" },
-  statValue: { fontSize: 18, fontWeight: "700", color: colors.tertiary },
+  statValue: { fontSize: 18, fontWeight: "700", color: colors.text.tertiary },
   statLabel: { fontSize: 11, color: colors.gray[500], marginTop: 2 },
 });

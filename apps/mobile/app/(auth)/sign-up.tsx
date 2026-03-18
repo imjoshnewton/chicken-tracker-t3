@@ -63,8 +63,8 @@ export default function SignUpScreen() {
           <Text style={styles.title}>Verify Email</Text>
           <Text style={styles.subtitle}>Enter the code sent to {email}</Text>
           {error ? <Text style={styles.error}>{error}</Text> : null}
-          <TextInput style={styles.input} placeholder="Verification code" placeholderTextColor={colors.gray[400]} value={code} onChangeText={setCode} keyboardType="number-pad" />
-          <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={onVerify} disabled={loading}>
+          <TextInput style={styles.input} placeholder="Verification code" placeholderTextColor={colors.gray[400]} value={code} onChangeText={setCode} keyboardType="number-pad" accessibilityLabel="Verification code" />
+          <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={onVerify} disabled={loading} accessibilityLabel="Verify email" accessibilityRole="button">
             {loading ? <ActivityIndicator color={colors.white} /> : <Text style={styles.buttonText}>Verify</Text>}
           </TouchableOpacity>
         </View>
@@ -78,15 +78,15 @@ export default function SignUpScreen() {
         <Text style={styles.title}>FlockNerd</Text>
         <Text style={styles.subtitle}>Create your account</Text>
         {error ? <Text style={styles.error}>{error}</Text> : null}
-        <TextInput style={styles.input} placeholder="Email" placeholderTextColor={colors.gray[400]} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" />
-        <TextInput style={styles.input} placeholder="Password" placeholderTextColor={colors.gray[400]} value={password} onChangeText={setPassword} secureTextEntry />
-        <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={onSignUp} disabled={loading}>
+        <TextInput style={styles.input} placeholder="Email" placeholderTextColor={colors.gray[400]} value={email} onChangeText={setEmail} autoCapitalize="none" keyboardType="email-address" accessibilityLabel="Email" />
+        <TextInput style={styles.input} placeholder="Password" placeholderTextColor={colors.gray[400]} value={password} onChangeText={setPassword} secureTextEntry accessibilityLabel="Password" />
+        <TouchableOpacity style={[styles.button, loading && styles.buttonDisabled]} onPress={onSignUp} disabled={loading} accessibilityLabel="Sign up" accessibilityRole="button">
           {loading ? <ActivityIndicator color={colors.white} /> : <Text style={styles.buttonText}>Sign Up</Text>}
         </TouchableOpacity>
         <View style={styles.footer}>
           <Text style={styles.footerText}>Already have an account? </Text>
           <Link href="/(auth)/sign-in" asChild>
-            <TouchableOpacity><Text style={styles.link}>Sign In</Text></TouchableOpacity>
+            <TouchableOpacity accessibilityLabel="Sign in" accessibilityRole="link"><Text style={styles.link}>Sign In</Text></TouchableOpacity>
           </Link>
         </View>
       </View>

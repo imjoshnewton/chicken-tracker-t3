@@ -16,6 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { startOfDay } from "date-fns";
 import { trpc } from "../lib/trpc";
 import { colors } from "../constants/Colors";
+import { showErrorToast } from "../lib/toast";
 
 const EXPENSE_CATEGORIES = [
   { value: "feed", label: "Feed" },
@@ -46,6 +47,7 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to log expense"),
   });
 
   const resetForm = () => {
@@ -56,9 +58,13 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
     setShowDatePicker(false);
   };
 
+  React.useEffect(() => {
+    if (!visible) resetForm();
+  }, [visible]);
+
   const handleSubmit = () => {
     const numAmount = parseFloat(amount);
-    if (!numAmount || numAmount <= 0) return;
+    if (!numAmount || numAmount <= 0) { showErrorToast("Enter a valid amount"); return; }
     createExpense.mutate({
       flockId,
       date: startOfDay(date),
@@ -74,17 +80,19 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { resetForm(); onClose(); }}>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Cancel" accessibilityRole="button">
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Log Expense</Text>
-          <View style={{ width: 60 }} />
+          <TouchableOpacity onPress={handleSubmit} disabled={!isValid || createExpense.isLoading} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Log expense" accessibilityRole="button" accessibilityState={{ disabled: !isValid || createExpense.isLoading }}>
+            <Text style={[styles.headerAction, (!isValid || createExpense.isLoading) && { opacity: 0.4 }]}>Log</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.form} contentContainerStyle={styles.formContent}>
+        <ScrollView style={styles.form} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
           {/* Date */}
           <Text style={styles.label}>Date</Text>
-          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)} accessibilityLabel="Select date" accessibilityRole="button">
             <Text style={styles.dateButtonText}>{date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</Text>
           </TouchableOpacity>
           {showDatePicker && (
@@ -116,6 +124,7 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
               value={amount}
               onChangeText={setAmount}
               placeholderTextColor={colors.gray[400]}
+              accessibilityLabel="Expense amount"
             />
           </View>
 
@@ -127,6 +136,8 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
                 key={cat.value}
                 style={[styles.categoryChip, category === cat.value && styles.categoryChipActive]}
                 onPress={() => { Haptics.selectionAsync(); setCategory(cat.value); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: category === cat.value }}
               >
                 <Text style={[styles.categoryChipText, category === cat.value && styles.categoryChipTextActive]}>
                   {cat.label}
@@ -145,6 +156,7 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
             value={memo}
             onChangeText={setMemo}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Memo"
           />
         </ScrollView>
 
@@ -153,6 +165,9 @@ export default function LogExpenseModal({ visible, onClose, flockId }: LogExpens
             style={[styles.submitButton, !isValid && styles.submitButtonDisabled]}
             onPress={handleSubmit}
             disabled={!isValid || createExpense.isLoading}
+            accessibilityLabel="Log expense"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !isValid || createExpense.isLoading }}
           >
             {createExpense.isLoading ? (
               <ActivityIndicator color={colors.white} />
@@ -171,6 +186,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: colors.gray[200] },
   cancelText: { fontSize: 16, color: colors.tertiary },
   headerTitle: { fontSize: 18, fontWeight: "600", color: colors.gray[900] },
+  headerAction: { fontSize: 16, fontWeight: "600", color: colors.tertiary },
   form: { flex: 1 },
   formContent: { padding: 16, gap: 8 },
   label: { fontSize: 14, fontWeight: "500", color: colors.gray[700], marginTop: 8 },
@@ -182,7 +198,7 @@ const styles = StyleSheet.create({
   currencySymbol: { fontSize: 20, fontWeight: "600", color: colors.gray[500], marginRight: 4 },
   amountInput: { flex: 1, padding: 16, fontSize: 20, fontWeight: "600", color: colors.gray[900] },
   categorySelector: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  categoryChip: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.gray[200] },
+  categoryChip: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.gray[200] },
   categoryChipActive: { backgroundColor: colors.tertiary, borderColor: colors.tertiary },
   categoryChipText: { fontSize: 14, color: colors.gray[700] },
   categoryChipTextActive: { color: colors.white },

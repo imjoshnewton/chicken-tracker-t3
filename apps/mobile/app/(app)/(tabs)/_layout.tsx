@@ -2,6 +2,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Tabs } from "expo-router";
 import { useColorScheme } from "react-native";
 import Colors from "../../../constants/Colors";
+import { trpc } from "../../../lib/trpc";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -13,6 +14,11 @@ function TabBarIcon(props: {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const theme = Colors[colorScheme ?? "light"];
+
+  const { data: unread } = trpc.auth.getUserUnreadNotifications.useQuery(undefined, {
+    refetchInterval: 30000,
+  });
+  const unreadCount = unread?.length ?? 0;
 
   return (
     <Tabs
@@ -27,7 +33,7 @@ export default function TabLayout() {
       <Tabs.Screen name="index" options={{ title: "Flocks", tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} /> }} />
       <Tabs.Screen name="logs" options={{ title: "Logs", tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} /> }} />
       <Tabs.Screen name="expenses" options={{ title: "Expenses", tabBarIcon: ({ color }) => <TabBarIcon name="dollar" color={color} /> }} />
-      <Tabs.Screen name="settings" options={{ title: "Settings", tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} /> }} />
+      <Tabs.Screen name="settings" options={{ title: "Settings", tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />, tabBarBadge: unreadCount > 0 ? unreadCount : undefined }} />
     </Tabs>
   );
 }

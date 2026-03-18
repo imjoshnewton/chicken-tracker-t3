@@ -16,6 +16,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { startOfDay } from "date-fns";
 import { trpc } from "../lib/trpc";
 import { colors } from "../constants/Colors";
+import { showErrorToast } from "../lib/toast";
 
 interface Breed {
   id: string;
@@ -48,6 +49,7 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to log eggs"),
   });
 
   const resetForm = () => {
@@ -58,8 +60,12 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
     setShowDatePicker(false);
   };
 
+  React.useEffect(() => {
+    if (!visible) resetForm();
+  }, [visible]);
+
   const handleSubmit = () => {
-    if (count <= 0) return;
+    if (count <= 0) { showErrorToast("Add at least 1 egg"); return; }
     createLog.mutate({
       flockId,
       date: startOfDay(date),
@@ -87,17 +93,19 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { resetForm(); onClose(); }} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Cancel" accessibilityRole="button">
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Log Eggs</Text>
-          <View style={{ width: 60 }} />
+          <TouchableOpacity onPress={handleSubmit} disabled={count <= 0 || createLog.isLoading} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel={`Log ${count} egg${count !== 1 ? "s" : ""}`} accessibilityRole="button" accessibilityState={{ disabled: count <= 0 || createLog.isLoading }}>
+            <Text style={[styles.headerAction, (count <= 0 || createLog.isLoading) && { opacity: 0.4 }]}>Log</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.form} contentContainerStyle={styles.formContent}>
+        <ScrollView style={styles.form} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
           {/* Date */}
           <Text style={styles.label}>Date</Text>
-          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)} accessibilityLabel="Select date" accessibilityRole="button">
             <Text style={styles.dateButtonText}>{date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</Text>
           </TouchableOpacity>
           {showDatePicker && (
@@ -126,6 +134,8 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
               onPress={decrement}
               disabled={count === 0}
               activeOpacity={0.6}
+              accessibilityLabel="Decrease egg count"
+              accessibilityRole="button"
             >
               <Text style={[styles.stepperButtonText, count === 0 && styles.stepperButtonTextDisabled]}>-</Text>
             </TouchableOpacity>
@@ -133,7 +143,7 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
               <Text style={styles.stepperCount}>{count}</Text>
               <Text style={styles.stepperUnit}>eggs</Text>
             </View>
-            <TouchableOpacity style={styles.stepperButton} onPress={increment} activeOpacity={0.6}>
+            <TouchableOpacity style={styles.stepperButton} onPress={increment} activeOpacity={0.6} accessibilityLabel="Increase egg count" accessibilityRole="button">
               <Text style={styles.stepperButtonText}>+</Text>
             </TouchableOpacity>
           </View>
@@ -146,6 +156,8 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
                 <TouchableOpacity
                   style={[styles.breedChip, !breedId && styles.breedChipActive]}
                   onPress={() => { Haptics.selectionAsync(); setBreedId(undefined); }}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: !breedId }}
                 >
                   <Text style={[styles.breedChipText, !breedId && styles.breedChipTextActive]}>All</Text>
                 </TouchableOpacity>
@@ -154,6 +166,8 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
                     key={breed.id}
                     style={[styles.breedChip, breedId === breed.id && styles.breedChipActive]}
                     onPress={() => { Haptics.selectionAsync(); setBreedId(breed.id); }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: breedId === breed.id }}
                   >
                     <Text style={[styles.breedChipText, breedId === breed.id && styles.breedChipTextActive]}>
                       {breed.name || breed.breed}
@@ -174,6 +188,7 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
             value={notes}
             onChangeText={setNotes}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Notes"
           />
         </ScrollView>
 
@@ -182,6 +197,9 @@ export default function LogEggsModal({ visible, onClose, flockId, breeds }: LogE
             style={[styles.submitButton, count <= 0 && styles.submitButtonDisabled]}
             onPress={handleSubmit}
             disabled={count <= 0 || createLog.isLoading}
+            accessibilityLabel={`Log ${count} egg${count !== 1 ? "s" : ""}`}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: count <= 0 || createLog.isLoading }}
           >
             {createLog.isLoading ? (
               <ActivityIndicator color={colors.white} />
@@ -200,6 +218,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: colors.gray[200] },
   cancelText: { fontSize: 16, color: colors.primary },
   headerTitle: { fontSize: 18, fontWeight: "600", color: colors.gray[900] },
+  headerAction: { fontSize: 16, fontWeight: "600", color: colors.primary },
   form: { flex: 1 },
   formContent: { padding: 16, gap: 8 },
   label: { fontSize: 14, fontWeight: "500", color: colors.gray[700], marginTop: 8 },
@@ -218,7 +237,7 @@ const styles = StyleSheet.create({
   input: { backgroundColor: colors.white, borderRadius: 12, padding: 16, fontSize: 16, borderWidth: 1, borderColor: colors.gray[200], color: colors.gray[900] },
   textArea: { minHeight: 80, textAlignVertical: "top" },
   breedSelector: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  breedChip: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.gray[200] },
+  breedChip: { paddingVertical: 12, paddingHorizontal: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.gray[200] },
   breedChipActive: { backgroundColor: colors.primary, borderColor: colors.primary },
   breedChipText: { fontSize: 14, color: colors.gray[700] },
   breedChipTextActive: { color: colors.white },

@@ -9,7 +9,7 @@ import { colors } from "../../../constants/Colors";
 
 function MenuItem({ icon, label, onPress, badge }: { icon: string; label: string; onPress: () => void; badge?: number }) {
   return (
-    <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.6}>
+    <TouchableOpacity style={styles.menuItem} onPress={onPress} activeOpacity={0.6} accessibilityLabel={badge ? `${label}, ${badge} unread` : label} accessibilityRole="button">
       <FontAwesome name={icon as any} size={18} color={colors.gray[600]} style={styles.menuIcon} />
       <Text style={styles.menuText}>{label}</Text>
       <View style={styles.menuRight}>
@@ -67,7 +67,7 @@ export default function SettingsScreen() {
         <MenuItem icon="info-circle" label="About" onPress={() => {}} />
       </View>
 
-      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut} activeOpacity={0.6}>
+      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut} activeOpacity={0.6} accessibilityLabel="Sign out" accessibilityRole="button">
         <Text style={styles.signOutText}>Sign Out</Text>
       </TouchableOpacity>
     </ScrollView>

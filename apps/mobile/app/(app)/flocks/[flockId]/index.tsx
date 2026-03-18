@@ -1,15 +1,18 @@
 import React from "react";
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl } from "react-native";
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator, TouchableOpacity, RefreshControl, Animated } from "react-native";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { Image } from "expo-image";
 import { subDays, startOfDay } from "date-fns";
+import * as Haptics from "expo-haptics";
 import { trpc } from "../../../../lib/trpc";
 import { colors } from "../../../../constants/Colors";
+import { showErrorToast } from "../../../../lib/toast";
 import LogEggsModal from "../../../../components/LogEggsModal";
 import LogExpenseModal from "../../../../components/LogExpenseModal";
 import ProductionChart from "../../../../components/ProductionChart";
 import ExpenseChart from "../../../../components/ExpenseChart";
 import BreedFormModal from "../../../../components/BreedFormModal";
+import EditTaskModal from "../../../../components/EditTaskModal";
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -29,6 +32,20 @@ export default function FlockDetailScreen() {
   const [showBreedForm, setShowBreedForm] = React.useState(false);
   const [editingBreed, setEditingBreed] = React.useState<any>(null);
   const [expenseMonths, setExpenseMonths] = React.useState(6);
+  const [editingTask, setEditingTask] = React.useState<any>(null);
+  const [fabOpen, setFabOpen] = React.useState(false);
+  const fabAnim = React.useRef(new Animated.Value(0)).current;
+
+  const openFab = () => {
+    setFabOpen(true);
+    Animated.spring(fabAnim, { toValue: 1, useNativeDriver: true, friction: 6, tension: 80 }).start();
+  };
+  const closeFab = (cb?: () => void) => {
+    Animated.timing(fabAnim, { toValue: 0, duration: 150, useNativeDriver: true }).start(() => {
+      setFabOpen(false);
+      cb?.();
+    });
+  };
 
   const today = startOfDay(new Date());
   const range = { from: subDays(today, 30), to: today };
@@ -52,6 +69,14 @@ export default function FlockDetailScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
   const breeds = flock?.breeds?.filter((b: any) => !b.deleted) ?? [];
 
+  const markComplete = trpc.tasks.markComplete.useMutation({
+    onSuccess: () => {
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      refetchFlock();
+    },
+    onError: () => showErrorToast("Failed to update task"),
+  });
+
   const onRefresh = async () => {
     setRefreshing(true);
     await refetchFlock();
@@ -67,12 +92,13 @@ export default function FlockDetailScreen() {
   }
 
   // Calculate basic stats from the stats response
-  const todayCount = stats?.logs?.filter((l: any) => {
+  const logs = stats?.getLogs ?? [];
+  const todayCount = logs.filter((l: any) => {
     const logDate = new Date(l.date);
     return logDate.toDateString() === today.toDateString();
-  }).reduce((sum: number, l: any) => sum + l.count, 0) ?? 0;
+  }).reduce((sum: number, l: any) => sum + l.count, 0);
 
-  const totalEggs = stats?.logs?.reduce((sum: number, l: any) => sum + l.count, 0) ?? 0;
+  const totalEggs = logs.reduce((sum: number, l: any) => sum + l.count, 0);
 
   // Calculate total expenses
   const totalExpenses = expenseStats?.expenses?.reduce((sum: number, e: any) => sum + e.total, 0) ?? 0;
@@ -81,15 +107,20 @@ export default function FlockDetailScreen() {
     <>
       <Stack.Screen options={{ title: flock.name }} />
       <ScrollView style={styles.container} contentContainerStyle={styles.content} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}>
-        {flock.image ? <Image source={{ uri: flock.image }} style={styles.heroImage} contentFit="cover" /> : null}
+        {flock.imageUrl ? (
+          <View style={styles.heroContainer}>
+            <Image source={{ uri: flock.imageUrl }} style={styles.heroImage} contentFit="cover" />
+            <View style={styles.heroOverlay}>
+              <Text style={styles.heroTitle}>{flock.name}</Text>
+            </View>
+          </View>
+        ) : null}
 
-        <View style={styles.header}>
-          <Text style={styles.title}>{flock.name}</Text>
-          {flock.description ? <Text style={styles.description}>{flock.description}</Text> : null}
-          <TouchableOpacity style={styles.editButton} onPress={() => router.push(`/(app)/flocks/${flockId}/edit`)}>
-            <Text style={styles.editButtonText}>Edit</Text>
-          </TouchableOpacity>
-        </View>
+        {flock.description ? (
+          <View style={styles.header}>
+            <Text style={styles.description}>{flock.description}</Text>
+          </View>
+        ) : null}
 
         <View style={styles.statsGrid}>
           <StatCard label="Today" value={todayCount} />
@@ -99,32 +130,45 @@ export default function FlockDetailScreen() {
         </View>
 
         {/* Production Chart */}
-        {stats?.logs && stats.logs.length > 0 ? (
-          <ProductionChart
-            logs={stats.logs}
-            range={range}
-            thisWeekAvg={stats.thisWeeksAvg}
-            lastWeekAvg={stats.lastWeeksAvg}
-            breeds={breeds}
-          />
-        ) : null}
+        <ProductionChart
+          logs={logs}
+          range={range}
+          thisWeekAvg={stats?.thisWeeksAvg}
+          lastWeekAvg={stats?.lastWeeksAvg}
+          breeds={breeds}
+        />
 
         {/* Expense Chart */}
-        {expenseStats?.expenses && expenseStats.expenses.length > 0 ? (
-          <ExpenseChart
-            expenses={expenseStats.expenses}
-            production={expenseStats.production}
-            numMonths={expenseMonths}
-            onMonthsChange={setExpenseMonths}
-          />
-        ) : null}
+        <ExpenseChart
+          expenses={expenseStats?.expenses ?? []}
+          production={expenseStats?.production ?? []}
+          numMonths={expenseMonths}
+          onMonthsChange={setExpenseMonths}
+        />
 
         {/* Tasks Section */}
         {flock.tasks && flock.tasks.length > 0 ? (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Tasks</Text>
             {flock.tasks.slice(0, 5).map((task: any) => (
-              <View key={task.id} style={styles.taskRow}>
+              <TouchableOpacity
+                key={task.id}
+                style={styles.taskRow}
+                onPress={() => {
+                  if (!task.completed) {
+                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                    markComplete.mutate({ id: task.id, recurrence: task.recurrence ?? "" });
+                  }
+                }}
+                onLongPress={() => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                  setEditingTask(task);
+                }}
+                activeOpacity={task.completed ? 1 : 0.7}
+                accessibilityRole="checkbox"
+                accessibilityState={{ checked: !!task.completed }}
+                accessibilityLabel={task.title}
+              >
                 <View style={[styles.taskCheck, task.completed && styles.taskCheckCompleted]}>
                   {task.completed ? <Text style={styles.taskCheckIcon}>✓</Text> : null}
                 </View>
@@ -134,19 +178,14 @@ export default function FlockDetailScreen() {
                     <Text style={styles.taskDue}>Due: {new Date(task.dueDate).toLocaleDateString()}</Text>
                   ) : null}
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         ) : null}
 
         {/* Breeds Section */}
         <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Breeds</Text>
-            <TouchableOpacity style={styles.addBreedButton} onPress={() => { setEditingBreed(null); setShowBreedForm(true); }}>
-              <Text style={styles.addBreedButtonText}>+ Add</Text>
-            </TouchableOpacity>
-          </View>
+          <Text style={styles.sectionTitle}>Breeds</Text>
           {breeds.length > 0 ? breeds.map((breed: any) => (
             <TouchableOpacity key={breed.id} style={styles.breedRow} onPress={() => { setEditingBreed(breed); setShowBreedForm(true); }}>
               {breed.imageUrl ? (
@@ -168,15 +207,47 @@ export default function FlockDetailScreen() {
         </View>
       </ScrollView>
 
-      {/* FABs */}
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={[styles.fab, { backgroundColor: colors.primary }]} onPress={() => setShowLogEggs(true)}>
-          <Text style={styles.fabIcon}>🥚</Text>
+      {/* FAB */}
+      {fabOpen && (
+        <View style={styles.fabOverlay}>
+          <Animated.View style={[styles.fabOverlayBg, { opacity: fabAnim }]}>
+            <TouchableOpacity style={{ flex: 1 }} activeOpacity={1} onPress={() => closeFab()} />
+          </Animated.View>
+          <View style={styles.fabMenu}>
+            {[
+              { label: "Log Eggs", icon: "🥚", onPress: () => closeFab(() => setShowLogEggs(true)) },
+              { label: "Log Expense", icon: "💰", onPress: () => closeFab(() => setShowLogExpense(true)) },
+              { label: "Add Breed", icon: "🐓", onPress: () => closeFab(() => { setEditingBreed(null); setShowBreedForm(true); }) },
+              { label: "Edit Flock", icon: "✏️", onPress: () => closeFab(() => router.push(`/(app)/flocks/${flockId}/edit`)) },
+            ].map((item, i, arr) => {
+              const reverseIndex = arr.length - i;
+              const translateY = fabAnim.interpolate({ inputRange: [0, 1], outputRange: [reverseIndex * 70, 0] });
+              const opacity = fabAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 0, 1] });
+              const scale = fabAnim.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] });
+              return (
+                <Animated.View key={i} style={[styles.fabMenuItem, { opacity, transform: [{ translateY }, { scale }] }]}>
+                  <TouchableOpacity style={styles.fabMenuItemTouchable} onPress={item.onPress}>
+                    <Text style={styles.fabMenuLabel}>{item.label}</Text>
+                    <View style={styles.fabMenuIcon}>
+                      <Text style={styles.fabMenuIconText}>{item.icon}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </Animated.View>
+              );
+            })}
+            <Animated.View style={{ opacity: fabAnim, transform: [{ rotate: fabAnim.interpolate({ inputRange: [0, 1], outputRange: ["0deg", "180deg"] }) }] }}>
+              <TouchableOpacity style={styles.fabClose} onPress={() => closeFab()}>
+                <Text style={styles.fabCloseText}>✕</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        </View>
+      )}
+      {!fabOpen && (
+        <TouchableOpacity style={styles.fab} onPress={openFab} activeOpacity={0.8} accessibilityLabel="Actions" accessibilityRole="button">
+          <Text style={styles.fabPlus}>+</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.fab, { backgroundColor: colors.tertiary }]} onPress={() => setShowLogExpense(true)}>
-          <Text style={styles.fabIcon}>💰</Text>
-        </TouchableOpacity>
-      </View>
+      )}
 
       {/* Modals */}
       <LogEggsModal
@@ -196,6 +267,11 @@ export default function FlockDetailScreen() {
         flockId={flockId!}
         breed={editingBreed}
       />
+      <EditTaskModal
+        visible={!!editingTask}
+        onClose={() => setEditingTask(null)}
+        task={editingTask}
+      />
     </>
   );
 }
@@ -204,23 +280,20 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   content: { paddingBottom: 100 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: colors.background },
-  errorText: { fontSize: 16, color: colors.gray[400] },
+  errorText: { fontSize: 16, color: colors.text.muted },
+  heroContainer: { position: "relative" },
   heroImage: { width: "100%", height: 200 },
-  header: { padding: 16 },
-  title: { fontSize: 28, fontWeight: "700", color: colors.gray[900] },
-  description: { fontSize: 15, color: colors.gray[500], marginTop: 4 },
-  editButton: { marginTop: 12, paddingVertical: 8, paddingHorizontal: 16, backgroundColor: colors.gray[100], borderRadius: 8, alignSelf: "flex-start" },
-  editButtonText: { fontSize: 14, color: colors.primary, fontWeight: "500" },
+  heroOverlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.3)", justifyContent: "center", alignItems: "center" },
+  heroTitle: { fontSize: 28, fontWeight: "700", color: colors.white },
+  header: { paddingHorizontal: 16, paddingTop: 12, paddingBottom: 4 },
+  description: { fontSize: 15, color: colors.gray[500] },
   statsGrid: { flexDirection: "row", flexWrap: "wrap", padding: 12, gap: 8 },
   statCard: { flex: 1, minWidth: "45%", backgroundColor: colors.white, borderRadius: 12, padding: 16, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 },
   statValue: { fontSize: 24, fontWeight: "700", color: colors.primary },
   statLabel: { fontSize: 12, color: colors.gray[500], marginTop: 4 },
   section: { padding: 16 },
-  sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
-  sectionTitle: { fontSize: 20, fontWeight: "600", color: colors.gray[900] },
-  addBreedButton: { paddingVertical: 6, paddingHorizontal: 12, backgroundColor: colors.secondary, borderRadius: 16 },
-  addBreedButtonText: { fontSize: 13, fontWeight: "500", color: colors.white },
-  emptyBreeds: { fontSize: 14, color: colors.gray[400], textAlign: "center", paddingVertical: 16 },
+  sectionTitle: { fontSize: 20, fontWeight: "600", color: colors.gray[900], marginBottom: 12 },
+  emptyBreeds: { fontSize: 14, color: colors.text.muted, textAlign: "center", paddingVertical: 16 },
   taskRow: { flexDirection: "row", alignItems: "center", backgroundColor: colors.white, borderRadius: 12, padding: 12, marginBottom: 8 },
   taskCheck: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, borderColor: colors.gray[300], justifyContent: "center", alignItems: "center", marginRight: 12 },
   taskCheckCompleted: { backgroundColor: colors.secondary, borderColor: colors.secondary },
@@ -235,8 +308,17 @@ const styles = StyleSheet.create({
   breedInfo: { marginLeft: 12, flex: 1 },
   breedName: { fontSize: 15, fontWeight: "500", color: colors.gray[800] },
   breedCount: { fontSize: 13, color: colors.gray[500] },
-  breedProd: { fontSize: 12, color: colors.secondary, marginTop: 1 },
-  fabContainer: { position: "absolute", bottom: 24, right: 16, gap: 12 },
-  fab: { width: 56, height: 56, borderRadius: 28, justifyContent: "center", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 },
-  fabIcon: { fontSize: 24 },
+  breedProd: { fontSize: 12, color: colors.text.secondary, marginTop: 1 },
+  fabOverlay: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 100 },
+  fabOverlayBg: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0,0,0,0.7)" },
+  fabMenu: { position: "absolute", bottom: 40, right: 20, alignItems: "flex-end", gap: 16 },
+  fabMenuItem: {},
+  fabMenuItemTouchable: { flexDirection: "row", alignItems: "center", gap: 14 },
+  fabMenuLabel: { fontSize: 16, fontWeight: "500", color: colors.white },
+  fabMenuIcon: { width: 52, height: 52, borderRadius: 26, backgroundColor: "rgba(255,255,255,0.15)", justifyContent: "center", alignItems: "center", borderWidth: 1, borderColor: "rgba(255,255,255,0.25)" },
+  fabMenuIconText: { fontSize: 22 },
+  fabClose: { width: 52, height: 52, borderRadius: 26, justifyContent: "center", alignItems: "center", marginTop: 8 },
+  fabCloseText: { fontSize: 26, color: colors.white, fontWeight: "300" },
+  fab: { position: "absolute", bottom: 24, right: 16, width: 56, height: 56, borderRadius: 28, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 5, zIndex: 50 },
+  fabPlus: { color: colors.white, fontSize: 30, fontWeight: "300", marginTop: -2 },
 });

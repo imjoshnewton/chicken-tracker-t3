@@ -12,6 +12,7 @@ import { Stack } from "expo-router";
 import { formatDistanceToNow } from "date-fns";
 import { trpc } from "../../lib/trpc";
 import { colors } from "../../constants/Colors";
+import { showErrorToast } from "../../lib/toast";
 
 export default function NotificationsScreen() {
   const { data: notifications, isLoading, refetch, isRefetching } = trpc.auth.getUserNotifications.useQuery();
@@ -22,6 +23,7 @@ export default function NotificationsScreen() {
       utils.auth.getUserNotifications.invalidate();
       utils.auth.getUserUnreadNotifications.invalidate();
     },
+    onError: () => showErrorToast("Failed to mark as read"),
   });
 
   if (isLoading) {
@@ -44,6 +46,8 @@ export default function NotificationsScreen() {
                 if (!item.read) markAsRead.mutate({ id: item.id });
               }}
               activeOpacity={item.read ? 1 : 0.7}
+              accessibilityLabel={`${item.message}, ${formatDistanceToNow(new Date(item.createdAt), { addSuffix: true })}${!item.read ? ", unread" : ""}`}
+              accessibilityRole="button"
             >
               <View style={styles.rowContent}>
                 {!item.read ? <View style={styles.unreadDot} /> : null}
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
   textContent: { flex: 1 },
   message: { fontSize: 15, color: colors.gray[600], lineHeight: 20 },
   messageUnread: { color: colors.gray[900], fontWeight: "500" },
-  time: { fontSize: 12, color: colors.gray[400], marginTop: 4 },
+  time: { fontSize: 12, color: colors.text.muted, marginTop: 4 },
   empty: { alignItems: "center", paddingTop: 64 },
-  emptyText: { fontSize: 16, color: colors.gray[400] },
+  emptyText: { fontSize: 16, color: colors.text.muted },
 });

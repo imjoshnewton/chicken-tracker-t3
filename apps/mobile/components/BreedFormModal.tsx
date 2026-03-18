@@ -16,6 +16,7 @@ import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { trpc } from "../lib/trpc";
 import { colors } from "../constants/Colors";
+import { showErrorToast } from "../lib/toast";
 
 interface BreedFormModalProps {
   visible: boolean;
@@ -43,6 +44,10 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
   const [imageUrl, setImageUrl] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
+    if (!visible) {
+      resetForm();
+      return;
+    }
     if (breed) {
       setName(breed.name || "");
       setBreedType(breed.breed || "");
@@ -63,6 +68,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to add breed"),
   });
 
   const updateBreed = trpc.breeds.updateBreed.useMutation({
@@ -71,6 +77,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to update breed"),
   });
 
   const deleteBreed = trpc.breeds.deleteBreed.useMutation({
@@ -79,6 +86,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to delete breed"),
   });
 
   const resetForm = () => {
@@ -91,7 +99,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
   };
 
   const handleSubmit = () => {
-    if (!breedType.trim()) return;
+    if (!breedType.trim()) { showErrorToast("Enter a breed name"); return; }
     const parsedCount = parseInt(count) || 0;
     const parsedAvg = parseFloat(avgProduction) || 0;
 
@@ -149,16 +157,18 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { resetForm(); onClose(); }}>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Cancel" accessibilityRole="button">
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>{isEdit ? "Edit Breed" : "Add Breed"}</Text>
-          <View style={{ width: 60 }} />
+          <TouchableOpacity onPress={handleSubmit} disabled={!breedType.trim() || isSubmitting} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel={isEdit ? "Save breed changes" : "Add breed"} accessibilityRole="button" accessibilityState={{ disabled: !breedType.trim() || isSubmitting }}>
+            <Text style={[styles.headerAction, (!breedType.trim() || isSubmitting) && { opacity: 0.4 }]}>{isEdit ? "Save" : "Add"}</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.form} contentContainerStyle={styles.formContent}>
+        <ScrollView style={styles.form} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
           {/* Image */}
-          <TouchableOpacity style={styles.imageContainer} onPress={handlePickImage}>
+          <TouchableOpacity style={styles.imageContainer} onPress={handlePickImage} accessibilityLabel="Pick breed photo" accessibilityRole="button">
             {imageUrl ? (
               <Image source={{ uri: imageUrl }} style={styles.image} contentFit="cover" />
             ) : (
@@ -176,6 +186,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
             value={name}
             onChangeText={setName}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Breed name"
           />
 
           <Text style={styles.label}>Breed</Text>
@@ -185,6 +196,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
             value={breedType}
             onChangeText={setBreedType}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Breed type"
           />
 
           <Text style={styles.label}>Description (optional)</Text>
@@ -196,6 +208,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
             value={description}
             onChangeText={setDescription}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Description"
           />
 
           <View style={styles.row}>
@@ -208,6 +221,7 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
                 value={count}
                 onChangeText={setCount}
                 placeholderTextColor={colors.gray[400]}
+                accessibilityLabel="Bird count"
               />
             </View>
             <View style={styles.halfField}>
@@ -219,12 +233,13 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
                 value={avgProduction}
                 onChangeText={setAvgProduction}
                 placeholderTextColor={colors.gray[400]}
+                accessibilityLabel="Average daily production"
               />
             </View>
           </View>
 
           {isEdit && (
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete} accessibilityLabel="Delete breed" accessibilityRole="button">
               <Text style={styles.deleteButtonText}>Delete Breed</Text>
             </TouchableOpacity>
           )}
@@ -235,6 +250,9 @@ export default function BreedFormModal({ visible, onClose, flockId, breed }: Bre
             style={[styles.submitButton, !breedType.trim() && styles.submitButtonDisabled]}
             onPress={handleSubmit}
             disabled={!breedType.trim() || isSubmitting}
+            accessibilityLabel={isEdit ? "Save breed changes" : "Add breed"}
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !breedType.trim() || isSubmitting }}
           >
             {isSubmitting ? (
               <ActivityIndicator color={colors.white} />
@@ -253,6 +271,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: colors.gray[200] },
   cancelText: { fontSize: 16, color: colors.primary },
   headerTitle: { fontSize: 18, fontWeight: "600", color: colors.gray[900] },
+  headerAction: { fontSize: 16, fontWeight: "600", color: colors.primary },
   form: { flex: 1 },
   formContent: { padding: 16, gap: 8 },
   imageContainer: { alignSelf: "center", marginBottom: 8 },

@@ -35,9 +35,9 @@ export default function FlocksScreen() {
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={refetch} tintColor={colors.primary} />}
         contentContainerStyle={styles.list}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} onPress={() => router.push(`/(app)/flocks/${item.id}`)} activeOpacity={0.7}>
-            {item.image ? (
-              <Image source={{ uri: item.image }} style={styles.cardImage} contentFit="cover" />
+          <TouchableOpacity style={styles.card} onPress={() => router.push(`/(app)/flocks/${item.id}`)} activeOpacity={0.7} accessibilityLabel={item.name} accessibilityHint="View flock details" accessibilityRole="button">
+            {item.imageUrl ? (
+              <Image source={{ uri: item.imageUrl }} style={styles.cardImage} contentFit="cover" />
             ) : (
               <View style={[styles.cardImage, styles.cardImagePlaceholder]}>
                 <Text style={styles.placeholderEmoji}>🐔</Text>
@@ -56,7 +56,7 @@ export default function FlocksScreen() {
           </View>
         }
       />
-      <TouchableOpacity style={styles.fab} onPress={() => setShowAddFlock(true)}>
+      <TouchableOpacity style={styles.fab} onPress={() => setShowAddFlock(true)} accessibilityLabel="Add flock" accessibilityRole="button">
         <Text style={styles.fabText}>+</Text>
       </TouchableOpacity>
       <AddFlockModal visible={showAddFlock} onClose={() => setShowAddFlock(false)} />
@@ -76,8 +76,8 @@ const styles = StyleSheet.create({
   cardTitle: { fontSize: 18, fontWeight: "600", color: colors.gray[900] },
   cardDescription: { fontSize: 14, color: colors.gray[500], marginTop: 4 },
   empty: { alignItems: "center", paddingTop: 64 },
-  emptyText: { fontSize: 18, fontWeight: "600", color: colors.gray[400] },
-  emptySubtext: { fontSize: 14, color: colors.gray[400], marginTop: 8 },
+  emptyText: { fontSize: 18, fontWeight: "600", color: colors.text.muted },
+  emptySubtext: { fontSize: 14, color: colors.text.muted, marginTop: 8 },
   fab: { position: "absolute", bottom: 24, right: 24, width: 56, height: 56, borderRadius: 28, backgroundColor: colors.primary, justifyContent: "center", alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 },
   fabText: { color: colors.white, fontSize: 28, fontWeight: "300", marginTop: -2 },
 });

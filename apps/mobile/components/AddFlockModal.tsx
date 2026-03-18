@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { trpc } from "../lib/trpc";
 import { colors } from "../constants/Colors";
+import { showErrorToast } from "../lib/toast";
 
 const FLOCK_TYPES = [
   { value: "chickens", label: "Chickens" },
@@ -38,6 +39,7 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
       resetForm();
       onClose();
     },
+    onError: () => showErrorToast("Failed to create flock"),
   });
 
   const resetForm = () => {
@@ -46,8 +48,12 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
     setType("chickens");
   };
 
+  React.useEffect(() => {
+    if (!visible) resetForm();
+  }, [visible]);
+
   const handleSubmit = () => {
-    if (!name.trim()) return;
+    if (!name.trim()) { showErrorToast("Enter a flock name"); return; }
     createFlock.mutate({
       name: name.trim(),
       description: description.trim(),
@@ -60,14 +66,16 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => { resetForm(); onClose(); }}>
+          <TouchableOpacity onPress={onClose} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Cancel" accessibilityRole="button">
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
           <Text style={styles.headerTitle}>New Flock</Text>
-          <View style={{ width: 60 }} />
+          <TouchableOpacity onPress={handleSubmit} disabled={!name.trim() || createFlock.isLoading} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Create flock" accessibilityRole="button" accessibilityState={{ disabled: !name.trim() || createFlock.isLoading }}>
+            <Text style={[styles.headerAction, (!name.trim() || createFlock.isLoading) && { opacity: 0.4 }]}>Create</Text>
+          </TouchableOpacity>
         </View>
 
-        <ScrollView style={styles.form} contentContainerStyle={styles.formContent}>
+        <ScrollView style={styles.form} contentContainerStyle={styles.formContent} keyboardShouldPersistTaps="handled">
           <Text style={styles.label}>Flock Name</Text>
           <TextInput
             style={styles.input}
@@ -76,6 +84,7 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
             onChangeText={setName}
             placeholderTextColor={colors.gray[400]}
             autoFocus
+            accessibilityLabel="Flock name"
           />
 
           <Text style={styles.label}>Description</Text>
@@ -87,6 +96,7 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
             value={description}
             onChangeText={setDescription}
             placeholderTextColor={colors.gray[400]}
+            accessibilityLabel="Description"
           />
 
           <Text style={styles.label}>Type</Text>
@@ -96,6 +106,8 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
                 key={t.value}
                 style={[styles.typeChip, type === t.value && styles.typeChipActive]}
                 onPress={() => setType(t.value)}
+                accessibilityRole="button"
+                accessibilityState={{ selected: type === t.value }}
               >
                 <Text style={[styles.typeChipText, type === t.value && styles.typeChipTextActive]}>
                   {t.label}
@@ -110,6 +122,9 @@ export default function AddFlockModal({ visible, onClose }: AddFlockModalProps) 
             style={[styles.submitButton, !name.trim() && styles.submitButtonDisabled]}
             onPress={handleSubmit}
             disabled={!name.trim() || createFlock.isLoading}
+            accessibilityLabel="Create flock"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !name.trim() || createFlock.isLoading }}
           >
             {createFlock.isLoading ? (
               <ActivityIndicator color={colors.white} />
@@ -128,6 +143,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", padding: 16, borderBottomWidth: 1, borderBottomColor: colors.gray[200] },
   cancelText: { fontSize: 16, color: colors.primary },
   headerTitle: { fontSize: 18, fontWeight: "600", color: colors.gray[900] },
+  headerAction: { fontSize: 16, fontWeight: "600", color: colors.primary },
   form: { flex: 1 },
   formContent: { padding: 16, gap: 8 },
   label: { fontSize: 14, fontWeight: "500", color: colors.gray[700], marginTop: 8 },

@@ -19,6 +19,11 @@ export const colors = {
     800: "#1f2937",
     900: "#111827",
   },
+  text: {
+    secondary: "#5C8A83",
+    tertiary: "#A8533F",
+    muted: "#6B7280",
+  },
 } as const;
 
 const tintColorLight = colors.primary;
