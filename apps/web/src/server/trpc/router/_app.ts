@@ -5,6 +5,7 @@ import { expensesRouter } from "./expenses";
 import { flocksRouter } from "./flocks";
 import { logsRouter } from "./logs";
 import { statsRouter } from "./stats";
+import { tasksRouter } from "./tasks";
 
 export const appRouter = router({
   auth: authRouter,
@@ -13,6 +14,7 @@ export const appRouter = router({
   flocks: flocksRouter,
   logs: logsRouter,
   stats: statsRouter,
+  tasks: tasksRouter,
 });
 
 // export type definition of API
