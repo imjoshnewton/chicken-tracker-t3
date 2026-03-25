@@ -39,6 +39,15 @@ export default async function RootLayout({
             </Link>
           </li>
 
+          <li>
+              <Link
+                href="/blog"
+                className="px-3 py-2 font-semibold transition-all hover:bg-slate-400/10"
+              >
+                Blog
+              </Link>
+            </li>
+
           {/* user is signed-in */}
           <SignedIn>
             {/* <li> */}

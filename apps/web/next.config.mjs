@@ -3,6 +3,16 @@
 /** @type {import("next").NextConfig} */
 const config = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "blog.flocknerd.com" }],
+        destination: "https://flocknerd.com/blog/:path*",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
       { hostname: "firebasestorage.googleapis.com" },
