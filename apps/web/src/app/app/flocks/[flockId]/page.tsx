@@ -17,7 +17,7 @@ export default async function Page(props: any) {
   // const authRes = await auth();
   const user = await currentUsr();
 
-  if (!user) redirect("/api/auth/signin");
+  if (!user) redirect("/auth/sign-in");
 
   return <Flock userId={user.id} flockId={flockId} />;
 }

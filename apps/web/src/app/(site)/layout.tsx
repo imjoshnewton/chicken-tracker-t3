@@ -29,7 +29,7 @@ export default async function RootLayout({
         }`}
       >
         <ul>
-          <li className="flex items-center gap-2 sm:gap-4">
+          <li>
             <Link href="/" className="translate-x-2 sm:translate-x-0">
               <span className="flex items-center">
                 <Image
@@ -39,14 +39,14 @@ export default async function RootLayout({
                 />
               </span>
             </Link>
-            <Link href="/blog" className={navItemClass}>
-              Blog
-            </Link>
           </li>
 
           <li>
             <SignedIn>
               <div className="mr-2 flex items-center gap-2">
+                <Link href="/blog" className={navItemClass}>
+                  Blog
+                </Link>
                 <Link
                   href="/app/flocks"
                   className={`animate__animated animate__fadeInRight ${navItemClass}`}
@@ -73,12 +73,17 @@ export default async function RootLayout({
             </SignedIn>
 
             <SignedOut>
-              <SignInButton mode="modal">
-                <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
-                  <MdLogin />
-                  &nbsp;Sign in
-                </button>
-              </SignInButton>
+              <div className="mr-2 flex items-center gap-2">
+                <Link href="/blog" className={navItemClass}>
+                  Blog
+                </Link>
+                <SignInButton mode="modal">
+                  <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
+                    <MdLogin />
+                    &nbsp;Sign in
+                  </button>
+                </SignInButton>
+              </div>
             </SignedOut>
           </li>
         </ul>

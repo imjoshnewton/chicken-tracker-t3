@@ -1,15 +1,43 @@
 import { SignIn } from "@clerk/nextjs";
 
+interface SignInPageProps {
+  params: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
 
+function normalizeRedirectUrl(value?: string | string[]) {
+  const redirectUrl = typeof value === "string" ? value : value?.[0];
 
-// Simplest possible approach for Next.js 15 compatibility
-export default async function Page(props: any) {
-  const searchParams = await (props ? props.searchParams : {});
-  const params = props ? await props.params : {};
-  const redirectUrl =
-    typeof searchParams.redirect_url == "string"
-      ? searchParams.redirect_url
-      : searchParams.redirect_url?.at(0);
+  if (!redirectUrl) {
+    return "/app/flocks";
+  }
+
+  try {
+    const url = new URL(redirectUrl, "https://flocknerd.com");
+
+    if (
+      url.pathname.startsWith("/auth/sign-in") ||
+      url.pathname.startsWith("/auth/sign-up")
+    ) {
+      return "/app/flocks";
+    }
+
+    return `${url.pathname}${url.search}${url.hash}`;
+  } catch {
+    if (
+      redirectUrl.startsWith("/auth/sign-in") ||
+      redirectUrl.startsWith("/auth/sign-up")
+    ) {
+      return "/app/flocks";
+    }
+
+    return redirectUrl;
+  }
+}
+
+export default async function Page({ searchParams }: SignInPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const redirectUrl = normalizeRedirectUrl(resolvedSearchParams.redirect_url);
 
   return (
     <main className="container mx-auto flex h-screen justify-center">
