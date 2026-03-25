@@ -17,6 +17,24 @@ export interface BlogPost {
   content: string;
 }
 
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function stripDuplicateHeroImage(content: string, images?: string[]) {
+  const heroImage = images?.[0];
+
+  if (!heroImage) {
+    return content;
+  }
+
+  const duplicateHeroPattern = new RegExp(
+    `^\\s*!\\[[^\\]]*\\]\\(${escapeRegExp(heroImage)}\\)\\s*\\n+`,
+  );
+
+  return content.replace(duplicateHeroPattern, "");
+}
+
 export function getAllPosts(): BlogPost[] {
   const files = fs.readdirSync(BLOG_DIR).filter((f) => f.endsWith(".mdx"));
 
@@ -29,6 +47,9 @@ export function getAllPosts(): BlogPost[] {
 
       if (data.draft) return null;
 
+      const images = data.images as string[] | undefined;
+      const sanitizedContent = stripDuplicateHeroImage(content, images);
+
       return {
         slug,
         title: data.title as string,
@@ -36,9 +57,9 @@ export function getAllPosts(): BlogPost[] {
         tags: (data.tags as string[]) || [],
         draft: (data.draft as boolean) || false,
         summary: data.summary as string,
-        images: data.images as string[] | undefined,
-        readingTime: readingTime(content).text,
-        content,
+        images,
+        readingTime: readingTime(sanitizedContent).text,
+        content: sanitizedContent,
       };
     })
     .filter(Boolean) as BlogPost[];
@@ -55,6 +76,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(fileContent);
+  const images = data.images as string[] | undefined;
+  const sanitizedContent = stripDuplicateHeroImage(content, images);
 
   return {
     slug,
@@ -63,8 +86,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
     tags: (data.tags as string[]) || [],
     draft: (data.draft as boolean) || false,
     summary: data.summary as string,
-    images: data.images as string[] | undefined,
-    readingTime: readingTime(content).text,
-    content,
+    images,
+    readingTime: readingTime(sanitizedContent).text,
+    content: sanitizedContent,
   };
 }
