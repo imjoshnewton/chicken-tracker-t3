@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
-import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts, getPostBySlug } from "@lib/blog";
 import type { Metadata } from "next";
@@ -54,7 +53,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mdxComponents: Record<string, React.ComponentType<any>> = {
   img: (props: { src?: string; alt?: string; className?: string }) => (
     // eslint-disable-next-line @next/next/no-img-element
@@ -114,19 +112,6 @@ export default async function BlogPost({ params }: Props) {
             ))}
           </div>
         </header>
-
-        {post.images && post.images.length > 0 && (
-          <div className="mb-8 overflow-hidden rounded-lg">
-            <Image
-              src={post.images[0]!}
-              alt={post.title}
-              width={800}
-              height={450}
-              className="w-full object-cover"
-              priority
-            />
-          </div>
-        )}
 
         <div className="prose prose-lg max-w-none prose-headings:text-primary prose-a:text-primary prose-a:no-underline hover:prose-a:underline">
           <MDXRemote source={post.content} components={mdxComponents} />

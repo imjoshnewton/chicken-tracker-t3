@@ -18,6 +18,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const user = await currentUser();
+  const navItemClass =
+    "rounded px-3 py-2 font-semibold transition-all hover:bg-slate-400/10";
 
   return (
     <>
@@ -27,8 +29,8 @@ export default async function RootLayout({
         }`}
       >
         <ul>
-          <li className="translate-x-2 cursor-pointer sm:translate-x-0">
-            <Link href="/">
+          <li className="flex items-center gap-2 sm:gap-4">
+            <Link href="/" className="translate-x-2 sm:translate-x-0">
               <span className="flex items-center">
                 <Image
                   src={logo}
@@ -37,76 +39,48 @@ export default async function RootLayout({
                 />
               </span>
             </Link>
+            <Link href="/blog" className={navItemClass}>
+              Blog
+            </Link>
           </li>
 
           <li>
-              <Link
-                href="/blog"
-                className="px-3 py-2 font-semibold transition-all hover:bg-slate-400/10"
-              >
-                Blog
-              </Link>
-            </li>
+            <SignedIn>
+              <div className="mr-2 flex items-center gap-2">
+                <Link
+                  href="/app/flocks"
+                  className={`animate__animated animate__fadeInRight ${navItemClass}`}
+                >
+                  <span className="flex items-center">My Flocks</span>
+                </Link>
+                <UserButton
+                  afterSignOutUrl="/"
+                  userProfileMode="navigation"
+                  userProfileUrl="/app/settings/"
+                  appearance={{
+                    elements: {
+                      userButtonOuterIdentifier:
+                        "text-white font-bold text-base ml-2",
+                      userButtonPopoverCard:
+                        "bg-[#FEF9F6] rounded-lg text-primary",
+                      userButtonTrigger: "ml-2 md:ml-1",
+                      avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
+                      avatarImage: "border-2 border-white rounded-full",
+                    },
+                  }}
+                />
+              </div>
+            </SignedIn>
 
-          {/* user is signed-in */}
-          <SignedIn>
-            {/* <li> */}
-            {/* <Link href={"/app/flocks"}> */}
-            {/* My Flocks */}
-            {/* <li
-                className={`ml-4 flex cursor-pointer items-center rounded px-3 py-1 transition-all hover:bg-slate-400/10`}
-              >
-                {user?.hasImage && (
-                  <Image
-                    src={user.imageUrl as string}
-                    width="35"
-                    height="35"
-                    className="user-img h-9 w-9 lg:h-11 lg:w-11"
-                    alt="Current user profile image"
-                  />
-                )}
-              </li> */}
-            {/* </Link> */}
-            {/* </li> */}
-            <li className="mr-2 flex items-center gap-2">
-              <Link
-                href={"/app/flocks"}
-                className="animate__animated animate__fadeInRight px-3 py-2 hover:bg-slate-400/10"
-              >
-                <span className="flex items-center font-semibold">
-                  My Flocks
-                </span>
-              </Link>
-              <UserButton
-                afterSignOutUrl="/"
-                userProfileMode="navigation"
-                userProfileUrl="/app/settings/"
-                appearance={{
-                  elements: {
-                    userButtonOuterIdentifier:
-                      "text-white font-bold text-base ml-2",
-                    userButtonPopoverCard:
-                      "bg-[#FEF9F6] rounded-lg text-primary",
-                    userButtonTrigger: "ml-2 md:ml-1",
-                    avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
-                    avatarImage: "border-2 border-white rounded-full",
-                  },
-                }}
-              />
-            </li>
-          </SignedIn>
-
-          {/* user is not signed-in */}
-          <SignedOut>
-            <li>
+            <SignedOut>
               <SignInButton mode="modal">
                 <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
                   <MdLogin />
                   &nbsp;Sign in
                 </button>
               </SignInButton>
-            </li>
-          </SignedOut>
+            </SignedOut>
+          </li>
         </ul>
       </nav>
       <section className={"transition-all"}>{children}</section>

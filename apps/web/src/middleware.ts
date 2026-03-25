@@ -3,6 +3,7 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 // Define public routes
 const isPublicRoute = createRouteMatcher([
   '/',
+  '/blog(.*)',
   '/api/trpc(.*)',
   '/api/summaryCleanup(.*)',
   '/api/createSummaryNotifications(.*)',
