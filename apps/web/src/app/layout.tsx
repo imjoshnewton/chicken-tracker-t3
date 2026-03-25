@@ -6,8 +6,31 @@ import "../styles/globals.scss";
 import "animate.css";
 
 export const metadata = {
-  title: "FlockNerd - Egg-ceptional Insights",
-  description: "Flock Stats for Nerds",
+  title: "FlockNerd — Egg-ceptional Insights",
+  description: "Track your backyard flock's egg production, expenses, and health. Free for chicken, duck, and quail keepers.",
+  metadataBase: new URL("https://flocknerd.com"),
+  openGraph: {
+    title: "FlockNerd — Egg-ceptional Insights",
+    description: "Track your backyard flock's egg production, expenses, and health. Free for chicken, duck, and quail keepers.",
+    url: "https://flocknerd.com",
+    siteName: "FlockNerd",
+    type: "website",
+    images: [
+      {
+        url: "https://flocknerd.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "FlockNerd — Egg-ceptional Insights",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FlockNerd — Egg-ceptional Insights",
+    description: "Track your backyard flock's egg production, expenses, and health. Free for chicken, duck, and quail keepers.",
+    images: ["https://flocknerd.com/og-image.png"],
+    site: "@imjoshnewton",
+  },
 };
 
 const noto = Noto_Sans({
