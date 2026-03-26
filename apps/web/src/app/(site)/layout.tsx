@@ -44,6 +44,9 @@ export default async function RootLayout({
           <li>
             <SignedIn>
               <div className="mr-2 flex items-center gap-2">
+                <Link href="/about" className={navItemClass}>
+                  About
+                </Link>
                 <Link href="/blog" className={navItemClass}>
                   Blog
                 </Link>
@@ -74,6 +77,9 @@ export default async function RootLayout({
 
             <SignedOut>
               <div className="mr-2 flex items-center gap-2">
+                <Link href="/about" className={navItemClass}>
+                  About
+                </Link>
                 <Link href="/blog" className={navItemClass}>
                   Blog
                 </Link>
