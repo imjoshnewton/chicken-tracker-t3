@@ -5,6 +5,7 @@ import {
   doublePrecision,
   index,
   integer,
+  jsonb,
   pgTableCreator,
   primaryKey,
   smallint,
@@ -13,6 +14,7 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core";
+import type { FlockOnboardingContext } from "@lib/onboarding";
 
 // Using same table prefix pattern for consistency
 export const pgTable = pgTableCreator((name) => `flocknerd_${name}`);
@@ -205,6 +207,21 @@ export const user = pgTable(
     defaultFlock: varchar("defaultFlock", { length: 255 })
       .default("")
       .notNull(),
+    onboardingStartedAt: timestamp("onboardingStartedAt", {
+      precision: 3,
+      mode: "string",
+    }),
+    onboardingCompletedAt: timestamp("onboardingCompletedAt", {
+      precision: 3,
+      mode: "string",
+    }),
+    onboardingCurrentStep: integer("onboardingCurrentStep")
+      .default(1)
+      .notNull(),
+    onboardingContext: jsonb("onboardingContext")
+      .$type<FlockOnboardingContext>()
+      .default(sql`'{}'::jsonb`)
+      .notNull(),
     clerkId: varchar("clerkId", { length: 255 }),
     secondaryClerkId: varchar("secondaryClerkId", { length: 255 }),
   },
@@ -248,4 +265,3 @@ export type Flock = typeof flock.$inferInsert;
 export type Breed = typeof breed.$inferInsert;
 export type Expense = typeof expense.$inferInsert;
 export type EggLog = typeof eggLog.$inferInsert;
-

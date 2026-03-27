@@ -9,7 +9,7 @@ function normalizeRedirectUrl(value?: string | string[]) {
   const redirectUrl = typeof value === "string" ? value : value?.[0];
 
   if (!redirectUrl) {
-    return "/app/flocks";
+    return "/app";
   }
 
   try {
@@ -19,7 +19,7 @@ function normalizeRedirectUrl(value?: string | string[]) {
       url.pathname.startsWith("/auth/sign-in") ||
       url.pathname.startsWith("/auth/sign-up")
     ) {
-      return "/app/flocks";
+      return "/app";
     }
 
     return `${url.pathname}${url.search}${url.hash}`;
@@ -28,7 +28,7 @@ function normalizeRedirectUrl(value?: string | string[]) {
       redirectUrl.startsWith("/auth/sign-in") ||
       redirectUrl.startsWith("/auth/sign-up")
     ) {
-      return "/app/flocks";
+      return "/app";
     }
 
     return redirectUrl;

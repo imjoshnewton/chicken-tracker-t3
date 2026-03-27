@@ -38,9 +38,11 @@ type GetUserNotifications = RouterOutput["auth"]["getUserNotifications"];
 export default function AppLayout({
   children,
   initialNotifications,
+  onboardingActive = false,
 }: {
   children: React.ReactNode;
   initialNotifications: GetUserNotifications;
+  onboardingActive?: boolean;
 }) {
   const { user } = useUser();
 
@@ -48,7 +50,9 @@ export default function AppLayout({
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-[#FEF9F6] transition ease transform duration-300`;
-  const links = [
+  const links = onboardingActive
+    ? []
+    : [
     {
       icon: <MdHomeFilled className="mr-5 mt-[-3px] inline text-2xl" />,
       title: "My Flocks",
@@ -162,7 +166,7 @@ export default function AppLayout({
           </li>
 
           {/* user is signed-in */}
-          {user && (
+          {user && !onboardingActive && (
             <>
               <li
                 className={`mr-2 flex items-center gap-2 rounded transition-all`}

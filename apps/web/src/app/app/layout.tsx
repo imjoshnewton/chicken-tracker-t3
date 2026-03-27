@@ -1,4 +1,13 @@
+import { currentUsr } from "@lib/auth";
+import {
+  FLOCK_ONBOARDING_ROUTE,
+  getFlockOnboardingHandoffPath,
+  isFlockOnboardingComplete,
+  normalizeFlockOnboardingContext,
+} from "@lib/onboarding";
 import { auth } from "@clerk/nextjs/server";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { getServerClient } from "../_trpc/serverClient";
 import AppLayout from "./AppLayout";
@@ -14,15 +23,38 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUsr();
+  const pathname = (await headers()).get("x-pathname") ?? "/app";
+  const isOnboardingRoute = pathname.startsWith(FLOCK_ONBOARDING_ROUTE);
+  const onboardingComplete = isFlockOnboardingComplete(user);
+
+  if (!onboardingComplete && !isOnboardingRoute) {
+    redirect(FLOCK_ONBOARDING_ROUTE);
+  }
+
+  if (onboardingComplete && isOnboardingRoute) {
+    redirect(
+      getFlockOnboardingHandoffPath(
+        user,
+        normalizeFlockOnboardingContext((user as any).onboardingContext),
+      ),
+    );
+  }
+
   const authRes = await auth();
-
   const serverClient = getServerClient(authRes);
-
-  const notifications = await serverClient.auth.getUserNotifications();
+  const notifications = isOnboardingRoute
+    ? []
+    : await serverClient.auth.getUserNotifications();
 
   return (
     <TrpcProvider>
-      <AppLayout initialNotifications={notifications}>{children}</AppLayout>
+      <AppLayout
+        initialNotifications={notifications}
+        onboardingActive={isOnboardingRoute && !onboardingComplete}
+      >
+        {children}
+      </AppLayout>
     </TrpcProvider>
   );
 }

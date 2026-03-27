@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server';
 
 // Define public routes
 const isPublicRoute = createRouteMatcher([
@@ -20,9 +21,18 @@ const isPublicRoute = createRouteMatcher([
 
 // By default protect all routes, but allow public routes defined above
 export default clerkMiddleware(async (auth, req) => {
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set('x-pathname', req.nextUrl.pathname);
+
   if (!isPublicRoute(req)) {
     await auth.protect();
   }
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 });
 
 export const config = {
