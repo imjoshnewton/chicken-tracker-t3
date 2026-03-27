@@ -1,0 +1,96 @@
+stories:
+  - name: "Fresh user is routed into FlockNerd onboarding"
+    auth_required: true
+    url: "/app"
+    covers:
+      - "apps/web/src/app/app/layout.tsx"
+      - "apps/web/src/app/app/onboarding/page.tsx"
+      - "apps/web/src/app/app/onboarding/onboarding-shell.tsx"
+      - "apps/web/src/lib/onboarding.ts"
+      - "apps/web/src/actions/onboarding.actions.ts"
+    workflow: |
+      Navigate to /auth/sign-up.
+      Create a brand-new user account.
+      Complete sign-up and land in the authenticated app.
+      Verify the user is routed to /app/onboarding instead of the normal flock pages.
+      Verify the onboarding shell renders with Step 1 of 5 visible.
+      Verify the step list and progress indicator are visible.
+      Take screenshot of the initial onboarding shell.
+
+  - name: "Welcome step saves and resumes"
+    auth_required: true
+    url: "/app/onboarding"
+    covers:
+      - "apps/web/src/app/app/onboarding/onboarding-shell.tsx"
+      - "apps/web/src/actions/onboarding.actions.ts"
+      - "apps/web/src/lib/onboarding.ts"
+    workflow: |
+      Open Step 1 of onboarding.
+      Choose a starting point and primary goal.
+      Save and continue.
+      Return to Step 1.
+      Reload the page.
+      Verify the selected values persist.
+      Take screenshot of the saved welcome step state.
+
+  - name: "User can create the first flock in onboarding"
+    auth_required: true
+    url: "/app/onboarding"
+    covers:
+      - "apps/web/src/actions/onboarding.actions.ts"
+      - "apps/web/src/services/onboarding.service.ts"
+      - "apps/web/src/data/onboarding.repository.ts"
+    workflow: |
+      Continue to the flock setup step.
+      Enter a flock name, type, and optional description.
+      Save and continue.
+      Verify the flock step accepts the data and advances.
+      Verify the new flock appears in the step summary if shown.
+      Take screenshot of the completed flock setup step.
+
+  - name: "User can add breed groups during onboarding"
+    auth_required: true
+    url: "/app/onboarding"
+    covers:
+      - "apps/web/src/actions/onboarding.actions.ts"
+      - "apps/web/src/services/onboarding.service.ts"
+      - "apps/web/src/data/onboarding.repository.ts"
+    workflow: |
+      Continue to the breed setup step.
+      Add at least two breed groups with breed name and count.
+      Save and continue.
+      Verify the step advances successfully.
+      Verify breed rows remain visible or summarized after save.
+      Take screenshot of the breed setup state.
+
+  - name: "Optional baseline egg log behaves correctly"
+    auth_required: true
+    url: "/app/onboarding"
+    covers:
+      - "apps/web/src/actions/onboarding.actions.ts"
+      - "apps/web/src/services/onboarding.service.ts"
+      - "apps/web/src/data/onboarding.repository.ts"
+    workflow: |
+      Continue to the baseline egg log step.
+      Verify the user can skip the step without being blocked.
+      Return to the step if possible.
+      Enter a realistic egg count and date.
+      Save and continue.
+      Verify the step accepts a baseline egg log.
+      Take screenshot of the baseline log step.
+
+  - name: "Completion summary finishes onboarding and hands off cleanly"
+    auth_required: true
+    url: "/app/onboarding"
+    covers:
+      - "apps/web/src/app/app/onboarding/page.tsx"
+      - "apps/web/src/app/app/onboarding/onboarding-shell.tsx"
+      - "apps/web/src/app/app/flocks/[flockId]/page.tsx"
+      - "apps/web/src/app/app/layout.tsx"
+    workflow: |
+      Continue to the completion step.
+      Verify the summary reflects the created flock and any breed/baseline entries.
+      Finish onboarding.
+      Verify the app redirects out of onboarding to the created flock handoff.
+      Verify revisiting /app/onboarding redirects away for a completed user.
+      Take screenshot of the completion summary and handoff destination.
