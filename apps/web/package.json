@@ -8,13 +8,15 @@
     "lint": "eslint src",
     "start": "next start",
     "migrations:generate": "drizzle-kit generate",
-    "push": "node -r esbuild-register src/lib/db/migrate.ts",
+    "push": "bun run db:migrate",
     "migrations:drop": "drizzle-kit drop --config=drizzle.config.ts",
     "db:pull": "drizzle-kit introspect --config=drizzle.config.ts",
-    "db:push": "dotenv drizzle-kit push",
+    "db:adopt": "node -r esbuild-register src/lib/db/adopt.ts",
+    "db:migrate": "node -r esbuild-register src/lib/db/migrate.ts",
+    "db:push": "node -r esbuild-register src/lib/db/push.ts",
     "db:studio": "dotenv drizzle-kit studio",
     "db:up": "dotenv drizzle-kit up",
-    "db:check": "dotenv drizzle-kit check",
+    "db:check": "node -r esbuild-register src/lib/db/check.ts",
     "update-browserslist": "npx update-browserslist-db@latest"
   },
   "dependencies": {

@@ -15,6 +15,13 @@
       "when": 1698723403725,
       "tag": "0001_long_kate_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774641240000,
+      "tag": "0002_flock_onboarding_state",
+      "breakpoints": true
     }
   ]
 }
