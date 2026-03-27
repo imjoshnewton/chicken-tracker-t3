@@ -13,9 +13,7 @@ import {
 } from "react-icons/md";
 
 import {
-  SignInButton,
-  SignOutButton,
-  UserButton,
+  useClerk,
   useUser,
 } from "@clerk/nextjs";
 
@@ -23,13 +21,14 @@ import {
 import { inferRouterOutputs } from "@trpc/server";
 import { trpc } from "@utils/trpc";
 import { motion, HTMLMotionProps } from "motion/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ReactElement, useRef, useState } from "react";
 import { Toaster } from "react-hot-toast";
 import { AppRouter } from "src/server/trpc/router/_app";
 import logo from "../../../public/FlockNerd-logo-v2.png";
 import NotificationsList from "./NotificationsList";
 import { Button } from "@components/ui/button";
+import { AccountMenu } from "@components/auth/AccountMenu";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type GetUserNotifications = RouterOutput["auth"]["getUserNotifications"];
@@ -46,7 +45,6 @@ export default function AppLayout({
 }) {
   const { user } = useUser();
 
-  const pathName = usePathname();
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const genericHamburgerLine = `h-[2px] w-[22px] my-[2.5px] rounded-full bg-[#FEF9F6] transition ease transform duration-300`;
@@ -198,22 +196,7 @@ export default function AppLayout({
                 {/* <div className="user-name animate__animated animate__fadeInLeft hidden lg:block">
                   {user.fullName}
                 </div> */}
-                <UserButton
-                  afterSignOutUrl="/"
-                  userProfileMode="navigation"
-                  userProfileUrl="/app/settings/"
-                  appearance={{
-                    elements: {
-                      userButtonOuterIdentifier:
-                        "text-white font-bold text-base ml-2",
-                      userButtonPopoverCard:
-                        "bg-[#FEF9F6] rounded-lg text-primary",
-                      // userButtonTrigger: "ml-2 md:ml-1",
-                      avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
-                      avatarImage: "border-2 border-white rounded-full",
-                    },
-                  }}
-                />
+                <AccountMenu />
               </li>
             </>
           )}
@@ -221,12 +204,13 @@ export default function AppLayout({
           {/* user is not signed-in */}
           {!user && (
             <li>
-              <SignInButton>
-                <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
-                  <MdLogin />
-                  &nbsp;Sign in
-                </button>
-              </SignInButton>
+              <Link
+                href="/auth/sign-in"
+                className="inline-flex items-center rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary"
+              >
+                <MdLogin />
+                &nbsp;Sign in
+              </Link>
             </li>
           )}
         </ul>
@@ -271,21 +255,41 @@ export default function AppLayout({
           {links.map((link, index) => {
             return <SidebarNavLink {...link} key={index} />;
           })}
-          <li
-            className={`mb-0 px-2 ${
-              pathName == "/logout" ? "bg-gray-400 text-white" : ""
-            } hover:text-gray-500`}
-          >
-            <SignOutButton>
-              <button className="flex items-center px-2 py-3">
-                <MdLogout className="ml-[2px] mr-[18.5px] inline text-2xl" />
-                Logout
-              </button>
-            </SignOutButton>
-          </li>
+          {user ? (
+            <SidebarLogoutItem />
+          ) : null}
         </ul>
       </aside>
     </>
+  );
+}
+
+function SidebarLogoutItem() {
+  const router = useRouter();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const { signOut } = useClerk();
+
+  return (
+    <li className="mb-0 px-2 hover:text-gray-500">
+      <button
+        type="button"
+        className="flex items-center px-2 py-3"
+        disabled={isSigningOut}
+        onClick={async () => {
+          setIsSigningOut(true);
+
+          try {
+            await signOut({ redirectUrl: "/" });
+            router.replace("/");
+          } finally {
+            setIsSigningOut(false);
+          }
+        }}
+      >
+        <MdLogout className="ml-[2px] mr-[18.5px] inline text-2xl" />
+        {isSigningOut ? "Logging out..." : "Logout"}
+      </button>
+    </li>
   );
 }
 

@@ -2,8 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { MdLogin } from "react-icons/md";
 import logo from "../../../public/FlockNerd-logo-v2.png";
-import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { currentUser, auth } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
+
+import { AccountMenu } from "@components/auth/AccountMenu";
 
 
 
@@ -42,7 +43,7 @@ export default async function RootLayout({
           </li>
 
           <li>
-            <SignedIn>
+            {user ? (
               <div className="mr-2 flex items-center gap-2">
                 <Link href="/about" className={navItemClass}>
                   About
@@ -56,26 +57,10 @@ export default async function RootLayout({
                 >
                   <span className="flex items-center">My Flocks</span>
                 </Link>
-                <UserButton
-                  afterSignOutUrl="/"
-                  userProfileMode="navigation"
-                  userProfileUrl="/app/settings/"
-                  appearance={{
-                    elements: {
-                      userButtonOuterIdentifier:
-                        "text-white font-bold text-base ml-2",
-                      userButtonPopoverCard:
-                        "bg-[#FEF9F6] rounded-lg text-primary",
-                      userButtonTrigger: "ml-2 md:ml-1",
-                      avatarBox: "h-9 w-9 lg:h-10 lg:w-10",
-                      avatarImage: "border-2 border-white rounded-full",
-                    },
-                  }}
-                />
+                <AccountMenu showName />
               </div>
-            </SignedIn>
+            ) : (
 
-            <SignedOut>
               <div className="mr-2 flex items-center gap-2">
                 <Link href="/about" className={navItemClass}>
                   About
@@ -83,14 +68,15 @@ export default async function RootLayout({
                 <Link href="/blog" className={navItemClass}>
                   Blog
                 </Link>
-                <SignInButton mode="modal">
-                  <button className="rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary">
-                    <MdLogin />
-                    &nbsp;Sign in
-                  </button>
-                </SignInButton>
+                <Link
+                  href="/auth/sign-in"
+                  className="inline-flex items-center rounded border-2 bg-transparent px-2 py-2 pr-3 transition-all hover:bg-white hover:text-primary"
+                >
+                  <MdLogin />
+                  &nbsp;Sign in
+                </Link>
               </div>
-            </SignedOut>
+            )}
           </li>
         </ul>
       </nav>
