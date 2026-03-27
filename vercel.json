@@ -1,5 +1,40 @@
 {
   "buildCommand": "cd apps/web && bun run build",
+  "redirects": [
+    {
+      "source": "/blog",
+      "has": [
+        {
+          "type": "host",
+          "value": "blog.flocknerd.com"
+        }
+      ],
+      "destination": "https://flocknerd.com/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "blog.flocknerd.com"
+        }
+      ],
+      "destination": "https://flocknerd.com/blog/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "blog.flocknerd.com"
+        }
+      ],
+      "destination": "https://flocknerd.com/blog",
+      "permanent": true
+    }
+  ],
   "outputDirectory": "apps/web/.next",
   "installCommand": "bun install",
   "framework": "nextjs"
