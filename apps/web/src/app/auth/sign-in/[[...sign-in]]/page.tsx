@@ -1,47 +1,23 @@
-import { SignIn } from "@clerk/nextjs";
+import { AuthShell } from "@components/auth/AuthShell";
+import { SignInForm } from "@components/auth/SignInForm";
+
+import { getDefaultSignInRedirect } from "@lib/auth-redirect";
 
 interface SignInPageProps {
   params: Promise<Record<string, string | string[] | undefined>>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-function normalizeRedirectUrl(value?: string | string[]) {
-  const redirectUrl = typeof value === "string" ? value : value?.[0];
-
-  if (!redirectUrl) {
-    return "/app";
-  }
-
-  try {
-    const url = new URL(redirectUrl, "https://flocknerd.com");
-
-    if (
-      url.pathname.startsWith("/auth/sign-in") ||
-      url.pathname.startsWith("/auth/sign-up")
-    ) {
-      return "/app";
-    }
-
-    return `${url.pathname}${url.search}${url.hash}`;
-  } catch {
-    if (
-      redirectUrl.startsWith("/auth/sign-in") ||
-      redirectUrl.startsWith("/auth/sign-up")
-    ) {
-      return "/app";
-    }
-
-    return redirectUrl;
-  }
-}
-
 export default async function Page({ searchParams }: SignInPageProps) {
   const resolvedSearchParams = await searchParams;
-  const redirectUrl = normalizeRedirectUrl(resolvedSearchParams.redirect_url);
+  const redirectUrl = getDefaultSignInRedirect(resolvedSearchParams.redirect_url);
 
   return (
-    <main className="container mx-auto flex h-screen justify-center">
-      <SignIn redirectUrl={redirectUrl} />
-    </main>
+    <AuthShell
+      title="Sign in to FlockNerd"
+      description="Use the app’s own sign-in flow so redirects, onboarding, and browser testing stay predictable."
+    >
+      <SignInForm redirectUrl={redirectUrl} />
+    </AuthShell>
   );
 }
