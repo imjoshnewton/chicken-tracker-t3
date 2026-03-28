@@ -1,8 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
-
-import { db } from "@lib/db";
-import { flock, user } from "@lib/db/schema-postgres";
-import { eq, sql } from "drizzle-orm";
+import { currentUsr } from "@lib/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -10,6 +6,7 @@ import Card from "../../../components/shared/Card";
 import AddFlockButton from "./AddFlockButton";
 import { Suspense } from "react";
 import Loader from "@components/shared/Loader";
+import * as flocksService from "../../../services/flocks.service";
 
 export const metadata = {
   title: "FlockNerd - All Flocks",
@@ -19,6 +16,14 @@ export const metadata = {
 export const runtime = "nodejs";
 
 const Flocks = async () => {
+  const user = await currentUsr();
+  const flocks = await flocksService.getUserFlocks(user.id);
+  const [singleFlock] = flocks;
+
+  if (flocks.length === 1 && singleFlock) {
+    redirect(`/app/flocks/${singleFlock.id}`);
+  }
+
   return (
     <main className="flex flex-col gap-4">
       <div className="flex items-center justify-end">
@@ -31,32 +36,17 @@ const Flocks = async () => {
           </div>
         }
       >
-        <FlockList />
+        <FlockList flocks={flocks} />
       </Suspense>
     </main>
   );
 };
 
-async function FlockList() {
-  const clerkUser = await currentUser();
-
-  if (!clerkUser) redirect("/auth/sign-in");
-
-  const flocks = await db
-    .select({
-      id: flock.id,
-      name: flock.name,
-      description: flock.description,
-      imageUrl: flock.imageUrl,
-      type: flock.type,
-      userId: flock.userId,
-    })
-    .from(user)
-    .where(
-      // Check both primary and secondary Clerk IDs
-      sql`${user.clerkId} = ${clerkUser.id} OR ${user.secondaryClerkId} = ${clerkUser.id}`
-    )
-    .innerJoin(flock, eq(flock.userId, user.id));
+async function FlockList({
+  flocks,
+}: {
+  flocks: Awaited<ReturnType<typeof flocksService.getUserFlocks>>;
+}) {
 
   return (
     <ul className="grid grid-cols-1 grid-rows-1 gap-6 md:grid-cols-2 xl:grid-cols-3">

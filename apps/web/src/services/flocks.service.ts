@@ -7,6 +7,17 @@ export const getUserFlocks = async (userId: string) => {
   return flocksRepo.getFlocksByUserId(db, userId);
 };
 
+export const getUserFlockLandingPath = async (userId: string) => {
+  const flocks = await getUserFlocks(userId);
+  const [singleFlock] = flocks;
+
+  if (flocks.length === 1 && singleFlock) {
+    return `/app/flocks/${singleFlock.id}`;
+  }
+
+  return "/app/flocks";
+};
+
 export const getFlockById = async (flockId: string) => {
   return flocksRepo.getFlockById(db, flockId);
 };

@@ -1,14 +1,13 @@
 import { currentUsr } from "@lib/auth";
 import {
   FLOCK_ONBOARDING_ROUTE,
-  getFlockOnboardingHandoffPath,
   isFlockOnboardingComplete,
-  normalizeFlockOnboardingContext,
 } from "@lib/onboarding";
 import { auth } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import * as flocksService from "../../services/flocks.service";
 import { getServerClient } from "../_trpc/serverClient";
 import AppLayout from "./AppLayout";
 import { TrpcProvider } from "./Provider";
@@ -33,12 +32,7 @@ export default async function RootLayout({
   }
 
   if (onboardingComplete && isOnboardingRoute) {
-    redirect(
-      getFlockOnboardingHandoffPath(
-        user,
-        normalizeFlockOnboardingContext((user as any).onboardingContext),
-      ),
-    );
+    redirect(await flocksService.getUserFlockLandingPath(user.id));
   }
 
   const authRes = await auth();

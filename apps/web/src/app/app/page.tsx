@@ -1,4 +1,5 @@
-import Loader from "@components/shared/Loader";
+import { currentUsr } from "@lib/auth";
+import * as flocksService from "../../services/flocks.service";
 import { redirect } from "next/navigation";
 
 export const metadata = {
@@ -9,7 +10,9 @@ export const metadata = {
 export const runtime = "nodejs";
 
 const AppHome = async () => {
-  redirect("/app/flocks");
+  const user = await currentUsr();
+
+  redirect(await flocksService.getUserFlockLandingPath(user.id));
 
   // return (
   //   <>

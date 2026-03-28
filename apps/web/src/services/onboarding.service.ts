@@ -9,7 +9,6 @@ import {
   firstEggLogSchema,
   firstFlockSchema,
   flockWelcomeSchema,
-  getFlockOnboardingHandoffPath,
   normalizeFlockOnboardingContext,
   type BreedGroupListInput,
   type FirstEggLogInput,
@@ -21,6 +20,7 @@ import * as breedsRepo from "../data/breeds.repository";
 import * as flocksRepo from "../data/flocks.repository";
 import * as logsRepo from "../data/logs.repository";
 import * as onboardingRepo from "../data/onboarding.repository";
+import { getUserFlockLandingPath } from "./flocks.service";
 
 function nowIsoString() {
   return new Date().toISOString();
@@ -278,7 +278,7 @@ export async function saveFirstEggLog(userId: string, input: FirstEggLogInput) {
 
 export async function completeOnboarding(userId: string) {
   const existing = await getRequiredState(userId);
-  const handoffPath = getFlockOnboardingHandoffPath(existing, existing.onboardingContext);
+  const handoffPath = await getUserFlockLandingPath(userId);
 
   const [updated] = await onboardingRepo.updateUserOnboardingState(db, userId, {
     defaultFlock:
