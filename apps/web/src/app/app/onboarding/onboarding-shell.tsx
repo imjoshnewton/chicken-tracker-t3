@@ -256,8 +256,13 @@ function FirstFlockStep({
       <ErrorBanner message={error} />
       <div className="grid gap-5 lg:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="flock-name">Flock name</Label>
-          <Input id="flock-name" value={name} onChange={(event) => setName(event.target.value)} />
+          <Label htmlFor="flock-name">Name your flock</Label>
+          <Input
+            id="flock-name"
+            placeholder="Review Coop"
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="flock-type">Flock type</Label>
@@ -275,7 +280,7 @@ function FirstFlockStep({
           </select>
         </div>
         <div className="space-y-2 lg:col-span-2">
-          <Label htmlFor="flock-description">Description</Label>
+          <Label htmlFor="flock-description">Description (optional)</Label>
           <Textarea
             id="flock-description"
             rows={4}

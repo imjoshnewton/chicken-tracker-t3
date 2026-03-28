@@ -68,7 +68,10 @@ export async function saveWelcomeContext(userId: string, input: FlockWelcomeInpu
 }
 
 export async function saveFirstFlock(userId: string, input: FirstFlockInput) {
-  const validated = firstFlockSchema.parse(input);
+  const validated = firstFlockSchema.parse({
+    ...input,
+    name: input.name.trim() || input.description.trim(),
+  });
 
   return withTransaction(async (tx) => {
     const existing = await onboardingRepo.getUserOnboardingState(tx, userId);
