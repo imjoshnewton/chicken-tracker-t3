@@ -67,3 +67,5 @@ apps/mobile/android/
 # gcloud
 /gcloud/node_modules
 /gcloud/.gcloudignore
+ui_review_artifacts/
+ui_review_artifacts/
