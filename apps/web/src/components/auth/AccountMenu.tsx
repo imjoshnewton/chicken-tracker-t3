@@ -81,16 +81,20 @@ export function AccountMenu({
           {email ? <p className="mt-1 text-xs text-primary/70">{email}</p> : null}
         </div>
         <div className="my-1 h-px bg-primary/10" />
-        <Link
-          href="/app/settings"
-          className="flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-medium transition hover:bg-primary/5"
+        <Button
+          asChild
+          variant="ghost"
+          className="h-auto w-full justify-start rounded-xl px-3 py-2 text-sm font-medium text-primary hover:bg-primary/5 hover:text-primary"
         >
-          <MdManageAccounts className="text-lg" />
-          Account settings
-        </Link>
-        <button
+          <Link href="/app/settings">
+            <MdManageAccounts className="text-lg" />
+            Account settings
+          </Link>
+        </Button>
+        <Button
           type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-medium transition hover:bg-primary/5"
+          variant="ghost"
+          className="h-auto w-full justify-start rounded-xl px-3 py-2 text-left text-sm font-medium text-primary hover:bg-primary/5 hover:text-primary"
           disabled={isSigningOut}
           onClick={async () => {
             setIsSigningOut(true);
@@ -107,9 +111,8 @@ export function AccountMenu({
         >
           <MdLogout className="text-lg" />
           {isSigningOut ? "Signing out..." : "Sign out"}
-        </button>
+        </Button>
       </PopoverContent>
     </Popover>
   );
 }
-

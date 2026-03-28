@@ -13,6 +13,13 @@ import {
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@components/ui/select";
 import { Textarea } from "@components/ui/textarea";
 import type { Breed, Flock } from "@lib/db/schema-postgres";
 import {
@@ -31,6 +38,7 @@ type EditableBreedGroup = {
 };
 
 const flockTypeOptions = ["Backyard flock", "Layer flock", "Mixed flock"];
+const allBreedGroupsOption = "__all_breed_groups__";
 
 function StepFrame({
   title,
@@ -108,12 +116,13 @@ export function OnboardingShell({
           const unlocked = step.step <= unlockedStep;
 
           return (
-            <button
+            <Button
               key={step.step}
               type="button"
+              variant="ghost"
               disabled={!unlocked}
               onClick={() => goToStep(step.step)}
-              className={`rounded-xl border px-4 py-4 text-left transition ${
+              className={`h-auto w-full justify-start rounded-xl border px-4 py-4 text-left transition ${
                 active
                   ? "border-primary bg-primary text-white"
                   : unlocked
@@ -121,11 +130,13 @@ export function OnboardingShell({
                     : "border-stone-200 bg-stone-100 text-stone-400"
               }`}
             >
-              <p className="text-xs font-semibold uppercase tracking-[0.2em]">
-                Step {step.step}
-              </p>
-              <h2 className="mt-2 text-sm font-semibold">{step.title}</h2>
-            </button>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.2em]">
+                  Step {step.step}
+                </p>
+                <h2 className="mt-2 text-sm font-semibold">{step.title}</h2>
+              </div>
+            </Button>
           );
         })}
       </section>
@@ -187,28 +198,30 @@ function WelcomeStep({
       <ErrorBanner message={error} />
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="space-y-3 rounded-xl border border-stone-200 bg-white p-4">
-          <Label>How are you getting started?</Label>
-          <select
-            className="h-10 w-full rounded-md border border-slate-200 bg-transparent px-3 text-sm"
-            value={setupIntent}
-            onChange={(event) => setSetupIntent(event.target.value as any)}
-          >
-            <option value="starting_fresh">Starting fresh</option>
-            <option value="migrating_existing_records">Migrating existing records</option>
-            <option value="backfilling_recent_activity">Backfilling recent activity</option>
-          </select>
+          <Label htmlFor="welcome-setup-intent">How are you getting started?</Label>
+          <Select value={setupIntent} onValueChange={(value) => setSetupIntent(value as any)}>
+            <SelectTrigger id="welcome-setup-intent" className="w-full bg-transparent">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="starting_fresh">Starting fresh</SelectItem>
+              <SelectItem value="migrating_existing_records">Migrating existing records</SelectItem>
+              <SelectItem value="backfilling_recent_activity">Backfilling recent activity</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-3 rounded-xl border border-stone-200 bg-white p-4">
-          <Label>What do you want ready first?</Label>
-          <select
-            className="h-10 w-full rounded-md border border-slate-200 bg-transparent px-3 text-sm"
-            value={primaryGoal}
-            onChange={(event) => setPrimaryGoal(event.target.value as any)}
-          >
-            <option value="egg_tracking">Egg tracking</option>
-            <option value="flock_organization">Flock organization</option>
-            <option value="routine_planning">Routine planning</option>
-          </select>
+          <Label htmlFor="welcome-primary-goal">What do you want ready first?</Label>
+          <Select value={primaryGoal} onValueChange={(value) => setPrimaryGoal(value as any)}>
+            <SelectTrigger id="welcome-primary-goal" className="w-full bg-transparent">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="egg_tracking">Egg tracking</SelectItem>
+              <SelectItem value="flock_organization">Flock organization</SelectItem>
+              <SelectItem value="routine_planning">Routine planning</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
       <div className="mt-6 flex justify-end">
@@ -266,18 +279,18 @@ function FirstFlockStep({
         </div>
         <div className="space-y-2">
           <Label htmlFor="flock-type">Flock type</Label>
-          <select
-            id="flock-type"
-            className="h-10 w-full rounded-md border border-slate-200 bg-transparent px-3 text-sm"
-            value={type}
-            onChange={(event) => setType(event.target.value)}
-          >
-            {flockTypeOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
+          <Select value={type} onValueChange={setType}>
+            <SelectTrigger id="flock-type" className="w-full bg-transparent">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {flockTypeOptions.map((option) => (
+                <SelectItem key={option} value={option}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
         <div className="space-y-2 lg:col-span-2">
           <Label htmlFor="flock-description">Description (optional)</Label>
@@ -390,30 +403,63 @@ function BreedGroupsStep({
     >
       <ErrorBanner message={error} />
       <div className="space-y-4">
-        {groups.map((group, index) => (
-          <div key={group.id ?? `new-${index}`} className="rounded-xl border border-stone-200 bg-white p-4">
-            <div className="grid gap-4 lg:grid-cols-2">
-              <div className="space-y-2">
-                <Label>Group name</Label>
-                <Input value={group.name} onChange={(event) => updateGroup(index, "name", event.target.value)} />
+        {groups.map((group, index) => {
+          const groupNameId = `breed-group-${index}-name`;
+          const breedId = `breed-group-${index}-breed`;
+          const countId = `breed-group-${index}-count`;
+          const averageProductionId = `breed-group-${index}-average-production`;
+          const descriptionId = `breed-group-${index}-description`;
+
+          return (
+            <div key={group.id ?? `new-${index}`} className="rounded-xl border border-stone-200 bg-white p-4">
+              <div className="grid gap-4 lg:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor={groupNameId}>Group name</Label>
+                  <Input
+                    id={groupNameId}
+                    value={group.name}
+                    onChange={(event) => updateGroup(index, "name", event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={breedId}>Breed</Label>
+                  <Input
+                    id={breedId}
+                    value={group.breed}
+                    onChange={(event) => updateGroup(index, "breed", event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={countId}>Bird count</Label>
+                  <Input
+                    id={countId}
+                    type="number"
+                    min={1}
+                    value={group.count}
+                    onChange={(event) => updateGroup(index, "count", event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={averageProductionId}>Average eggs per day</Label>
+                  <Input
+                    id={averageProductionId}
+                    type="number"
+                    min={0}
+                    step="0.1"
+                    value={group.averageProduction}
+                    onChange={(event) => updateGroup(index, "averageProduction", event.target.value)}
+                  />
+                </div>
+                <div className="space-y-2 lg:col-span-2">
+                  <Label htmlFor={descriptionId}>Description</Label>
+                  <Textarea
+                    id={descriptionId}
+                    rows={3}
+                    value={group.description ?? ""}
+                    onChange={(event) => updateGroup(index, "description", event.target.value)}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label>Breed</Label>
-                <Input value={group.breed} onChange={(event) => updateGroup(index, "breed", event.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label>Bird count</Label>
-                <Input type="number" min={1} value={group.count} onChange={(event) => updateGroup(index, "count", event.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label>Average eggs per day</Label>
-                <Input type="number" min={0} step="0.1" value={group.averageProduction} onChange={(event) => updateGroup(index, "averageProduction", event.target.value)} />
-              </div>
-              <div className="space-y-2 lg:col-span-2">
-                <Label>Description</Label>
-                <Textarea rows={3} value={group.description ?? ""} onChange={(event) => updateGroup(index, "description", event.target.value)} />
-              </div>
-            </div>
             {groups.length > 1 ? (
               <div className="mt-4 flex justify-end">
                 <Button
@@ -424,8 +470,9 @@ function BreedGroupsStep({
                 </Button>
               </div>
             ) : null}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
       <div className="mt-4 flex justify-start">
         <Button
@@ -522,31 +569,51 @@ function FirstEggLogStep({
         {!skipped ? (
           <div className="grid gap-4 lg:grid-cols-2">
             <div className="space-y-2">
-              <Label>Log date</Label>
-              <Input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+              <Label htmlFor="first-egg-log-date">Log date</Label>
+              <Input
+                id="first-egg-log-date"
+                type="date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
+              />
             </div>
             <div className="space-y-2">
-              <Label>Egg count</Label>
-              <Input type="number" min={1} value={count} onChange={(event) => setCount(event.target.value)} />
+              <Label htmlFor="first-egg-log-count">Egg count</Label>
+              <Input
+                id="first-egg-log-count"
+                type="number"
+                min={1}
+                value={count}
+                onChange={(event) => setCount(event.target.value)}
+              />
             </div>
             <div className="space-y-2">
-              <Label>Breed group</Label>
-              <select
-                className="h-10 w-full rounded-md border border-slate-200 bg-transparent px-3 text-sm"
-                value={breedId}
-                onChange={(event) => setBreedId(event.target.value)}
+              <Label htmlFor="first-egg-log-breed-group">Breed group</Label>
+              <Select
+                value={breedId || allBreedGroupsOption}
+                onValueChange={(value) => setBreedId(value === allBreedGroupsOption ? "" : value)}
               >
-                <option value="">All breed groups</option>
-                {summaryFlock?.breeds.map((breed) => (
-                  <option key={breed.id} value={breed.id}>
-                    {breed.name || breed.breed}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id="first-egg-log-breed-group" className="w-full bg-transparent">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={allBreedGroupsOption}>All breed groups</SelectItem>
+                  {summaryFlock?.breeds.map((breed) => (
+                    <SelectItem key={breed.id} value={breed.id}>
+                      {breed.name || breed.breed}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2 lg:col-span-2">
-              <Label>Notes</Label>
-              <Textarea rows={3} value={notes} onChange={(event) => setNotes(event.target.value)} />
+              <Label htmlFor="first-egg-log-notes">Notes</Label>
+              <Textarea
+                id="first-egg-log-notes"
+                rows={3}
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+              />
             </div>
           </div>
         ) : null}

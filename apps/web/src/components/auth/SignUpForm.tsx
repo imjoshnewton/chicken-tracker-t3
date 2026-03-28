@@ -219,9 +219,10 @@ export function SignUpForm({ redirectUrl }: { redirectUrl: string }) {
             {isSubmitting ? "Verifying..." : "Verify email and continue"}
           </Button>
 
-          <button
+          <Button
             type="button"
-            className="w-full text-sm font-medium text-primary underline-offset-4 hover:underline"
+            variant="link"
+            className="h-auto w-full px-0 text-sm font-medium text-primary"
             onClick={async () => {
               if (!isLoaded) {
                 return;
@@ -237,7 +238,7 @@ export function SignUpForm({ redirectUrl }: { redirectUrl: string }) {
             }}
           >
             Resend code
-          </button>
+          </Button>
         </form>
       )}
 
@@ -253,4 +254,3 @@ export function SignUpForm({ redirectUrl }: { redirectUrl: string }) {
     </div>
   );
 }
-
