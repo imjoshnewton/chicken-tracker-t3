@@ -7,30 +7,44 @@ import * as schema from "./schema-postgres";
 const isEdgeRuntime = typeof process !== 'undefined' && 
   process.env.NEXT_RUNTIME === 'edge';
 
-// Create an optimized connection pool using DATABASE_URL
-const pool = createPool({
-  connectionString: process.env.DATABASE_URL,
-  ...(isEdgeRuntime
-    ? {
-        // Edge Runtime has different connection handling
-        ssl: true,
-      }
-    : {
-        // Optimize for Vercel serverless with Neon:
-        // - Max: Limit total connections to avoid overloading Neon 
-        // - Min: Keep some connections warm to reduce cold starts
-        // - Idle timeout: Release connections when not in use
-        max: 10,
-        min: 2,
-        connectionTimeoutMillis: 5000, // 5 seconds to establish connection
-        idleTimeoutMillis: 10000, // 10 seconds idle before releasing
-        keepAlive: true, // Keep connections alive to reduce connection churn
-        ssl: true, // Secure connections
-      }),
-});
+const connectionString = process.env.DATABASE_URL ?? process.env.POSTGRES_URL;
 
-// Use Vercel's postgres client with Neon database
-export const db = drizzle(pool, { schema });
+function createDb() {
+  const pool = createPool({
+    connectionString,
+    ...(isEdgeRuntime
+      ? {
+          ssl: true,
+        }
+      : {
+          max: 10,
+          min: 2,
+          connectionTimeoutMillis: 5000,
+          idleTimeoutMillis: 10000,
+          keepAlive: true,
+          ssl: true,
+        }),
+  });
+
+  return drizzle(pool, { schema });
+}
+
+type Database = ReturnType<typeof createDb>;
+
+let database: Database | undefined;
+
+function getDb(): Database {
+  database ??= createDb();
+  return database;
+}
+
+export const db: Database = new Proxy({} as Database, {
+  get(_target, prop) {
+    const instance = getDb();
+    const value = instance[prop as keyof Database];
+    return typeof value === "function" ? value.bind(instance) : value;
+  },
+});
 
 // Export sql for direct query usage if needed
 export { sql };
