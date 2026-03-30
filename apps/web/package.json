@@ -40,6 +40,7 @@
     "@trpc/react-query": "^11.9.0",
     "@trpc/server": "^11.9.0",
     "@upstash/qstash": "^2.9.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/postgres": "^0.10.0",
     "animate.css": "^4.1.1",
     "caniuse-lite": "^1.0.30001718",

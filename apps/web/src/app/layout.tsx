@@ -1,5 +1,5 @@
 import { ClerkProvider } from "@clerk/nextjs";
-
+import { Analytics } from "@vercel/analytics/react";
 
 import { Noto_Sans } from "next/font/google";
 import "../styles/globals.scss";
@@ -196,6 +196,7 @@ export default function RootLayout({
         </head>
         <body className="lg:flex lg:h-full lg:flex-1 lg:flex-col">
           <div className="pt-15 lg:pt-16">{children}</div>
+          <Analytics />
         </body>
       </html>
     </ClerkProvider>
